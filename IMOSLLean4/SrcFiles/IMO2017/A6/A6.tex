@@ -1,0 +1,144 @@
+\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{hyperref}
+
+\DeclareMathOperator{\rchar}{char}
+
+\newtheorem*{claim}{Claim}
+
+\title{IMO 2017 A6 (P2)}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+
+\subsection*{Problem}
+
+Let $F$ be a field.
+Determine all functions $f : F \to F$ such that, for any $x, y \in F$,
+\[ f(f(x) f(y)) + f(x + y) = f(xy). \tag{*}\label{2017a6-eq0} \]
+
+
+
+\subsection*{Answer}
+
+$x \mapsto 0$, $x \mapsto x - 1$, and $x \mapsto 1 - x$.
+
+
+
+\subsection*{Solution}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h1480146p8693244}
+
+The reference links to the solution in the AoPS thread for IMO 2017 P2 by the user \textbf{anantmudgal09} (see post \#75).
+The solution works when $\rchar(F) \neq 2$, and our solution for this case is a slight modification of the referenced solution.
+We will present our own solution for the case $\rchar(F) = 2$.
+
+It is easy to check that the functions give in the answer section satisfies~\eqref{2017a6-eq0}.
+It remains to show that these are all the functions.
+
+We start with some small properties.
+First, plugging $(x, y) = (t + 1, t^{-1} + 1)$ into~\eqref{2017a6-eq0} yields
+\[ f(f(t + 1) f(t^{-1} + 1)) = 0 \quad \forall t \in F \setminus \{0\}. \tag{1}\label{2017a6-eq1} \]
+In particular, this also means $f(f(0)^2) = 0$.
+
+If $f(c) = 0$ for some $c \in F$ with $c \neq 1$, then plugging $t = c - 1$ into~\eqref{2017a6-eq1} yields $f(0) = 0$.
+But then plugging $y = 0$ into~\eqref{2017a6-eq0} yields $f \equiv 0$.
+Thus, from now on, we assume that $f(c) = 0$ implies $c = 1$.
+Since $f(f(0)^2) = 0$, this means $f(0)^2 = 1 \iff f(0) = \pm 1$ and also
+\[ f(c) = 0 \iff c = 1 \quad \forall c \in F. \tag{2}\label{2017a6-eq2} \]
+
+Now notice that, if $f : F \to F$ satisfies~\eqref{2017a6-eq0}, then $-f$ also satisfies~\eqref{2017a6-eq0}.
+Since $f(0) = \pm 1$, we may WLOG assume that $f(0) = 1$.
+The goal reduces to showing that $f(x) = 1 - x$ for all $x \in F$.
+
+Plugging $y = 1$ into~\eqref{2017a6-eq0} yields that, for any $x \in F$,
+\[ f(x + 1) + 1 = f(x). \tag{3}\label{2017a6-eq3} \]
+Now we reduce the goal to showing that $f$ is injective.
+Indeed, plugging $y = 0$ into~\eqref{2017a6-eq0} yields
+\[ f(f(x)) + f(x) = 1 \quad \forall x \in F. \]
+Then for any $x \in F$, we get
+\[ f(f(f(x))) = 1 - f(f(x)) = f(x) \implies f(f(x)) = x, \]
+    and thus $f(x) = 1 - f(f(x)) = 1 - x$, as desired.
+It remains to show that $f$ is injective.
+
+For both cases, we just gather identities until injectivity is in front of the door.
+
+
+
+\subsubsection*{Case 1: $\rchar(F) \neq 2$.}
+
+First,~\eqref{2017a6-eq3} implies that $f(-1) = 2$.
+Thus, plugging $x = -1$ into~\eqref{2017a6-eq0} yields
+\[ f(2f(y)) + f(y) + 1 = f(-y) \quad \forall y \in F. \tag{4}\label{2017a6-eq4} \]
+In particular, for any $a, b \in F$, $f(a) = f(b)$ implies $f(-a) = f(-b)$.
+Comparing~\eqref{2017a6-eq0} with $(x, y) = (a, -b)$ and $(x, y) = (b, -a)$ gives us
+\[ f(a - b) = f(-ab) - f(f(a) f(-b)) = f(-ab) - f(f(b) f(-a)) = f(b - a). \]
+
+Now denote $c = a - b$.
+Then the above equality tells us that $f(c) = f(-c)$.
+Then~\eqref{2017a6-eq4} yields
+\[ f(2f(c)) = -1 \iff f(2f(c) - 1) = 0 \iff 2f(c) - 1 = 1 \iff f(c) = 1 \]
+\[ \iff f(c + 1) = 0 \iff c + 1 = 1 \iff c = 0 \iff a = b. \]
+Note that the fourth iff statement holds since $\rchar(F) \neq 2$.
+This proves that $f$ is injective.
+
+
+
+\subsubsection*{Case 2: $\rchar(F) = 2$.}
+
+Fix $a, b \in F$ such that $f(a) = f(b)$.
+Our goal is to show that $a = b$.
+
+By~\eqref{2017a6-eq3}, we have $f(a + 1) = f(b + 1)$.
+By~\eqref{2017a6-eq2}, $a = 0$ implies $b = 0$ and vice versa.
+So, we have either $a = b = 0$ or $a, b \neq 0$; we may assume that the latter holds.
+
+We start with the following observation.
+Consider~\eqref{2017a6-eq0} with $(x, y) = (a + 1, b^{-1} + 1)$.
+Since $f(a + 1) = f(b + 1)$, applying~\eqref{2017a6-eq1} yields
+\[ f((a + 1)(b^{-1} + 1)) = f((a + 1) + (b^{-1} + 1)) \implies f(ab^{-1} + a + b^{-1} + 1) = f(a + b^{-1}). \]
+Then, by~\eqref{2017a6-eq3}, we get
+\[ f(ab^{-1} + a + b^{-1}) = f(1 + a + b^{-1}). \]
+By symmetry, we have
+\[ f(ba^{-1} + b + a^{-1}) = f(1 + b + a^{-1}). \]
+Now notice the identity
+\[ (1 + a + b^{-1})(1 + b + a^{-1}) = (ab^{-1} + a + b^{-1})(ba^{-1} + b + a^{-1}). \]
+As a result, by plugging the appropriate values into~\eqref{2017a6-eq0}, we get
+\[ f((1 + a + b^{-1}) + (1 + b + a^{-1})) = f((ab^{-1} + a + b^{-1}) + (ba^{-1} + b + a^{-1})). \]
+Letting $C = a + b + 1$ and $D = a^{-1} + b^{-1} + 1$, the above equation is equivalent to saying that
+\[ f(C + D) = f(CD + 1) = f(CD) + 1, \]
+    where the second equality holds by~\eqref{2017a6-eq3} since $\rchar(F) = 2$.
+But then plugging $(x, y) = (C, D)$ into~\eqref{2017a6-eq0} yields
+\[ f(f(C) f(D)) = 1 \iff f(C) f(D) = 0 \iff f(C) = 0 \vee f(D) = 0 \iff C = 1 \vee D = 1. \]
+By definition of $C$ and $D$, and by $\rchar(F) = 2$, this is equivalent to
+\[ a + b + 1 = 1 \vee a^{-1} + b^{-1} + 1 = 1 \iff a = b \vee a^{-1} = b^{-1}. \]
+But $a^{-1} = b^{-1}$ yields $a = b$.
+So, regardless, we have obtained $a = b$.
+This proves that $f$ is injective.
+
+
+
+\subsection*{Extra notes}
+
+All the functions described in the answer satisfy~\eqref{2017a6-eq0} even when we relax $F$ to be just a division ring.
+The solution, up to reducing to injectivity on the case $f(0) = 1$, generalizes to division ring case.
+
+With a careful modification, the solution for the case $\rchar(F) \neq 2$ also generalizes to division rings.
+Indeed, comparing~\eqref{2017a6-eq0} with $(x, y) = (a, b)$ and $(x, y) = (b, a)$ gives us $f(ab) = f(ba)$.
+Now we have $f(-a) = f(-b)$, and in addition, $f(-ab) = f(-ba)$.
+Comparing~\eqref{2017a6-eq0} with $(x, y) = (a, -b)$ and $(x, y) = (b, -a)$ again gives us the desired equality.
+We will implement this modification.
+
+Unfortunately, we have not found a way to generalize the case $\rchar(F) = 2$ to division rings.
+Thus, we will stick just to the field case.
+
+
+
+\end{document}
