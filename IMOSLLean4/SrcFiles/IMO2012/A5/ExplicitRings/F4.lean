@@ -257,11 +257,11 @@ theorem cast_mul (x y : 𝔽₄) : cast r (x * y) = cast r x * cast r y :=
     | I, x => (one_mul _).symm
     | x, I => x.mul_one.symm ▸ (mul_one _).symm
     | X, O => (mul_zero r).symm
-    | X, X => calc r + 1 = r * r := by rw [← h0, ← mul_one_add r, h1]
+    | X, X => by change r + 1 = r * r; rw [← h0, ← mul_one_add r, h1]
     | X, Y => h0.symm
     | Y, O => (mul_zero (r + 1)).symm
     | Y, X => h0.symm.trans <| (mul_add_one r r).trans (add_one_mul r r).symm
-    | Y, Y => calc r = (r + 1) * (r + 1) := by rw [add_one_mul r, h0, h1]
+    | Y, Y => by change r = (r + 1) * (r + 1); rw [add_one_mul r, h0, h1]
 
 def castHom : 𝔽₄ →+* R :=
   { toFun := cast r

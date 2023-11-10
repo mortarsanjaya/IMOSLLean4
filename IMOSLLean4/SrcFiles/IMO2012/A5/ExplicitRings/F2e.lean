@@ -262,8 +262,9 @@ theorem cast_mul : ∀ x y : 𝔽₂ε, cast r (x * y) = cast r x * cast r y
   | X, Y => (add_left_eq_self.mpr h0).symm.trans (mul_add_one r r).symm
   | Y, O => (mul_zero (r + 1)).symm
   | Y, X => (add_left_eq_self.mpr h0).symm.trans (add_one_mul r r).symm
-  | Y, Y => calc 1 = (r + 1) * (r + 1) := by rw [add_one_mul r, mul_add_one r,
-      h0, zero_add, ← add_assoc, ← two_mul, h, zero_mul, zero_add]
+  | Y, Y => by change 1 = (r + 1) * (r + 1)
+               rw [add_one_mul r, mul_add_one r, h0, zero_add,
+                 ← add_assoc, ← two_mul, h, zero_mul, zero_add]
 
 def castHom : 𝔽₂ε →+* R :=
   { toFun := cast r
@@ -280,9 +281,8 @@ theorem castHom_eq_zero_imp (x : 𝔽₂ε) (h2 : castHom h h0 x = 0) : x = 0 :=
     | O => rfl
     | I => absurd h2 h3
     | X => absurd h2 h1
-    | Y => by
-        rw [eq_neg_of_add_eq_zero_left h2, neg_mul_neg, one_mul] at h0
-        exact absurd h0 h3
+    | Y => by apply Not.elim h3
+              rwa [eq_neg_of_add_eq_zero_left h2, neg_mul_neg, one_mul] at h0
 
 theorem castHom_injective : Function.Injective (castHom h h0) :=
   (injective_iff_map_eq_zero (castHom h h0)).mpr (castHom_eq_zero_imp h h0 h1)
