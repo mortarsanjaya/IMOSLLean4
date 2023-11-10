@@ -31,7 +31,7 @@ theorem final_solution {R : Type _} [LinearOrderedCommRing R]
   rcases h2.lt_or_eq with h2 | rfl
   · exact h0 x h2
   · apply (h1 0).antisymm
-    replace h := h (-1) 0
+    specialize h (-1) 0
     rwa [add_zero, zero_mul, zero_add, h0 _ neg_one_lt_zero] at h
 
 end IMO2011A6
