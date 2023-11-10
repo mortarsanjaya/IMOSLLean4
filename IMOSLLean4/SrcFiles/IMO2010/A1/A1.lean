@@ -31,8 +31,8 @@ theorem final_solution {F : Type _} [LinearOrderedField F] [FloorRing F]
         Int.cast_two, mul_inv_cancel two_ne_zero] at h1
       -- Finally get `f = 0`
       ext y
-      replace h2 := h 1 y
-      rwa [h1, zero_mul, Int.floor_one, Int.cast_one, one_mul] at h2
+      specialize h 1 y
+      rwa [h1, zero_mul, Int.floor_one, Int.cast_one, one_mul] at h
   ---- `←`
   · intros x y
     rcases h with ⟨C, h, rfl⟩ | rfl
