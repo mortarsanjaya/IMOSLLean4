@@ -1,0 +1,1 @@
+-- Root for the `IMO2006` problems.
