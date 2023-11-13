@@ -1,36 +1,3 @@
-\documentclass{article}
-
-\usepackage{fullpage}
-\usepackage{amsmath, amsfonts, amssymb, amsthm}
-\usepackage{hyperref}
-\usepackage{float}
-
-\setlength{\parskip}{5pt}
-
-\newcommand{\F}{\mathbb{F}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\Z}{\mathbb{Z}}
-
-\DeclareMathOperator{\rchar}{char}
-
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\newtheorem*{claim}{Claim}
-
-\title{IMO 2012 A5}
-\author{}
-\date{}
-
-\begin{document}
-
-\maketitle
-
-
-
-
-
-\section*{Problem}
-
 Let $R$ be a commutative ring and $S$ be a field.
 Find all functions $f : R \to S$ such that, for any $x, y \in R$,
 \[ f(xy + 1) - f(x + y) = f(x) f(y). \tag{*}\label{2012a5-eq0} \]
@@ -52,7 +19,7 @@ The official solution and the simplest solution for the case $f(-1) = 0$ does no
 
 
 
-\section*{Answer}
+\subsection*{Answer}
 
 The solutions can be described via the following nine classes of functions.
 For the $8^{\text{th}}$ class, $\phi, \psi \in S$ satisfies $\phi + \psi = 1$ and $\phi \psi = -1$.
@@ -83,7 +50,7 @@ The map into the intermediate ring is necessarily a ring homomorphism in this co
 
 
 
-\section*{Solution}
+\subsection*{Solution}
 
 I will present a very long and technical solution.
 The solution seems to be generalizable to the case where $R$ is not necessarily commutative.
@@ -104,7 +71,7 @@ We also assume that $S$ is an integral domain for the same reason and for the be
 
 
 
-\subsection*{Step 1: Small observations}
+\subsubsection*{Step 1: Small observations}
 
 One can check manually that all functions described above works.
 We now focus on showing that they are all the solutions.
@@ -129,7 +96,7 @@ In particular, the case $f(-1) = 0$ yields that $f$ is even.
 
 
 
-\subsection*{Step 2: Ring quotients}
+\subsubsection*{Step 2: Ring quotients}
 
 We construct an ideal $I$ of $R$ such that $f$ is constant on the cosets of $I$.
 We define the two ideals
@@ -154,7 +121,7 @@ The above lemma yields $-1 = f(0) = -f(-c) f(c) = -f(c)^2$, so
 
 \begin{lemma}\label{2012a5-2-2}
 For any $c \in R$, we have $c \in I$ if and only if $c \in J$ and $f(c) = -1$.
-The set $I$ is an ideal of $R$.
+Also, $I$ is an ideal of $R$.
 \end{lemma}
 \begin{proof}
 If $c \in I$, then $f(c) = f(0) = -1$, and $c \in J$ holds by the previous lemma.
@@ -208,7 +175,7 @@ By definition of $I$, it suffices to show that $f(dc + dx + 1) \neq f(dx + 1)$.
 Since $c \in J \setminus I$, we have $f(c) = 1 \neq -1$ by~\eqref{2012a5-eq2-3} and thus
 \[ f(d(c + x) + 1) = f(d + c + x) + f(d) f(c + x) = -(f(d + x) + f(d) f(x)) = -f(dx + 1). \]
 But $1 \neq -1$ in $S$ and $f(dx + 1) \neq 0$ yields $-f(dx + 1) \neq f(dx + 1)$.
-This proves that $f(dc + dx + 1) \neq f(dx + 1)$.
+We are done.
 \end{proof}
 
 
@@ -219,7 +186,7 @@ This proves that $f(dc + dx + 1) \neq f(dx + 1)$.
 
 
 
-\subsection*{Step 3: Case 1: $f(-1) \neq 0$}
+\subsubsection*{Step 3: Case 1: $f(-1) \neq 0$}
 
 The results displayed here are relevant up to Step 5.
 
@@ -287,7 +254,7 @@ We now split into two subcases.
 
 
 
-\subsection*{Step 4: Subcase 1.1: $f(-1) = -2 \neq 0$}
+\subsubsection*{Step 4: Subcase 1.1: $f(-1) = -2 \neq 0$}
 
 Here, we consider the subcase where $f(-1) = -2 \neq 0$.
 Note that this also means that $\rchar(S) \neq 2$.
@@ -329,7 +296,7 @@ For any $x, y \in R$,
 
 
 
-\subsection*{Step 5: Subcase 1.2: $f(-1) = 1 \neq -2$}
+\subsubsection*{Step 5: Subcase 1.2: $f(-1) = 1 \neq -2$}
 
 Here, we consider the subcase where $f(-1) = 1 \neq -2$.
 This also means that $\rchar(S) \neq 3$.
@@ -372,7 +339,7 @@ A contradiction, since $\rchar(S) \neq 3$.
 
 
 
-\subsection*{Step 6: Case 2: $f(-1) = 0$}
+\subsubsection*{Step 6: Case 2: $f(-1) = 0$}
 
 This covers the rest of the solution, which consists of four subcases.
 The Subcase 2.3 needs to steal some results from Subcase 2.1.
@@ -398,7 +365,7 @@ This can be rewritten as
 \[ f(x + 2) = f(2) (f(x + 1) - f(x)) + f(x - 1) \quad \forall x \in R. \tag{6.5}\label{2012a5-eq6-5} \]
 
 \begin{claim}
-We have \[ f(2) \in \{-1, 0, 1, 3\}. \]
+We have $f(2) \in \{-1, 0, 1, 3\}$.
 \end{claim}
 \begin{proof}
 For convenience, let $C = f(2)$.
@@ -429,7 +396,7 @@ Since $f(1) = 0$, applying~\eqref{2012a5-eq0} with $y = 2$ and applying~\eqref{2
 
 
 
-\subsection*{Step 7: Subcase 2.1: $f(2) = 0 \neq 3$}
+\subsubsection*{Step 7: Subcase 2.1: $f(2) = 0 \neq 3$}
 
 Here, we consider the subcase where $f(2) = 0 \neq 3$.
 This also means that $\rchar(S) \neq 3$.
@@ -504,7 +471,7 @@ The two equations yields $f(x + 1) = f(x - 1) = 0$, as desired.
 
 
 
-\subsection*{Step 8: Subcase 2.2: $f(2) = 1 \neq -1$}
+\subsubsection*{Step 8: Subcase 2.2: $f(2) = 1 \neq -1$}
 
 Here, we consider the subcase where $f(2) = 1 \neq -1$.
 This also means that $\rchar(S) \neq 2$.
@@ -537,7 +504,7 @@ This shows that $2 \in J$.
 
 
 
-\subsection*{Step 9: Subcase 2.3: $f(2) = 3 \neq 1$}
+\subsubsection*{Step 9: Subcase 2.3: $f(2) = 3 \neq 1$}
 
 Here, we consider the subcase where $f(2) = 3 \neq 1$.
 This also means that $\rchar(S) \neq 2$.
@@ -659,7 +626,7 @@ The formula~\eqref{2012a5-eq9-4} now proves that $f$ can be written as $g^2 - 1$
 
 
 
-\subsection*{Step 10: Subcase 2.4: $f(2) = -1$}
+\subsubsection*{Step 10: Subcase 2.4: $f(2) = -1$}
 
 Finally, we consider the subcase where $f(2) = -1$.
 The solution in this subcase corresponds to four class of solutions: 2, 4, 8, 9.
@@ -775,7 +742,11 @@ The main goal is to prove that $f(c) = -1$ implies $c = 0$.
 We have useful statements along that way that also helps solving the subcase after proving the main goal.
 
 \begin{lemma}\label{2012a5-10-2}
-For any $x \in R$, we have either $f(x) f(x + 1) = 0$, or $f(x) + f(x + 1) = 1$ and $f(x) f(x + 1) = -1$.
+For any $x \in R$, we have either
+\begin{itemize}
+    \item   $f(x) f(x + 1) = 0$; or
+    \item   $f(x) + f(x + 1) = 1$ and $f(x) f(x + 1) = -1$.
+\end{itemize}
 \end{lemma}
 \begin{proof}
 We start by rewriting $f(x^4)$ using~\eqref{2012a5-eq10-2} and~\eqref{2012a5-eq10-3}:
@@ -841,10 +812,14 @@ Since $f(c^2) = -1$, this follows by~\eqref{2012a5-eq10-lem3-1} and~\eqref{2012a
 \end{proof}
 
 \begin{lemma}\label{2012a5-10-4}
-For any $x \in R$, we have either $x^2 = 0$, $(x + 1)^2 = 0$, or $f(x) + f(x + 1) = 1$ and $x^2 + x + 1 = 0$.
+For any $x \in R$, we have either
+\begin{itemize}
+    \item   $x^2 = 0$;
+    \item   $(x + 1)^2 = 0$; or
+    \item   $f(x) + f(x + 1) = 1$ and $x^2 + x + 1 = 0$.
+\end{itemize}
 \end{lemma}
 \begin{proof}
-
 If $ab = 0$, then either $f(x) = 0$ or $f(x + 1) = 0$.
 By~\eqref{2012a5-eq10-2} and Lemma~\ref{2012a5-10-3}, they yield $(x + 1)^2 = 1$ and $x^2 = 0$, respectively.
 
@@ -881,13 +856,3 @@ That is, we have $d \in \{c, c + 1\}$.
 In summary, any $x \in R$ satisfies $x \in \{0, 1, c, c + 1\}$.
 This yields $R \cong \F_4$, and it remains to check that $f(c) + f(c + 1) = 1$ and $f(c) f(c + 1) = -1$.
 The former is given, and the latter follows by~\eqref{2012a5-eq10-1}.
-
-
-
-
-
-
-
-
-
-\end{document}

@@ -1,0 +1,25 @@
+\documentclass[openany]{book}
+
+\usepackage{IMOSLLean4Preamble}
+
+\title{Collection of (Generalized) IMO Shortlist Problems \\ Formalized in Lean}
+\author{}
+\date{}
+
+
+\begin{document}
+
+\maketitle
+
+\foreach \Year in {\StartYear, ..., \EndYear} {
+    \chapter{IMO \Year}
+    \foreach \Subject in {A, C, N} {
+    \foreach \Number in {1, ..., \MaxSLNumber} {
+        \IfFileExists{IMOSLLean4/IMO\Year/\Subject\Number/\Subject\Number} {
+            \section{\Subject\Number}
+            \input{IMOSLLean4/IMO\Year/\Subject\Number/\Subject\Number}
+        } {}
+    } }
+}
+
+\end{document}
