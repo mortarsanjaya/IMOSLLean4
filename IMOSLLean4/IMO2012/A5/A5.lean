@@ -1,9 +1,9 @@
 import Mathlib.RingTheory.Ideal.Quotient
-import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F2
-import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F2e
-import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F3
-import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F4
-import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.Z4
+import IMOSLLean4.IMO2012.A5.ExplicitRings.F2
+import IMOSLLean4.IMO2012.A5.ExplicitRings.F2e
+import IMOSLLean4.IMO2012.A5.ExplicitRings.F3
+import IMOSLLean4.IMO2012.A5.ExplicitRings.F4
+import IMOSLLean4.IMO2012.A5.ExplicitRings.Z4
 
 /-! # IMO 2012 A5 -/
 
