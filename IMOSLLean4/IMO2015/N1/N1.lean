@@ -5,8 +5,6 @@ import Mathlib.Data.Int.Parity
 namespace IMOSL
 namespace IMO2015N1
 
-set_option profiler true
-
 def f (n : ℤ) := n * (n / 2)
 
 theorem main_claim {c m : ℤ} (h : 2 * c ∣ m - 3) (h0 : 2 * c ∣ f m - 3) :
