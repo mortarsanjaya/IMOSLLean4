@@ -261,10 +261,10 @@ Plugging $x = y$ and applying~\eqref{2012a5-eq3-4} again into the above equation
 By~\eqref{2012a5-eq1-3}, we get
 \[ f(x + 1) f(-1)^2 = f(x + 1) f(-1) (f(-x) + f(x)). \]
 Since $f(-1) \neq 0$, we get that for any $x \in R$,
-\[ f(x + 1) \neq 0 \text{ implies } f(-x) + f(x) = f(-1) \quad \text{for any } x \in R. \tag{3.7}\label{2012a5-eq3-7} \]
+\[ f(x + 1) \neq 0 \text{ implies } f(-x) + f(x) = f(-1) \quad \forall x \in R. \tag{3.7}\label{2012a5-eq3-7} \]
 
 Finally, before we move on to the two subcases, we prove that
-\[ f(x + 1) = 0 \text{ implies } f(-x) = f(x) = -1 \quad \text{for any } x \in R. \tag{3.8}\label{2012a5-eq3-8} \]
+\[ f(x + 1) = 0 \text{ implies } f(-x) = f(x) = -1 \quad \forall x \in R. \tag{3.8}\label{2012a5-eq3-8} \]
 Suppose that $f(x + 1) = 0$.
 Plugging $y = x + 1$ into~\eqref{2012a5-eq3-5} gives us
 \[ f(2x + 1) - f(-2x - 1) = f(-x) f(-x - 1). \]
@@ -450,8 +450,8 @@ Subtracting the two equalities and factoring gives
 
 We show that
 \[ f(c + 1) = f(c - 1) = 0 \text{ implies } c = 0 \quad \forall c \in R. \tag{7.3}\label{2012a5-eq7-3} \]
-It suffices to show that $f(c + x) = f(x)$ for all $y \in R$.
-Indeed, assume that $f(c + 1) = f(c - 1) = 0$.
+It suffices to show that $f(c + x) = f(x)$ for all $x \in R$.
+Assume that $f(c + 1) = f(c - 1) = 0$.
 By~\eqref{2012a5-eq0}, we get the equations
 \[ f((c + 1) x + (c - 1)) = f((c^2 - 1) x + 1) = f((c - 1) x + (c + 1)), \]
     which can be rewritten as
@@ -552,9 +552,9 @@ Note that we will borrow~\eqref{2012a5-eq7-4} to cover the case $\rchar(S) = 3$ 
 In this subcase,~\eqref{2012a5-eq6-5} reads as
 \[ f(x + 2) = 3 (f(x + 1) - f(x)) + f(x - 1) \quad \forall x \in R. \tag{9.1}\label{2012a5-eq9-1} \]
 Applying the above equality to~\eqref{2012a5-eq6-6} yields
-\[ f(x) (3 f(x - 1) + f(x + 1)) - (f(x - 1) + 3 f(x + 1)) (1 + f (x - 1)) = 0 \quad \forall x \in R. \tag{9.2}\label{2012a5-eq9-2} \]
+\[ f(x) (3 f(x - 1) + f(x + 1)) = (f(x - 1) + 3 f(x + 1)) (1 + f (x - 1)) \quad \forall x \in R. \tag{9.2}\label{2012a5-eq9-2} \]
 Replacing $x$ with $-x$ and using~\eqref{2012a5-eq6-1} yields
-\[ f(x) (3 f(x + 1) + f(x - 1)) - (f(x + 1) + 3 f(x - 1)) (1 + f (x + 1)) = 0 \quad \forall x \in R. \]
+\[ f(x) (3 f(x + 1) + f(x - 1)) = (f(x + 1) + 3 f(x - 1)) (1 + f (x + 1)) \quad \forall x \in R. \]
 Subtracting~\eqref{2012a5-eq9-2} from this equation yields
 \[ f(x + 1) + f(x - 1) = 2 f(x) + 2 \text{ or } f(x + 1) = f(x - 1) \quad \forall x \in R. \tag{9.3}\label{2012a5-eq9-3} \]
 
@@ -573,8 +573,7 @@ Thus,~\eqref{2012a5-eq9-4} yields a stronger result:
 \[ f(x + 1) + f(x - 1) = 2 f(x) + 2 \text{ or } f(x + 1) = f(x) = f(x - 1) = 0 \quad \forall x \in R. \tag{9.5}\label{2012a5-eq9-5} \]
 Finally, we show that the latter yields a contradiction.
 For the case $\rchar(S) = 3$, we have $f(2) = 3 = 0$.
-We can then borrow~\eqref{2012a5-eq7-4} from Step 7, which does not require $f(2) \neq 3$.
-It directly yields a contradiction.
+We can then borrow~\eqref{2012a5-eq7-4} from Step 7, which does not require $f(2) \neq 3$; it directly yields a contradiction.
 It remains to consider the case $\rchar(S) \neq 3$.
 
 By~\eqref{2012a5-eq6-2} and~\eqref{2012a5-eq0}, we have $f(2x + 1) = f(2x - 1) = 0$.

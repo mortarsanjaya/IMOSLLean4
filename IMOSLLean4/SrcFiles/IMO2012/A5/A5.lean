@@ -1,5 +1,4 @@
 import Mathlib.RingTheory.Ideal.Quotient
-import Mathlib.Logic.Lemmas
 import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F2
 import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F2e
 import IMOSLLean4.SrcFiles.IMO2012.A5.ExplicitRings.F3
@@ -82,6 +81,8 @@ inductive IsAnswer {R S : Type _} [Ring R] [Ring S] : (R → S) → Prop
   | 𝔽₄_map_comp (φ : R →+* 𝔽₄) (_ : Surjective φ.toFun)
         (c : S) (_ : c * (1 - c) = -1) :
       IsAnswer (𝔽₄Map S c ∘ φ.toFun)
+
+
 
 
 
@@ -175,7 +176,7 @@ theorem good_map_comp_hom {R R₀ S : Type _} [Ring R] [Ring R₀] [Ring S]
   h (φ x) (φ y) ▸ congr_arg₂ (λ u v ↦ f u - f v)
     (by rw [φ.map_add, φ.map_mul, φ.map_one]) (φ.map_add x y)
 
-theorem good_of_isAnswer {R S : Type _} [Ring R] [CommRing S]
+theorem good_of_IsAnswer {R S : Type _} [Ring R] [CommRing S]
     {f : R → S} (h : IsAnswer f) : good f :=
   h.recOn zero_is_good
     (good_map_comp_hom sub_one_is_good)
@@ -186,6 +187,8 @@ theorem good_of_isAnswer {R S : Type _} [Ring R] [CommRing S]
     (λ φ _ ↦ good_map_comp_hom ℤ₄Map_is_good φ)
     (λ φ _ ↦ good_map_comp_hom 𝔽₂εMap_is_good φ)
     (λ φ _ _ h ↦ good_map_comp_hom (𝔽₄Map_is_good h) φ)
+
+
 
 
 
@@ -208,7 +211,7 @@ theorem good_of_comp_hom_good_surjective {φ : R₀ →+* R} (h : Surjective φ)
 
 /-- Given `f : R → S` and `φ : R₀ →+* R` surjective,
   `f ∘ φ` is an answer if `f` is an answer. -/
-theorem isAnswerCompHom {φ : R₀ →+* R} (h : Surjective φ.toFun)
+theorem IsAnswerCompHom {φ : R₀ →+* R} (h : Surjective φ.toFun)
     {f : R → S} (h0 : IsAnswer f) : IsAnswer (f ∘ φ.toFun) :=
   h0.recOn IsAnswer.of_zero
     (λ ρ ↦ IsAnswer.hom_sub_one (ρ.comp φ))
@@ -237,8 +240,8 @@ theorem neg_map_zero_mul (x : R) : -f 0 * f x = f x := by
 
 /-- (1.1) -/
 theorem eq_zero_of_map_zero_ne_neg_one (h0 : f 0 ≠ -1) : f = 0 :=
-  funext λ x ↦ (mul_left_eq_self₀.mp <| neg_map_zero_mul h x).resolve_left λ h1 ↦
-    h0 <| neg_eq_iff_eq_neg.mp h1
+  funext λ x ↦ (mul_left_eq_self₀.mp <| neg_map_zero_mul h x).resolve_left
+    λ h1 ↦ h0 <| neg_eq_iff_eq_neg.mp h1
 
 theorem one_ne_zero_of_map_zero (h0 : f 0 = -1) : (1 : R) ≠ 0 :=
   mt (congr_arg f) <| by rw [good_map_one h, h0, zero_eq_neg]; exact one_ne_zero
@@ -265,11 +268,13 @@ theorem eq_hom_sub_one_of (h0 : ∀ x y, f (x + y) = f x + f y + 1) :
   ⟨RingHom.mk' ⟨⟨g, h2⟩, h4⟩ h3, funext λ x ↦ (add_sub_cancel (f x) 1).symm⟩
 
 /-- Corollary of the previous result -/
-theorem isAnswerOfAddOneAdditive (h0 : ∀ x y, f (x + y) = f x + f y + 1) :
-    IsAnswer f :=
+theorem IsAnswer_of_add_one_additive
+    (h0 : ∀ x y, f (x + y) = f x + f y + 1) : IsAnswer f :=
   Exists.elim (eq_hom_sub_one_of h h0) (λ φ h1 ↦ h1.symm ▸ IsAnswer.hom_sub_one φ)
 
 end Noncomm
+
+
 
 
 
@@ -290,13 +295,14 @@ theorem quasi_period_add {c d : R}
     (h0 : ∀ x, f (c * x + 1) = 0) (h1 : ∀ x, f (d * x + 1) = 0) :
     ∀ x, f ((c + d) * x + 1) = 0 := by
   rw [← quasi_period_iff h] at h0 h1 ⊢
-  intro x
-  rw [add_assoc, h0, h1, ← mul_assoc, mul_neg, ← h0]
+  intro x; rw [add_assoc, h0, h1, ← mul_assoc, mul_neg, ← h0]
 
 theorem map_quasi_period (h0 : f 0 = -1)
     {c : R} (h1 : ∀ x, f (c + x) = -f c * f x) : f c = 1 ∨ f c = -1 := by
+  -- First prove `f(-c) = f(c)`
   have h2 := map_neg_sub_map2 h c
   rw [h1, good_map_one h, mul_zero, zero_mul, sub_eq_zero] at h2
+  -- Now show that `f(c)^2 = 1`
   replace h1 := h1 (-c)
   rwa [add_neg_self, h0, h2, neg_mul, neg_inj, eq_comm, mul_self_eq_one_iff] at h1
 
@@ -307,15 +313,15 @@ def quasiPeriodIdeal : Ideal R where
   zero_mem' x := by rw [zero_mul, zero_add, good_map_one h]
   smul_mem' a b h1 x := by rw [smul_eq_mul, mul_assoc, mul_left_comm, h1]
 
-theorem period_iff {c : R} :
+theorem period_iff :
     (∀ x, f (c + x) = f x) ↔ (∀ x, f (c + x) = -f c * f x) ∧ f c = f 0 :=
   have h1 := neg_map_zero_mul h
   ⟨λ h0 ↦ have h2 : f c = f 0 := add_zero c ▸ h0 0
     ⟨λ x ↦ by rw [h0, h2, h1], h2⟩,
   λ h0 x ↦ by rw [h0.1, h0.2, h1]⟩
 
-theorem period_imp_quasi_period {c : R} (h0 : ∀ x, f (c + x) = f x) :
-    ∀ x, f (c * x + 1) = 0 :=
+theorem period_imp_quasi_period (h0 : ∀ x, f (c + x) = f x) :
+    c ∈ quasiPeriodIdeal h :=
   (quasi_period_iff h).mp ((period_iff h).mp h0).1
 
 theorem period_mul {c : R} (h0 : ∀ x, f (c + x) = f x) (d : R) :
@@ -359,6 +365,10 @@ def periodIdeal : Ideal R where
   zero_mem' x := congr_arg f <| zero_add x
   smul_mem' d c h0 := period_mul h h0 d
 
+theorem mem_periodIdeal_iff :
+    c ∈ periodIdeal h ↔ c ∈ quasiPeriodIdeal h ∧ f c = f 0 :=
+  (period_iff h).trans <| and_congr_left' (quasi_period_iff h)
+
 theorem period_equiv_imp_f_eq {a b : R}
     (h0 : Ideal.Quotient.ringCon (periodIdeal h) a b) : f a = f b :=
   sub_add_cancel a b ▸ Ideal.Quotient.eq.mp ((RingCon.eq _).mpr h0) b
@@ -374,8 +384,8 @@ theorem zero_of_periodic_periodLift (c : R ⧸ periodIdeal h) :
     (∀ x, periodLift h (c + x) = periodLift h x) → c = 0 :=
   c.induction_on λ _ h0 ↦ Ideal.Quotient.eq_zero_iff_mem.mpr λ y ↦ h0 ⟦y⟧
 
-theorem isAnswerOfPeriodLift (h0 : IsAnswer (periodLift h)) : IsAnswer f :=
-  isAnswerCompHom Ideal.Quotient.mk_surjective h0
+theorem IsAnswer_of_periodLift (h0 : IsAnswer (periodLift h)) : IsAnswer f :=
+  IsAnswerCompHom Ideal.Quotient.mk_surjective h0
 
 
 
@@ -403,8 +413,8 @@ theorem is_period_or_eq_quasi_nonperiod {d : R} (h3 : d ∈ quasiPeriodIdeal h) 
     rw [← add_sub_right_comm, add_sub_assoc, map_quasi_period_add h h0 h3 h4,
       ← map_quasi_period_add h h0 h1 h2, add_sub_cancel'_right]
 
-theorem mul_nonquasi_period_is_nonperiod
-    {d : R} (h3 : d ∉ quasiPeriodIdeal h) : d * c ∉ periodIdeal h := by
+theorem mul_nonquasi_period_is_nonperiod (h3 : d ∉ quasiPeriodIdeal h) :
+    d * c ∉ periodIdeal h := by
   obtain ⟨x, h3⟩ := not_forall.mp h3
   refine not_forall.mpr ⟨d * x + 1, λ h4 ↦ ?_⟩
   have h5 := map_quasi_period_add h h0 h1 h2
@@ -432,13 +442,12 @@ theorem equiv_mod_periodIdeal (x : R) :
 
 end QuasiPeriod
 
-theorem cases_of_nonperiod_quasi_period (h0 : ∀ c, (∀ x, f (c + x) = f x) → c = 0)
+theorem cases_of_nonperiod_quasi_period (h0 : ∀ c ∈ periodIdeal h, c = 0)
     {c : R} (h1 : f 0 = -1) (h2 : c ∈ quasiPeriodIdeal h) (h3 : c ≠ 0) (x : R) :
-    (x = 0 ∨ x = c) ∨ x = 1 ∨ x = c + 1 :=
-  (equiv_mod_periodIdeal h h1 h2 (mt (h0 c) h3) x).imp
-    (Or.imp (h0 x) (λ h5 ↦ eq_of_sub_eq_zero <| h0 _ h5))
-    (Or.imp (λ h5 ↦ eq_of_sub_eq_zero <| h0 _ h5)
-      (λ h5 ↦ eq_of_sub_eq_zero <| h0 _ h5))
+    (x = 0 ∨ x = c) ∨ x = 1 ∨ x = c + 1 := by
+  refine (equiv_mod_periodIdeal h h1 h2 (mt (h0 c) h3) x).imp
+    (Or.imp (h0 x) ?_) (Or.imp ?_ ?_)
+  all_goals exact λ h5 ↦ eq_of_sub_eq_zero <| h0 _ h5
 
 end Quot
 
@@ -446,10 +455,10 @@ end Quot
 
 
 
-/-! ## Step 3: Case 1: `f_ ≠ 0` -/
 
-set_option profiler true
-set_option profiler.threshold 50
+
+/-! ## Step 3: Case 1: `f(-1) ≠ 0` -/
+
 section Step3
 
 variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
@@ -494,36 +503,25 @@ theorem case1_map_two_mul_add_one (x : R) :
 
 /-- Main claim -/
 theorem case1_map_neg_one_cases : f (-1) = -2 ∨ f (-1) = 1 := by
-  sorry
-/-
-  have h1 : f (-1) = -f 3 :=
-    case1_map_neg_add_one h h0 (1 + 1 : R) ▸
-      sub_eq_neg_add (1 : R) (1 + 1) ▸ sub_add_cancel'' (1 : R) 1 ▸ rfl
+  have h1 : -f (-1) = f (2 + 1) := by
+    rw [neg_eq_iff_eq_neg, ← one_add_one_eq_two,
+      ← case1_map_neg_add_one h h0, neg_add, neg_add_cancel_comm]
   have h2 : f 2 = 1 := case1_map_two h h0
+  -- `f(4) = C^2 - 1`, where `C = f(-1)`
   have h3 := case1_map_add_one_add_map_sub_one h h0
-  have h4 := (neg_eq_iff_eq_neg.mpr h1).symm
-  have h5 : f (2 + 2) = -f _ + 1 :=
-    mul_right_cancel₀ h0 <|
-      (neg_eq_iff_eq_neg.mpr <| h3 (2 + 2)).symm.trans <|
-        (neg_add _ _).trans <|
-          (add_sub_assoc (2 : R) 2 1).symm ▸
-            (add_sub_cancel (1 : R) 1).symm ▸
-              two_mul (2 : R) ▸
-                h4 ▸
-                  (add_one_mul (f 3) (f _)).symm ▸
-                    congr_arg₂ _ (neg_eq_iff_eq_neg.mpr <| case1_map_two_mul_add_one h h0 2)
-                      h1.symm
-  suffices f (2 + (1 + 1)) = (-f _ + 1) * (-f _ - 1) from
-    (mul_right_eq_self₀.mp <| this.symm.trans h5).imp
-      (λ h6 => neg_eq_iff_eq_neg.mp <| eq_add_of_sub_eq h6) neg_add_eq_zero.mp
-  mul_self_sub_mul_self (-f _) 1 ▸
-    (mul_neg (-f _) (f _)).symm ▸
-      h4 ▸
-        h3 3 ▸
-          eq_sub_of_add_eq
-            (congr_arg₂ _ (add_assoc (2 : R) 1 1 ▸ rfl)
-              ((mul_one _).trans <| (add_sub_cancel (2 : R) 1).symm ▸ h2.symm))
--/
+  have h4 := h3 (2 + 1)
+  rw [add_sub_cancel, h2, ← h1, neg_mul, neg_neg, ← eq_sub_iff_add_eq] at h4
+  -- Double-evaluating `f(5)` gives `(C - 1) C = -(C^2 - 1) C`, where `C = f(-1)`
+  have h5 := h3 (2 + 1 + 1)
+  rw [add_sub_cancel, h4, ← h1, ← neg_mul, add_assoc (2 : R), ← one_add_one_eq_two,
+    ← two_mul, eq_add_of_sub_eq (h _ _), ← add_assoc, h4, one_add_one_eq_two, h2,
+    one_mul, add_sub_cancel'_right, ← sub_eq_add_neg, ← sub_one_mul] at h5
+  -- Finishing
+  apply mul_right_cancel₀ h0 at h5
+  replace h3 := sq_sub_sq (f (-1)) 1
+  rwa [one_pow, sq, ← neg_eq_iff_eq_neg.mpr h5,
+    ← neg_one_mul, mul_eq_mul_right_iff, sub_eq_zero, eq_comm,
+    ← eq_sub_iff_add_eq, ← neg_add', one_add_one_eq_two] at h3
 
 /-- (3.7) -/
 theorem case1_map_add_one_ne_zero_imp {x : R} (h1 : f (x + 1) ≠ 0) :
@@ -536,65 +534,63 @@ theorem case1_map_add_one_ne_zero_imp {x : R} (h1 : f (x + 1) ≠ 0) :
 /-- (3.8) -/
 theorem case1_map_add_one_eq_zero_imp {x : R} (h1 : f (x + 1) = 0) :
     f x = -1 ∧ f (-x) = -1 := by
+  -- Reduce to `f(x) = -1` via `f(-x) = f(x)`
   have h2 : f (-x) = f x := by rw [← sub_eq_zero, map_neg_sub_map2 h, h1, zero_mul]
   rw [h2, and_self]
+  -- Prove `f(x) f(-1) = f(x) f(-x - 1)`
   have h3 := case1_map_two_mul_add_one h h0
   have h4 := case1_map_add_main_eq1 h x (x + 1)
   rw [h1, mul_zero, sub_zero, ← add_assoc, ← two_mul, h3, h1, zero_mul,
     neg_zero, zero_sub, ← sub_add_cancel'' (1 : R), add_assoc,
     one_add_one_eq_two, ← mul_add_one _ x, ← neg_add_eq_sub, ← mul_neg,
     h3, neg_neg, neg_add_eq_sub, sub_add_cancel'', h2] at h4
+  -- Finish with (3.6)
   have h5 := case1_map_add_main_eq2 h x (-(x + 1))
   rwa [neg_neg, h1, mul_zero, zero_sub, neg_inj, add_right_comm, add_neg_self,
     ← h4, mul_eq_mul_right_iff, case1_map_zero h h0, or_iff_left h0, eq_comm] at h5
 
 end Step3
 
-#exit
 
 
 
 
 
-/-! ## Step 4: Subcase 1.1: `f_ = -2 ≠ 0` -/
+
+/-! ## Step 4: Subcase 1.1: `f(-1) = -2 ≠ 0` -/
 
 section Step4
 
 /-- Auxiliary lemma: `2 ≠ 0` -/
-theorem case1_1_S_two_ne_zero {S : Type _} [AddGroup S] {a b : S} (h : a ≠ 0) (h0 : a = -b) :
-    (b : S) ≠ 0 :=
-  neg_ne_zero.mp λ h1 => h <| h0.trans h1
+theorem case1_1_S_two_ne_zero {S : Type _} [AddGroup S]
+    {a b : S} (h : a ≠ 0) (h0 : a = -b) : (b : S) ≠ 0 :=
+  neg_ne_zero.mp λ h1 ↦ h <| h0.trans h1
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
-  (h0 : f (-1) ≠ 0) (h1 : f (-1) = -2)
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f) (h0 : f (-1) ≠ 0) (h1 : f (-1) = -2)
 
 /-- (4.1) -/
 theorem case1_1_lem1 (x : R) : f (-x) + f x = -2 :=
-  (ne_or_eq (f (x + 1)) 0).elim (λ h2 => h1 ▸ case1_map_add_one_ne_zero_imp h h0 h2) λ h2 =>
-    let h3 := case1_map_add_one_eq_zero_imp h h0 h2
-    (congr_arg₂ _ h3.2 h3.1).trans (neg_add _ _).symm
+  (ne_or_eq (f (x + 1)) 0).elim
+    (λ h2 ↦ h1 ▸ case1_map_add_one_ne_zero_imp h h0 h2)
+    (λ h2 ↦ by have h3 := case1_map_add_one_eq_zero_imp h h0 h2
+               rw [h3.1, h3.2, ← neg_add, one_add_one_eq_two])
 
 /-- (4.2) -/
-theorem case1_1_lem2 (x : R) : f (x + 1) = f x + 1 :=
-  eq_add_of_sub_eq <|
-    mul_right_cancel₀ h0 <|
-      (sub_one_mul _ _).trans <|
-        map_neg_sub_map2 h x ▸
-          h1.symm ▸
-            (mul_neg (f x) 2).symm ▸
-              (mul_two (f x)).symm ▸
-                case1_1_lem1 h h0 h1 x ▸
-                  sub_sub (f (-x) - f x) (f (-x)) (f x) ▸
-                    (sub_sub_cancel_left (f (-x)) (f x)).symm ▸ (neg_add' (f x) (f x)).symm
+theorem case1_1_lem2 (x : R) : f (x + 1) = f x + 1 := by
+  rw [← sub_eq_iff_eq_add]
+  apply mul_right_cancel₀ h0
+  rw [sub_one_mul, ← map_neg_sub_map2 h, h1, mul_neg, mul_two,
+    ← case1_1_lem1 h h0 h1 x, ← sub_sub, sub_sub_cancel_left, neg_add']
 
-/-- Solution for the current subcase (`hom_sub_one: x ↦ φ(x) - 1`) -/
-theorem case11IsAnswer : IsAnswer f :=
-  isAnswerOfAddOneAdditive h (case1_map_zero h h0) λ x y =>
-    by
-    have h2 := λ t => eq_sub_of_add_eq (case1_1_lem1 h h0 h1 t)
+/-- Solution for the current subcase (`x ↦ φ(x) - 1`) -/
+theorem case1_1_IsAnswer : IsAnswer f :=
+  IsAnswer_of_add_one_additive h λ x y ↦ by
+    apply mul_right_cancel₀ (case1_1_S_two_ne_zero h0 h1)
+    have h2 := λ t ↦ eq_sub_of_add_eq (case1_1_lem1 h h0 h1 t)
     have h3 := case1_map_add_main_eq2 h x y
-    rw [h1, h2, h2, case1_1_lem2 h h0 h1, mul_neg, neg_neg, add_one_mul] at h3
-    refine' mul_right_cancel₀ (case1_1_S_two_ne_zero h0 h1) ((eq_sub_of_add_eq h3).trans _)
+    rw [h1, case1_1_lem2 h h0 h1, mul_neg, neg_neg, add_one_mul (α := S)] at h3
+    rw [eq_sub_of_add_eq h3, h2, h2]
     ring
 
 end Step4
@@ -603,70 +599,69 @@ end Step4
 
 
 
-/-! ## Step 5: Subcase 1.2: `f_ = 1 ≠ -2` -/
+
+
+/-! ## Step 5: Subcase 1.2: `f(-1)= 1 ≠ -2` -/
 
 section Step5
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
-  (h0 : f (-1) ≠ 0) (h1 : f (-1) ≠ -2)
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f) (h0 : f (-1) ≠ 0) (h1 : f (-1) ≠ -2)
+    (h2 : f (-1) = 1) (h3 : ∀ c ∈ periodIdeal h, c = 0)
 
 /-- (5.1) -/
-theorem case1_2_lem1 (h1 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) {c : R} (h2 : f (c + 1) = 0) :
-    c = 0 :=
-  h1 c λ x => by
-    let h4 := case1_map_add_main_eq2 h c (x - 1)
-    let h5 := case1_map_add_one_eq_zero_imp h h0 h2
-    rw [h5.1, h5.2, ← mul_sub, neg_one_mul, neg_inj, map_neg_sub_map2 h, add_assoc, sub_add_cancel,
-        mul_eq_mul_right_iff] at h4  <;>
-      exact h4.resolve_right h0
-
-variable (h2 : f (-1) = 1) (h3 : ∀ c, (∀ x, f (c + x) = f x) → c = 0)
+theorem case1_2_lem1 (h1 : ∀ c ∈ periodIdeal h, c = 0)
+    {c : R} (h2 : f (c + 1) = 0) : c = 0 :=
+  h1 c λ x ↦ by
+    have h4 := case1_map_add_main_eq2 h c (x - 1)
+    have h5 := case1_map_add_one_eq_zero_imp h h0 h2
+    rw [h5.1, h5.2, ← mul_sub, neg_one_mul, neg_inj, map_neg_sub_map2 h,
+      add_assoc, sub_add_cancel, mul_eq_mul_right_iff] at h4
+    exact h4.resolve_right h0
 
 /-- (5.2) -/
-theorem case1_2_lem2 (x : R) : f (x + 1) + f (x - 1) + f x = 0 :=
-  add_eq_zero_iff_eq_neg.mpr <| mul_one (f x) ▸ h2 ▸ case1_map_add_one_add_map_sub_one h h0 x
+theorem case1_2_lem2 (x : R) : f (x + 1) + f (x - 1) + f x = 0 := by
+  rw [add_eq_zero_iff_eq_neg, case1_map_add_one_add_map_sub_one h h0, h2, mul_one]
 
 /-- `3 = 0` in `R` -/
 theorem case1_2_lem3 : (3 : R) = 0 :=
-  h3 (3 : R) <|
-    let h4 x := eq_neg_of_add_eq_zero_left (case1_2_lem2 h h0 h1 h2 h3 x)
-    λ x =>
-    add_comm x 3 ▸
-      add_assoc x 2 1 ▸
-        (eq_add_neg_of_add_eq <| h4 _).trans
-          (add_assoc x 1 1 ▸
-            (add_sub_cancel (x + 1) 1).symm ▸
-              h4 (x + 1) ▸ (add_sub_cancel x 1).symm ▸ neg_add_cancel_left _ _)
+  h3 (3 : R) λ x ↦ by
+    have h4 y : f (y + 1) = -f y - f (y - 1) :=
+      eq_sub_of_add_eq <| eq_neg_of_add_eq_zero_left (case1_2_lem2 h h0 h2 y)
+    rw [add_comm, ← two_add_one_eq_three, ← add_assoc, h4, ← one_add_one_eq_two,
+      ← add_assoc, add_sub_cancel, ← neg_add', h4, add_sub_cancel,
+      ← add_sub_right_comm, neg_add_self, zero_sub, neg_neg]
 
 /-- (5.3) -/
 theorem case1_2_lem4 (x : R) (h4 : x ≠ 0) : f (-x) + f x = 1 :=
   h2 ▸ case1_map_add_one_ne_zero_imp h h0 (mt (case1_2_lem1 h h0 h3) h4)
 
 /-- The main lemma for the subcase -/
-theorem case1_2_lem5 (x : R) : x = 0 ∨ x = 1 ∨ x = -1 :=
-  by
-  by_contra' h4
-  rw [← add_eq_zero_iff_eq_neg] at h4
-  have h5 := case1_2_lem4 h h0 h1 h2 h3
-  have h6 := congr_arg₂ Add.add (h5 (x + 1) h4.2.2) (h5 (x - 1) <| sub_ne_zero_of_ne h4.2.1)
-  have h7 := λ x => eq_neg_of_add_eq_zero_left (case1_2_lem2 h h0 h1 h2 h3 x)
-  rw [add_add_add_comm, h7, add_comm (f (-(x + 1))), neg_sub', sub_neg_eq_add, neg_add', h7, ←
-    neg_add, ← bit0, h5 x h4.1] at h6
-  exact h1 (h2.trans <| neg_eq_iff_eq_neg.mp h6)
+theorem case1_2_lem5 (x : R) : x = 0 ∨ x = 1 ∨ x = -1 := by
+  by_contra h4
+  rw [not_or, not_or, ← add_eq_zero_iff_eq_neg] at h4
+  have h5 := case1_2_lem4 h h0 h2 h3
+  have h6 := case1_2_lem2 h h0 h2
+  replace h6 : _ + _ = 0 + 0 := congr_arg₂ (· + ·) (h6 (-x)) (h6 x)
+  rw [add_zero, add_add_add_comm, h5 x h4.1, add_comm (f (x + 1)),
+    add_add_add_comm, ← neg_add', h5 _ h4.2.2, neg_add_eq_sub, ← neg_sub,
+    h5 _ (sub_ne_zero_of_ne h4.2.1), one_add_one_eq_two] at h6
+  apply h1; rwa [h2, eq_neg_iff_add_eq_zero, add_comm]
 
-/-- Solution for the current subcase (`𝔽₃_map1`) -/
-theorem case12QuotIsAnswer : IsAnswer f :=
-  let X := case1_map_zero h h0
-  let X0 : Bijective (𝔽₃.castHom <| case1_2_lem3 h h0 h1 h2 h3) :=
-    ⟨𝔽₃.castHom_injective _ (one_ne_zero_of_map_zero h X), λ x =>
-      (case1_2_lem5 h h0 h1 h2 h3 x).elim (λ h4 => ⟨𝔽₃.𝔽₃0, h4.symm⟩) λ h4 =>
-        h4.elim (λ h4 => ⟨𝔽₃.𝔽₃1, h4.symm⟩) λ h4 => ⟨𝔽₃.𝔽₃2, h4.symm⟩⟩
-  let π := (RingEquiv.ofBijective _ X0).symm
-  suffices f = 𝔽₃Map1 S ∘ π from this.symm ▸ IsAnswer.𝔽₃_map1_comp π.toRingHom π.Surjective
-  (MulEquiv.eq_comp_symm _ _ _).mpr <|
-    funext λ x =>
-      match x with
-      | 𝔽₃.𝔽₃0 => X
+/-- Solution for the current subcase (`𝔽₃Map1`) -/
+theorem case1_2_quot_IsAnswer : IsAnswer f :=
+  -- `𝔽₃ → R/I` is bijective
+  have X : Bijective (𝔽₃.castHom <| case1_2_lem3 h h0 h2 h3) :=
+    ⟨𝔽₃.castHom_injective _ (one_ne_zero_of_map_zero h (case1_map_zero h h0)),
+    λ x ↦ by rcases case1_2_lem5 h h0 h1 h2 h3 x with h4 | h4 | h4
+             exacts [⟨𝔽₃.𝔽₃0, h4.symm⟩, ⟨𝔽₃.𝔽₃1, h4.symm⟩, ⟨𝔽₃.𝔽₃2, h4.symm⟩]⟩
+  -- Factor `f` out as `𝔽₃Map1 ∘ π`
+  let π := (RingEquiv.ofBijective _ X).symm
+  suffices f = 𝔽₃Map1 S ∘ π.toFun
+    from this.symm ▸ IsAnswer.𝔽₃_map1_comp π.toRingHom π.surjective
+  (MulEquiv.eq_comp_symm _ _ _).mpr <| funext λ x ↦
+    match x with
+      | 𝔽₃.𝔽₃0 => case1_map_zero h h0
       | 𝔽₃.𝔽₃1 => good_map_one h
       | 𝔽₃.𝔽₃2 => h2
 
@@ -676,219 +671,225 @@ end Step5
 
 
 
-/-! ## Step 6: Case 2: `f_ = 0` -/
+
+
+/-! ## Step 6: Case 2: `f(-1) = 0` -/
 
 section Step6
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
-  (h0 : f (-1) = 0)
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f) (h0 : f (-1) = 0)
 
 /-- (6.1) `f` is even -/
 theorem case2_map_even (x : R) : f (-x) = f x :=
-  eq_of_sub_eq_zero <| (map_neg_sub_map2 h x).trans <| mul_eq_zero_of_right _ h0
+  by rw [← sub_eq_zero, map_neg_sub_map2 h, h0, mul_zero]
 
 /-- (6.2) -/
-theorem case2_good_alt (x y : R) : f (x * y - 1) - f (x - y) = f x * f y :=
-  suffices -(x * -y + 1) = x * y - 1 from
-    case2_map_even h h0 y ▸
-      h x (-y) ▸
-        congr_arg₂ _ ((congr_arg f this.symm).trans <| case2_map_even h h0 _)
-          (congr_arg f <| sub_eq_add_neg x y)
-  (neg_add' _ _).trans <| congr_arg₂ _ ((neg_mul _ _).symm.trans <| neg_mul_neg x y) rfl
+theorem case2_good_alt (x y : R) : f (x * y - 1) - f (x - y) = f x * f y := by
+  have h1 := case2_map_even h h0
+  rw [← h1 y, ← h, ← sub_eq_add_neg, mul_neg, neg_add_eq_sub, ← neg_sub 1, h1]
 
 /-- (6.3) -/
-theorem case2_map_sq_sub_one (h3 : f 0 = -1) (x : R) : f (x ^ 2 - 1) = f x ^ 2 - 1 :=
-  (sq x).symm ▸ (eq_add_of_sub_eq <| case2_good_alt h h0 x x).trans <|
-    (congr_arg₂ _ (sq (f x)).symm ((congr_arg f <| sub_self x).trans h3)).trans
-      (sub_eq_add_neg _ _).symm
+theorem case2_map_sq_sub_one (h3 : f 0 = -1) (x : R) :
+    f (x ^ 2 - 1) = f x ^ 2 - 1 := by
+  rw [sq, sq, ← case2_good_alt h h0, sub_self, h3, sub_neg_eq_add, add_sub_cancel]
 
 /-- (6.4) -/
-theorem case2_map_self_mul_add_one_sub_one (x : R) : f (x * (x + 1) - 1) = f x * f (x + 1) :=
-  (eq_add_of_sub_eq <| case2_good_alt h h0 x (x + 1)).trans <|
-    add_right_eq_self.mpr <| h0 ▸ congr_arg f <| sub_add_cancel' x 1
+theorem case2_map_self_mul_add_one_sub_one (x : R) :
+    f (x * (x + 1) - 1) = f x * f (x + 1) := by
+  rw [← case2_good_alt h h0, sub_add_cancel', h0, sub_zero]
 
 /-- (6.5) -/
-theorem case2_map_add_two_eq (x : R) : f (x + 2) = f 2 * (f (x + 1) - f x) + f (x - 1) :=
-  by
-  have h1 : f (-(2 * x + 1)) = f (2 * -(x + 1) + 1) := congr_arg f (by ring)
+theorem case2_map_add_two_eq (x : R) :
+    f (x + 2) = f 2 * (f (x + 1) - f x) + f (x - 1) := by
   have h2 := case2_map_even h h0
-  have h3 := λ t => eq_add_of_sub_eq (h 2 t)
-  rw [h2, h3, h3, h2, ← eq_sub_iff_add_eq', add_sub_right_comm, ← mul_sub] at h1
-  refine' (congr_arg f <| add_comm _ _).trans (h1.trans <| congr_arg₂ _ rfl _)
-  rw [bit0, ← sub_eq_add_neg, add_sub_add_right_eq_sub, ← neg_sub, h2]
+  have h3 := λ t ↦ eq_add_of_sub_eq (h 2 t)
+  rw [add_comm, mul_sub, ← add_sub_right_comm, eq_sub_iff_add_eq', ← h3,
+    ← h2, ← add_sub_cancel (2 * x + 1) 1, neg_sub', sub_neg_eq_add, add_assoc,
+    one_add_one_eq_two, ← mul_add_one 2 x, ← mul_neg, h3, h2, add_right_inj, ← h2,
+    ← sub_eq_add_neg, neg_sub, ← one_add_one_eq_two, add_sub_add_right_eq_sub]
 
 /-- Main claim -/
-theorem case2_map_two_cases (h1 : f 0 = -1) : f 2 = -1 ∨ f 2 = 1 ∨ f 2 = 3 ∨ f 2 = 0 :=
-  by
-  suffices (f 2 + 1) * ((f 2 - 1) * ((f 2 - 3) * f 2)) = 0 from
-    (mul_eq_zero.mp this).imp eq_neg_of_add_eq_zero_left λ this =>
-      (mul_eq_zero.mp this).imp eq_of_sub_eq_zero λ this =>
-        (mul_eq_zero.mp this).imp_left eq_of_sub_eq_zero
+theorem case2_map_two_cases (h1 : f 0 = -1) :
+    f 2 = 1 ∨ f 2 = -1 ∨ f 2 = 3 ∨ f 2 = 0 := by
+  -- `f(3) = f(2)^2 - 1`
   have h2 := case2_map_sq_sub_one h h0 h1 2
-  rw [sq, two_mul, add_sub_assoc, bit0, add_sub_cancel, ← bit0] at h2
+  rw [sq, two_mul, ← one_add_one_eq_two, ← add_assoc,
+    add_sub_cancel, one_add_one_eq_two] at h2
+  rw [← or_assoc, ← sq_eq_sq_iff_eq_or_eq_neg, one_pow, ← sub_eq_zero, ← h2]
+  -- `f(4) = (f(2) - 1) f(3) - 1`
   have h3 := case2_map_add_two_eq h h0
   have h4 := h3 (1 + 1)
-  rw [add_sub_cancel, ← bit0, good_map_one h, add_zero, h2] at h4
-  have h5 := case2_map_self_mul_add_one_sub_one h h0 2
-  rw [two_mul, add_sub_assoc, add_sub_cancel, h3, add_sub_cancel, add_assoc, ← bit0, h4, h2, ←
-    sub_eq_zero] at h5
-  rw [← h5]; ring
+  rw [add_sub_cancel, good_map_one h, add_zero, one_add_one_eq_two, mul_sub, ← sq,
+    ← sub_sub_sub_cancel_right _ _ 1, ← h2, sub_right_comm, ← sub_one_mul] at h4
+  -- `f(5) = f(2) f(3) = f(2) (f(2) - 2) f(3)`
+  replace h2 := case2_map_self_mul_add_one_sub_one h h0 (1 + 1)
+  rw [mul_add_one (1 + 1 : R), ← add_assoc,
+    add_sub_cancel, one_add_one_eq_two] at h2
+  specialize h3 (2 + 1)
+  rwa [add_sub_cancel, add_right_comm, ← two_mul, h2, add_assoc, one_add_one_eq_two,
+    ← mul_add_one (f 2), ← add_sub_right_comm, h4, sub_add_cancel, ← sub_one_mul,
+    mul_eq_mul_left_iff, eq_comm, mul_left_eq_self₀, sub_sub, one_add_one_eq_two,
+    sub_eq_iff_eq_add', two_add_one_eq_three, or_assoc, or_left_comm] at h3
 
 /-- (6.6) -/
 theorem case2_special_identity (x : R) :
     f x * f (x + 1) - f (x - 1) * f (x + 2) = f x * f 2 + f (x + 2) := by
-  calc
-    f x * f (x + 1) - f (x - 1) * f (x + 2) =
-        f (x * (x + 1) - 1) - (f ((x - 1) * (x + 2) + 1) - f (x - 1 + (x + 2))) :=
-      congr_arg₂ _ (case2_map_self_mul_add_one_sub_one h h0 x).symm (h _ _).symm
-    _ = f (x * (x + 1) - 1) - f ((x - 1) * (x + 2) + 1) + f (x - 1 + (x + 2)) :=
-      (sub_add _ _ _).symm
-    _ = 0 + f (x * 2 + 1) :=
-      (congr_arg₂ _ (sub_eq_zero_of_eq <| congr_arg f <| by ring) (congr_arg f <| by ring))
-    _ = f x * f 2 + f (x + 2) := (zero_add _).trans <| eq_add_of_sub_eq (h x 2)
+  rw [← case2_map_self_mul_add_one_sub_one h h0, ← h, ← h, sub_add_cancel,
+    mul_two, ← sub_add, ← one_add_one_eq_two, ← add_assoc,
+    sub_add_add_cancel, ← add_assoc, add_left_eq_self, sub_eq_zero]
+  apply congr_arg f
+  rw [sub_eq_iff_eq_add, mul_add_one (x - 1), add_assoc _ (x - 1),
+    sub_add_cancel, add_assoc, sub_one_mul, sub_add_cancel]
 
 end Step6
 
-/-! ## Step 7: Subcase 2.1: `f_ = 0` and `f(2) = 0 ≠ 3` -/
 
+
+
+
+
+
+/-! ## Step 7: Subcase 2.1: `f(-1)= 0` and `f(2) = 0 ≠ 3` -/
 
 section Step7
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
-  (h0 : f (-1) = 0)
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f) (h0 : f (-1) = 0)
 
 /-- If `f(2) = 0`, then `3 ∈ I` -/
-theorem case2_1_lem1 (h1 : f 2 = 0) (x : R) : f (3 + x) = f x :=
-  (congr_arg f <| add_rotate 2 1 x).trans <|
-    (case2_map_add_two_eq h h0 _).trans <|
-      (add_sub_cancel' 1 x).symm ▸ add_left_eq_self.mpr <| mul_eq_zero_of_left h1 _
+theorem case2_1_lem1 (h1 : f 2 = 0) : 3 ∈ periodIdeal h := λ x ↦ by
+  rw [← two_add_one_eq_three, add_rotate, case2_map_add_two_eq h h0,
+    h1, zero_mul, zero_add, add_sub_cancel']
+
 
 section ThreeEqZero
 
 variable (h1 : (3 : R) = 0)
 
 /-- (7.1) -/
-theorem case2_1_lem2 (x : R) : f x * f (x + 1) - f (x - 1) ^ 2 = f (x - 1) :=
-  sub_eq_of_eq_add <|
-    (eq_add_of_sub_eq <| case2_special_identity h h0 x).symm ▸
-      (eq_neg_of_add_eq_zero_left h1).symm ▸
-        sub_eq_add_neg x 1 ▸
-          h0.symm ▸
-            (mul_zero (f x)).symm ▸ sq (f (x - 1)) ▸ (zero_add (f (x - 1))).symm ▸ rfl
+theorem case2_1_lem2 (x : R) : f x * f (x + 1) - f (x - 1) ^ 2 = f (x - 1) := by
+  rw [← two_add_one_eq_three, add_eq_zero_iff_eq_neg] at h1
+  have h2 := case2_special_identity h h0 x
+  rwa [h1, h0, mul_zero, zero_add, ← sub_eq_add_neg, ← sq] at h2
 
 /-- (7.1) with `x` replaced by `x + 1` -/
-theorem case2_1_lem3 (x : R) : f (x + 1) * f (x - 1) - f x ^ 2 = f x :=
-  sub_eq_of_eq_add <|
-    (sub_eq_add_neg x 1).symm ▸
-      eq_neg_of_add_eq_zero_left h1 ▸
-        add_assoc x 1 1 ▸
-          (eq_add_of_sub_eq <| case2_1_lem2 h h0 h1 (x + 1)).trans ((add_sub_cancel x 1).symm ▸ rfl)
+theorem case2_1_lem3 (x : R) : f (x + 1) * f (x - 1) - f x ^ 2 = f x := by
+  have h2 := case2_1_lem2 h h0 h1 (x + 1)
+  rw [← two_add_one_eq_three, add_eq_zero_iff_eq_neg] at h1
+  rwa [add_sub_cancel, add_assoc, one_add_one_eq_two, h1, ← sub_eq_add_neg] at h2
 
 /-- (7.2) -/
-theorem case2_1_lem4 (x : R) : f (x - 1) + f x + f (x + 1) = -1 ∨ f x = f (x - 1) :=
-  by
-  suffices (f (x - 1) + f x + f (x + 1) + 1) * (f x - f (x - 1)) = 0 from
-    (mul_eq_zero.mp this).imp eq_neg_of_add_eq_zero_left eq_of_sub_eq_zero
-  calc
-    _ = f x * f (x + 1) - f (x - 1) ^ 2 - (f (x + 1) * f (x - 1) - f x ^ 2) - (f (x - 1) - f x) :=
-      by ring
-    _ = 0 :=
-      sub_eq_zero_of_eq <| congr_arg₂ Sub.sub (case2_1_lem2 h h0 h1 x) (case2_1_lem3 h h0 h1 x)
+theorem case2_1_lem4 (x : R) :
+    f (x - 1) + f x + f (x + 1) = -1 ∨ f x = f (x - 1) := by
+  have h2 : _ - _ = _ - _ :=
+    congr_arg₂ _ (case2_1_lem2 h h0 h1 x) (case2_1_lem3 h h0 h1 x)
+  rwa [sub_sub_sub_comm, mul_comm, ← mul_sub, sub_eq_iff_eq_add,
+    sq_sub_sq, ← one_add_mul (α := S), ← neg_sub (f x), mul_neg,
+    ← neg_mul, mul_eq_mul_right_iff, sub_eq_zero, eq_neg_iff_add_eq_zero,
+    add_comm, add_assoc, add_eq_zero_iff_neg_eq, eq_comm] at h2
 
 /-- (7.3) -/
-theorem case2_1_lem5 {c : R} (h2 : f (c + 1) = 0) (h3 : f (c - 1) = 0) : ∀ x, f (c + x) = f x :=
-  let h4 : (2 : R) = -1 := eq_neg_of_add_eq_zero_left h1
-  suffices ∀ x, f (x + 1 - (c - 1)) = f (x + 1 + (c + 1)) from λ x =>
-    by
-    let h5 := this (x - (c + 1) - 1)
-    rwa [sub_add_cancel, sub_add_cancel, sub_sub, add_add_sub_cancel, ← two_mul, h4, neg_one_mul,
-      sub_neg_eq_add, add_comm] at h5
-  λ x =>
-  (eq_of_sub_eq_zero <|
-          (case2_good_alt h h0 (x + 1) (c - 1)).trans (mul_eq_zero_of_right _ h3)).symm.trans <|
-    by
-    let h5 : ∀ x y : R, f y = 0 → f (x * y + 1) = f (x + y) := λ x y h5 =>
-      eq_of_sub_eq_zero <| (h x y).trans (mul_eq_zero_of_right _ h5)
-    rw [← h5 _ _ h2, add_one_mul, add_sub_assoc, sub_sub, add_one_mul, add_assoc, add_assoc, ← bit0,
-      h4, sub_neg_eq_add, ← sub_eq_add_neg, ← h5 _ _ h3, ← h5 _ _ h2, mul_right_comm]
+theorem case2_1_lem5 {c : R} (h2 : f (c + 1) = 0) (h3 : f (c - 1) = 0) :
+    c ∈ periodIdeal h := λ x ↦ by
+  rw [← two_add_one_eq_three, add_eq_zero_iff_eq_neg, ← one_add_one_eq_two] at h1
+  let y := x - c - 1 - 1
+  -- `f (y (c - 1) + (c + 1)) = f (y + 2 - c)`
+  have h4 := case2_good_alt h h0 (y + 1) (c - 1)
+  rw [h3, mul_zero, sub_eq_zero, add_one_mul y,
+    add_sub_assoc, sub_sub, h1, sub_neg_eq_add] at h4
+  -- `f (y (c + 1) + (c - 1)) = f (y + 2 + c)`
+  have h5 := h (y * (c - 1)) (c + 1)
+  rw [h2, mul_zero, sub_eq_zero, h4, mul_right_comm,
+    eq_add_of_sub_eq (h _ _), h3, mul_zero, zero_add] at h5
+  -- Finish by expressing `f(y (c^2 - 1) + 1)` in two ways
+  replace h4 := h (y + 1) (c + 1)
+  rwa [h2, mul_zero, sub_eq_zero, add_one_mul y, add_assoc, add_assoc,
+    h1, ← sub_eq_add_neg, h5, sub_add_cancel, sub_sub_sub_cancel_right,
+    sub_add_add_cancel, sub_add_cancel, sub_sub, ← two_mul,
+    ← one_add_one_eq_two, h1, neg_one_mul, sub_neg_eq_add, add_comm] at h4
 
 end ThreeEqZero
 
+
 section Quotient
 
-variable (h1 : f 2 = 0) (h2 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) (h3 : f 0 = -1)
+variable (h1 : f 2 = 0) (h2 : ∀ c ∈ periodIdeal h, c = 0)
+  (h3 : f 0 = -1) (h4 : f 2 ≠ 3)
 
 /-- (7.4) -/
-theorem case2_1_lem6 (x : R) : f (x - 1) + f x + f (x + 1) = -1 :=
-  by
-  have h4 := h2 3 (case2_1_lem1 h h0 h1)
+theorem case2_1_lem6 (x : R) : f (x - 1) + f x + f (x + 1) = -1 := by
+  -- Restrict to case `f(x) = f(x - 1)`
+  replace h4 := h2 3 (case2_1_lem1 h h0 h1)
   have h5 := case2_1_lem4 h h0 h4
-  refine' (h5 x).elim id λ h6 => _
+  refine (h5 x).elim id λ h6 ↦ ?_
+  -- Restrict to case `f(x) = f(x - 1) = f(x + 1)`
+  replace h2 : (1 + 1 : R) = -1 := by
+    rwa [one_add_one_eq_two, eq_neg_iff_add_eq_zero, two_add_one_eq_three]
   have h7 := h5 (x - 1)
-  rw [sub_add_cancel, sub_sub, ← bit0, eq_neg_of_add_eq_zero_left h4, sub_neg_eq_add] at h7
-  cases h7; exact (add_rotate _ _ _).symm.trans h7
+  rw [sub_add_cancel, sub_sub, h2, sub_neg_eq_add, add_rotate] at h7
+  refine h7.resolve_right λ h7 ↦ ?_
+  -- Get `f(x) = f(x - 1) = f(x + 1) = 0` and a contradiction
   have h8 := case2_1_lem2 h h0 h4 x
   rw [← h7, h6, ← sq, sub_self, eq_comm] at h8
   have h9 := case2_1_lem5 h h0 h4 (h7.symm.trans h8) h8 0
   rw [add_zero, h6, h8, h3, zero_eq_neg] at h9
-  exact absurd h9 one_ne_zero
-
-variable (h4 : f 2 ≠ 3)
+  exact one_ne_zero h9
 
 /-- (7.5) -/
-theorem case2_1_lem7 (x : R) : f x = -1 ∨ f x = 0 :=
-  by
-  suffices 3 * ((f x + 1) * f x) = 0 from
-    (mul_eq_zero.mp this).elim (λ h5 => False.elim <| h4 <| h1.trans h5.symm) λ this =>
-      (mul_eq_zero.mp this).imp_left eq_neg_of_add_eq_zero_left
-  have h5 := case2_1_lem6 h h0 h1 h2 h3 (x ^ 2)
-  rw [case2_map_sq_sub_one h h0 h3 x, add_rotate, ← add_sub_assoc, sub_eq_neg_self] at h5
-  nth_rw 1 [← sub_add_cancel (x ^ 2) (1 ^ 2)] at h5
-  rw [sq_sub_sq, one_pow, eq_add_of_sub_eq (h _ _), sq, add_add_sub_cancel,
-    eq_add_of_sub_eq (h _ _), ← two_mul] at h5
-  have h6 := h2 3 (case2_1_lem1 h h0 h1)
-  rw [eq_add_of_sub_eq (case2_1_lem3 h h0 h6 x), eq_neg_of_add_eq_zero_left h6, neg_one_mul,
-    case2_map_even h h0] at h5
-  rw [← h5]; ring
+theorem case2_1_lem7 (x : R) : f x = -1 ∨ f x = 0 := by
+  have h7 := h2 3 (case2_1_lem1 h h0 h1)
+  have h5 : (2 : R) = -1 := by rwa [eq_neg_iff_add_eq_zero, two_add_one_eq_three]
+  -- `f(x^2) = f(x)^2 + f(x) + f(-x)`
+  have h6 := h (x + 1) (x - 1)
+  rw [← sq_sub_sq, one_pow, sub_add_cancel, add_add_sub_cancel,
+    ← two_mul, h5, eq_add_of_sub_eq (case2_1_lem3 h h0 h7 _),
+    neg_one_mul, add_comm, sub_eq_iff_eq_add, add_assoc] at h6
+  -- `f(x^2 + 1) = f(x)^2 + f(-x)`
+  replace h7 := h x x
+  rw [← sq, ← two_mul, ← sq, h5, neg_one_mul, sub_eq_iff_eq_add] at h7
+  -- Plug into (7.4): `f(x^2 - 1) + f(x^2) + f(x^2 + 1) = -1`
+  replace h5 := case2_1_lem6 h h0 h1 h2 h3 (x ^ 2)
+  rw [case2_map_sq_sub_one h h0 h3 x, h6, h7, case2_map_even h h0,
+    ← two_mul, add_rotate, add_add_add_comm, ← two_mul, ← add_sub_assoc,
+    sub_eq_neg_self, add_right_comm, ← add_one_mul (2 : S), sq,
+    ← add_one_mul (2 : S), ← mul_add, two_add_one_eq_three, mul_eq_zero,
+    ← add_one_mul (f x), mul_eq_zero, add_eq_zero_iff_eq_neg] at h5
+  exact h5.resolve_left (h4.symm.trans_eq h1)
 
 /-- (7.6) -/
-theorem case2_1_lem8 (x : R) (h5 : f x = -1) : x = 0 :=
-  by
-  replace h4 := case2_1_lem7 h h0 h1 h2 h3 h4
+theorem case2_1_lem8 (x : R) (h5 : f x = -1) : x = 0 := by
   replace h3 := case2_1_lem6 h h0 h1 h2 h3 x
   rw [h5, add_right_comm, add_left_eq_self] at h3
   have h6 := eq_add_of_sub_eq' (case2_1_lem3 h h0 (h2 3 <| case2_1_lem1 h h0 h1) x)
-  rw [sq, ← add_one_mul, mul_eq_zero_of_left (add_eq_zero_iff_eq_neg.mpr h5),
+  rw [sq, ← add_one_mul (f x), mul_eq_zero_of_left (add_eq_zero_iff_eq_neg.mpr h5),
     eq_neg_of_add_eq_zero_left h3, mul_neg, neg_eq_zero, mul_self_eq_zero] at h6
   rw [h6, add_zero] at h3
   exact h2 x (case2_1_lem5 h h0 (h2 3 <| case2_1_lem1 h h0 h1) h6 h3)
 
 /-- The main lemma for the subcase -/
-theorem case2_1_lem9 (x : R) : x = 0 ∨ x = 1 ∨ x = -1 :=
-  let h5 := case2_1_lem7 h h0 h1 h2 h3 h4
-  let h6 := case2_1_lem8 h h0 h1 h2 h3 h4
-  let h7 := h2 3 <| case2_1_lem1 h h0 h1
-  (h5 x).imp (h6 x) λ h8 =>
-    (h5 (x + 1)).symm.imp
-      (λ h9 =>
-        eq_of_sub_eq_zero <|
-          h2 _ <|
-            case2_1_lem5 h h0 h7 ((congr_arg f <| sub_add_cancel x 1).trans h8)
-              ((sub_sub x 1 1).symm ▸
-                (sub_eq_add_neg x 2).symm ▸ (neg_eq_of_add_eq_zero_right h7).symm ▸ h9))
-      λ h9 => eq_neg_of_add_eq_zero_left <| h6 (x + 1) h9
+theorem case2_1_lem9 (x : R) : x = 0 ∨ x = 1 ∨ x = -1 := by
+  have h5 := case2_1_lem8 h h0 h1 h2 h3
+  have h6 := case2_1_lem7 h h0 h1 h2 h3 h4
+  refine (h6 x).imp (h5 x) (λ h7 ↦ ?_)
+  refine (h6 (x - 1)).imp (λ h8 ↦ eq_of_sub_eq_zero (h5 _ h8)) (λ h8 ↦ ?_)
+  replace h6 := case2_1_lem6 h h0 h1 h2 h3 x
+  rw [h8, zero_add, h7, zero_add] at h6
+  exact eq_neg_of_add_eq_zero_left (h5 _ h6)
 
-/-- Solution for the current subcase (`𝔽₃_map2`) -/
-theorem case21QuotIsAnswer : IsAnswer f :=
+/-- Solution for the current subcase (`𝔽₃Map2`) -/
+theorem case2_1_quot_IsAnswer : IsAnswer f :=
+  -- `𝔽₃ → R/I` is bijective
   have X : Bijective (𝔽₃.castHom <| h2 3 <| case2_1_lem1 h h0 h1) :=
-    ⟨𝔽₃.castHom_injective _ (one_ne_zero_of_map_zero h h3), λ x =>
-      (case2_1_lem9 h h0 h1 h2 h3 h4 x).elim (λ h5 => ⟨𝔽₃.𝔽₃0, h5.symm⟩) λ h5 =>
-        h5.elim (λ h5 => ⟨𝔽₃.𝔽₃1, h5.symm⟩) λ h5 => ⟨𝔽₃.𝔽₃2, h5.symm⟩⟩
+    ⟨𝔽₃.castHom_injective _ (one_ne_zero_of_map_zero h h3),
+    λ x ↦ by rcases case2_1_lem9 h h0 h1 h2 h3 h4 x with h5 | h5 | h5
+             exacts [⟨𝔽₃.𝔽₃0, h5.symm⟩, ⟨𝔽₃.𝔽₃1, h5.symm⟩, ⟨𝔽₃.𝔽₃2, h5.symm⟩]⟩
+  -- Factor `f` out as `𝔽₃Map2 ∘ π`
   let π := (RingEquiv.ofBijective _ X).symm
-  suffices f = 𝔽₃Map2 S ∘ π from this.symm ▸ IsAnswer.𝔽₃_map2_comp π.toRingHom π.Surjective
-  (MulEquiv.eq_comp_symm _ _ _).mpr <|
-    funext λ x =>
-      match x with
+  suffices f = 𝔽₃Map2 S ∘ π.toFun
+    from this.symm ▸ IsAnswer.𝔽₃_map2_comp π.toRingHom π.surjective
+  (MulEquiv.eq_comp_symm _ _ _).mpr <| funext λ x ↦
+    match x with
       | 𝔽₃.𝔽₃0 => h3
       | 𝔽₃.𝔽₃1 => good_map_one h
       | 𝔽₃.𝔽₃2 => h0
@@ -897,96 +898,93 @@ end Quotient
 
 end Step7
 
-/-! ## Step 8: Subcase 2.2: `f_ = 0` and `f(2) = 1 ≠ -1` -/
 
+
+
+
+
+
+/-! ## Step 8: Subcase 2.2: `f(-1) = 0` and `f(2) = 1 ≠ -1` -/
 
 section Step8
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
-  (h0 : f (-1) = 0) (h1 : f 2 = 1)
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 2 = 1) (h2 : f 2 ≠ -1)
 
 /-- (8.1) -/
-theorem case2_2_lem1 (x : R) : f (x + 2) + f x = f (x + 1) + f (x - 1) :=
-  (case2_map_add_two_eq h h0 x).symm ▸
-    h1.symm ▸ (one_mul (f (x + 1) - f x)).symm ▸ (add_assoc _ _ _).trans (sub_add_add_cancel _ _ _)
+theorem case2_2_lem1 (x : R) : f (x + 2) + f x = f (x + 1) + f (x - 1) := by
+  rw [case2_map_add_two_eq h h0, h1, one_mul, add_assoc, sub_add_add_cancel]
 
-/-- `4 ∈ I` -/
-theorem case2_2_lem2 (x : R) : f (4 + x) = f x :=
-  by
+/-- `2 + 2 ∈ I` -/
+theorem case2_2_lem2 : 2 + 2 ∈ periodIdeal h := λ x ↦ by
   have h2 := case2_2_lem1 h h0 h1
   have h3 := (h2 (x + 1 + 1)).symm
-  rw [add_sub_cancel, add_assoc, ← bit0, h2, add_sub_cancel, add_comm] at h3
-  refine' ((add_left_injective _ h3).trans <| congr_arg f (-1)).symm
-  rw [add_assoc x, ← bit0, add_assoc, ← bit0, add_comm]
+  rwa [add_sub_cancel, add_assoc, one_add_one_eq_two, h2, add_sub_cancel, add_comm,
+    add_left_inj, add_assoc x, one_add_one_eq_two, add_rotate, eq_comm] at h3
 
-variable (h2 : f 2 ≠ -1)
-
-theorem case2_2_lem3 (x : R) : f (2 * x + 1) = 0 :=
-  by
-  have h3 := eq_add_of_sub_eq' (h x 2)
-  rw [h1, mul_one, case2_2_lem1 h h0 h1] at h3
-  have h4 := eq_add_of_sub_eq' (h (x - 1) 2)
-  rw [h1, mul_one, bit0, sub_add_add_cancel, ← h3, ← bit0] at h4
-  have h5 := eq_add_of_sub_eq (case2_good_alt h h0 (x * 2 + 1) 2)
-  rw [h1, mul_one, add_sub_right_comm, ← sub_one_mul, h4, add_one_mul, add_sub_assoc, bit0,
-    add_sub_cancel, ← bit0, mul_rotate, two_mul, ← bit0, mul_comm x 2,
-    period_imp_quasi_period h (case2_2_lem2 h h0 h1), ← two_mul, zero_eq_mul] at h5
-  exact h5.resolve_left λ h5 => h2 <| h1.trans <| eq_neg_of_add_eq_zero_left h5
+theorem case2_2_lem3 : 2 ∈ quasiPeriodIdeal h := λ x ↦ by
+  -- First get `f(2x + 1) = f(2x - 1)`
+  have h3 := eq_add_of_sub_eq' (h (x - 1) (1 + 1))
+  rw [sub_add_add_cancel, sub_one_mul, ← sub_sub, one_add_one_eq_two,
+    sub_add_cancel, h1, mul_one, ← case2_2_lem1 h h0 h1,
+    ← mul_one (f x), ← h1, ← eq_add_of_sub_eq' (h x 2)] at h3
+  -- Now use `f(4x + 1) = 0` to obtain `f(2x + 1) = f(2x - 1) = 0`
+  have h4 := eq_add_of_sub_eq (case2_good_alt h h0 (x * 2 + 1) (1 + 1))
+  rw [add_sub_add_right_eq_sub, add_one_mul (x * 2), ← add_assoc, add_sub_cancel,
+    h3, one_add_one_eq_two, h1, mul_one, ← two_mul, mul_rotate, two_mul,
+    period_imp_quasi_period h (case2_2_lem2 h h0 h1), zero_eq_mul, mul_comm] at h4
+  refine h4.resolve_left λ h4 ↦ h2 ?_
+  rwa [h1, eq_neg_iff_add_eq_zero, one_add_one_eq_two]
 
 theorem case2_2_lem4 : f 0 = -1 :=
-  Not.imp_symm (eq_zero_of_map_zero_ne_neg_one h) λ h3 =>
-    one_ne_zero' S <| h1.symm.trans <| congr_fun h3 2
+  Not.imp_symm (eq_zero_of_map_zero_ne_neg_one h)
+    (λ h3 ↦ one_ne_zero <| h1.symm.trans <| congr_fun h3 2)
 
 /-- The main lemma for the subcase -/
-theorem case2_2_lem5 (h3 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) (x : R) :
-    (x = 0 ∨ x = 2) ∨ x = 1 ∨ x = -1 :=
-  suffices (x = 0 ∨ x = 2) ∨ x = 1 ∨ x = 2 + 1 from
-    this.imp_right <|
-      Or.imp_right λ this =>
-        this.trans <|
-          eq_neg_of_add_eq_zero_left <| (add_assoc _ _ _).trans <| h3 _ <| case2_2_lem2 h h0 h1
-  let h4 : f 0 = -1 := case2_2_lem4 h h0 h1 h2
-  cases_of_nonperiod_quasi_period h h3 h4 (case2_2_lem3 h h0 h1 h2)
-    (λ h5 => h2 <| (congr_arg f h5).trans h4) x
+theorem case2_2_lem5 (h3 : ∀ c ∈ periodIdeal h, c = 0) (x : R) :
+    (x = 0 ∨ x = 2) ∨ x = 1 ∨ x = -1 := by
+  have h4 := h3 (2 + 2) (case2_2_lem2 h h0 h1)
+  rw [← one_add_one_eq_two, ← add_assoc] at h4
+  rw [← eq_neg_iff_add_eq_zero.mpr h4, one_add_one_eq_two]
+  replace h4 := case2_2_lem4 h h1
+  exact cases_of_nonperiod_quasi_period h h3 h4
+    (case2_2_lem3 h h0 h1 h2) (λ h5 ↦ h2 <| h5.symm ▸ h4) x
 
-/-- Solution for the current subcase (`ℤ₄_map`) -/
-theorem case22QuotIsAnswer (h3 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) : IsAnswer f :=
-  have X : Bijective (ℤ₄.castHom <| h3 4 <| case2_2_lem2 h h0 h1) :=
-    ⟨ℤ₄.castHom_injective _ λ h4 => h2 <| (congr_arg f h4).trans <| case2_2_lem4 h h0 h1 h2,
-      λ x =>
-      (case2_2_lem5 h h0 h1 h2 h3 x).elim
-        (λ h5 => h5.elim (λ h5 => ⟨0, h5.symm⟩) λ h5 => ⟨2, h5.symm⟩) λ h5 =>
-        h5.elim (λ h5 => ⟨1, h5.symm⟩) λ h5 => ⟨3, h5.symm⟩⟩
+/-- Solution for the current subcase (`ℤ₄Map`) -/
+theorem case2_2_quot_IsAnswer (h3 : ∀ c ∈ periodIdeal h, c = 0) : IsAnswer f :=
+  have h4 : (4 : R) = 0 := by
+    rw [← Nat.cast_eq_ofNat, Nat.cast_add 2 2]
+    exact h3 _ (case2_2_lem2 h h0 h1)
+  -- `ℤ₄ → R/I` is bijective
+  have X : Bijective (ℤ₄.castHom h4) :=
+    ⟨ℤ₄.castHom_injective _ λ h5 ↦ h2 <| h5.symm ▸ case2_2_lem4 h h1,
+    λ x ↦ by rcases case2_2_lem5 h h0 h1 h2 h3 x with (h5 | h5) | (h5 | h5)
+             exacts [⟨0, h5.symm⟩, ⟨2, h5.symm⟩, ⟨1, h5.symm⟩, ⟨3, h5.symm⟩]⟩
+  -- Factor `f` out as `ℤ₄Map ∘ π`
   let π := (RingEquiv.ofBijective _ X).symm
-  suffices f = ℤ₄Map S ∘ π from this.symm ▸ IsAnswer.ℤ₄_map_comp π.toRingHom π.Surjective
-  (MulEquiv.eq_comp_symm _ _ _).mpr <|
-    funext λ x =>
-      match x with
-      | ℤ₄.ℤ₄0 => case2_2_lem4 h h0 h1 h2
+  suffices f = ℤ₄Map S ∘ π.toFun
+    from this.symm ▸ IsAnswer.ℤ₄_map_comp π.toRingHom π.surjective
+  (MulEquiv.eq_comp_symm _ _ _).mpr <| funext λ x ↦
+    match x with
+      | ℤ₄.ℤ₄0 => case2_2_lem4 h h1
       | ℤ₄.ℤ₄1 => good_map_one h
       | ℤ₄.ℤ₄2 => h1
       | ℤ₄.ℤ₄3 => h0
 
 end Step8
 
-/-! ## Step 9: Subcase 2.3: `f_ = 0` and `f(2) = 3 ≠ 1` -/
 
+
+
+
+
+
+/-! ## Step 9: Subcase 2.3: `f(-1) = 0` and `f(2) = 3 ≠ 1` -/
 
 section Step9Domain
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
-  (h0 : f (-1) = 0)
-
-/-- A copy of `case2_1_lem6` (7.4) from Subcase 2.1,
-  without quotienting by the "period ideal". -/
-theorem case2_1_lem6_nonquotient (h1 : f 2 = 0) (h2 : f 0 = -1) (x : R) :
-    f (x - 1) + f x + f (x + 1) = -1 :=
-  let X :=
-    case2_1_lem6 (periodLift_is_good h) h0 h1 (zero_of_periodic_periodLift h) h2
-      (Ideal.Quotient.mk _ x)
-  X
-
-variable (h1 : f 2 = 3)
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 2 = 3)
 
 /-- (9.1) -/
 theorem case2_3_lem1 (x : R) : f (x + 2) = 3 * (f (x + 1) - f x) + f (x - 1) :=
@@ -994,259 +992,268 @@ theorem case2_3_lem1 (x : R) : f (x + 2) = 3 * (f (x + 1) - f x) + f (x - 1) :=
 
 /-- (9.2) -/
 theorem case2_3_lem2 (x : R) :
-    f x * (3 * f (x - 1) + f (x + 1)) - (f (x - 1) + 3 * f (x + 1)) * (1 + f (x - 1)) = 0 :=
-  sub_eq_zero_of_eq (case2_special_identity h h0 x) ▸
-    h1.symm ▸ (case2_3_lem1 h h0 h1 x).symm ▸ by ring
+    f x * (3 * f (x - 1) + f (x + 1))
+      = (f (x - 1) + 3 * f (x + 1)) * (1 + f (x - 1)) := by
+  have h2 := case2_special_identity h h0 x
+  rw [← h1, mul_add, eq_add_of_sub_eq h2, case2_map_add_two_eq h h0]
+  ring
 
 /-- (9.3) -/
-theorem case2_3_lem3 (x : R) : f (x + 1) + f (x - 1) = 2 * f x + 2 ∨ f (x + 1) = f (x - 1) :=
-  by
-  suffices (f (x + 1) + f (x - 1) - (2 * f x + 2)) * (f (x + 1) - f (x - 1)) = 0 from
-    (mul_eq_zero.mp this).imp eq_of_sub_eq_zero eq_of_sub_eq_zero
+theorem case2_3_lem3 (x : R) :
+    f (x + 1) + f (x - 1) = 2 * f x + 2 ∨ f (x - 1) = f (x + 1) := by
   have X := case2_map_even h h0
   have X0 := case2_3_lem2 h h0 h1
   have h2 := X0 (-x)
   rw [X, ← neg_add', X, neg_add_eq_sub, ← neg_sub x, X] at h2
-  refine' Eq.trans _ ((congr_arg₂ Sub.sub (X0 x) h2).trans <| sub_zero _)
+  rw [← sub_eq_zero, or_comm, ← mul_eq_mul_right_iff, ← sub_eq_zero,
+    ← sub_eq_zero.mpr (congr_arg₂ (· - ·) h2 (X0 x))]
   ring
 
 /-- (9.4) -/
 theorem case2_3_lem4 (h2 : f 2 ≠ 1) (x : R) :
-    f (x + 1) + f (x - 1) = 2 * f x + 2 ∨ f (x + 1) = 0 ∧ f (x - 1) = 0 :=
-  let X := case2_3_lem3 h h0 h1
-  (X x).imp_right λ h3 =>
-    by
-    suffices f (x - 1) = 0 from ⟨h3.trans this, this⟩
-    have h4 := case2_3_lem2 h h0 h1 x
-    rw [h3, sub_eq_zero, add_comm, ← one_add_mul, mul_comm, mul_eq_mul_left_iff, mul_eq_zero, bit1,
-      add_left_comm] at h4
-    have h5 : (2 : S) + 2 ≠ 0 := by
-      rw [← two_mul, mul_self_ne_zero] <;> exact add_left_ne_self.mp (h1.symm.trans_ne h2)
-    revert h4 <;> refine' λ h4 => (h4.resolve_left _).resolve_left h5
-    intro h4
-    have h6 := case2_3_lem1 h h0 h1 x
-    rw [h3, ← sub_eq_of_eq_add' h4, sub_sub_cancel_left, mul_neg_one, neg_add_eq_sub, sub_sub, bit1,
-      add_left_comm, ← bit0] at h6
-    have h7 := X (x + 1)
-    rw [add_sub_cancel, add_assoc, ← bit0, h6] at h7
-    refine' h5 (h7.elim (λ h7 => _) sub_eq_self.mp)
-    rwa [← add_sub_right_comm, h3, ← two_mul, ← mul_add_one, ← h4.trans (add_comm _ _),
-      sub_eq_self] at h7
+    f (x + 1) + f (x - 1) = 2 * f x + 2 ∨ f (x + 1) = 0 ∧ f (x - 1) = 0 := by
+  -- Reduce to `f(x - 1) = 0` assuming `f(x - 1) = f(x + 1)`
+  have X := case2_3_lem3 h h0 h1
+  refine (X x).imp_right λ h3 ↦ ?_
+  rw [← h3, and_self]
+  -- Get either `f (x - 1) = 0`, `(4 : S) = 0`, or `f(x) = f(x - 1) + 1`
+  have h4 := case2_3_lem2 h h0 h1 x
+  rw [← h3, add_comm, ← one_add_mul (3 : S), mul_comm,
+    mul_eq_mul_left_iff, mul_eq_zero, or_comm] at h4
+  -- Eliminate the other two cases
+  have h5 : (2 : S) ≠ 0 := λ h5 ↦ h2 <| by
+    rw [h1, ← two_add_one_eq_three, h5, zero_add]
+  refine (h4.resolve_right ?_).resolve_left ?_
+  -- Obtain contradiction via `f(x + 2) + f(x) = 2 f(x + 1) + 2`
+  · intros h4; apply h5
+    specialize X (x + 1)
+    rwa [add_sub_cancel, add_assoc, one_add_one_eq_two, case2_3_lem1 h h0 h1,
+      ← h3, h4, sub_add_cancel'', mul_neg_one, add_left_inj, add_add_add_comm,
+      ← two_mul, add_comm, add_right_inj, ← two_add_one_eq_three, neg_add',
+      sub_add_cancel, eq_comm, eq_sub_iff_add_eq, one_add_one_eq_two, or_self,
+      eq_neg_iff_add_eq_zero, ← two_mul, ← sq, sq_eq_zero_iff] at X
+  · rw [← two_add_one_eq_three, add_left_comm, one_add_one_eq_two, ← two_mul]
+    exact mul_ne_zero h5 h5
 
 /-- (9.5) -/
 theorem case2_3_lem5 (h2 : f 2 ≠ 1) (x : R) :
-    f (x + 1) + f (x - 1) = 2 * f x + 2 ∨ f x = 0 ∧ f (x + 1) = 0 ∧ f (x - 1) = 0 :=
-  let X := case2_3_lem4 h h0 h1 h2
-  (X x).elim Or.inl λ h3 =>
-    (X (x + 1)).imp
-      (λ h4 =>
-        eq_add_of_sub_eq' <|
-          (eq_of_sub_eq_zero <| by
-                  rw [add_sub_cancel, add_assoc, ← bit0, case2_3_lem1 h h0 h1] <;>
-                    ring).symm.trans <|
-            sub_eq_of_eq_add' h4)
-      λ h4 => ⟨add_sub_cancel x 1 ▸ h4.2, h3⟩
+    f (x + 1) + f (x - 1) = 2 * f x + 2 ∨
+      f x = 0 ∧ f (x + 1) = 0 ∧ f (x - 1) = 0 := by
+  have X := case2_3_lem4 h h0 h1 h2
+  refine (X x).elim Or.inl λ h3 ↦ (X (x + 1)).imp
+    (λ h4 ↦ ?_) (λ h4 => ⟨add_sub_cancel x 1 ▸ h4.2, h3⟩)
+  rw [h3.1, mul_zero, zero_add, add_assoc, one_add_one_eq_two,
+    add_sub_cancel, case2_3_lem1 h h0 h1, h3.1, zero_sub, h3.2,
+    add_zero, mul_neg, neg_add_eq_iff_eq_add, ← two_add_one_eq_three,
+    add_one_mul (2 : S), add_right_comm, self_eq_add_left] at h4
+  rw [h3.1, h3.2, h4, zero_add]
 
-/-- (9.6) Very slow, but... well it works -/
-theorem case2_3_lem6 (h2 : f 2 ≠ 1) (h3 : f 0 = -1) (x : R) : f (x + 1) + f (x - 1) = 2 * f x + 2 :=
-  let X := case2_3_lem5 h h0 h1 h2
-  (X x).resolve_right λ h4 =>
-    (em <| f 2 = 0).elim
-      (---- Case 1: `char(S) = 3` (borrows case2_1_lem6 i.e. (7.4) from Subcase 2.1)
-      λ h5 =>
-        absurd (case2_1_lem6_nonquotient h h0 h5 h3 x) <|
-          h4.1.symm ▸
-            h4.2.1.symm ▸
-              h4.2.2.symm ▸
-                (add_zero (0 : S)).symm ▸
-                  (add_zero (0 : S)).symm ▸ λ h6 =>
-                    one_ne_zero' S <| zero_eq_neg.mp h6)---- Case 2: `char(S) ≠ 3`
-    λ h5 => by
-      let X0 := add_left_ne_self.mp (h1.symm.trans_ne h2)
-      suffices f (2 * x) = -3 from
-        (---- First reduce to `f(2x) = -3`
-                X
-                (2 * x)).symm.elim
-          (λ h6 => absurd (this.symm.trans h6.1) <| neg_ne_zero.mpr <| h1.symm.trans_ne h5)
-          λ h6 => by
-          have h7 := eq_add_of_sub_eq (h 2 (x - 1))
-          rw [h4.2.2, mul_zero, zero_add, mul_sub_one, bit0, add_add_sub_cancel, ←
-            sub_sub, sub_add_cancel, ← bit0, add_comm, h4.2.1] at h7
-          have h8 := eq_add_of_sub_eq (case2_good_alt h h0 (x + 1) 2)
-          rw [h4.2.1, zero_mul, zero_add, bit0, add_sub_add_right_eq_sub, add_one_mul,
-            ← add_assoc, add_sub_cancel, ← bit0, mul_comm, h4.2.2] at h8
-          rw [h7, h8, add_zero, this, ← mul_add_one, bit1, neg_add, neg_add_cancel_right, mul_neg,
-            zero_eq_neg, mul_self_eq_zero] at h6
-          exact X0 h6
-      ---- Now prove that `f(2x) = -3`
-      suffices 2 * (f (2 * x) + 3) = 0 from
-        eq_neg_of_add_eq_zero_left <| (mul_eq_zero.mp this).resolve_left X0
-      have h6 := eq_add_of_sub_eq (case2_good_alt h h0 (x + 1) (x - 1))
-      rw [← sq_sub_sq, one_pow, add_sub_sub_cancel, h4.2.1, zero_mul, zero_add, ← bit0,
-        h1] at h6
-      have h7 := eq_add_of_sub_eq (case2_good_alt h h0 x x)
-      rw [← sq, h4.1, zero_mul, zero_add, sub_self, h3] at h7
-      have h8 := eq_add_of_sub_eq (h (x + 1) (x - 1))
-      rw [← sq_sub_sq, one_pow, h4.2.1, zero_mul, zero_add, add_add_sub_cancel] at h8
-      have h9 := case2_3_lem1 h h0 h1 (x ^ 2 - 1)
-      rw [h8, h7, h6, sq, bit0, sub_add_add_cancel, eq_add_of_sub_eq (h x x), h4.1,
-        zero_mul, zero_add, ← two_mul, eq_comm, ← sub_eq_zero] at h9
-      rw [← h9]; ring
+/-- (9.6) -/
+theorem case2_3_lem6 (h2 : f 2 ≠ 1) (h3 : f 0 = -1) (x : R) :
+    f (x + 1) + f (x - 1) = 2 * f x + 2 := by
+  refine (case2_3_lem5 h h0 h1 h2 x).resolve_right λ h4 ↦ ?_
+  by_cases h5 : f 2 = 0
+  -- Case 1: `char(S) = 3`
+  · have h6 : f (x - 1) + f x + f (x + 1) = -1 :=
+      case2_1_lem6 (periodLift_is_good h) h0 h5
+        (zero_of_periodic_periodLift h) h3 x
+    rw [h4.1, h4.2.1, h4.2.2, add_zero, add_zero, zero_eq_neg] at h6
+    exact one_ne_zero h6
+  -- Case 2: `char(S) ≠ 3`
+  · suffices (f (2 * x) = -1 ∨ f (2 * x) = 0) ∧ f (2 * x) = -3 by
+      rcases this with ⟨h6 | h6, h7⟩
+      · rw [h7, neg_inj, ← h1] at h6; exact h2 h6
+      · rw [h7, neg_eq_zero, ← h1] at h6; exact h5 h6
+    constructor
+    -- `f(2x) ∈ {-1, 0}`
+    · refine (case2_3_lem5 h h0 h1 h2 (2 * x)).imp (λ h6 ↦ ?_) And.left
+      have h7 := h (1 + 1) (x - 1)
+      rw [h4.2.2, mul_zero, add_add_sub_cancel, add_comm 1 x, h4.2.1, sub_zero,
+        mul_sub_one, ← sub_sub, sub_add_cancel, one_add_one_eq_two] at h7
+      have h8 := case2_good_alt h h0 (x + 1) (1 + 1)
+      rw [h4.2.1, zero_mul, add_sub_add_right_eq_sub,
+        h4.2.2, sub_zero, add_one_mul x, ← add_assoc,
+        add_sub_cancel, one_add_one_eq_two, mul_comm] at h8
+      rw [h7, h8, zero_add, ← mul_add_one (2 : S), zero_eq_mul] at h6
+      rcases h6 with h6 | h6
+      · refine absurd ?_ h2
+        rw [h1, ← two_add_one_eq_three, h6, zero_add]
+      · rw [eq_neg_iff_add_eq_zero, h6]
+    -- `f(2x) = -3`
+    · have h6 := case2_3_lem1 h h0 h1 ((x + 1) * (x - 1))
+      rw [eq_add_of_sub_eq (h _ _), eq_add_of_sub_eq (case2_good_alt h h0 _ _),
+        h4.2.1, zero_mul, zero_add, zero_add, ← one_add_one_eq_two, ← sq_sub_sq,
+        one_pow, add_add_sub_cancel, add_sub_sub_cancel, sub_add_add_cancel,
+        case2_map_sq_sub_one h h0 h3, sq, eq_add_of_sub_eq (h _ _), h4.1, sq 0,
+        zero_mul, zero_add, zero_sub, ← two_mul, one_add_one_eq_two, h1,
+        sub_neg_eq_add, mul_add_one (3 : S), add_assoc, ← two_mul] at h6
+      nth_rw 1 [← two_add_one_eq_three] at h6
+      rw [add_one_mul (α := S), add_right_comm, self_eq_add_left,
+        ← mul_add, mul_eq_zero, add_eq_zero_iff_eq_neg] at h6
+      apply h6.resolve_left
+      rwa [h1, ← two_add_one_eq_three, add_left_ne_self] at h2
 
 end Step9Domain
+
 
 section Step9Field
 
 variable {R S : Type _} [CommRing R] [Field S]
 
-def homGuess (f : R → S) (x : R) :=
-  (f x - f (x - 1) + 1) / 2
+def homGuess (f : R → S) (x : R) := (f x - f (x - 1) + 1) / 2
 
-variable {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 2 = 3) (h2 : f 2 ≠ 1) (h3 : f 0 = -1)
+variable {f : R → S} (h : good f) (h0 : f (-1) = 0)
+  (h1 : f 2 = 3) (h2 : f 2 ≠ 1) (h3 : f 0 = -1)
 
 /-- (9.g1) -/
 theorem case2_3_lem_g1 : homGuess f 0 = 0 :=
-  div_eq_zero_iff.mpr <|
-    Or.inl <|
-      h3.symm ▸ (zero_sub (1 : R)).symm ▸ h0.symm ▸ (sub_zero (-1 : S)).symm ▸ neg_add_self 1
+  div_eq_zero_iff.mpr <| Or.inl <|
+    by rw [h3, zero_sub, h0, sub_zero, neg_add_self]
 
 /-- (9.g2) -/
-theorem case2_3_lem_g2 (x : R) : homGuess f (x + 1) = homGuess f x + 1 :=
-  by
-  let X : (2 : S) ≠ 0 := add_left_ne_self.mp (h1.symm.trans_ne h2)
-  rw [hom_guess, hom_guess, div_eq_iff X, add_one_mul, div_mul_cancel _ X, add_right_comm,
-      add_left_inj, add_sub_cancel, sub_eq_iff_eq_add', ← add_sub_right_comm, ← add_sub_assoc,
-      eq_sub_iff_add_eq, ← add_assoc, ← two_mul] <;>
-    exact case2_3_lem6 h h0 h1 h2 h3 x
+theorem case2_3_lem_g2 (x : R) : homGuess f (x + 1) = homGuess f x + 1 := by
+  have h4 : (2 : S) ≠ 0 := λ h4 ↦ h2 <| by
+    rw [h1, ← two_add_one_eq_three, h4, zero_add]
+  rw [homGuess, homGuess, div_add_one h4, add_sub_cancel]
+  refine congr_arg₂ _ ?_ rfl
+  rw [add_right_comm, add_left_inj, ← add_sub_right_comm,
+    eq_sub_iff_add_eq, ← add_sub_right_comm, sub_eq_iff_eq_add,
+    case2_3_lem6 h h0 h1 h2 h3, two_mul, add_right_comm]
 
 /-- Variant of (9.g2) -/
-theorem case2_3_lem_g2' (x : R) : homGuess f (x - 1) = homGuess f x - 1 :=
-  eq_sub_of_add_eq <|
-    (case2_3_lem_g2 h h0 h1 h2 h3 _).symm.trans <| congr_arg _ <| sub_add_cancel x 1
+theorem case2_3_lem_g2' (x : R) : homGuess f (x - 1) = homGuess f x - 1 := by
+  rw [eq_sub_iff_add_eq, ← case2_3_lem_g2 h h0 h1 h2 h3, sub_add_cancel]
 
 /-- (9.g3) -/
-theorem case2_3_lem_g3 (x : R) : homGuess f (-x) = -homGuess f x :=
-  by
-  suffices f (-x) - f (-x - 1) + 1 = -(f x - f (x - 1) + 1) from
-    (congr_arg (· / (2 : S)) this).trans <| neg_div _ _
-  let X := case2_map_even h h0
-  rw [X, ← neg_add', X, eq_neg_iff_add_eq_zero, add_add_add_comm, sub_add_sub_comm, ← two_mul, ←
-      bit0, ← add_sub_right_comm, sub_eq_zero] <;>
-    exact (case2_3_lem6 h h0 h1 h2 h3 x).symm
+theorem case2_3_lem_g3 (x : R) : homGuess f (-x) = -homGuess f x := by
+  have X := case2_map_even h h0
+  rw [← add_left_inj 1, ← case2_3_lem_g2 h h0 h1 h2 h3, homGuess, add_sub_cancel,
+    X, neg_add_eq_sub, ← X, neg_sub, homGuess, ← neg_div, neg_add', neg_sub]
+  replace X : (2 : S) ≠ 0 := λ h4 ↦ h2 <| by
+    rw [h1, ← two_add_one_eq_three, h4, zero_add]
+  rw [div_add_one X, ← one_add_one_eq_two, sub_add_add_cancel]
 
 /-- (9.g4) -/
-theorem case2_3_lem_g4 (x : R) : f x = homGuess f x ^ 2 - 1 :=
-  by
-  have X : (2 : S) ≠ 0 := add_left_ne_self.mp (h1.symm.trans_ne h2)
-  have X0 : (2 : S) ^ 2 ≠ 0 := pow_ne_zero 2 X
-  rw [hom_guess, div_pow, div_sub_one X0, eq_div_iff X0]
-  refine' mul_left_cancel₀ X (eq_of_sub_eq_zero _).symm
-  rw [← case2_3_lem2 h h0 h1 x, eq_sub_of_add_eq (case2_3_lem6 h h0 h1 h2 h3 x)]
+theorem case2_3_lem_g4 (x : R) : f x = homGuess f x ^ 2 - 1 := by
+  have h4 : (2 : S) ≠ 0 := λ h4 ↦ h2 <| by
+    rw [h1, ← two_add_one_eq_three, h4, zero_add]
+  have h5 : (2 : S) ^ 2 ≠ 0 := pow_ne_zero 2 h4
+  rw [homGuess, div_pow, div_sub_one h5, eq_div_iff h5]
+  refine mul_left_cancel₀ h4 (eq_of_sub_eq_zero ?_).symm
+  rw [← sub_eq_zero_of_eq (case2_3_lem2 h h0 h1 x),
+    eq_sub_of_add_eq (case2_3_lem6 h h0 h1 h2 h3 x)]
   ring
 
 /-- (9.g5) -/
 theorem case2_3_lem_g5 (x y : R) :
     (homGuess f (x * y) + 1) ^ 2 - homGuess f (x + y) ^ 2 =
-      (homGuess f x ^ 2 - 1) * (homGuess f y ^ 2 - 1) :=
-  by
-  let h4 := case2_3_lem_g4 h h0 h1 h2 h3
-  let h5 := h x y
-  rwa [h4, h4, h4, h4, sub_sub_sub_cancel_right, case2_3_lem_g2 h h0 h1 h2 h3] at h5
+      (homGuess f x ^ 2 - 1) * (homGuess f y ^ 2 - 1) := by
+  have h4 := case2_3_lem_g4 h h0 h1 h2 h3
+  have h5 := h x y
+  iterate 4 rw [h4] at h5
+  rwa [sub_sub_sub_cancel_right, case2_3_lem_g2 h h0 h1 h2 h3] at h5
 
 /-- (9.g6) -/
 theorem case2_3_lem_g6 (x y : R) :
     (homGuess f (x * y) - 1) ^ 2 - homGuess f (x - y) ^ 2 =
-      (homGuess f x ^ 2 - 1) * (homGuess f y ^ 2 - 1) :=
-  by
-  let h4 := case2_3_lem_g4 h h0 h1 h2 h3
-  let h5 := case2_good_alt h h0 x y
-  rwa [h4, h4, h4, h4, sub_sub_sub_cancel_right, case2_3_lem_g2' h h0 h1 h2 h3] at h5
+      (homGuess f x ^ 2 - 1) * (homGuess f y ^ 2 - 1) := by
+  have h4 := case2_3_lem_g4 h h0 h1 h2 h3
+  have h5 := case2_good_alt h h0 x y
+  iterate 4 rw [h4] at h5
+  rwa [sub_sub_sub_cancel_right, case2_3_lem_g2' h h0 h1 h2 h3] at h5
 
 /-- (9.g7) -/
 theorem case2_3_lem_g7 (x y : R) :
-    2 ^ 2 * homGuess f (x * y) = homGuess f (x + y) ^ 2 - homGuess f (x - y) ^ 2 := by
-  calc
-    _ = (hom_guess f (x * y) + 1) ^ 2 - (hom_guess f (x * y) - 1) ^ 2 := by ring
-    _ = hom_guess f (x + y) ^ 2 - hom_guess f (x - y) ^ 2 :=
-      sub_eq_sub_iff_sub_eq_sub.mp <|
-        (case2_3_lem_g5 h h0 h1 h2 h3 x y).trans (case2_3_lem_g6 h h0 h1 h2 h3 x y).symm
+    2 ^ 2 * homGuess f (x * y)
+      = homGuess f (x + y) ^ 2 - homGuess f (x - y) ^ 2 := by
+  rw [← sub_sub_sub_cancel_left, case2_3_lem_g5 h h0 h1 h2 h3, add_sq',
+    ← case2_3_lem_g6 h h0 h1 h2 h3, sub_sub_sub_cancel_right, sub_sq',
+    add_sub_sub_cancel, mul_one, ← two_mul, ← mul_assoc, ← sq]
 
 /-- (9.g8) -/
 theorem case2_3_lem_g8 (x y : R) :
     (homGuess f (x + y) ^ 2 - homGuess f (x - y) ^ 2) ^ 2 + 2 ^ 4 =
       2 ^ 3 * (homGuess f (x + y) ^ 2 + homGuess f (x - y) ^ 2) +
-        (2 ^ 2) ^ 2 * ((homGuess f x ^ 2 - 1) * (homGuess f y ^ 2 - 1)) :=
-  by
-  rw [← case2_3_lem_g5 h h0 h1 h2 h3, mul_sub, ← mul_pow, mul_add_one,
-      case2_3_lem_g7 h h0 h1 h2 h3] <;>
-    ring
+        (2 ^ 2) ^ 2 * ((homGuess f x ^ 2 - 1) * (homGuess f y ^ 2 - 1)) := by
+  rw [← case2_3_lem_g5 h h0 h1 h2 h3, mul_sub, ← mul_pow,
+    mul_add_one (α := S), case2_3_lem_g7 h h0 h1 h2 h3]
+  ring
 
+/-- TODO: Optimize the proof -/
 theorem case2_3_lem_g9 (x y : R) :
     homGuess f (x + y) + homGuess f (x - y) = 2 * homGuess f x ∨
-      homGuess f (x + y) + homGuess f (x - y) = -(2 * homGuess f x) :=
-  let X : (2 : S) ≠ 0 := add_left_ne_self.mp (h1.symm.trans_ne h2)
-  sq_eq_sq_iff_eq_or_eq_neg.mp <|
-    mul_left_cancel₀ (pow_ne_zero 3 X) <|
-      by
-      have h4 := case2_3_lem_g2 h h0 h1 h2 h3
-      have h5 := case2_3_lem_g2' h h0 h1 h2 h3
-      have h6 := case2_3_lem_g8 h h0 h1 h2 h3 x
-      have h7 :=
-        congr_arg₂ Sub.sub (congr_arg₂ Add.add (h6 (y + 1)) (h6 (y - 1)))
-          (congr_arg (Mul.mul (2 : S)) (h6 y))
-      rw [← add_assoc x, h4, ← sub_sub x, h5, ← add_sub_assoc x, h5, ← sub_add x, h4, h4, h5] at h7
-      rw [← sub_eq_zero, ← sub_eq_zero_of_eq h7]
-      ring
+      homGuess f (x + y) + homGuess f (x - y) = -(2 * homGuess f x) := by
+  have h4 : (2 : S) ≠ 0 := λ h4 ↦ h2 <| by
+    rw [h1, ← two_add_one_eq_three, h4, zero_add]
+  rw [← sq_eq_sq_iff_eq_or_eq_neg]
+  apply mul_left_cancel₀ (pow_ne_zero 3 h4)
+
+  replace h4 := case2_3_lem_g2 h h0 h1 h2 h3
+  have h5 := case2_3_lem_g2' h h0 h1 h2 h3
+  have h6 := case2_3_lem_g8 h h0 h1 h2 h3 x
+  replace h6 : (_ + _) - (2 * _) = _ - _ :=
+    congr_arg₂ (· - ·)
+      (congr_arg₂ (· + ·) (h6 (y + 1)) (h6 (y - 1)))
+      (congr_arg (2 * ·) (h6 y))
+  rw [← add_assoc x, h4, ← sub_sub x, h5, ← add_sub_assoc x,
+    h5, ← sub_add x, h4, h4, h5] at h6
+  rw [← sub_eq_zero, ← sub_eq_zero_of_eq h6]
+  ring
 
 /-- (9.g9) -/
-theorem case2_3_lem_g10 (x y : R) : homGuess f (x + y) + homGuess f (x - y) = 2 * homGuess f x :=
-  let X := case2_3_lem_g9 h h0 h1 h2 h3
-  (X x y).elim id λ h4 => by
-    have X0 := case2_3_lem_g2 h h0 h1 h2 h3
-    have h5 := X (x + 1) y
-    rw [add_right_comm, X0, add_sub_right_comm, X0, add_add_add_comm, X0, mul_add_one, ← bit0] at h5
-    cases h5; exact add_left_injective _ h5
-    rw [h4, neg_add, add_right_inj, eq_neg_iff_add_eq_zero, ← two_mul, mul_self_eq_zero] at h5
-    exact absurd h5 (add_left_ne_self.mp <| h1.symm.trans_ne h2)
+theorem case2_3_lem_g10 (x y : R) :
+    homGuess f (x + y) + homGuess f (x - y) = 2 * homGuess f x := by
+  have h4 x := case2_3_lem_g9 h h0 h1 h2 h3 x y
+  refine (h4 x).elim id λ h5 ↦ ?_
+  have h6 := case2_3_lem_g2 h h0 h1 h2 h3
+  specialize h4 (x + 1)
+  rw [add_right_comm, h6, add_sub_right_comm, h6, add_add_add_comm,
+    h6, mul_add_one (2 : S), one_add_one_eq_two, add_left_inj] at h4
+  refine h4.resolve_right λ h4 ↦ ?_
+  rw [h5, neg_add, add_right_inj, eq_neg_iff_add_eq_zero, ← two_mul,
+    mul_self_eq_zero, ← add_left_eq_self, two_add_one_eq_three] at h4
+  exact h2 (h1.trans h4)
 
-theorem case2_3_lem_g_mul (x y : R) : homGuess f (x * y) = homGuess f x * homGuess f y :=
-  mul_left_cancel₀ (pow_ne_zero 2 <| add_left_ne_self.mp <| h1.symm.trans_ne h2) <|
-    let h4 := case2_3_lem_g10 h h0 h1 h2 h3
-    (case2_3_lem_g7 h h0 h1 h2 h3 x y).trans <|
-      (sq_sub_sq _ _).trans <|
-        suffices homGuess f (x + y) - homGuess f (x - y) = 2 * homGuess f y from
-          (congr_arg₂ _ (h4 x y) this).trans <| (sq (2 : S)).symm ▸ mul_mul_mul_comm _ _ _ _
-        neg_sub y x ▸
-          (case2_3_lem_g3 h h0 h1 h2 h3 (y - x)).symm ▸
-            add_comm y x ▸ (sub_neg_eq_add _ _).trans (h4 y x)
-
-theorem case2_3_lem_g_one : homGuess f 1 = 1 :=
-  zero_add (1 : R) ▸ (case2_3_lem_g2 h h0 h1 h2 h3 _).trans <|
-    (congr_arg (· + (1 : S)) <| case2_3_lem_g1 h h0 h1 h2 h3).trans (zero_add 1)
-
-theorem case2_3_lem_g_add (x y : R) : homGuess f (x + y) = homGuess f x + homGuess f y :=
-  by
-  have h4 := case2_3_lem_g_mul h h0 h1 h2 h3 2
-  rw [bit0, case2_3_lem_g2 h h0 h1 h2 h3, case2_3_lem_g_one h h0 h1 h2 h3, ← bit0, ← bit0] at h4
-  have h5 := case2_3_lem_g10 h h0 h1 h2 h3 (x + y) (x - y)
-  rw [add_add_sub_cancel, ← two_mul, h4, add_sub_sub_cancel, ← two_mul, h4, ← mul_add] at h5
-  exact mul_left_cancel₀ (add_left_ne_self.mp <| h1.symm.trans_ne h2) h5.symm
-
-theorem case2_3_sol : ∃ φ : R →+* S, f = λ x => φ x ^ 2 - 1 :=
-  ⟨⟨homGuess f, case2_3_lem_g_one h h0 h1 h2 h3, case2_3_lem_g_mul h h0 h1 h2 h3,
-      case2_3_lem_g1 h h0 h1 h2 h3, case2_3_lem_g_add h h0 h1 h2 h3⟩,
+theorem case2_3_sol : ∃ φ : R →+* S, f = λ x => φ x ^ 2 - 1 := by
+  have X := case2_3_lem_g2 h h0 h1 h2 h3
+  have X0 := case2_3_lem_g10 h h0 h1 h2 h3
+  have X1 : (2 : S) ≠ 0 := λ X1 ↦ h2 <| by
+    rw [h1, ← two_add_one_eq_three, X1, zero_add]
+  -- Zero map
+  have hZero := case2_3_lem_g1 h0 h3
+  -- One map
+  have hOne : homGuess f 1 = 1 := by
+    rw [← zero_add (1 : R), X, hZero, zero_add]
+  -- Multiplicativity
+  have hMul x y : homGuess f (x * y) = homGuess f x * homGuess f y
+  · have h4 := case2_3_lem_g7 h h0 h1 h2 h3 x y
+    rw [sq_sub_sq, X0, sub_eq_add_neg, ← case2_3_lem_g3 h h0 h1 h2 h3,
+      neg_sub, add_comm x, X0, mul_mul_mul_comm, ← sq] at h4
+    exact mul_left_cancel₀ (pow_ne_zero 2 X1) h4
+  -- Additivity
+  have hAdd x y : homGuess f (x + y) = homGuess f x + homGuess f y
+  · specialize X0 (x + y) (x - y)
+    rw [add_add_sub_cancel, add_sub_sub_cancel, ← two_mul, hMul, ← two_mul,
+      hMul, ← mul_add, ← one_add_one_eq_two, X, hOne, one_add_one_eq_two] at X0
+    exact (mul_left_cancel₀ X1 X0).symm
+  -- Finish
+  exact ⟨⟨⟨⟨homGuess f, hOne⟩, hMul⟩, hZero, hAdd⟩,
     funext <| case2_3_lem_g4 h h0 h1 h2 h3⟩
 
-/-- Solution for the current subcase (`hom_sq_sub_one: x ↦ φ(x)^2 - 1`) -/
-theorem case23IsAnswer : IsAnswer f :=
-  Exists.elim (case2_3_sol h h0 h1 h2 h3) λ φ h4 => h4.symm ▸ IsAnswer.hom_sq_sub_one φ
+/-- Solution for the current subcase (`x ↦ φ(x)^2 - 1`) -/
+theorem case2_3_IsAnswer : IsAnswer f :=
+  Exists.elim (case2_3_sol h h0 h1 h2 h3)
+    (λ φ h4 ↦ h4.symm ▸ IsAnswer.hom_sq_sub_one φ)
 
 end Step9Field
 
-/-! ## Step 10: Subcase 2.3: `f_ = 0` and `f(2) = -1` -/
 
 
-section Step10
+
+
+
+
+/-! #### Some lemmas in characteristic two (to avoid `CharP` imports) -/
 
 namespace Char2
 
@@ -1256,17 +1263,16 @@ theorem add_self (x : R) : x + x = 0 :=
   (two_mul x).symm.trans (mul_eq_zero_of_left h x)
 
 theorem add_add_cancel (x y : R) : x + y + y = x :=
-  (add_assoc x y y).trans <| (congr_arg (Add.add x) (add_self h y)).trans (add_zero x)
+  by rw [add_assoc, add_self h, add_zero]
 
 theorem sub_eq_add (x y : R) : x - y = x + y :=
   sub_eq_of_eq_add (add_add_cancel h x y).symm
 
 theorem add_sq (x y : R) : (x + y) ^ 2 = x ^ 2 + y ^ 2 :=
-  (add_sq' x y).trans <|
-    (congr_arg (Add.add _) <| mul_eq_zero_of_left (mul_eq_zero_of_left h x) y).trans (add_zero _)
+  by rw [add_sq', h, zero_mul, zero_mul, add_zero]
 
 theorem add_one_sq (x : R) : (x + 1) ^ 2 = x ^ 2 + 1 :=
-  (add_sq h x 1).trans <| congr_arg (Add.add <| x ^ 2) (one_pow 2)
+  by rw [add_sq h, one_pow]
 
 theorem add_eq_iff_eq_add {x y z : R} : x + y = z ↔ x = z + y :=
   sub_eq_add h x y ▸ sub_eq_iff_eq_add
@@ -1275,420 +1281,394 @@ theorem add_eq_iff_eq_add' {x y z : R} : x + y = z ↔ x = y + z :=
   sub_eq_add h x y ▸ sub_eq_iff_eq_add'
 
 theorem add_eq_zero_iff_eq {x y : R} : x + y = 0 ↔ x = y :=
-  (add_eq_iff_eq_add h).trans <| by rw [zero_add]
-
-theorem add_pow_four (x y : R) : (x + y) ^ 4 = x ^ 4 + y ^ 4 := by
-  rw [bit0, ← two_mul, pow_mul, pow_mul, pow_mul, add_sq h, add_sq h]
-
-theorem add_one_pow_four (x : R) : (x + 1) ^ 4 = x ^ 4 + 1 :=
-  (add_pow_four h x 1).trans <| congr_arg (Add.add <| x ^ 4) (one_pow 4)
+  by rw [add_eq_iff_eq_add h, zero_add]
 
 end Char2
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
+
+/-! ## Step 10: Subcase 2.3: `f(-1) = 0` and `f(2) = -1` -/
+
+section Step10
+
+variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+  {f : R → S} (h : good f)
 
 /-- `2 ∈ I` -/
-theorem case2_4_lem1 (h0 : f (-1) = 0) (h1 : f 2 = -1) : ∀ x, f (2 + x) = f x :=
-  suffices ∀ x, f (x + 1) = f (x - 1) from λ x =>
-    add_rotate x 1 1 ▸ (this (x + 1)).trans <| congr_arg f (add_sub_cancel x 1)
-  ---- First assume an intermediate statement
-  suffices ∀ x, f (x + 1) = f (x - 1) ∨ f x + f (x - 1) = -1 from λ x =>
-    (this x).elim id λ h2 => by
-      have h3 := this (-x)
-      have h4 := case2_map_even h h0
-      rw [h4, neg_add_eq_sub, ← neg_sub, h4, ← neg_add', h4] at h3
-      exact h3.elim Eq.symm λ h3 => add_right_injective (f x) <| h3.trans h2.symm
-  ---- Now prove the intermediate statement
-λ x =>
-  by
-  suffices (f (x + 1) - f (x - 1)) * (f x + f (x - 1) + 1) = 0 from
-    (mul_eq_zero.mp this).imp eq_of_sub_eq_zero eq_neg_of_add_eq_zero_left
-  rw [← sub_eq_zero_of_eq (case2_special_identity h h0 x), case2_map_add_two_eq h h0 x, h1] <;> ring
+theorem case2_4_lem1 (h0 : f (-1) = 0) (h1 : f 2 = -1) :
+    2 ∈ periodIdeal h := by
+  have h2 x : f (x + 1) = f (x - 1) ∨ f x + f (x - 1) = -1 := by
+    have h2 := case2_special_identity h h0 x
+    rwa [case2_map_add_two_eq h h0, h1, neg_one_mul, neg_sub, sub_add,
+      mul_neg_one, ← add_sub_assoc, neg_add_self, eq_sub_iff_add_eq, mul_sub,
+      ← sub_add, mul_comm _ (f x), ← mul_sub, ← add_mul, ← add_one_mul (α := S),
+      mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm] at h2
+  intro x
+  rw [← one_add_one_eq_two, ← add_rotate]
+  rcases h2 (x + 1) with h3 | h3
+  rwa [add_sub_cancel] at h3
+  specialize h2 (-(x + 1))
+  have h4 := case2_map_even h h0
+  rw [← neg_add', h4, h4, neg_add_eq_sub, sub_add_cancel'', h4] at h2
+  refine h2.elim Eq.symm λ h2 ↦ ?_
+  rwa [add_sub_cancel, ← h2, add_right_inj, eq_comm] at h3
 
 section Rchar2
 
-variable (h0 : (2 : R) = 0)
+variable (h0 : (2 : R) = 0) (h1 : f 0 = -1)
 
-theorem case2_4_lem2 : f (-1) = 0 :=
-  eq_neg_of_add_eq_zero_left h0 ▸ good_map_one h
+theorem case2_4_lem2 : f (-1) = 0 := by
+  rw [← one_add_one_eq_two, add_eq_zero_iff_eq_neg] at h0
+  rw [← h0, good_map_one h]
 
 /-- (10.1) -/
 theorem case2_4_lem3 (x : R) : f (x * (x + 1) + 1) = f x * f (x + 1) :=
-  Char2.sub_eq_add h0 (x * (x + 1)) 1 ▸ case2_map_self_mul_add_one_sub_one h (case2_4_lem2 h h0) x
-
-variable (h1 : f 0 = -1)
+  Char2.sub_eq_add h0 (x * (x + 1)) 1 ▸
+    case2_map_self_mul_add_one_sub_one h (case2_4_lem2 h h0) x
 
 /-- (10.2) -/
 theorem case2_4_lem4 (x : R) : f (x ^ 2 + 1) = f x ^ 2 - 1 :=
   Char2.sub_eq_add h0 (x ^ 2) 1 ▸ case2_map_sq_sub_one h (case2_4_lem2 h h0) h1 x
 
 /-- (10.3) -/
-theorem case2_4_lem5 (x : R) : f (x ^ 2) = f (x + 1) ^ 2 - 1 :=
-  (congr_arg₂ _ (Char2.add_one_sq h0 x) rfl).trans (Char2.add_add_cancel h0 (x ^ 2) 1) ▸
-    case2_4_lem4 h h0 h1 (x + 1)
+theorem case2_4_lem5 (x : R) : f (x ^ 2) = f (x + 1) ^ 2 - 1 := by
+  rw [← case2_4_lem4 h h0 h1, Char2.add_one_sq h0, Char2.add_add_cancel h0]
 
-theorem case2_4_lem6 : ∀ x, f x ^ 2 + f (x + 1) ^ 2 = 1 ∨ f x + f (x + 1) = 1 :=
-  let h3 := case2_4_lem3 h h0
-  let h4 := case2_4_lem5 h h0 h1
+/-- Lemma 4 (TODO: Optimize the proof, if possible) -/
+theorem case2_4_lem6 (x : R) :
+    f x ^ 2 + f (x + 1) ^ 2 = 1 ∨ f x + f (x + 1) = 1 := by
+  have h3 := case2_4_lem3 h h0
+  have h4 := case2_4_lem5 h h0 h1
   ---- (10.L1.1)
-  have h5 : ∀ x, (f (x + 1) ^ 2 - 1) * (f (x + 1) - 1) + f x * f (x + 1) = f x * f (x * (x + 1)) :=
-    λ x => by
-    rw [← h3, ← h4, ← h, eq_sub_iff_add_eq, add_right_comm, ← eq_sub_iff_add_eq, ← mul_assoc,
-      mul_add_one, ← sq, add_left_comm, char2.add_self h0, add_zero, ← mul_add_one, sub_add_cancel,
-      add_assoc, h]
-  ---- Assuming the lemma + possibility of `f(x + 1) = f(x)`
-λ x =>
-  by
-  suffices (f x ^ 2 + f (x + 1) ^ 2 = 1 ∨ f x + f (x + 1) = 1) ∨ f x = f (x + 1) from
-    this.elim id λ h6 =>
-      Or.inr <| by
-        rw [← h6, ← two_mul, eq_comm]
-        have h7 := case2_4_lem4 h h0 h1
-        have h8 := h7 (x * (x + 1))
-        rw [mul_pow, char2.add_one_sq h0, h3, h4, h7] at h8
-        replace h8 := sub_eq_zero_of_eq (congr_arg₂ Mul.mul (rfl : f x ^ 2 = f x ^ 2) h8)
-        rw [mul_sub_one (f x ^ 2), ← mul_pow, ← h5, ← h6] at h8
-        replace h8 : (1 - 2 * f x) * (f x ^ 2 - 1) = 0 := h8 ▸ by ring
-        rw [mul_eq_zero] at h8 ; refine' h8.elim eq_of_sub_eq_zero λ h8 => _
-        refine' absurd (h5 (x ^ 2)) _
-        rw [h7, h4, ← h6, h8, sq, zero_mul, zero_mul, add_zero, zero_sub,
-          ← sq, neg_one_sq]
-        exact one_ne_zero' S
-  ---- Proving the lemma + possibility of `f(x + 1) = f(x)`
-  suffices (f x ^ 2 + f (x + 1) ^ 2 - 1) * (f x + f (x + 1) - 1) * (f x - f (x + 1)) = 0 from
-    (mul_eq_zero.mp this).imp
-      (λ this => (mul_eq_zero.mp this).imp eq_of_sub_eq_zero eq_of_sub_eq_zero) eq_of_sub_eq_zero
-  have h6 := congr_arg (Mul.mul <| f x) (h5 (x + 1))
-  rw [char2.add_add_cancel h0, mul_left_comm, mul_comm (x + 1), ← h5] at h6
-  rw [← sub_eq_zero_of_eq h6]; ring
+  have h5 x :
+      (f (x + 1) ^ 2 - 1) * (f (x + 1) - 1) + f x * f (x + 1)
+        = f x * f (x * (x + 1)) := by
+    rw [← h3, ← h4, ← h, eq_sub_iff_add_eq, add_right_comm, ← eq_sub_iff_add_eq,
+      ← mul_assoc, mul_add_one x, ← sq, add_left_comm, Char2.add_self h0,
+      add_zero, ← mul_add_one (f (x ^ 2)), sub_add_cancel, add_assoc, h]
+  ---- Now use (10.L1.1) for more reduction
+  have h6 : (f x) * _ = _ := congr_arg₂ _ rfl (h5 (x + 1))
+  rw [Char2.add_add_cancel h0, mul_left_comm, mul_comm (x + 1), ← h5] at h6
+  replace h6 :
+      (f x ^ 2 + f (x + 1) ^ 2 - 1) * (f x + f (x + 1) - 1)
+        * (f x - f (x + 1)) = 0 :=
+    sub_eq_zero_of_eq h6 ▸ by ring
+  rw [mul_eq_zero, mul_eq_zero, sub_eq_zero, sub_eq_zero, sub_eq_zero] at h6
+  rcases h6 with h6 | h6; exact h6; right
+  ---- Assuming `f(x) = f(x + 1)`, prove that `f(x) + f(x + 1) = 1`
+  specialize h3 (x ^ 2)
+  have h2 := case2_4_lem4 h h0 h1
+  rw [h4, h2, ← Char2.add_one_sq h0, ← mul_pow, h2] at h3
+  replace h3 : _ * _ = _ * _ := congr_arg ((f x) ^ 2 * ·) h3
+  rw [mul_sub_one, ← mul_pow, ← h5, ← h6, ← sq, mul_sub_one,
+    ← add_sub_right_comm, add_sub_assoc, sub_sub_cancel, ← sq, add_sq,
+    mul_comm, one_pow, add_assoc, mul_pow, sub_eq_iff_eq_add, add_right_inj,
+    mul_one, ← eq_sub_iff_add_eq,← mul_assoc, mul_left_eq_self₀] at h3
+  rcases h3 with h3 | h3
+  · rwa [← h6, ← two_mul]
+  · specialize h5 (x ^ 2)
+    rw [h2, h4, ← h6, h3, sq, zero_mul, zero_mul,
+      zero_sub, neg_mul_neg, mul_one, add_zero] at h5
+    exact absurd h5 one_ne_zero
 
-/-- Solution for the current sub-subcase (`hom_sub_one: x ↦ φ(x) - 1`) -/
-theorem case24Schar2QuotIsAnswer (h3 : (2 : S) = 0) : IsAnswer f :=
-  isAnswerOfAddOneAdditive h h1 λ x y => ---- (10.L2.1)
-  by
-    have h4 : ∀ x, f (x + 1) = f x + 1 := λ x =>
-      (Char2.add_eq_iff_eq_add' h3).mp <|
-        (add_comm _ _).trans <|
-          (case2_4_lem6 h h0 h1 x).symm.elim id λ h4 =>
-            (sq_eq_one_iff.mp <| (Char2.add_sq h3 _ _).trans h4).elim id λ h5 =>
-              h5.trans <| neg_eq_of_add_eq_zero_left h3
+/-- Solution for the current sub-subcase (`hom_sub_one: x ↦ φ(x) - 1`).
+  (TODO: Optimize the proof, if possible) -/
+theorem case2_4_Schar2_quot_IsAnswer (h3 : (2 : S) = 0) : IsAnswer f :=
+  IsAnswer_of_add_one_additive h <| by
+    ---- (10.L2.1)
+    have h4 x : f (x + 1) = f x + 1 := by
+      rw [← Char2.add_eq_iff_eq_add' h3, add_comm]
+      refine (case2_4_lem6 h h0 h1 x).elim (λ h4 ↦ ?_) id
+      rwa [← Char2.add_sq h3, ← Char2.add_eq_zero_iff_eq h3,
+        ← Char2.add_one_sq h3, sq_eq_zero_iff, Char2.add_eq_zero_iff_eq h3] at h4
     ---- (10.L2.2)
-    have h5 : ∀ x y, f (x * y) = f x * f y + f (x + y) + 1 := λ x y =>
-      (Char2.add_eq_iff_eq_add h3).mp ((h4 _).symm.trans <| eq_add_of_sub_eq <| h x y)
+    replace h x y : f (x * y) = f x * f y + f (x + y) + 1 :=
+      by rw [← h, sub_add_cancel, h4, Char2.add_add_cancel h3]
     ---- Back to the main equality
+    intros x y
     let a := f x
     let b := f y
     let c := f (x + y)
-    have h6 := h5 (x * y) ((y + 1) * (x + 1))
-    rw [mul_mul_mul_comm, h5, add_left_inj] at h6
+    have h6 := h (x * y) ((y + 1) * (x + 1))
+    rw [mul_mul_mul_comm, h, add_left_inj] at h6
     have h7 : x * y + (y + 1) * (x + 1) = x * (y + 1) + y * (x + 1) + 1 := by ring
     rw [h7, h4, ← add_assoc, ← sub_eq_iff_eq_add', add_sub_add_right_eq_sub] at h6
-    replace h7 : f (x * y) = a * b + c + 1 := h5 x y
-    have h8 : f (x * (y + 1)) = a * (b + 1) + (c + 1) + 1 := by rw [h5, ← add_assoc, h4, h4]
+    replace h7 : f (x * y) = a * b + c + 1 := h x y
+    have h8 : f (x * (y + 1)) = a * (b + 1) + (c + 1) + 1 := by rw [h, ← add_assoc, h4, h4]
     have h9 : f (y * (x + 1)) = b * (a + 1) + (c + 1) + 1 := by
-      rw [h5, add_left_comm, ← add_assoc, h4, h4]
+      rw [h, add_left_comm, ← add_assoc, h4, h4]
     have h10 : f ((y + 1) * (x + 1)) = (b + 1) * (a + 1) + c + 1 := by
-      rw [h5, add_add_add_comm, ← bit0, h0, add_zero, add_comm y x, h4, h4]
+      rw [h, add_add_add_comm, one_add_one_eq_two, h0, add_zero, add_comm y x, h4, h4]
     replace h6 := (congr_arg₂ _ (congr_arg₂ _ h8 h9) (congr_arg₂ _ h7 h10)).symm.trans h6
     rw [← sub_eq_iff_eq_add', ← h6, eq_comm, ← sub_eq_zero]
     refine' Eq.trans _ (mul_eq_zero_of_left h3 <| (a + 1) * (b + 1))
     ring
 
-variable (h2 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) (h3 : (2 : S) ≠ 0)
+variable (h2 : ∀ c ∈ periodIdeal h, c = 0) (h3 : (2 : S) ≠ 0)
 
-theorem case2_4_lem7 (x : R) : f x * f (x + 1) = 0 ∨ f x + f (x + 1) = 1 ∧ f x * f (x + 1) = -1 :=
-  by
-  suffices---- Reduce the condition to `2 f(x)^2 f(x + 1)^2 (f(x)^2 + f(x + 1)^2 - 3) = 0`
-          2 *
-          (f x * f (x + 1)) ^ 2 *
-        (f x ^ 2 + f (x + 1) ^ 2 - 3) =
-      0
-    from
-    (mul_eq_zero.mp this).imp (λ h4 => sq_eq_zero_iff.mp <| (mul_eq_zero.mp h4).resolve_left h3)
-      λ h4 =>
-      let h5 := eq_of_sub_eq_zero h4
-      let h6 :=
-        (case2_4_lem6 h h0 h1 x).resolve_left <|
-          (eq_of_sub_eq_zero h4).trans_ne <| add_left_ne_self.mpr h3
-      ⟨h6, by
-        let h7 := add_sq' (f x) (f (x + 1))
-        rwa [h5, h6, one_pow, bit1, add_right_comm, self_eq_add_left, mul_assoc, ← mul_one_add,
-          mul_eq_zero, or_iff_right h3, add_eq_zero_iff_neg_eq, eq_comm] at h7 ⟩
-  ---- Prove the above equality
-  have h4 : ∀ x, f (x ^ 4) = (f x ^ 2 - 1) ^ 2 - 1 := λ x => by
-    rw [bit0, ← two_mul, pow_mul, case2_4_lem5 h h0 h1, case2_4_lem4 h h0 h1]
+/-- Lemma 5 -/
+theorem case2_4_lem7 (x : R) :
+    f x * f (x + 1) = 0 ∨ f x + f (x + 1) = 1 ∧ f x * f (x + 1) = -1 := by
+  have h4 x : f ((x ^ 2) ^ 2) = f x ^ 2 * (f x ^ 2 - 2) := by
+    rw [case2_4_lem5 h h0 h1, case2_4_lem4 h h0 h1, ← one_pow 2,
+      sq_sub_sq, one_pow, sub_add_cancel, sub_sub, one_add_one_eq_two]
   have h5 := case2_4_lem3 h h0
-  have h6 := char2.add_one_pow_four h0
+  have h6 := Char2.add_one_sq h0
   have h7 := h4 (x * (x + 1) + 1)
-  rw [h5, h6, mul_pow, h6, h5, h4, ← h6, h4, eq_comm, ← sub_eq_zero] at h7
-  rw [← h7]; ring
+  rw [h5, h6, h6, mul_pow, h6, mul_pow, h6, h5, h4, ← h6, ← h6, h4,
+    mul_mul_mul_comm, ← mul_pow, mul_eq_mul_left_iff, or_comm] at h7
+  refine h7.imp sq_eq_zero_iff.mp λ h8 ↦ ?_
+  rw [sub_mul, mul_sub, ← mul_pow, sub_sub, sub_right_inj, mul_comm, ← mul_add,
+    mul_right_eq_self₀, or_iff_left h3, ← add_sub_assoc, sub_eq_iff_eq_add] at h8
+  replace h7 := case2_4_lem6 h h0 h1 x
+  rw [h8, add_right_eq_self, or_iff_right h3] at h7
+  refine ⟨h7, ?_⟩
+  apply congr_arg (· ^ 2) at h7
+  rw [add_sq', h8, one_pow, add_assoc, add_right_eq_self, mul_assoc,
+    ← mul_one_add (2 : S), mul_eq_zero, or_iff_right h3] at h7
+  exact eq_neg_of_add_eq_zero_right h7
 
-/-- This lemma's proof implementation is too slow... at least 0.7s.
-  It should be optimized or broken down into more lemmas.
-  Or, you could give a simpler proof. -/
-theorem case2_4_lem8 (c : R) (h4 : f c = -1) : c = 0 :=
-  by
-  have
-    h5 :---- (10.L3.1)
-    ∀ x, f x = -1 → f (x + 1) = 0 :=
-    λ x h5 =>
-    let X : (1 : S) ≠ 0 := one_ne_zero' S
-    (case2_4_lem7 h h0 h1 h2 h3 x).elim
-      (λ h6 => (mul_eq_zero.mp h6).resolve_left <| h5.trans_ne <| neg_ne_zero.mpr X) λ h6 => by
-      rw [h5, neg_one_mul, neg_inj, neg_add_eq_iff_eq_add] at h6  <;>
-        exact absurd (h6.1.symm.trans h6.2) (add_right_ne_self.mpr X)
+/-- Lemma 6 (TODO: Refactor the proof, if possible) -/
+theorem case2_4_lem8 : ∀ c, f c = -1 → c = 0 := by
+  ---- (10.L3.1)
+  have A1 x (h6 : f x = -1) : f (x + 1) = 0 := by
+    rcases case2_4_lem7 h h0 h1 h3 x with h7 | ⟨h7, h8⟩
+    · rwa [h6, neg_one_mul, neg_eq_zero] at h7
+    · rw [h6, neg_one_mul, neg_inj] at h8
+      rw [h6, h8, neg_add_self] at h7
+      rw [h8, h7]
   ---- (10.L3.2)
-  have h6 : ∀ c, f c = -1 → ∀ x, f (c ^ 2 + c * x + 1) = -f (c * x + 1) := λ c h6 x => by
-    rw [eq_add_of_sub_eq (h c _), sq, ← mul_add, eq_add_of_sub_eq (h c _), h6, ← add_assoc,
-        char2.add_self h0, zero_add] <;>
-      ring
-  ---- The main problem
-  have X := char2.add_sq h0
-  have X0 := case2_4_lem5 h h0 h1
-  -- Reduce to `c^4 = 0`
-  have h7 := X0 c
-  rw [h5 c h4, zero_pow (Nat.succ_pos 1), zero_sub] at h7
-  suffices h8 : (c ^ 2) ^ 2 = 0
-  · suffices h9 : ∀ c, f c = -1 → c ^ 2 = 0 → c = 0
-    exact h9 c h4 (h9 _ h7 h8)
-    intro d h9 h10
-    refine' h2 d ((period_iff h).mpr ⟨(quasi_period_iff h).mpr λ x => _, h9.trans h1.symm⟩)
-    have h11 := h6 d h9 x
-    rw [h10, zero_add, eq_neg_iff_add_eq_zero, ← two_mul, mul_eq_zero] at h11
-    exact h11.resolve_left h3
-  -- Get `c^6 + c^4 = 0`
-  have h8 : ∀ x, f ((c ^ 2) ^ 2 + c ^ 2 + c ^ 2 * x + 1) = f (c ^ 2 * x + 1) := λ x => by
-    rw [add_assoc ((c ^ 2) ^ 2), ← mul_one_add, h6 _ h7, mul_one_add, sq, mul_assoc, ← sq, h6 _ h4,
-      neg_neg]
-  have h9 : f (c + 1) = 0 := h5 c h4
-  have h10 : f (c ^ 2 + c + 1) = 0 := by
-    rw [sq, ← mul_add_one, case2_4_lem3 h h0, h9, mul_zero]
-  replace h8 : ∀ x, f (((c ^ 2) ^ 2 + c ^ 2) * c ^ 2 * x + 1) = 0 :=
-    by
-    suffices f ((c ^ 2) ^ 2 + c ^ 2) = -1 from λ x => by
-      rw [mul_assoc, mul_left_comm, ← h8, mul_left_comm, ← mul_one_add, add_comm (1 : R),
-        eq_add_of_sub_eq (h _ _), this, neg_one_mul, ← add_assoc, h8, neg_add_self]
-    rw [← X, X0, h10, sq, zero_mul, zero_sub]
-  replace h8 : ((c ^ 2) ^ 2 + c ^ 2) * c ^ 2 = 0 :=
-    h2 _
-      ((period_iff h).mpr
-        ⟨(quasi_period_iff h).mpr h8, by
-          rwa [← X, ← mul_pow, X0, h1, sub_eq_neg_self, sq_eq_zero_iff, sq, ← add_one_mul,
-            mul_rotate, ← sq, eq_add_of_sub_eq (h _ _), h9, mul_zero, zero_add, ←
-            add_assoc]⟩)
-  -- Now show that `c^4 = 0`
-  refine'
-    h2 _
-      ((period_iff h).mpr
-        ⟨(quasi_period_iff h).mpr λ x => _, by
-          rw [X0, h1, sub_eq_neg_self, sq_eq_zero_iff] <;> exact h5 _ h7⟩)
-  rw [sq, ← add_one_mul, mul_assoc, ← sq] at h8
-  have h11 := eq_add_of_sub_eq (h (c ^ 2 + 1) ((c ^ 2) ^ 2 * x + 1))
-  rw [h5 _ h7, zero_mul, zero_add, mul_add_one, ← mul_assoc, h8, zero_mul,
-    zero_add, add_left_comm, char2.add_add_cancel h0, h7, eq_comm] at h11
-  rw [sq, sq, mul_assoc, mul_assoc, ← neg_eq_zero, ← h6 _ h4, ← mul_assoc, ← sq, ← mul_assoc, ← sq,
-    add_comm (c ^ 2)]
-  exact h5 _ h11
+  have A2 c (h6 : f c = -1) x : f (c ^ 2 + c * x + 1) = -f (c * x + 1) := by
+    rw [sq, ← mul_add, eq_add_of_sub_eq (h _ _), ← add_assoc,
+      Char2.add_self h0, zero_add, eq_add_of_sub_eq (h _ _), h6,
+      neg_one_mul, neg_one_mul, neg_add, neg_neg, add_comm]
+  ---- Reduce to `c^4 = 0`
+  intro c h4
+  have X := case2_4_lem5 h h0 h1
+  have h5 := X c
+  rw [A1 c h4, sq (0 : S), zero_mul, zero_sub] at h5
+  have h6 (d : R) (h7 : f d = -1) (h8 : d ^ 2 = 0) : d = 0 := h2 d <| by
+    rw [mem_periodIdeal_iff, h1]
+    refine ⟨λ x ↦ ?_, h7⟩
+    have h9 := A2 d h7 x
+    rwa [h8, zero_add, eq_neg_iff_add_eq_zero,
+      ← two_mul, mul_eq_zero, or_iff_right h3] at h9
+  refine h6 c h4 (h6 _ h5 ?_)
+  ---- Prove that `c^6 + c^4 = 0`
+  replace h6 : ((c ^ 2) ^ 2 + c ^ 2) * c ^ 2 = 0 := h2 _ <| by
+    rw [mem_periodIdeal_iff, h1]
+    have h7 := Char2.add_sq h0
+    specialize A1 c h4
+    have h8 : f (c ^ 2 + c + 1) = 0 := by
+      rw [sq c, ← mul_add_one c, case2_4_lem3 h h0, A1, mul_zero]
+    constructor
+    · replace h6 x : f ((c ^ 2) ^ 2 + c ^ 2 + c ^ 2 * x + 1) = f (c ^ 2 * x + 1) :=
+        by rw [add_assoc ((c ^ 2) ^ 2), ← mul_one_add (c ^ 2) x, A2 _ h5,
+          mul_one_add (c ^ 2) x, sq, mul_assoc, ← sq, A2 _ h4, neg_neg]
+      intro x
+      rw [mul_assoc, mul_left_comm, ← h6, mul_left_comm,
+        ← mul_one_add (α := R), eq_add_of_sub_eq (h _ _),
+        add_comm (1 : R), ← add_assoc, h6, ← add_one_mul (α := S)]
+      apply mul_eq_zero_of_left
+      rw [← h7, X, sub_add_cancel, h8, sq, zero_mul]
+    · rwa [← h7, ← mul_pow, X, sub_eq_neg_self, sq_eq_zero_iff,
+        sq, ← add_one_mul c, mul_assoc, eq_add_of_sub_eq (h _ _),
+        A1, zero_mul, zero_add, ← sq, ← add_rotate]
+  ---- Final step
+  apply h2
+  rw [mem_periodIdeal_iff, h1, and_comm]
+  have h7 := A1 (c ^ 2) h5
+  constructor
+  · rw [X, h7, sq, zero_mul, zero_sub]
+  · intro x
+    rw [sq, ← add_one_mul (α := R), mul_assoc, ← sq] at h6
+    have h8 := h (c ^ 2 + 1) ((c ^ 2) ^ 2 * x + 1)
+    rw [h7, zero_mul, sub_eq_zero, add_add_add_comm, Char2.add_self h0,
+      add_zero, mul_add_one (α := R), ← mul_assoc, h6, zero_mul,
+      zero_add, Char2.add_add_cancel h0, h5] at h8
+    replace h6 : (c ^ 2) ^ 2 = c * (c * c ^ 2) := by rw [← mul_assoc, ← sq, ← sq]
+    rw [h6, mul_assoc, ← neg_eq_zero, ← A2 c h4, ← mul_assoc, ← h6]
+    exact A1 _ h8.symm
 
+/-- Lemma 7 -/
 theorem case2_4_lem9 (x : R) :
-    (x ^ 2 = 0 ∨ x ^ 2 = 1) ∨ f x + f (x + 1) = 1 ∧ x * (x + 1) + 1 = 0 :=
-  by
-  suffices
-    (---- Reduce to showing that either `f(x) = 0`, `f(x + 1) = 0`, or `f(x)^2 + f(x + 1)^2 = 3`
-            f
-            (x + 1) =
-          0 ∨
-        f x = 0) ∨
-      f x ^ 2 + f (x + 1) ^ 2 = 3
-    from
-    let h4 := case2_4_lem8 h h0 h1 h2 h3
-    this.imp
-      (Or.imp
-        (λ h5 =>
-          h4 _ <| (case2_4_lem5 h h0 h1 _).trans <| sub_eq_neg_self.mpr <| sq_eq_zero_iff.mpr h5)
-        λ h5 =>
-        eq_of_sub_eq_zero <|
-          (Char2.sub_eq_add h0 _ _).trans <|
-            h4 _ <| (case2_4_lem4 h h0 h1 x).trans <| sub_eq_neg_self.mpr <| sq_eq_zero_iff.mpr h5)
-      λ this =>
-      let h5 := (case2_4_lem6 h h0 h1 x).resolve_left (this.trans_ne <| add_left_ne_self.mpr h3)
-      ⟨h5,
-        h4 _ <|
-          (case2_4_lem3 h h0 _).trans <|
-            by
-            have h6 := add_sq' (f x) (f (x + 1))
-            rw [h5, this, one_pow, bit1, add_right_comm, self_eq_add_left, mul_assoc, ← mul_one_add,
-              mul_eq_zero] at h6
-            exact h6.elim (λ h6 => absurd h6 h3) eq_neg_of_add_eq_zero_right⟩
-  ---- Now prove that either `f(x) = 0`, `f(x + 1) = 0`, or `f(x)^2 + f(x + 1)^2 = 3`
-  suffices 2 * (f (x + 1) * f x) ^ 2 * (f x ^ 2 + f (x + 1) ^ 2 - 3) = 0 from
-    (mul_eq_zero.mp this).imp
-      (λ h4 => mul_eq_zero.mp <| sq_eq_zero_iff.mp <| (mul_eq_zero.mp h4).resolve_left h3)
-      eq_of_sub_eq_zero
-  have h4 : ∀ x, f (x ^ 4) = (f x ^ 2 - 1) ^ 2 - 1 := λ x => by
-    rw [bit0, ← two_mul, pow_mul, case2_4_lem5 h h0 h1, case2_4_lem4 h h0 h1]
-  have h5 := case2_4_lem3 h h0
-  have h6 := char2.add_one_pow_four h0
-  have h7 := h4 (x * (x + 1) + 1)
-  rw [h5, h6, mul_pow, h6, h5, h4, ← h6, h4, eq_comm, ← sub_eq_zero] at h7
-  rw [← h7]; ring
+    (x ^ 2 = 0 ∨ x ^ 2 = 1) ∨ f x + f (x + 1) = 1 ∧ x * (x + 1) + 1 = 0 := by
+  have h4 := case2_4_lem8 h h0 h1 h2 h3
+  refine (case2_4_lem7 h h0 h1 h3 x).imp ?_ (λ h5 ↦ ?_)
+  · rw [mul_eq_zero, or_comm]
+    refine Or.imp (λ h5 ↦ h4 _ <| ?_) (λ h5 ↦ ?_)
+    · rw [case2_4_lem5 h h0 h1, h5, sq, zero_mul, zero_sub]
+    · rw [← Char2.add_eq_zero_iff_eq h0]
+      apply h4; rw [case2_4_lem4 h h0 h1, h5, sq, zero_mul, zero_sub]
+  · exact ⟨h5.1, h4 _ <| (case2_4_lem3 h h0 x).trans h5.2⟩
 
 theorem case2_4_lem10 (h4 : ∀ x : R, x ^ 2 = 0 → x = 0) (x : R) :
     (x = 0 ∨ x = 1) ∨ f x + f (x + 1) = 1 ∧ x * (x + 1) + 1 = 0 :=
-  (case2_4_lem9 h h0 h1 h2 h3 x).imp_left <|
-    Or.imp (h4 x) λ h5 =>
-      eq_of_sub_eq_zero <|
-        h4 (x - 1) <| (Char2.sub_eq_add h0 x 1).symm ▸ (Char2.add_one_sq h0 x).symm ▸ h5.symm ▸ h0
+  (case2_4_lem9 h h0 h1 h2 h3 x).imp_left <| Or.imp (h4 x) λ h5 ↦ by
+    rw [← Char2.add_eq_zero_iff_eq h0] at h5 ⊢
+    exact h4 _ ((Char2.add_one_sq h0 x).trans h5)
+
+
 
 /-- The main lemma for the `𝔽₂[X]/⟨X^2⟩` subcase -/
 theorem case2_4_𝔽₂ε_main_lemma {c : R} (h4 : c ≠ 0) (h5 : c * c = 0) :
-    ∀ x, (x = 0 ∨ x = c) ∨ x = 1 ∨ x = c + 1 :=
-  suffices ∀ x, f (c * x + 1) = 0 from cases_of_nonperiod_quasi_period h h2 h1 this h4
-  λ x => by
-  let h6 := (case2_4_lem5 h h0 h1 <| c * x).symm
-  rwa [mul_pow, sq c, h5, zero_mul, h1, sub_eq_neg_self, sq_eq_zero_iff] at h6
+    ∀ x, (x = 0 ∨ x = c) ∨ x = 1 ∨ x = c + 1 := by
+  refine cases_of_nonperiod_quasi_period h h2 h1 (λ x ↦ ?_) h4
+  have h6 := case2_4_lem5 h h0 h1 (c * x)
+  rwa [mul_pow, sq, h5, zero_mul, h1, eq_comm,
+    sub_eq_neg_self, sq_eq_zero_iff] at h6
 
-/-- Solution for the current sub-subcase (`𝔽₂ε_map`) -/
-theorem case24𝔽₂εQuotIsAnswer {c : R} (h4 : c ≠ 0) (h5 : c * c = 0) : IsAnswer f :=
-  have X : Bijective (𝔽₂ε.cast'Hom h0 h5) :=
-    ⟨𝔽₂ε.cast'Hom_injective _ _ h4, λ x =>
-      (case2_4_𝔽₂ε_main_lemma h h0 h1 h2 h3 h4 h5 x).elim
-        (λ h5 => h5.elim (λ h5 => ⟨𝔽₂ε.O, h5.symm⟩) λ h5 => ⟨𝔽₂ε.X, h5.symm⟩) λ h5 =>
-        h5.elim (λ h5 => ⟨𝔽₂ε.I, h5.symm⟩) λ h5 => ⟨𝔽₂ε.Y, h5.symm⟩⟩
+/-- Solution for the current sub-subcase (`𝔽₂εMap`) -/
+theorem case2_4_𝔽₂ε_quot_IsAnswer {c : R} (h4 : c ≠ 0) (h5 : c * c = 0) :
+    IsAnswer f :=
+  -- `𝔽₂[X]/⟨X^2⟩ → R/I` induced by `X ↦ c` is bijective
+  have X : Bijective (𝔽₂ε.castHom h0 h5) :=
+    ⟨𝔽₂ε.castHom_injective _ _ h4,
+    λ x ↦ by rcases case2_4_𝔽₂ε_main_lemma h h0 h1 h2 h4 h5 x
+               with (h5 | h5) | (h5 | h5)
+             exacts [⟨𝔽₂ε.O, h5.symm⟩, ⟨𝔽₂ε.X, h5.symm⟩,
+                     ⟨𝔽₂ε.I, h5.symm⟩, ⟨𝔽₂ε.Y, h5.symm⟩]⟩
+  -- Factor `f` out as `𝔽₂εMap ∘ π`
   let π := (RingEquiv.ofBijective _ X).symm
-  suffices f = 𝔽₂εMap S ∘ π from this.symm ▸ IsAnswer.𝔽₂ε_map_comp π.toRingHom π.Surjective
-  (MulEquiv.eq_comp_symm _ _ _).mpr <|
-    funext λ x =>
-      let h6 := good_map_one h
-      match x with
+  suffices f = 𝔽₂εMap S ∘ π
+    from this.symm ▸ IsAnswer.𝔽₂ε_map_comp π.toRingHom π.surjective
+  have h6 := good_map_one h
+  (MulEquiv.eq_comp_symm _ _ _).mpr <| funext λ x ↦
+    match x with
       | 𝔽₂ε.O => h1
       | 𝔽₂ε.I => h6
-      | 𝔽₂ε.X =>
-        suffices f c = 1 ∨ f c = -1 from this.resolve_right <| mt (case2_4_lem8 h h0 h1 h2 h3 c) h4
-        sq_eq_one_iff.mp <|
-          sub_eq_zero.mp <|
-            (case2_4_lem4 h h0 h1 c).symm.trans <|
-              ((sq c).trans h5).symm ▸ (zero_add (1 : R)).symm ▸ h6
+      | 𝔽₂ε.X => by
+          have h7 := case2_4_lem4 h h0 h1 c
+          rw [sq, h5, zero_add, h6, eq_comm, sub_eq_zero, sq_eq_one_iff] at h7
+          exact h7.resolve_right <| mt (case2_4_lem8 h h0 h1 h2 h3 c) h4
       | 𝔽₂ε.Y => by
-        let h7 := case2_4_lem5 h h0 h1 c
-        rwa [sq, h5, h1, eq_comm, sub_eq_neg_self, sq_eq_zero_iff] at h7
+          have h7 := case2_4_lem5 h h0 h1 c
+          rwa [sq, h5, h1, eq_comm, sub_eq_neg_self, sq_eq_zero_iff] at h7
+
+
 
 /-- The main lemma for the `𝔽₄` subcase -/
-theorem case2_4_𝔽₄_main_lemma (h4 : ∀ x : R, x ^ 2 = 0 → x = 0) {c : R} (h5 : f c + f (c + 1) = 1)
-    (h6 : c * c + c = 1) : ∀ x, (x = 0 ∨ x = c) ∨ x = 1 ∨ x = c + 1 := λ x =>
-  (or_or_or_comm _ _ _ _).mp <|
-    let h7 := case2_4_lem10 h h0 h1 h2 h3 h4
-    (h7 x).imp_right λ h8 =>
-      (h7 (x + c)).elim (Or.imp (Char2.add_eq_zero_iff_eq h0).mp (Char2.add_eq_iff_eq_add' h0).mp)
-        (by
-          let h9 := one_ne_zero_of_map_zero h h1
-          suffices (x + c) * (x + c + 1) = 0 from λ h10 =>
-            absurd h10.2 <| this.symm ▸ (zero_add (1 : R)).trans_ne h9
-          rw [mul_add_one, ← sq, char2.add_sq h0, add_add_add_comm, sq, sq, h6, ← mul_add_one,
-            h8.2])
+theorem case2_4_𝔽₄_main_lemma
+    (h4 : ∀ x : R, x ^ 2 = 0 → x = 0) (h5 : c * (c + 1) = 1) (x : R) :
+    (x = 0 ∨ x = 1) ∨ x = c ∨ x = c + 1 := by
+  have h7 := case2_4_lem10 h h0 h1 h2 h3 h4
+  refine (h7 x).imp_right λ h8 ↦ (h7 (x + c)).elim ?_ ?_
+  · exact Or.imp (Char2.add_eq_zero_iff_eq h0).mp (Char2.add_eq_iff_eq_add' h0).mp
+  · rintro ⟨-, h9⟩
+    rw [mul_add_one (x + c), ← sq, Char2.add_sq h0, add_add_add_comm, sq,
+      sq, ← mul_add_one c, h5, ← mul_add_one x, h8.2, zero_add] at h9
+    exact absurd h9 (one_ne_zero_of_map_zero h h1)
 
-/-- Solution for the current sub-subcase (`𝔽₄_map`) -/
-theorem case24𝔽₄QuotIsAnswer (h4 : ∀ x : R, x ^ 2 = 0 → x = 0) {c : R} (h5 : f c + f (c + 1) = 1)
-    (h6 : c * c + c = 1) : IsAnswer f :=
-  have X : Bijective (𝔽₄.cast'Hom h0 h6) :=
-    ⟨𝔽₄.cast'Hom_injective _ _ (one_ne_zero_of_map_zero h h1), λ x =>
-      (case2_4_𝔽₄_main_lemma h h0 h1 h2 h3 h4 h5 h6 x).elim
-        (λ h5 => h5.elim (λ h5 => ⟨𝔽₄.O, h5.symm⟩) λ h5 => ⟨𝔽₄.X, h5.symm⟩) λ h5 =>
-        h5.elim (λ h5 => ⟨𝔽₄.I, h5.symm⟩) λ h5 => ⟨𝔽₄.Y, h5.symm⟩⟩
+/-- Solution for the current sub-subcase (`𝔽₄Map`) -/
+theorem case2_4_𝔽₄_quot_IsAnswer (h4 : ∀ x : R, x ^ 2 = 0 → x = 0)
+    (h5 : f c + f (c + 1) = 1) (h6 : c * (c + 1) = 1) : IsAnswer f :=
+  -- `𝔽₄ → R/I` is bijective
+  have X : Bijective (𝔽₄.castHom h0 h6) :=
+    ⟨𝔽₄.castHom_injective _ _ (one_ne_zero_of_map_zero h h1),
+    λ x ↦ by rcases case2_4_𝔽₄_main_lemma h h0 h1 h2 h3 h4 h6 x
+               with (h7 | h7) | (h7 | h7)
+             exacts [⟨𝔽₄.O, h7.symm⟩, ⟨𝔽₄.I, h7.symm⟩,
+                     ⟨𝔽₄.X, h7.symm⟩, ⟨𝔽₄.Y, h7.symm⟩]⟩
+  -- Factor `f` out as `𝔽₄Map ∘ π`
   let π := (RingEquiv.ofBijective _ X).symm
-  suffices f = 𝔽₄Map S (f c) ∘ π from
-    this.symm ▸
-      IsAnswer.𝔽₄_map_comp π.toRingHom π.Surjective (f c)
-        (eq_sub_of_add_eq' h5 ▸
-          case2_4_lem3 h h0 c ▸ (mul_add_one c c).symm ▸ h6.symm ▸ h1 ▸ congr_arg f h0)
-  (MulEquiv.eq_comp_symm _ _ _).mpr <|
-    funext λ x =>
-      match x with
+  have h7 := eq_sub_of_add_eq' h5
+  suffices f = 𝔽₄Map S (f c) ∘ π
+    from this.symm ▸ IsAnswer.𝔽₄_map_comp π.toRingHom π.surjective (f c) <|
+      by rwa [← h7, ← case2_4_lem3 h h0, h6, Char2.add_self h0]
+  (MulEquiv.eq_comp_symm _ _ _).mpr <| funext λ x ↦
+    match x with
       | 𝔽₄.O => h1
       | 𝔽₄.I => good_map_one h
       | 𝔽₄.X => rfl
-      | 𝔽₄.Y => eq_sub_of_add_eq' h5
+      | 𝔽₄.Y => h7
+
+
 
 /-- The main lemma for the `𝔽₂` subcase -/
 theorem case2_4_𝔽₂_main_lemma (h4 : ∀ x : R, x ^ 2 = 0 → x = 0)
-    (h5 : ¬∃ c, f c + f (c + 1) = 1 ∧ c * c + c = 1) (x : R) : x = 0 ∨ x = 1 :=
-  (case2_4_lem10 h h0 h1 h2 h3 h4 x).resolve_right λ h6 =>
-    h5 ⟨x, h6.1, (mul_add_one x x).symm.trans <| (Char2.add_eq_zero_iff_eq h0).mp h6.2⟩
+    (h5 : ¬∃ c, f c + f (c + 1) = 1 ∧ c * (c + 1) = 1) (x : R) : x = 0 ∨ x = 1 :=
+  (case2_4_lem10 h h0 h1 h2 h3 h4 x).resolve_right λ h6 ↦
+    h5 ⟨x, h6.1, (Char2.add_eq_zero_iff_eq h0).mp h6.2⟩
 
-/-- Solution for the current sub-subcase (`𝔽₂_map`) -/
-theorem case24𝔽₂QuotIsAnswer (h4 : ∀ x : R, x ^ 2 = 0 → x = 0)
-    (h5 : ¬∃ c, f c + f (c + 1) = 1 ∧ c * c + c = 1) : IsAnswer f :=
+/-- Solution for the current sub-subcase (`𝔽₂Map`) -/
+theorem case2_4_𝔽₂_quot_IsAnswer (h4 : ∀ x : R, x ^ 2 = 0 → x = 0)
+    (h5 : ¬∃ c, f c + f (c + 1) = 1 ∧ c * (c + 1) = 1) : IsAnswer f :=
+  -- `𝔽₂ → R/I` is bijective
   have X : Bijective (𝔽₂.castHom h0) :=
-    ⟨𝔽₂.castHom_injective _ (one_ne_zero_of_map_zero h h1), λ x =>
-      (case2_4_𝔽₂_main_lemma h h0 h1 h2 h3 h4 h5 x).elim (λ h5 => ⟨𝔽₂.O, h5.symm⟩) λ h5 =>
-        ⟨𝔽₂.I, h5.symm⟩⟩
+    ⟨𝔽₂.castHom_injective _ (one_ne_zero_of_map_zero h h1),
+    λ x ↦ by rcases case2_4_𝔽₂_main_lemma h h0 h1 h2 h3 h4 h5 x with h5 | h5
+             exacts [⟨𝔽₂.O, h5.symm⟩, ⟨𝔽₂.I, h5.symm⟩]⟩
+  -- Factor `f` out as `𝔽₂Map ∘ π`
   let π := (RingEquiv.ofBijective _ X).symm
-  suffices f = 𝔽₂Map S ∘ π from this.symm ▸ IsAnswer.𝔽₂_map_comp π.toRingHom π.Surjective
-  (MulEquiv.eq_comp_symm _ _ _).mpr <|
-    funext λ x =>
-      match x with
+  suffices f = 𝔽₂Map S ∘ π
+    from this.symm ▸ IsAnswer.𝔽₂_map_comp π.toRingHom π.surjective
+  (MulEquiv.eq_comp_symm _ _ _).mpr <| funext λ x ↦
+    match x with
       | 𝔽₂.O => h1
       | 𝔽₂.I => good_map_one h
 
 end Rchar2
 
-/-- Solution for the current subcase (`hom_sub_one`, `𝔽₂ε_map`, `𝔽₄_map`, `𝔽₂_map`) -/
-theorem case24QuotIsAnswer (h0 : f (-1) = 0) (h1 : f 2 = -1)
-    (h2 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) : IsAnswer f :=
-  let h3 : (2 : R) = 0 := h2 _ (case2_4_lem1 h h0 h1)
-  let h4 : f 0 = -1 := h3 ▸ h1
-  (---- Map 1
-        em <|
-        (2 : S) = 0).elim
-    (λ h5 => case24Schar2QuotIsAnswer h h3 h4 h5) λ h5 =>
-    (---- Map 2
-          em' <|
-          ∀ x : R, x ^ 2 = 0 → x = 0).elim
-      (λ h6 =>
-        Exists.elim (Classical.not_forall.mp h6) λ c h6 =>
-          let h6 := not_imp.mp h6
-          case24𝔽₂εQuotIsAnswer h h3 h4 h2 h5 h6.2 ((sq c).symm.trans h6.1))
-      λ h6 =>
-      (em <| ∃ c, f c + f (c + 1) = 1 ∧ c * c + c = 1).elim
-        (---- Map 3
-        λ h7 =>
-          Exists.elim h7 λ c h7 => case24𝔽₄QuotIsAnswer h h3 h4 h2 h5 h6 h7.1 h7.2)---- Map 4
-      λ h7 => case24𝔽₂QuotIsAnswer h h3 h4 h2 h5 h6 h7
+
+
+/-- Solution for the current subcase (4 classes) -/
+theorem case2_4_quot_IsAnswer (h0 : f (-1) = 0) (h1 : f 2 = -1)
+    (h2 : ∀ c ∈ periodIdeal h, c = 0) : IsAnswer f := by
+  have h3 := h2 _ (case2_4_lem1 h h0 h1)
+  have h4 : f 0 = -1 := h3 ▸ h1
+  by_cases h5 : (2 : S) = 0
+  · exact case2_4_Schar2_quot_IsAnswer h h3 h4 h5
+  by_cases h6 : ∃ x : R, ¬(x ^ 2 = 0 → x = 0)
+  · rcases h6 with ⟨c, h6⟩; rw [not_imp] at h6
+    exact case2_4_𝔽₂ε_quot_IsAnswer h h3 h4 h2 h5 h6.2 ((sq c).symm.trans h6.1)
+  rw [← not_forall, not_not] at h6
+  rcases em (∃ c, f c + f (c + 1) = 1 ∧ c * (c + 1) = 1) with ⟨c, h7, h8⟩ | h7
+  · exact case2_4_𝔽₄_quot_IsAnswer h h3 h4 h2 h5 h6 h7 h8
+  · exact case2_4_𝔽₂_quot_IsAnswer h h3 h4 h2 h5 h6 h7
 
 end Step10
 
-/-! ## Summary: Final solution -/
 
+
+
+
+
+
+/-! ## Summary: Final solution -/
 
 section FinalSolution
 
 variable {R S : Type _} [CommRing R] [Field S] {f : R → S}
 
-theorem quotIsAnswerOfGood (h : good f) (h0 : ∀ c, (∀ x, f (c + x) = f x) → c = 0) : IsAnswer f :=
-  (ne_or_eq (f 0) _).elim
-    (---- `f(0) ≠ -1`
-    λ h1 => (eq_zero_of_map_zero_ne_neg_one h h1).symm ▸ IsAnswer.zero)
-    λ h1 =>
-    (ne_or_eq (f _) 0).elim
-      (---- Case 1: `f(0) = -1`, `f_ ≠ 0`
-      λ h2 =>
-        (eq_or_ne (f _) (-2)).elim (case11IsAnswer h h2) λ h3 =>
-          case12QuotIsAnswer h h2 h3 ((case1_map_neg_one_cases h h2).resolve_left h3)
-            h0)---- Case 2: `f(0) = -1`, `f_ = 0`
-    λ h2 =>
-      (eq_or_ne (f 2) _).elim (λ h3 => case24QuotIsAnswer h h2 h3 h0) λ h3 =>
-        (eq_or_ne (f 2) 1).elim (λ h4 => case22QuotIsAnswer h h2 h4 h3 h0) λ h4 =>
-          (eq_or_ne (f 2) 3).elim (λ h5 => case23IsAnswer h h2 h5 h4 h1) λ h5 =>
-            suffices f 2 = 0 from case21QuotIsAnswer h h2 this h0 h1 h5
-            (((case2_map_two_cases h h2 h1).resolve_left h3).resolve_left h4).resolve_left h5
+theorem quot_IsAnswer_of_good (h : good f) (h0 : ∀ c ∈ periodIdeal h, c = 0) :
+    IsAnswer f := by
+  rcases ne_or_eq (f 0) (-1) with h1 | h1
+  ---- Case 1: `f(0) ≠ -1`
+  · rw [eq_zero_of_map_zero_ne_neg_one h h1]
+    exact IsAnswer.of_zero
+  rcases ne_or_eq (f (-1)) 0 with h2 | h2
+  ---- Case 2: `f(0) = -1`, `f(-1) ≠ 0`
+  · rcases eq_or_ne (f (-1)) (-2) with h3 | h3
+    · exact case1_1_IsAnswer h h2 h3
+    · exact case1_2_quot_IsAnswer h h2 h3
+        ((case1_map_neg_one_cases h h2).resolve_left h3) h0
+  ---- Case 3: `f(0) = -1`, `f(-1) = 0`
+  · rcases eq_or_ne (f 2) (-1) with h3 | h3
+    · exact case2_4_quot_IsAnswer h h2 h3 h0
+    rcases eq_or_ne (f 2) 1 with h4 | h4
+    · exact case2_2_quot_IsAnswer h h2 h4 h3 h0
+    rcases eq_or_ne (f 2) 3 with h5 | h5
+    · exact case2_3_IsAnswer h h2 h5 h4 h1
+    · have h6 := case2_map_two_cases h h2 h1
+      rw [or_iff_right h4, or_iff_right h3, or_iff_right h5] at h6
+      exact case2_1_quot_IsAnswer h h2 h6 h0 h1 h5
 
-theorem isAnswerOfGood (h : good f) : IsAnswer f :=
-  isAnswerOfPeriodLift h <|
-    quotIsAnswerOfGood (periodLift_is_good h) (zero_of_periodic_periodLift h)
+theorem IsAnswer_of_good (h : good f) : IsAnswer f :=
+  IsAnswer_of_periodLift h <|
+    quot_IsAnswer_of_good (periodLift_is_good h) (zero_of_periodic_periodLift h)
 
 /-- Final solution -/
 theorem final_solution : good f ↔ IsAnswer f :=
-  ⟨isAnswerOfGood, good_of_isAnswer⟩
+  ⟨ IsAnswer_of_good, good_of_IsAnswer⟩
 
 end FinalSolution
 
