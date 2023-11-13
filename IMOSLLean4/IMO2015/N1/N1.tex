@@ -1,0 +1,63 @@
+\documentclass{article}
+
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\newcommand{\Z}{\mathbb{Z}}
+
+\newtheorem*{claim}{Claim}
+
+\title{IMO 2015 N1}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+
+\subsection*{Problem}
+
+Let $f : \Z \to \Z$ be the function defined by
+\[ f(n) = n \lfloor n/2 \rfloor \quad \text{for all } n \in \Z. \]
+Find all integers $M$ such that $f^k(M)$ is even for some $k \geq 0$.
+
+
+
+\subsection*{Answer}
+
+Such $k$ exists if and only if $M \neq 3$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2015SL.pdf}
+
+We modify Solution 2 of the official solution for the above version of the problem.
+We will prove the contrapositive; $f^k(M)$ is odd for all $k \geq 0$ if and only if $M = 3$.
+The right-to-left direction is obvious since $f(3) = 3$.
+
+For the other direction, it suffices to show that $2^{x + 1} \mid f^k(M) - 3$ for any $k, x \geq 0$.
+We proceed by induction on $x$; the base case $x = 0$ is an implication of the initial hypothesis.
+On the other hand, the induction step follows from the following claim.
+
+\begin{claim}
+Let $c$ and $m$ be integers such that $2c$ divides both $m - 3$ and $f(m) - 3$.
+Then $4c$ divides $m - 3$.
+\end{claim}
+\begin{proof}
+We are done if $c = 0$, so now suppose that $c \neq 0$.
+Write $m = 2cd + 3$ for some integer $d$.
+Then $f(m) = (2cd + 3)(cd + 1)$.
+Since $2c \mid f(m) - 3$, this implies $2c \mid 3cd$.
+Then $d$ must be even, and thus $m - 3 = 2cd$ is divisible by $4c$, as desired.
+\end{proof}
+
+
+
+\end{document}
