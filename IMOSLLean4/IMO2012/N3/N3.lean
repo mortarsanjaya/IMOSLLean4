@@ -1,5 +1,4 @@
 import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.Prime
 import Mathlib.Data.Nat.Parity
 
 /-! # IMO 2012 N3 -/
