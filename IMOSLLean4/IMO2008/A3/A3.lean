@@ -8,10 +8,6 @@ import Mathlib.Data.Nat.SuccPred
 namespace IMOSL
 namespace IMO2008A3
 
-set_option profiler true
-
-open Function
-
 structure SpanishCouple [Preorder α] (f g : α → α) : Prop where
   f_mono : StrictMono f
   g_mono : StrictMono g
@@ -32,7 +28,7 @@ theorem g_iter_lt_f_of_spanishCouple [LinearOrder α]
       (congr_arg g h1.symm).trans_le <| (h g h0.g_mono _).trans (h f h0.f_mono _)
   | k + 1, x => h0.g_mono.lt_iff_lt.mp <| (h0.spec x).trans' <|
       (g_iter_lt_f_of_spanishCouple h h0 k _).trans_eq' <|
-      (iterate_succ_apply' g _ _).symm
+      (g.iterate_succ_apply' _ _).symm
 
 theorem add_iterate_le_of_strictMono_id_lt (h : StrictMono f) (h0 : x < f x) :
     ∀ k : ℕ, x + k ≤ (f^[k]) x
@@ -46,7 +42,7 @@ theorem final_solution_part_a (f g : ℕ → ℕ) : ¬SpanishCouple f g :=
   -- Case 1: `g = id`
   (λ h0 ↦ h0.symm ▸ f_id_not_spanishCouple f)
   -- Case 2: `g ≠ id`
-  (λ h0 h ↦ (ne_iff.mp h0).elim λ x h0 ↦
+  (λ h0 h ↦ (Function.ne_iff.mp h0).elim λ x h0 ↦
     (g_iter_lt_f_of_spanishCouple (λ _ ↦ StrictMono.id_le) h (f x) x).not_le <|
       ((f x).le_add_left x).trans <| add_iterate_le_of_strictMono_id_lt
         h.g_mono ((h.g_mono.id_le x).lt_of_ne h0.symm) (f x))
@@ -72,7 +68,7 @@ theorem final_solution_part_b_general [Preorder β]
       rw [← h3.1]
     spec := λ p ↦ by
       refine prod_lex_lt_iff.mpr <| Or.inr <| ⟨rfl, ?_⟩
-      rw [← iterate_add_apply, ← two_mul, pow_succ]
+      rw [← Function.iterate_add_apply, ← two_mul, pow_succ]
       exact h.strictMono_iterate_of_lt_map (h0 p.2)
         (Nat.mul_lt_mul_of_pos_right (Nat.lt_succ_self 2)
           (pow_pos (Nat.succ_pos 2) _)) }
