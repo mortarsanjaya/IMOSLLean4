@@ -1,0 +1,48 @@
+For each permutation $\mathbf{a} = (a_1, a_2, \ldots, a_n)$ of $\sigma_n = (1, 2, \ldots, n)$, we define
+\[ S_{\mathbf{a}} = \sum_{j = 1}^n \left\lfloor \frac{a_j}{j} \right\rfloor = \left\lfloor \frac{a_1}{1} \right\rfloor + \left\lfloor \frac{a_2}{2} \right\rfloor + \ldots + \left\lfloor \frac{a_n}{n} \right\rfloor. \]
+Find the smallest possible value of $S_{\mathbf{a}}$.
+
+
+
+\subsection*{Answer}
+
+$\lceil \log_2 (n + 1) \rceil$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2021SL.pdf}
+
+We follow Solution 3 of the official solution for the lower bound.
+We construct $\mathbf{a}$ for the upper bound using direct binary induction.
+The lower bound coming from Solution 3 is essentially the following inequality:
+\[ \forall a, b \in \N, b \neq 0 \implies b 2^{\lfloor a/b \rfloor} \geq a + 1. \]
+This inequality follows from $2^k \geq k + 1$ for any $k \in \N$:
+\[ b 2^{\lfloor a/b \rfloor} \geq b\left(\left\lfloor \frac{a}{b} \right\rfloor + 1\right) > b \cdot \frac{a}{b} = a. \]
+The above inequality implies that for any permutation $\mathbf{a}$ of $\sigma_n$,
+\[ 2^{S_{\mathbf{a}}} \geq \prod_{j = 1}^n \frac{a_j + 1}{j} = \frac{(n + 1)!}{n!} = n + 1 \implies S_{\mathbf{a}} \geq \lceil \log_2 (n + 1) \rceil. \]
+
+For the converse, we construct a permutation $\mathbf{a}_n = (a_{n, 1}, \ldots, a_{n, n})$ of $\sigma_n$ for each $n \in \N$ by binary recursion.
+Clearly, we set $\mathbf{a}_0 = ()$ and $\mathbf{a}_1 = (1)$.
+Now fix $n \geq 1$ and suppose that we are given a permutation $\mathbf{a}_n$ of $\sigma_n$.
+We want to construct permutations $\mathbf{a}_{2n}$ and $\mathbf{a}_{2n + 1}$ of $\sigma_{2n}$ and $\sigma_{2n + 1}$, respectively.
+We set $a_{2n, j} = a_{2n + 1, j} = a_{n, j}$ for $j \leq n$.
+After that, we set
+\[ (a_{2n, n + 1}, \ldots, a_{2n, 2n}) = (2n, n + 1, n + 2, \ldots, 2n - 1), \]
+\[ (a_{2n + 1, n + 1}, \ldots, a_{2n + 1, 2n + 1}) = (2n + 1, n + 1, n + 2, \ldots, 2n). \]
+
+We now prove by binary induction that $S_{\mathbf{a}} = \lceil \log_2 (n + 1) \rceil$ for every $n \in \N$.
+The base cases $n = 0$ and $n = 1$ are clear.
+For the induction, it suffices to show that $S_{\mathbf{a}_{2n}} = S_{\mathbf{a}_{2n + 1}} = S_{\mathbf{a}_n} + 1$ for $n \geq 1$.
+Indeed, from the recursive construction, we get
+\[ S_{\mathbf{a}_{2n}} = S_{\mathbf{a}_n} + \left\lfloor \frac{2n}{n + 1} \right\rfloor + \sum_{j = n + 2}^{2n} \left\lfloor \frac{j - 1}{j} \right\rfloor = S_{\mathbf{a}_n} + 1, \]
+\[ S_{\mathbf{a}_{2n + 1}} = S_{\mathbf{a}_n} + \left\lfloor \frac{2n + 1}{n + 1} \right\rfloor + \sum_{j = n + 2}^{2n + 1} \left\lfloor \frac{j - 1}{j} \right\rfloor = S_{\mathbf{a}_n} + 1. \]
+
+
+
+\subsection*{Implementation details}
+
+The above answer is mainly implemented as \texttt{Nat.size n} as opposed to \texttt{Nat.clog 2 (n + 1)}.
+The former is more amenable to binary induction.
+Note that \texttt{Nat.size n} is the length of $n$ in its binary representation, which is exactly $\lceil \log_2 (n + 1) \rceil$.
