@@ -1,0 +1,56 @@
+Determine all integers $m > 1$ such that $n \mid \binom{n}{m - 2n}$ for every $n \in \N$ with $n \leq m/2$.
+
+
+
+\subsection*{Answer}
+
+Prime numbers.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2012SL.pdf}
+
+The following solution we present is the official solution.
+We consider three cases.
+
+\begin{itemize}
+
+\item
+$m$ is even and composite.
+
+We can write $m = 2k$ for some $k > 1$.
+Then plugging $n = k$ yields a contradiction.
+
+\item
+$m$ is odd and composite.
+
+Then we can write $m = p(2k + 1)$ for some $p, k \in \N$, where $p$ is prime and $k > 0$.
+We claim that $n = pk$ does not work, i.e., $pk \nmid \binom{pk}{p}$.
+Indeed, we can write
+\[ \binom{pk}{p} = k \cdot \frac{(pk - 1)(pk - 2) \ldots (p(k - 1) + 1)}{(p - 1)!}. \]
+But the second factor is not divisible by $p$.
+
+\item
+$m$ is prime.
+
+Fix $n \leq m/2$, and write $m = 2n + c$ for some $c \in \N$.
+If $n = 0$, then $\binom{0}{c} = 0$ since $c = m$ is prime, thus positive.
+If $n > 0$ and $c = 0$, then $m = 2n$ is prime, so $n = 1$.
+It remains to consider the case $n, c > 0$.
+
+Now, $2n$ and $c$ are positive numbers whose sum is a prime.
+Then $n$ and $c$ are coprime.
+Thus, $n \mid \binom{n}{c}$ follows from
+\[ n \mid n \binom{n - 1}{c - 1} = c \binom{n}{c}. \]
+
+\end{itemize}
+
+
+
+\subsection*{Extra notes}
+
+The original problem has a more restricted inequality, $m/3 \leq n \leq m/2$.
+We remove the inequality $m/3 \leq n$ since the only thing that this inequality does is making sure that $\binom{n}{m - 2n}$ is a positive integer.
+Note that, by convention, we define $\binom{a}{b} = 0$ if $0 \leq a < b$, and also we define $0 \mid 0$.
