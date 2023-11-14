@@ -1,0 +1,64 @@
+Let $\alpha$ be a totally ordered type.
+Given two functions $f, g : \alpha \to \alpha$, we say that $f \leq g$ iff $f(x) \leq g(x)$ for any $x \in \alpha$.
+Similarly, $f < g$ iff $f(x) < g(x)$ for any $x \in \alpha$.
+Also, $\id_{\alpha} : \alpha \to \alpha$ denotes the map $x \mapsto x$.
+
+A pair $(f, g)$ of functions from $\alpha$ to itself is called a \emph{Spanish couple} if $f$ and $g$ are strictly increasing, and $f \circ g \circ g < g \circ f$.
+Determine whether there exists a Spanish couple for
+\begin{enumerate}[label=(\alph*)]
+    \item   $\alpha = \N$, and
+    \item   $\alpha = \N \times \N$, with the lexicographical order.
+            That is, $(a, b) \leq (c, d)$ iff either $a < c$, or $a = c$ and $b \leq d$.
+\end{enumerate}
+
+
+
+\subsection*{Answer}
+
+"No" for part (a), and "Yes" for part (b).
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2008SL.pdf}
+
+We present the official solution.
+In fact, we will generalize part (b), as we see in this solution.
+
+\begin{enumerate}[label=(\alph*)]
+
+    \item
+    Suppose that $\alpha = \N$ and that a Spanish couple $(f, g)$ exists.
+    By the property of $\N$, we have $f, g \geq \id_{\N}$.
+    Furthermore, we have $g < f$, since $g \circ f > f \circ g \circ g \geq g \circ g$.
+    In particular, we actually have $\id_{\N} < f$.
+    We now prove by induction on $k$ that $g^k \leq f$ for all $k \geq 0$.
+
+    The base case $k = 0$ has been done, so now suppose that $g^k < f$ for some $k \geq 0$.
+    Then, by the second property of the Spanish couple, we have $g^{k + 2} < f \circ g \circ g < g \circ f$.
+    Since $g$ is strictly increasing, this implies $g^{k + 1} < f$.
+
+    If $g = \id$, then $f \circ g \circ g = g \circ f = f$; a contradiction.
+    Thus there exists $x \in \N$ such that $g(x) > x$.
+    But then the sequence $(g^k(x))_{k \geq 0}$ is strictly increasing and bounded above by $f(x)$; a contradiction.
+    Thus, there exists no Spanish couple for $\alpha = \N$.
+
+    
+    
+    \item
+    The generalization is as follows.
+    Let $\beta$ be a totally ordered type.
+    Suppose that a function $\phi : \beta \to \beta$ is strictly increasing and satisfies $\phi(x) > x$ for all $x \in \beta$.
+    Then we construct a Spanish couple on $\N \times \beta$ using $\phi$.
+    In particular, we get the answer we want for the original problem with $\beta = \N$ and $\phi : n \mapsto n + 1$.
+    
+    Let $\alpha = \N \times \beta$.
+    Define $f, g : \alpha \to \alpha$ by $f(n, x) = (n + 1, x)$ and $g(n, x) = (n, \phi^{3^n}(x))$.
+    It is easy to show that $f$ and $g$ are strictly increasing.
+    Now, for any $n \in \N$ and $x \in \beta$, since $2 \cdot 3^n < 3^{n + 1}$, we get
+    \[ f(g(g(n, x))) = (n + 1, \phi^{2 \cdot 3^n}(x)) < (n + 1, \phi^{3^{n + 1}}(x)) = g(f(x)). \]
+
+
+
+\end{enumerate}
