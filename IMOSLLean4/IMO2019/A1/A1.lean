@@ -1,4 +1,5 @@
 import IMOSLLean4.Extra.IntLinearSolver
+import Mathlib.Algebra.Ring.Regular
 
 /-! # IMO 2019 A1 (P1) -/
 
@@ -23,14 +24,13 @@ theorem final_solution (h : N ≠ 0) (f : ℤ → ℤ) :
       eq_add_of_sub_eq <| mul_left_cancel₀ h <| by rw [h1, ← h1 0, zero_add]
     -- Classify all linear functions satifying the FE
     generalize f 1 - f 0 = q at h1
-    rcases Extra.IntIntLinearSolverAlt h1 with ⟨c, h1⟩
-    refine (em' <| N = q).imp (λ h2 ↦ ?_) (λ h2 ↦ ⟨c, funext <| by rwa [h2]⟩)
+    replace h1 := Extra.IntIntLinearSolverAlt h1
+    refine (em' <| N = q).imp (λ h2 ↦ ?_) (λ h2 ↦ ⟨f 0, funext <| by rwa [h2]⟩)
     have h3 := h0 0 0
-    rw [add_zero, N.mul_zero, h1, q.mul_zero, zero_add, h1, add_comm, add_left_inj,
-      ← sub_eq_zero, ← sub_mul, mul_eq_zero, sub_eq_zero, or_iff_right h2] at h3
+    rw [add_zero, N.mul_zero, h1 (f 0), add_comm, add_left_inj,
+      mul_eq_mul_right_iff, or_iff_right h2] at h3
     specialize h0 0 1
-    rw [N.mul_zero, zero_add, h1, q.mul_zero, zero_add, h1, q.mul_one,
-      h3, q.add_zero, h1, h3, zero_add, add_zero, ← sub_eq_zero,
-      ← sub_mul, mul_eq_zero, sub_eq_zero, or_iff_right h2] at h0
+    rw [N.mul_zero, zero_add, h1 (f 1), add_comm, add_left_inj,
+      mul_eq_mul_right_iff, or_iff_right h2, h1, mul_one, h3, add_zero] at h0
     funext n
     rw [h1, h0, h3, n.zero_mul, add_zero, Pi.zero_apply]

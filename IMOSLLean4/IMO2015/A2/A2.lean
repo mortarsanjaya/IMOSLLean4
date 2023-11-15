@@ -23,7 +23,7 @@ theorem final_solution {f : ℤ → ℤ} :
       have h1 := h x (0 - f (f 0))
       rwa [h0, sub_neg_eq_add (f (f x)), add_sub_cancel] at h1
     -- Now prove that `f` is linear (with linear coefficient `f(-1) + 1`)
-    obtain ⟨c, h1⟩ : ∃ c, ∀ n, f n = (f (-1) + 1) * n + c := by
+    have h1 : ∀ n, f n = (f (-1) + 1) * n + f 0 := by
       refine Extra.IntIntLinearSolverAlt λ n ↦ ?_
       have h1 := h0 (n - f n - 1)
       rw [sub_add_cancel, sub_right_comm, h, ← h0, h (n - 1), ← h0,
