@@ -1,0 +1,42 @@
+Let $b$ and $c$ be integers with $|b| > 1$ and $c \neq 0$.
+Find all functions $f : \Z \to \Z$ such that, for any $x, y \in \Z$,
+\[ f(y + f(x)) - f(y) = f(bx) - f(x) + c. \tag{*}\label{2014a4-eq0} \]
+
+
+
+\subsection*{Answer}
+
+None if $b - 1 \nmid c$, and $x \mapsto (b - 1)x + \dfrac{c}{b - 1}$ if $b - 1 \mid c$.
+
+
+
+\subsection*{Solution}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h1113177p23103087}
+
+We use the solution in the AoPS thread for IMO 2014 A4 by \textbf{bora\_olmez} (post \#31).
+To make the formalization "simpler", we slightly alter the equation.
+
+First, by plugging $x = 0$ into~\eqref{2014a4-eq0}, we get $f(y + f(0)) = f(y) + c$ for all $y \in \Z$.
+By small induction, this generalizes to $f(y + k f(0)) = f(y) + kc$ for any integers $y$ and $k$.
+
+Next we prove that $f$ is injective.
+Note that, if $f(m) = f(n)$, then~\eqref{2014a4-eq0} gives us $f(bm) = f(bn)$.
+By induction, we get $f(b^k m) = f(b^k n)$ for any non-negative integer $k$.
+Now choose $k_2 \neq k_1 \geq 0$ such that $b^{k_2} \equiv b^{k_1} \pmod{f(0)}$.
+Note that $f(0) \neq 0$; otherwise plugging $x = y = 0$ into~\eqref{2014a4-eq0} yields $c = 0$.
+Such $k_2$ and $k_1$ exists by pigeonhole principle.
+Since $|b| > 1$, this means that $b^{k_2} \neq b^{k_1}$.
+Thus we can write $b^{k_2} = b^{k_1} + N f(0)$ for some non-zero integer $N$.
+We have $f(b^{k_2} m) = f(b^{k_1} m) + Nm c$.
+Similarly $f(b^{k_2} n) = f(b^{k_1} n) + Nn c$.
+This leaves us with $Nm c = Nn c$, which implies $m = n$ since $N$ and $c$ are non-zero.
+This proves that $f$ is injective.
+
+Finally, for any integer $m$,~\eqref{2014a4-eq0} gives us $f(bm + f(0)) = f(m + f(m)) = f(bm) + c$.
+Since $f$ is injective, we get $f(m) = (b - 1)m + f(0)$ for all integers $m$.
+Plugging $x = y = 0$ into~\eqref{2014a4-eq0} gives $f(f(0)) = f(0) + c$.
+Using the previous equation gives us $(b - 1) f(0) = c$.
+Thus no such $f$ exists if $b - 1 \nmid c$.
+Otherwise $f$ is defined by $f(m) = (b - 1)m + \dfrac{c}{b - 1}$ for all integers $m$.
+Clearly, this $f$ satisfies~\eqref{2014a4-eq0}.
