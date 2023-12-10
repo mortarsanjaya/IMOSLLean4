@@ -1,0 +1,80 @@
+Find all functions $f : \N \to \N$ such that, for any $n \in \N$,
+\[ f(f(f(n))) = f(n + 1) + 1. \tag{*}\label{2013a5-eq0} \]
+
+
+
+\subsection*{Answer}
+
+The function $n \mapsto n + 1$ and the function $\phi : \N \to \N$ defined below:
+\[ \phi(n) \mapsto \begin{cases}
+    n + 5, & \text{if } n \equiv 1 \pmod{4}, \\
+    n - 3, & \text{if } n \equiv 3 \pmod{4}, \\
+    n + 1, & \text{if } n \equiv 0 \pmod{2}.
+\end{cases} \]
+Note that $\phi$ can be defined recursively via $\phi(0) = 1$, $\phi(1) = 6$, $\phi(2) = 3$, $\phi(3) = 0$, and $\phi(n + 4) = \phi(n) + 4$ for all $n \in \N$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2013SL.pdf}
+
+We follow Solution 1 of the official solution.
+It is easy to check that the two answers indeed work.
+The rest of the solution is for proving that they are the only functions satisfying~\eqref{2013a5-eq0}.
+
+First of all, we prove that $f^4(n + 1) = f^4(n) + 1$ for all $n \in \N$.
+Indeed, we have
+\[ f^4(n + 1) = f^3(f(n + 1)) = f(f(n + 1) + 1) + 1 = f(f^3(n)) + 1 = f^4(n) + 1. \]
+Then by induction, we get $f^4(n) = n + f^4(0)$ for all $n \in \N$.
+This also means that $f$ is injective.
+
+The next observation is that the set $\N \setminus f^4(\N)$ is finite.
+Indeed, it is exactly the set of non-negative integers less thatn $f^4(0)$.
+In particular, $\N \setminus f(\N)$ is finite as well.
+
+For each non-negative integer $k$, let $S_k = f^k(\N) \setminus f^{k + 1}(\N)$.
+Since $f$ is injective, it induces a bijection between $S_k$ and $S_{k + 1}$.
+Thus the $S_k$s have the same cardinality as $S_0 = \N \setminus f(\N)$, which is finite.
+Also, since $f$ is injective, the $S_k$s are pairwise disjoint.
+Thus, on one hand, we have $\#(\N \setminus f^3(\N)) = 3 \cdot \#(\N \setminus f(\N))$.
+On the other hand, by~\eqref{2013a5-eq0} and injectivity of $f$, we can see that
+\[ \N \setminus f^3(\N) \subseteq \{0, f(0) + 1\} \cup \{x + 1 : x \notin f(\N)\}. \]
+This set in the right hand side has size at most $2 + \#(\N \setminus f(\N))$.
+Thus $\#(\N \setminus f(\N)) \leq 1$, and equality holds since $f$ cannot be surjective.
+In particular, we obtain
+\[ f^4(0) = \#(\N \setminus f^4(\N)) = 4 \cdot \#(\N \setminus f(\N)) = 4, \]
+    and for all $n \in \N$,
+\[ f(n + 4) = f(n + f^4(0)) = f^5(n) = f(n) + f^4(0) = f(n) + 4. \tag{1}\label{2013a5-eq1} \]
+Based on the answers, it now suffices to find the values of $f(0), f(1), f(2), f(3)$.
+
+Recall that $\#(\N \setminus f(\N)) = 1$.
+Thus there exists a unique non-negative integer not attained by ç$f$, say $a$.
+Then we get
+\[ \{a, f(a), f^2(a)\} \subseteq \{0, f(0) + 1, a + 1\}. \]
+Note that~\eqref{2013a5-eq1} yields $f(n), f^2(n) \neq n$ for any $n \in \N$.
+Since $a \neq a + 1$ is clear, we have two cases:
+
+\begin{itemize}
+
+    \item
+    Case 1: $a = 0$.
+
+    Then $f(0) \neq 0$ and $f(0) \neq f(0) + 1$, so $f(0) = 0 + 1 = 1$.
+    Similarly, $f^2(0) \neq 0$ and $f^2(0) = f(1) \neq 1$, so $f^2(0) = f(0) + 1 \implies f(1) = 2$.
+    By~\eqref{2013a5-eq0}, we then get $f^3(0) = f(1) + 1 \implies f(2) = 3$.
+    Then we get $f(3) = f^4(0) = 4$, so $f(n) = n + 1$ for $n < 4$.
+    Finally,~\eqref{2013a5-eq1} yields $f(n) = n + 1$ for all $n \in \N$.
+
+    \item
+    Case 2: $a = f(0) + 1$.
+
+    Then $f(a), f^2(a) \in \{0, a + 1\}$.
+    If $f(a) = 0$, then $f(0) = f^2(a) = a + 1 = f(0) + 2$; a contradiction.
+    So $f(a) = a + 1$ and $f(a + 1) = f^2(a) = 0$.
+    Then~\eqref{2013a5-eq0} yields $f^3(a) = f(a + 1) + 1 \implies f(0) = 1$.
+    We get $a = 2$, and so $f(2) = 3$, $f(3) = 0$, and $f(0) = 1$.
+    Using~\eqref{2013a5-eq0} again yields $f(1) = 6$.
+    Finally,~\eqref{2013a5-eq1} yields the second answer.
+
+\end{itemize}
