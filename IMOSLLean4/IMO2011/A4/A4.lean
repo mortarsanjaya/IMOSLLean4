@@ -30,10 +30,10 @@ lemma main_step {f g : ℕ → ℕ} (h : ∀ k, f^[g k + 2] k < f (k + 1)) : f =
         (λ t h2 ↦ (h0 _ h2).trans_eq (f.iterate_succ_apply' _ _).symm)
   ---- Do the remaining work
   have h1 : ∀ t n, n ≤ f^[t] n :=
-    Nat.rec Nat.le_refl (λ t h1 n ↦ (h0 n).trans (h1 _))
+    Nat.rec Nat.le_refl λ t h1 n ↦ (h0 n).trans (h1 _)
   have h2 : StrictMono f :=
-    strictMono_nat_of_lt_succ (λ n ↦ (h1 _ (f n)).trans_lt (h n))
-  refine funext <| λ n ↦ (h0 n).antisymm' <| ?_
+    strictMono_nat_of_lt_succ λ n ↦ (h1 _ (f n)).trans_lt (h n)
+  refine funext λ n ↦ (h0 n).antisymm' ?_
   rw [← Nat.lt_succ_iff, ← h2.lt_iff_lt]
   exact (h1 _ _).trans_lt (h n)
 
@@ -42,15 +42,13 @@ theorem final_solution {f g : ℕ → ℕ} :
     (∀ k, f^[g k + 2] k + (g^[f k + 1] k + g (k + 1)) + 1 = f (k + 1))
       ↔ f = id ∧ g = λ _ ↦ 0 := by
   refine Iff.symm ⟨λ h k ↦ ?_, λ h ↦ ?_⟩
-  ---- `←`
   · rcases h with ⟨rfl, rfl⟩
     rw [iterate_id, iterate_succ_apply']; rfl
-  ---- `→`
   · obtain rfl : f = id := by
       refine main_step (g := g) (λ k ↦ ?_)
       rw [← h, Nat.lt_succ_iff]
       exact Nat.le_add_right _ _
-    refine ⟨rfl, funext (λ n ↦ ?_)⟩
+    refine ⟨rfl, funext λ n ↦ ?_⟩
     simp_rw [iterate_id, id_def, Nat.succ_inj',
       add_right_eq_self, add_eq_zero_iff] at h
     rcases n with _ | n
