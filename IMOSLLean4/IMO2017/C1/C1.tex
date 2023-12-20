@@ -1,0 +1,48 @@
+For any $(a, b, w, h) \in \N^4$, let $R(a, b, w, h)$ denote the set of pairs $(x, y) \in \N^2$ with $a \leq x < a + w$ and $b \leq y < b + h$.
+This is a "lattice" rectangle, which can be viewed as the intersection of the real rectangle $[a, a + w) \times [b, b + h)$ with the lattice $\Z^2$.
+
+Fix $m, n \in \N$ odd.
+Consider a partition of $R(0, 0, m, n)$ into $k \geq 1$ rectangles, say $R(a_i, b_i, w_i, h_i)$ for $i = 1, 2, \ldots, k$.
+Prove that, for at least one of the rectangles $R(a_i, b_i, w_i, h_i)$, the distance of its sides to the sides of $R(0, 0, m, n)$ are all odd or all even.
+That is, prove that there exists at least one index $i$ such that $w_i$ and $h_i$ are odd and $a_i \equiv b_i \pmod{2}$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2017SL.pdf}
+
+The solution we describe below is just a copy of the official solution.
+Some rewording are made for the purpose of easier transition into Lean codes.
+In fact, this is done for the problem statement as well.
+
+We will simplify by using short notations for quadruples.
+For each $i \leq k$, denote $q_i = (a_i, b_i, w_i, h_i)$.
+We put some weight on the points in $\N^2$, with $(x, y)$ having weight $(-1)^{x + y}$.
+The weight of a finite subset $S \subseteq \N^2$ is the sum of the weight of the points in $S$.
+For each quadruple $q \in \N^4$, denote by $f(q)$ the weight of $R(q)$, i.e.,
+\[ f(q) = \sum_{(x, y) \in R(q)} (-1)^{x + y}. \]
+
+\begin{claim}
+Let $q = (a, b, w, h)$.
+If either $w$ or $h$ is even, then $f(q) = 0$.
+If $w$ and $h$ are odd, then $f(q) = 1$ if $a \equiv b \pmod{2}$ and $f(q) = -1$ otherwise.
+Equivalently, $f(q) = (-1)^{a + b}$.
+\end{claim}
+\begin{proof}
+The claim follows from the equality
+\[ f(q) = \frac{(-1)^{a + w} - (-1)^a}{2} \cdot \frac{(-1)^{b + h} - (-1)^b}{2} = (-1)^{a + b}\frac{((-1)^w - 1)((-1)^h - 1)}{4}. \]
+\end{proof}
+
+Now, since $R(q)$ is a disjoint union of the $R(q_i)$s, we have $f(q) = \sum_{i \leq k} f(q_i)$.
+But the claim yields $f(q) = 1$ and $f(q_i) \in \{-1, 0, 1\}$ for each $i \leq k$.
+Thus $f(q_i) = 1$ for some $i \leq k$.
+This choice of $q_i$ works by the claim.
+
+
+
+\subsection*{Implementation details}
+
+Instead of using the standard predicate \texttt{Odd} and \texttt{Even}, we use the boolean function \texttt{Nat.bodd}.
+Taking an input $n \in \N$, it returns \texttt{true} if $n$ is odd and \texttt{false} if $n$ is even.
+This reduces import insignificantly, but it allows more direct computations.
