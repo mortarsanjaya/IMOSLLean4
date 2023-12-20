@@ -1,0 +1,46 @@
+Find all functions $f : \Z \to \Z$ such that, for any $a, b \in \Z$,
+\[ f^{a^2 + b^2}(a + b) = a f(a) + b f(b). \tag{*}\label{2020a6-eq0} \]
+
+
+
+\subsection*{Answer}
+
+$x \mapsto 0$ and $x \mapsto x + 1$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2020SL.pdf}
+
+We follow the official solution, but we avoid the explicit use of finiteness of orbits.
+Instead, if $f$ is injective, we are done after $f^{a^2 + 1}(a - 1) = f^{a^2}(a)$.
+If $f$ is not injective, then we show that the orbit $\{f^n(0) : n \in \N\}$ is bounded, and proceed similar to case 1.
+
+Plugging $b = 0$ yields $f^{a^2}(a) = a f(a)$ for all $a \in \Z$.
+Then plugging $a = -1$, $b = 0$ yields $f(-1) = 0$.
+Next, plugging $b = -1$ yields $f^{a^2 + 1}(a - 1) = a f(a) = f^{a^2}(a)$ for all $a \in \Z$.
+In particular, if $f$ is injective, we immediately get $f = x \mapsto x + 1$.
+For the rest of the solution, we assume that $f$ is not injective.
+
+Consider the equation $f^{(a + 1)^2 + 1}(a) = f^{(a + 1)^2}(a + 1)$.
+This means that $f^{n + 1}(a) = f^n(a + 1)$ whenever $n \geq (a + 1)^2$.
+By induction on $k$, for any $k \in \N$ and $a \in \Z$, there exists $N \in \N$ such that $f^{n + k}(a) = f^n(a + k)$ for all $n \geq N$.
+
+Since $f$ is not injective, there exists $k \in \N$ and $a \in \Z$ such that $f(a) = f(a + k)$.
+Then we get $f^{n + k}(a) = f^n(a + k) = f^n(a)$ for all $n$ big enough.
+If $a \geq 0$, then $f^n(a) = f^{n + a}(0)$ for all $n$ big enough.
+If $a < 0$, then $f^n(0) = f^{n + (-a)}(a)$ for all $n$ big enough.
+Either way, there exists $k, N \in \N$ such that $f^{n + k}(0) = f^n(0)$ for all $n \geq N$.
+In particular, the set $\{f^n(0) : n \in \N\}$ is finite and thus bounded.
+
+Choose some $M \in \N$ we have $|f^n(0)| < M$ for any $n \in \N$.
+For any integer $a$, plugging $b = -a$ into~\eqref{2020a6-eq0} yields $a (f(a) - f(-a)) = f^{2a^2}(0)$.
+For $|a| \geq M$, this forces $f(a) = f(-a)$ and $f^{2a^2}(0) = 0$.
+Since $\gcd(2M^2, 2(|M| + 1)^2) = 2$, by plugging $a = M$ and then $a = |M| + 1$ gives $f^2(0) = 0$.
+This also means that $f(a) = f(-a)$ for all $a \in \Z$.
+
+We now prove that $f \equiv 0$.
+For $a \neq 0$, since $f$ is even, we have
+\[ f^{a^2}(a) = f^{a^2}(-a) \implies -a f(a) = -a f(-a) = a f(a) \implies f(a) = 0. \]
+Finally,~\eqref{2020a6-eq0} yields $f(0) = f^2(2) = 2 f(1) = 0$.
