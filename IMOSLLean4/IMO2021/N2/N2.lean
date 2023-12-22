@@ -51,13 +51,14 @@ theorem final_solution (h : 99 ≤ n) : good n := by
     · refine ⟨k + 1, le_iff_exists_add.mpr ⟨4 * k + 5, by ring⟩, ?_⟩
       replace h1 : (k + 1) ^ 2 + 6 * (k + 1) + 8
         = 4 * k + 14 + (k ^ 2 + 4 * k + 1) := by ring
-      rw [two_mul, (k ^ 2).add_assoc, (k ^ 2).add_assoc, h1, add_le_add_iff_right]
+      rw [two_mul, add_assoc (k ^ 2), add_assoc (k ^ 2), h1, add_le_add_iff_right]
       -- Remaining goal: `4k + 14 ≤ k^2`
       rw [← add_le_add_iff_right 2, mul_assoc 2 2 k, ← mul_add, ← mul_add_one] at h
       replace h : 2 * 7 ^ 2 < 2 * (k ^ 2 + 2 * k + 1) :=
-        h.trans' <| le_iff_exists_add.mpr ⟨2, rfl⟩
+        Nat.lt_of_succ_le <| h.trans' <| le_iff_exists_add.mpr ⟨2, by rfl⟩
       rw [← one_pow 2, ← (2 * k).mul_one, ← add_sq] at h
-      replace h1 := lt_of_pow_lt_pow' 2 (lt_of_mul_lt_mul_left h (Nat.zero_le 2))
+      replace h1 := lt_of_pow_lt_pow_left' 2 <|
+        lt_of_mul_lt_mul_left h (Nat.zero_le 2)
       rw [Nat.lt_succ_iff] at h1
       -- Now we obtained `k ≥ 7`; use it to finish
       apply (add_le_add_left (Nat.mul_le_mul_left 2 h1) _).trans
