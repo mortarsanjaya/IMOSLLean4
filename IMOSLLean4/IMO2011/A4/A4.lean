@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Order.Monotone.Basic
-import Mathlib.Data.Pnat.Basic
+import Mathlib.Data.PNat.Basic
 
 /-! # IMO 2011 A4 -/
 
