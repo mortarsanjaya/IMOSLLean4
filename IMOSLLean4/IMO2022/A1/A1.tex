@@ -1,0 +1,22 @@
+Let $R$ be a totally ordered ring.
+Let $(a_n)_{n \geq 0}$ be a sequence of non-negative elements of $R$ such that $a_{n + 1}^2 + a_n a_{n + 2} \leq a_n + a_{n + 2}$ for all $n \geq 0$.
+Show that $a_N \leq 1$ for all $N \geq 2$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2022SL.pdf}
+
+We use an alternative way to prove that two consecutive terms starting from $a_1$ cannot be greater than $1$.
+
+First, for any $b, c > 1$ and $a \geq 0$ in $R$ such that $b^2 + ac \leq a + c$, we get
+\[ b < b^2 \leq b^2 + a(c - 1) \leq c. \]
+Thus, if $a_{n + 1}, a_{n + 2} > 1$ for some $n \in \N$, then $a_{n + 1}^2 + a_n a_{n + 2} \leq a_n + a_{n + 2}$ yields $a_{n + 1} < a_{n + 2}$.
+On the other hand, $a_{n + 2}^2 + a_{n + 1} a_{n + 3} \leq a_{n + 1} + a_{n + 3}$ yields $a_{n + 2} < a_{n + 1}$; a contradiction.
+Thus, $a_{n + 1} > 1$ always yields $a_{n + 2} \leq 1$.
+
+Finally, suppose for the sake of contradiction that $a_N > 1$ for some $N \geq 2$.
+We get $0 < a_N^2 - 1 \leq (1 - a_{N - 1})(a_{N + 1} - 1)$.
+This forces either $a_{N - 1} > 1$ or $a_{N + 1} > 1$.
+Both yields contradiction from the previous paragraph.
