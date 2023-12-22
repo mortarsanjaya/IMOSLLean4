@@ -29,7 +29,7 @@ theorem add_one_iterate : ∀ n (a : ℤ), (· + 1)^[n] a = a + n
   | n + 1, a => by rw [iterate_succ_apply', add_one_iterate n a, add_assoc]; rfl
 
 theorem good_add_one : good (· + 1) := λ a b ↦ by
-  have h (c : ℤ) : c + ↑(c.natAbs ^ 2) = c * (c + 1) := by
+  have h (c : ℤ) : c + ((c.natAbs ^ 2 : ℕ) : ℤ) = c * (c + 1) := by
     rw [Int.coe_nat_pow, Int.natAbs_sq, sq, ← mul_one_add, add_comm]
   rw [add_one_iterate, Int.ofNat_add, add_add_add_comm, h, h]
 
