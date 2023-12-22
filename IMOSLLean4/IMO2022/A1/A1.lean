@@ -16,7 +16,7 @@ variable [LinearOrderedCommRing R]
 theorem main_ineq {a b c : R} (h : 1 ≤ a) (h0 : 1 < b)
     (h1 : 0 ≤ c) (h2 : b ^ 2 + a * c ≤ a + c) : b < a :=
   lt_of_add_lt_add_right <| h2.trans_lt' <| add_lt_add_of_lt_of_le
-    (self_lt_pow h0 <| Nat.lt_succ_self 1) (le_mul_of_one_le_left h1 h)
+    (lt_self_pow h0 <| Nat.lt_succ_self 1) (le_mul_of_one_le_left h1 h)
 
 
 
