@@ -1,21 +1,15 @@
 Let $\alpha$ be a totally ordered type.
-Given two functions $f, g : \alpha \to \alpha$, we say that $f \leq g$ iff $f(x) \leq g(x)$ for any $x \in \alpha$.
-Similarly, $f < g$ iff $f(x) < g(x)$ for any $x \in \alpha$.
-Also, $\id_{\alpha} : \alpha \to \alpha$ denotes the map $x \mapsto x$.
+Given two functions $f, g : \alpha \to \alpha$, we say that $f \leq g$ (resp. $f < g$) iff $f(x) \leq g(x)$ (resp. $f(x) < g(x)$) for any $x \in \alpha$.
 
-A pair $(f, g)$ of functions from $\alpha$ to itself is called a \emph{Spanish couple} if $f$ and $g$ are strictly increasing, and $f \circ g \circ g < g \circ f$.
-Determine whether there exists a Spanish couple for
-\begin{enumerate}[label=(\alph*)]
-    \item   $\alpha = \N$, and
-    \item   $\alpha = \N \times \N$, with the lexicographical order.
-            That is, $(a, b) \leq (c, d)$ iff either $a < c$, or $a = c$ and $b \leq d$.
-\end{enumerate}
+A Spanish couple on $\alpha$ is a pair of strictly increasing functions $(f, g)$ from $\alpha$ to itself such that $f ∘ g ∘ g < g ∘ f$.
+Determine whether there exists a Spanish couple on 1. $\N$; and 2. $\N \times \N$ with the lexicographical order.
+By lexicographical order, we mean that $(a, b) \leq (c, d)$ iff either $a < c$, or $a = c$ and $b \leq d$.
 
 
 
 \subsection*{Answer}
 
-"No" for part (a), and "Yes" for part (b).
+NO for part 1 and YES for part 2.
 
 
 
@@ -24,9 +18,9 @@ Determine whether there exists a Spanish couple for
 Official solution: \url{http://www.imo-official.org/problems/IMO2008SL.pdf}
 
 We present the official solution.
-In fact, we will generalize part (b), as we see in this solution.
+In fact, we will generalize part 2, as we see in this solution.
 
-\begin{enumerate}[label=(\alph*)]
+\begin{enumerate}
 
     \item
     Suppose that $\alpha = \N$ and that a Spanish couple $(f, g)$ exists.

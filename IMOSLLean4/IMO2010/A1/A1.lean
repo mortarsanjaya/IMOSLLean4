@@ -6,17 +6,27 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.Order.Floor
 
-/-! # IMO 2010 A1 (P1) -/
+/-!
+# IMO 2010 A1 (P1)
+
+A *floor function* $\lfloor \cdot \rfloor : R → ℤ$ on a totally ordered ring
+  $R$ is a function such that, for any $r \in R$ and $n \in ℤ$,
+$$ n ≤ \lfloor r \rfloor \iff n ≤ r. $$
+
+Let $F$ be a field with floor and $R$ be a ring with floor.
+Find all functions $f : F → R$ such that, for any $x, y \in R$,
+$$ f(⌊x⌋ y) = f(x) ⌊f(y)⌋. $$
+-/
 
 namespace IMOSL
 namespace IMO2010A1
 
 /-- Final solution -/
-theorem final_solution {F : Type _} [LinearOrderedField F] [FloorRing F]
-  {R : Type _} [LinearOrderedRing R] [FloorRing R] (f : F → R) :
+theorem final_solution [LinearOrderedField F] [FloorRing F]
+  [LinearOrderedRing R] [FloorRing R] (f : F → R) :
     (∀ x y : F, f (⌊x⌋ * y) = f x * ⌊f y⌋) ↔
       (∃ C : R, ⌊C⌋ = 1 ∧ f = λ _ ↦ C) ∨ f = 0 := by
-  constructor <;> intro h
+  refine ⟨λ h ↦ ?_, ?_⟩
   ---- `→`
   · have h0 := h 0 0
     rw [mul_zero, eq_comm, mul_right_eq_self₀] at h0
@@ -40,8 +50,7 @@ theorem final_solution {F : Type _} [LinearOrderedField F] [FloorRing F]
       specialize h 1 y
       rwa [h1, zero_mul, Int.floor_one, Int.cast_one, one_mul] at h
   ---- `←`
-  · intros x y
-    rcases h with ⟨C, h, rfl⟩ | rfl
+  · rintro (⟨C, h, rfl⟩ | rfl) x y
     · rw [h, Int.cast_one, mul_one]
     · exact (zero_mul _).symm
 

@@ -30,7 +30,12 @@ The induction step can be generalized to $(k, c) \to (k + 1, 2c + 1)$ for any $k
 
 \subsection*{Further directions}
 
-One might be interested in finding which numbers can replace $2^k - 1$.
-For example, any positive integer less than or equal to $k$ can also replace $2^k - 1$.
-Any positive integer dividing $2^k - 1$ can also replace $2^k - 1$.
-However, without extra restrictions on $n$, we cannot replace $2^k - 1$ with $6$ when $k = 3$.
+A possible generalization is as follows.
+Given $N \in ℕ^+$, find the smallest $k = k(N) \in ℕ^+$ such that
+  there exist positive integers $m_1, m_2, \ldots, m_k$ such that
+\[ 1 + \frac{N}{n} = \prod_{i = 1}^k \left(1 + \frac{1}{m_i}\right). \]
+Some easy results are as follows:
+\begin{itemize}
+    \item   $k(2N + 1) \leq k(N) + 1$ for any $N \in \N^+$,
+    \item   $k(6) = 4 > ⌈\log_2 (6 + 1)⌉$.
+\end{itemize}

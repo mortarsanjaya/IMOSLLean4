@@ -9,8 +9,8 @@ import Mathlib.Data.PNat.Basic
 /-!
 # IMO 2013 N1
 
-Find all functions `f : ℕ⁺ → ℕ⁺` such that, for any `m n : ℕ⁺`,
-$$ `m^2 + f(n) ∣ m f(m) + n`. $$
+Find all functions $f : ℕ^+ → ℕ^+$ such that, for any $m, n : ℕ^+$,
+$$ m^2 + f(n) ∣ m f(m) + n. $$
 -/
 
 namespace IMOSL

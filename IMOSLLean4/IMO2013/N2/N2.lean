@@ -10,9 +10,20 @@ import Mathlib.Data.Nat.Parity
 /-!
 # IMO 2013 N2 (P1)
 
-Prove that, for any $k, n \in ℕ$ with $n > 0$,
-  there exists positive integers $m_1, m_2, \ldots, m_k$ such that
+Prove that, for any $k, n \in ℕ^+$, there exist
+  positive integers $m_1, m_2, \ldots, m_k$ such that
 $$ 1 + \frac{2^k - 1}{n} = \prod_{i = 1}^k \left(1 + \frac{1}{m_i}\right). $$
+
+### Further directions
+
+A possible generalization is as follows.
+Given $N \in ℕ^+$, find the smallest $k = k(N) \in ℕ^+$ such that
+  there exist positive integers $m_1, m_2, \ldots, m_k$ such that
+$$ 1 + \frac{N}{n} = \prod_{i = 1}^k \left(1 + \frac{1}{m_i}\right). $$
+Some easy results are as follows:
+* The result `good_two_mul_add_one` given below implies that
+  $k(2N + 1) \leq k(N) + 1$ for any $N \in ℕ^+$.
+* $k(6) = 4 > ⌈\log_2 (6 + 1)⌉$.
 -/
 
 namespace IMOSL

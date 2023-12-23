@@ -4,7 +4,7 @@ import Mathlib.Order.Monotone.Basic
 /-!
 # Maximum element in a sequence
 
-Let `α` be a linear ordered type and `f : ℕ → α` be a sequence.
+Let `α` be a totally ordered type and `f : ℕ → α` be a sequence.
 We construct the sequence `g : ℕ → α` defined by
   `g(n) = max{f(0), f(1), ..., f(n)}` for each `n : ℕ`.
 We also prove some of its properties.

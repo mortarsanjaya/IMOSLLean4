@@ -7,9 +7,11 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.GroupPower.Lemmas
 
 /-!
-# Linear solver for functions `f : ℤ → G`
+# Linear solver for functions $f : ℤ → G$
 
-We describe the solution to the functional equation `f(n + 1) = g + f(n)`.
+Let $G$ be an additive group, and fix an element $g \in G$.
+We describe all functions $f : ℤ → G$ satisfying
+  the functional equation $f(n + 1) = g + f(n)$.
 -/
 
 namespace IMOSL
