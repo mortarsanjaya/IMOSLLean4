@@ -1,0 +1,36 @@
+Prove that, for any $k, n \in \N$, $n > 0$, there exists positive integers $m_1, m_2, \ldots, m_k$ such that
+\[ 1 + \frac{2^k - 1}{n} = \prod_{j = 1}^k \left(1 + \frac{1}{m_j}\right). \tag{*}\label{2013n2-eq0} \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2013SL.pdf}
+
+We present Solution 1 of the official solution, with a slight modification.
+We just induct on $k$.
+
+Obviously, we are done if $k = 0$.
+Now replace $k$ with $k + 1$, and consider two cases based on the parity of $n$.
+If $n$ is even, say $n = 2t$ for some $t > 0$, then
+\[ 1 + \frac{2^{k + 1} - 1}{2t} = \left(1 + \frac{1}{2(t + 2^k - 1)}\right) \left(1 + \frac{2^k - 1}{t}\right). \]
+If $n$ is odd, say $n = 2t + 1$ for some $t \geq 0$, then
+\[ 1 + \frac{2^{k + 1} - 1}{2t + 1} = \left(1 + \frac{1}{2t + 1}\right) \left(1 + \frac{2^k - 1}{t + 1}\right). \]
+In both cases, we are done by applying the induction hypothesis on the second factor.
+
+
+
+\subsection*{Implementation details}
+
+We express the product term in~\eqref{2013n2-eq0} using \texttt{Multiset}.
+
+The induction step can be generalized to $(k, c) \to (k + 1, 2c + 1)$ for any $k, c \in \N$.
+
+
+
+\subsection*{Further directions}
+
+One might be interested in finding which numbers can replace $2^k - 1$.
+For example, any positive integer less than or equal to $k$ can also replace $2^k - 1$.
+Any positive integer dividing $2^k - 1$ can also replace $2^k - 1$.
+However, without extra restrictions on $n$, we cannot replace $2^k - 1$ with $6$ when $k = 3$.
