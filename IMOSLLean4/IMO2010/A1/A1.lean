@@ -9,9 +9,9 @@ import Mathlib.Algebra.Order.Floor
 /-!
 # IMO 2010 A1 (P1)
 
-A *floor function* $\lfloor \cdot \rfloor : R → ℤ$ on a totally ordered ring
-  $R$ is a function such that, for any $r \in R$ and $n \in ℤ$,
-$$ n ≤ \lfloor r \rfloor \iff n ≤ r. $$
+A *floor function* $⌊⬝⌋ : R → ℤ$ on a totally ordered ring $R$
+  is a function such that, for any $r ∈ R$ and $n ∈ ℤ$,
+$$ n ≤ ⌊r⌋ \iff n ≤ r. $$
 
 Let $F$ be a field with floor and $R$ be a ring with floor.
 Find all functions $f : F → R$ such that, for any $x, y \in R$,
@@ -30,7 +30,7 @@ theorem final_solution [LinearOrderedField F] [FloorRing F]
   ---- `→`
   · have h0 := h 0 0
     rw [mul_zero, eq_comm, mul_right_eq_self₀] at h0
-    apply h0.imp <;> intro h0
+    refine h0.imp (λ h0 ↦ ?_) (λ h0 ↦ ?_)
     -- Case 1: `⌊f(0)⌋ = 1`
     · refine ⟨f 0, Int.cast_eq_one.mp h0, funext λ x ↦ ?_⟩
       rw [← mul_one (f x), ← h0, ← h, mul_zero]

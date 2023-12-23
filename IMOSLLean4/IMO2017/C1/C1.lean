@@ -8,7 +8,20 @@ import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.BigOperators.Order
 import Mathlib.Algebra.BigOperators.Ring
 
-/-! # IMO 2017 C1 -/
+/-!
+# IMO 2017 C1
+
+A rectangle in $ℕ^2$ is a subset of form $\{a, a + 1, \ldots, a + w - 1\}
+  × \{b, b + 1, \ldots, b + h - 1\}$ for some $a, b, w, h ∈ ℕ$.
+Given such rectangle, the quantity $w$ and $h$ are called the
+  *width* and *height* of the rectangle, respectively.
+
+A rectangle $R$ in $ℕ^2$ with odd width and height is
+  partitioned into small rectangles.
+Prove that there exists a small rectangle $R'$ with the following property:
+  the distances from the sides of $R'$ to the respective sides
+    of $R$ all have the same parity.
+-/
 
 namespace IMOSL
 namespace IMO2017C1

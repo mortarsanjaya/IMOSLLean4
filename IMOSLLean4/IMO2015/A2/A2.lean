@@ -6,23 +6,30 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.IntLinearSolver
 
-/-! # IMO 2015 A2 -/
+/-!
+# IMO 2015 A2
+
+Find all functions $f : ℤ → ℤ$ such that, for any $x, y ∈ ℤ$,
+$$ f(x - f(y)) = f(f(x)) - f(y) - 1. $$
+-/
 
 namespace IMOSL
 namespace IMO2015A2
+
+set_option profiler true
+set_option profiler.threshold 50
 
 /-- Final solution -/
 theorem final_solution {f : ℤ → ℤ} :
     (∀ x y : ℤ, f (x - f y) = f (f x) - f y - 1)
       ↔ (f = λ _ ↦ (-1 : ℤ)) ∨ f = (· + 1) := by
-  symm; constructor
+  refine Iff.symm ⟨λ h x y ↦ ?_, λ h ↦ ?_⟩
   ---- `←` direction
-  · rintro (rfl | rfl) x y
+  · rcases h with rfl | rfl
     · rw [sub_sub, neg_add_self, sub_zero]
     · rw [sub_sub, add_sub_add_right_eq_sub, add_sub_right_comm]
   ---- `→` direction
-  · intro h
-    -- First obtain `f(x + 1) = f(f(x))`
+  · -- First obtain `f(x + 1) = f(f(x))`
     have h0 := h 0 (f 0)
     rw [sub_self, zero_sub 1] at h0
     replace h0 x : f (x + 1) = f (f x) := by
@@ -36,8 +43,8 @@ theorem final_solution {f : ℤ → ℤ} :
         sub_add_cancel, sub_self, zero_sub, sub_eq_iff_eq_add] at h1
       exact eq_add_of_sub_eq h1
     -- Finishing in two cases
-    apply (eq_or_ne (f (-1) + 1) 0).imp
-    all_goals intro h2; funext x
+    refine (eq_or_ne (f (-1) + 1) 0).imp
+      (λ h2 ↦ funext λ x ↦ ?_) (λ h2 ↦ funext λ x ↦ ?_)
     · rw [h1, h2, zero_mul, zero_add, ← eq_neg_of_add_eq_zero_left h2]
       specialize h1 (-1)
       rw [h2, zero_mul, zero_add] at h1

@@ -8,7 +8,22 @@ import Mathlib.Algebra.Group.Pi
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 
-/-! # IMO 2017 A6 (P2) -/
+/-!
+# IMO 2017 A6 (P2)
+
+Let $F$ be a field.
+Determine all functions $f : F \to F$ such that, for any $x, y \in F$,
+$$ f(f(x) f(y)) + f(x + y) = f(xy). $$
+
+### Further directions
+
+We have solved the problem when $F$ is a
+  division ring with $\text{char}(F) ≠ 2$.
+We are still interested in lifting the commutativity
+  assumption on $F$ when $\text{char}(F) ≠ 2$.
+If this works, then we have a complete solution
+  even when $F$ is just a division ring!
+-/
 
 namespace IMOSL
 namespace IMO2017A6

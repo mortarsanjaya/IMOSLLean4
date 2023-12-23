@@ -6,7 +6,14 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Tactic.Ring
 
-/-! # IMO 2021 N2 (P1) -/
+/-!
+# IMO 2021 N2 (P1)
+
+Let $n ≥ 99$ be an integer.
+The non-negative integers are coloured using two colours.
+Prove that there exists $a, b ∈ ℕ$ of the same colour such that
+  $n ≤ a < b ≤ 2n$ and $a + b$ is a square.
+-/
 
 namespace IMOSL
 namespace IMO2021N2

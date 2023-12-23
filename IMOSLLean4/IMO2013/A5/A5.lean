@@ -6,7 +6,12 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2013.A5.FinChainFn
 
-/-! # IMO 2013 A5 -/
+/-!
+# IMO 2013 A5
+
+Find all functions $f : \N \to \N$ such that, for any $n \in \N$,
+$$ f(f(f(n))) = f(n + 1) + 1. $$
+-/
 
 namespace IMOSL
 namespace IMO2013A5
@@ -15,8 +20,9 @@ open Finset
 open scoped Classical
 
 /-- (+4)-induction -/
-theorem add_four_induction {P : ℕ → Prop} (h : P 0) (h0 : P 1)
-    (h1 : P 2) (h2 : P 3) (h3 : ∀ n, P n → P (n + 4)) : ∀ n, P n
+theorem add_four_induction {P : ℕ → Prop}
+    (h : P 0) (h0 : P 1) (h1 : P 2) (h2 : P 3)
+    (h3 : ∀ n, P n → P (n + 4)) : ∀ n, P n
   | 0 => h
   | 1 => h0
   | 2 => h1
@@ -50,7 +56,7 @@ theorem good_answer2 : good answer2
 
 section Solution
 
-variable {f : ℕ → ℕ} (h : good f)
+variable (h : good f)
 
 theorem iter_four_eq : ∀ n, f^[4] n = f^[4] 0 + n :=
   have h0 n : f^[4] (n + 1) = f^[4] n + 1 := by
@@ -124,7 +130,6 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
     union_subset_iff, f.iterate_succ_apply, f.iterate_one] at h1
   iterate 3 rw [singleton_subset_iff, mem_union,
     mem_singleton, mem_insert, mem_singleton] at h1
-
   ---- Preparation for the subcases
   have h2 : ∀ n, f (f n) ≠ n := λ n h2 ↦ by
     apply absurd (iter_four_eq_add_four h n)
@@ -133,7 +138,6 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
     exact Nat.succ_ne_zero 3
   have h3 : ∀ n, f n ≠ n := λ n h3 ↦ h2 n <| Function.iterate_fixed h3 2
   rcases h1 with ⟨h1, h4, (rfl | rfl) | h5⟩
-
   ---- Case 1: `a = 0`
   · rw [or_iff_right (h3 0), or_iff_right (f 0).succ_ne_self.symm] at h4
     rw [or_iff_right (h2 0), h4, or_iff_left (h3 1)] at h1
@@ -143,7 +147,6 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
     rw [h4, h1] at h5
     left; refine funext (add_four_induction h4 h1 h5 h6 ?_)
     intro n h7; rw [map_add_four h, h7]
-
   ---- Case 2: `a = f(0) + 1`
   · rw [or_iff_left (h3 _)] at h4
     rw [or_iff_left (h2 _)] at h1
@@ -160,7 +163,6 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
     rw [h5] at h1 h4 h6
     right; refine funext (add_four_induction h5 h6 h4 h1 ?_)
     intro n h7; rw [map_add_four h, h7, answer2]
-
   ---- Case 3: `a = a + 1`
   · exact absurd h5 a.lt_succ_self.ne
 
@@ -171,6 +173,6 @@ end Solution
 
 
 /-- Final solution -/
-theorem final_solution {f : ℕ → ℕ} : good f ↔ f = Nat.succ ∨ f = answer2 :=
+theorem final_solution : good f ↔ f = Nat.succ ∨ f = answer2 :=
   ⟨good_imp_succ_or_answer2,
   λ h ↦ h.elim (λ h ↦ h.symm ▸ good_succ) (λ h ↦ h.symm ▸ good_answer2)⟩

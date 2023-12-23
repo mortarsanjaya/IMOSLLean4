@@ -8,7 +8,12 @@ import Mathlib.RingTheory.Int.Basic
 import Mathlib.Dynamics.PeriodicPts
 import IMOSLLean4.Extra.SeqMax
 
-/-! # IMO 2020 A6 -/
+/-!
+# IMO 2020 A6
+
+Find all functions $f : ℤ → ℤ$ such that, for any $a, b ∈ ℤ$,
+$$ f^{a^2 + b^2}(a + b) = a f(a) + b f(b). $$
+-/
 
 namespace IMOSL
 namespace IMO2020A6

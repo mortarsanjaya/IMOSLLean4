@@ -6,17 +6,31 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.GroupPower.Order
 
-/-! # IMO 2022 A1 -/
+/-!
+# IMO 2022 A1
+
+Let $R$ be a totally ordered ring.
+Let $(a_n)_{n ≥ 0}$ be a sequence of non-negative elements of $R$ such that
+$$ a_{n + 1}^2 + a_n a_{n + 2} ≤ a_n + a_{n + 2} \quad ∀ n ∈ ℕ. $$
+Show that $a_N ≤ 1$ for all $N ≥ 2$.
+-/
 
 namespace IMOSL
 namespace IMO2022A1
 
-variable [LinearOrderedCommRing R]
+variable [LinearOrderedRing R]
 
-theorem main_ineq {a b c : R} (h : 1 ≤ a) (h0 : 1 < b)
+lemma main_ineq {a b c : R} (h : 1 ≤ a) (h0 : 1 < b)
     (h1 : 0 ≤ c) (h2 : b ^ 2 + a * c ≤ a + c) : b < a :=
-  lt_of_add_lt_add_right <| h2.trans_lt' <| add_lt_add_of_lt_of_le
-    (lt_self_pow h0 <| Nat.lt_succ_self 1) (le_mul_of_one_le_left h1 h)
+  lt_of_add_lt_add_right <| h2.trans_lt' <|
+    add_lt_add_of_lt_of_le (lt_self_pow h0 <| Nat.lt_succ_self 1)
+      (le_mul_of_one_le_left h1 h)
+
+lemma main_ineq2 {a b c : R} (h : 0 ≤ a) (h0 : 1 < b)
+    (h1 : 1 ≤ c) (h2 : b ^ 2 + a * c ≤ a + c) : b < c :=
+  lt_of_add_lt_add_left <| h2.trans_lt' <| (add_comm a b).trans_lt <|
+    add_lt_add_of_lt_of_le (lt_self_pow h0 <| Nat.lt_succ_self 1)
+      (le_mul_of_one_le_right h h1)
 
 
 
@@ -26,8 +40,7 @@ theorem final_solution {a : ℕ → R} (h : ∀ i, 0 ≤ a i)
     (N : ℕ) (h1 : 2 ≤ N) : a N ≤ 1 := by
   -- First get that `a_{i + 1} > 1 → ¬a_{i + 2} > 1`
   have h2 (i : ℕ) (h1 : 1 < a (i + 1)) (h2 : 1 < a (i + 2)) : False :=
-    (main_ineq h1.le h2 (h _) (h0 _)).asymm <| main_ineq h2.le h1 (h i) <|
-      mul_comm (a i) (a (i + 2)) ▸ (h0 i).trans_eq (add_comm _ _)
+    (main_ineq h1.le h2 (h _) (h0 _)).asymm <| main_ineq2 (h i) h1 h2.le (h0 _)
   -- Now use the above to finish
   rw [le_iff_exists_add'] at h1; rcases h1 with ⟨n, rfl⟩
   refine le_of_not_lt λ h1 ↦ (h0 (n + 1)).not_lt ?_

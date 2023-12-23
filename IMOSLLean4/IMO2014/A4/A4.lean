@@ -7,7 +7,13 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Data.Int.Interval
 import IMOSLLean4.Extra.IntLinearSolver
 
-/-! # IMO 2014 A4 -/
+/-!
+# IMO 2014 A4
+
+Let $b$ and $c$ be integers with $|b| > 1$ and $c \neq 0$.
+Find all functions $f : ℤ \to ℤ$ such that, for any $x, y \in ℤ$,
+$$ f(y + f(x)) - f(y) = f(bx) - f(x) + c. $$
+-/
 
 namespace IMOSL
 namespace IMO2014A4
@@ -76,25 +82,24 @@ theorem map_is_linear : ∀ n : ℤ, f n = (b - 1) * n + f 0 := by
     rw [mul_zero, sub_self, zero_add, ← sub_left_inj (a := f n),
       add_sub_right_comm, ← h n n, sub_left_inj] at h2
     rw [sub_one_mul, ← add_sub_right_comm, this h2, add_sub_cancel']
+  ---- Some preliminary
+  have h2 : f 0 ≠ 0 := λ h2 ↦ by
+    have h3 := map_map_zero_add h 0
+    rw [zero_add, h2, h2, add_zero] at h3
+    exact h1 h3.symm
+  obtain ⟨m, n, h3, h4⟩ := exists_ne_pow_eq h2 b
+  rw [Int.emod_eq_emod_iff_emod_sub_eq_zero, ← Int.dvd_iff_emod_eq_zero] at h4
+  rcases h4 with ⟨N, h4⟩
   ---- Prove that `f` is injective
-  · -- Some preliminary
-    have h2 : f 0 ≠ 0 := λ h2 ↦ by
-      have h3 := map_map_zero_add h 0
-      rw [zero_add, h2, h2, add_zero] at h3
-      exact h1 h3.symm
-    obtain ⟨m, n, h3, h4⟩ := exists_ne_pow_eq h2 b
-    rw [Int.emod_eq_emod_iff_emod_sub_eq_zero, ← Int.dvd_iff_emod_eq_zero] at h4
-    rcases h4 with ⟨N, h4⟩
-    -- The main proof
-    intro x y h5
-    apply map_b_pow_mul_eq_of_map_eq h at h5
-    have h6 := h5 m
-    have h7 := map_mul_map_zero_add h
-    rw [eq_add_of_sub_eq' h4, add_mul, mul_assoc, h7, add_mul,
-      mul_assoc, h7, h5, add_left_inj, Int.mul_eq_mul_left_iff h1] at h6
-    refine (Int.mul_eq_mul_left_iff λ h8 ↦ ?_).mp h6
-    rw [h8, mul_zero, sub_eq_zero] at h4
-    exact h3 (Int.pow_right_injective h0 h4)
+  intro x y h5
+  apply map_b_pow_mul_eq_of_map_eq h at h5
+  have h6 := h5 m
+  have h7 := map_mul_map_zero_add h
+  rw [eq_add_of_sub_eq' h4, add_mul, mul_assoc, h7, add_mul,
+    mul_assoc, h7, h5, add_left_inj, Int.mul_eq_mul_left_iff h1] at h6
+  refine (Int.mul_eq_mul_left_iff λ h8 ↦ ?_).mp h6
+  rw [h8, mul_zero, sub_eq_zero] at h4
+  exact h3 (Int.pow_right_injective h0 h4)
 
 theorem c_eq_b_sub_one_mul_map_zero : c = (b - 1) * f 0 := by
   have h3 := h 0 0
@@ -107,16 +112,16 @@ end good_lemmas
 
 
 
-/-! ## Final solutions -/
+/-! ## Final solution -/
 
 variable {b c : ℤ} (h : 1 < b.natAbs) (h0 : c ≠ 0)
 
 /-- Final solution, Case 1: `b - 1 ∤ c` -/
-theorem final_solution_case1 (h1 : ¬b - 1 ∣ c) {f : ℤ → ℤ} : ¬good b c f :=
+theorem final_solution_case1 (h1 : ¬b - 1 ∣ c) : ¬good b c f :=
   λ h2 ↦ h1 ⟨f 0, c_eq_b_sub_one_mul_map_zero h2 h h0⟩
 
 /-- Final solution, Case 2: `b - 1 ∣ c` -/
-theorem final_solution_case2 (h1 : b - 1 ∣ c) {f : ℤ → ℤ} :
+theorem final_solution_case2 (h1 : b - 1 ∣ c) :
     good b c f ↔ f = ((b - 1) * · + c / (b - 1)) :=
   ⟨λ h2 ↦ suffices c / (b - 1) = f 0
     from this.symm ▸ funext (map_is_linear h2 h h0)

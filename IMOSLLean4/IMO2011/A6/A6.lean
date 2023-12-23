@@ -6,13 +6,20 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.Order.Ring.Defs
 
-/-! # IMO 2011 A6 (P3) -/
+/-!
+# IMO 2011 A6 (P3)
+
+Let $R$ be a totally ordered commutative ring.
+Let $f : R → R$ be a function such that, for any $x, y ∈ R$,
+$$ f(x + y) ≤ y f(x) + f(f(x)). $$
+Show that $f(x) = 0$ for any $x ∈ R$ such that $x ≤ 0$.
+-/
 
 namespace IMOSL
 namespace IMO2011A6
 
 /-- Final solution -/
-theorem final_solution {R : Type _} [LinearOrderedCommRing R]
+theorem final_solution [LinearOrderedCommRing R]
     {f : R → R} (h : ∀ x y : R, f (x + y) ≤ y * f x + f (f x)) :
     ∀ x : R, x ≤ 0 → f x = 0 := by
   have h0 : ∀ t x : R, f (f t) - f (f x) ≤ (f t - x) * f x := λ t x ↦ by

@@ -8,7 +8,13 @@ import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.List.Perm
 import Mathlib.Order.Bounds.Basic
 
-/-! # IMO 2021 A3 -/
+/-!
+# IMO 2021 A3
+
+Find the smallest possible value of
+$$ \sum_{j = 1}^n \left\lfloor \frac{a_j}{j} \right\rfloor $$
+  across all permutations $(a_1, a_2, \ldots, a_n)$ of $(1, 2, \ldots, n)$.
+-/
 
 namespace IMOSL
 namespace IMO2021A3

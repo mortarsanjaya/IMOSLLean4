@@ -7,16 +7,22 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Extra.IntLinearSolver
 import Mathlib.Algebra.Ring.Regular
 
-/-! # IMO 2019 A1 (P1) -/
+/-!
+# IMO 2019 A1 (P1)
+
+Fix an integer $N ≠ 0$.
+Find all functions $f : ℤ → ℤ$ such that, for any $a, b ∈ ℤ$,
+$$ f(Na) + N f(b) = f(f(a + b)). $$
+-/
 
 namespace IMOSL
 namespace IMO2019A1
 
 /-- Final solution -/
-theorem final_solution (h : N ≠ 0) (f : ℤ → ℤ) :
+theorem final_solution (h : N ≠ 0) {f : ℤ → ℤ} :
     (∀ a b : ℤ, f (N * a) + N * f b = f (f (a + b))) ↔
       (f = 0) ∨ ∃ c : ℤ, f = (N * · + c) := by
-  symm; refine ⟨λ h0 a b ↦ ?_, λ h0 ↦ ?_⟩
+  refine Iff.symm ⟨λ h0 a b ↦ ?_, λ h0 ↦ ?_⟩
   ---- `←` direction
   · rcases h0 with rfl | ⟨c, rfl⟩
     · exact (N * 0).zero_add.trans N.mul_zero

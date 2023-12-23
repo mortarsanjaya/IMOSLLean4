@@ -8,7 +8,17 @@ import Mathlib.Logic.Function.Iterate
 import Mathlib.Order.Monotone.Basic
 import Mathlib.Data.PNat.Basic
 
-/-! # IMO 2011 A4 -/
+/-!
+# IMO 2011 A4
+
+Find all functions $f, g : ℕ → ℕ$ such that, for any $k ∈ ℕ$,
+$$ f^{g(k) + 2}(k) + g^{f(k) + 1}(k) + g(k + 1) + 1 = f(k + 1). $$
+
+### Note
+
+The original version using signature $ℕ^+ → ℕ^+$ is:
+$$ f^{g(k) + 1}(k) + g^{f(k)}(k) + g(k + 1) = f(k + 1) + 1. $$
+-/
 
 namespace IMOSL
 namespace IMO2011A4

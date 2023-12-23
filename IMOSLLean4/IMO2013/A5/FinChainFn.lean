@@ -173,9 +173,7 @@ theorem iterRangeCompl_card :
 theorem iter_range_of_rangeCompl_singleton (h0 : h.rangeCompl = {a}) :
     ∀ n, h.iterRangeCompl n = (range n).image (λ k ↦ f^[k] a)
   | 0 => rfl
-  | n + 1 => by
-    rw [h.iterRangeCompl_succ, exactIterRange, h0, image_singleton,
-      iter_range_of_rangeCompl_singleton h0 n, range_succ, image_insert]
-    rfl
+  | n + 1 => by rw [h.iterRangeCompl_succ, exactIterRange, h0, image_singleton,
+      iter_range_of_rangeCompl_singleton h0 n, range_succ, image_insert]; rfl
 
 end Decidable
