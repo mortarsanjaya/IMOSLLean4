@@ -44,7 +44,6 @@ theorem IsAnswer_comp_hom {φ : R₀ →+* R} (h : φ.toFun.Surjective)
 
 
 
-
 variable [IsDomain S] {f : R → S} (h : good f)
 
 theorem good_map_one : f 1 = 0 := by
@@ -84,6 +83,7 @@ theorem eq_hom_sub_one_of (h0 : ∀ x y, f (x + y) = f x + f y + 1) :
   ⟨RingHom.mk' ⟨⟨g, h2⟩, h4⟩ h3, funext λ x ↦ (add_sub_cancel (f x) 1).symm⟩
 
 /-- Corollary of the previous result -/
-theorem IsAnswer_of_add_one_additive
-    (h0 : ∀ x y, f (x + y) = f x + f y + 1) : IsAnswer f :=
-  Exists.elim (eq_hom_sub_one_of h h0) (λ φ h1 ↦ h1.symm ▸ IsAnswer.hom_sub_one φ)
+theorem IsAnswer_of_add_one_additive (h0 : ∀ x y, f (x + y) = f x + f y + 1) :
+    IsAnswer f := by
+  rcases eq_hom_sub_one_of h h0 with ⟨φ, rfl⟩
+  exact IsAnswer.hom_sub_one φ

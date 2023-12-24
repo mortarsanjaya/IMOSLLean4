@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2012.A5.A5Defs
-import Mathlib.Algebra.GroupPower.Ring
+import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2012 A5 (Answer Checking)
@@ -16,23 +16,19 @@ This file checks that the claimed answers satisfy functional equation.
 namespace IMOSL
 namespace IMO2012A5
 
-variable [Ring R]
-
 /-- The zero map is good. -/
-theorem zero_is_good [Ring S] : good (0 : R → S) :=
-  λ _ _ ↦ (sub_self 0).trans (mul_zero 0).symm
+theorem zero_is_good [Ring R] [Ring S] : good (0 : R → S) :=
+  λ _ _ ↦ (sub_self _).trans (mul_zero _).symm
 
 /-- The map `x ↦ x - 1` is good. -/
-theorem sub_one_is_good : good (· - (1 : R)) := λ x y ↦ by
+theorem sub_one_is_good [Ring R] : good (· - (1 : R)) := λ x y ↦ by
   rw [sub_sub_sub_cancel_right, ← sub_sub_sub_eq, ← mul_sub_one, sub_one_mul]
 
 /-- The map `x ↦ x^2 - 1` is good if `R` is commutative. -/
-theorem sq_sub_one_is_good {R : Type _} [CommRing R] :
-    good (· ^ 2 - (1 : R)) := λ x y ↦ by
-  rw [sub_sub_sub_cancel_right, sq_sub_sq, add_add_add_comm,
-    ← mul_add_one (α := R), add_comm 1 y, ← add_one_mul (α := R),
-    ← sub_sub_sub_eq, ← mul_sub_one, ← sub_one_mul,
-    mul_mul_mul_comm, ← sq_sub_sq, ← sq_sub_sq, one_pow]
+theorem sq_sub_one_is_good [CommRing R] : good (· ^ 2 - (1 : R)) :=
+  λ x y ↦ by ring
+
+variable [Ring R]
 
 /-- The map `𝔽₂_map` is good. -/
 theorem 𝔽₂Map_is_good : good (𝔽₂Map R)
@@ -96,8 +92,8 @@ theorem 𝔽₄Map_is_good (h : c * (1 - c) = -1) : good (𝔽₄Map R c)
 
 
 
-theorem good_map_comp_hom [Ring R₀] [Ring S] {f : R → S} (h : good f)
-    (φ : R₀ →+* R) : good (f ∘ φ) := λ x y ↦
+theorem good_map_comp_hom [Ring R₀] [Ring S]
+    {f : R → S} (h : good f) (φ : R₀ →+* R) : good (f ∘ φ) := λ x y ↦
   h (φ x) (φ y) ▸ congr_arg₂ (λ u v ↦ f u - f v)
     (by rw [φ.map_add, φ.map_mul, φ.map_one]) (φ.map_add x y)
 
