@@ -13,6 +13,10 @@ import IMOSLLean4.IMO2012.A5.ExplicitRings.Z4
 /-!
 # IMO 2012 A5 (Definitions)
 
+Let $R$ be a commutative ring and $S$ be a field.
+Find all functions $f : R \to S$ such that, for any $x, y \in R$,
+$$ f(xy + 1) - f(x + y) = f(x) f(y). $$
+
 This file define the functional equation and its (claimed) set of answers.
 -/
 
@@ -20,7 +24,7 @@ namespace IMOSL
 namespace IMO2012A5
 
 /-- The problem. -/
-def good {R S : Type _} [Ring R] [Ring S] (f : R → S) :=
+def good [Ring R] [Ring S] (f : R → S) :=
   ∀ x y : R, f (x * y + 1) - f (x + y) = f x * f y
 
 
@@ -68,7 +72,7 @@ end ExtraMaps
 
 
 /-- The answer set. -/
-inductive IsAnswer {R S : Type _} [Ring R] [Ring S] : (R → S) → Prop
+inductive IsAnswer [Ring R] [Ring S] : (R → S) → Prop
   | of_zero :
       IsAnswer (0 : R → S)
   | hom_sub_one (φ : R →+* S) :

@@ -7,9 +7,9 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2012.A5.Case2.Subcase1
 
 /-!
-# IMO 2012 A5, Subcase 2.3: `f(-1) = 0` and `f(2) = 3 ≠ 1`
+# IMO 2012 A5, Subcase 2.3: $f(-1) = 0$ and $f(2) = 3 ≠ 1$
 
-This file solves Subcase 2.3.
+This file solves Subcase 2.3, using a lemma from Subcase 2.1.
 -/
 
 namespace IMOSL
@@ -17,7 +17,7 @@ namespace IMO2012A5
 
 section Step9Domain
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+variable [CommRing R] [CommRing S] [IsDomain S]
   {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 2 = 3)
 
 /-- (9.1) -/
@@ -133,7 +133,7 @@ end Step9Domain
 
 section Step9Field
 
-variable {R S : Type _} [CommRing R] [Field S]
+variable [CommRing R] [Field S]
 
 def homGuess (f : R → S) (x : R) := (f x - f (x - 1) + 1) / 2
 

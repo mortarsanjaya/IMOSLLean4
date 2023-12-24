@@ -10,31 +10,32 @@ import Mathlib.RingTheory.Ideal.Quotient
 /-!
 # IMO 2012 A5 (Ring quotient)
 
-Let `R` and `S` be commutative rings, with `S` being an integral domain.
-Given a `good` function `f : R → S`, the set `I = {c : R | ∀ x, f (c + x) = f x}`
-  is an ideal of `R`, and the induced map `R/I → S` is a good function.
-The set `J = {c : R | ∀ x, f (c + x) = f x}` is also an ideal of `R`.
-We prove this fact and prove more facts about `J`.
+Let $R$ be a commutative ring and $S$ be an integral domain.
+Given a *good* function $f : R → S$, the set
+$$ I = \{c ∈ R | ∀ x ∈ R, f(c + x) = f(x)\} $$
+  is an ideal of $R$, and the induced map $\tilde{f} : R/I → S$ is good.
+The set
+$$ J = \{c ∈ R | ∀ x ∈ R, f(cx + 1) = 0\} $$ is also an ideal of $R$.
+We prove this fact and prove more facts about $J$.
 -/
 
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
-  {f : R → S} (h : good f)
+variable [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
 
-theorem quasi_period_iff {c : R} :
+theorem quasi_period_iff :
     (∀ x, f (c + x) = -f c * f x) ↔ ∀ x, f (c * x + 1) = 0 :=
   forall_congr' λ x ↦ by rw [neg_mul, ← h, neg_sub, eq_comm, sub_eq_self]
 
-theorem quasi_period_add {c d : R}
+theorem quasi_period_add
     (h0 : ∀ x, f (c * x + 1) = 0) (h1 : ∀ x, f (d * x + 1) = 0) :
     ∀ x, f ((c + d) * x + 1) = 0 := by
   rw [← quasi_period_iff h] at h0 h1 ⊢
   intro x; rw [add_assoc, h0, h1, ← mul_assoc, mul_neg, ← h0]
 
-theorem map_quasi_period (h0 : f 0 = -1)
-    {c : R} (h1 : ∀ x, f (c + x) = -f c * f x) : f c = 1 ∨ f c = -1 := by
+theorem map_quasi_period (h0 : f 0 = -1) (h1 : ∀ x, f (c + x) = -f c * f x) :
+    f c = 1 ∨ f c = -1 := by
   -- First prove `f(-c) = f(c)`
   have h2 := map_neg_sub_map2 h c
   rw [h1, good_map_one h, mul_zero, zero_mul, sub_eq_zero] at h2
@@ -60,7 +61,7 @@ theorem period_imp_quasi_period (h0 : ∀ x, f (c + x) = f x) :
     c ∈ quasiPeriodIdeal h :=
   (quasi_period_iff h).mp ((period_iff h).mp h0).1
 
-theorem period_mul {c : R} (h0 : ∀ x, f (c + x) = f x) (d : R) :
+theorem period_mul (h0 : ∀ x, f (c + x) = f x) (d : R) :
     ∀ x : R, f (d * c + x) = f x := by
   -- Eliminate the case `f = 0` first
   rcases ne_or_eq (f 0) (-1) with h1 | h1
@@ -105,7 +106,7 @@ theorem mem_periodIdeal_iff :
     c ∈ periodIdeal h ↔ c ∈ quasiPeriodIdeal h ∧ f c = f 0 :=
   (period_iff h).trans <| and_congr_left' (quasi_period_iff h)
 
-theorem period_equiv_imp_f_eq {a b : R}
+theorem period_equiv_imp_f_eq
     (h0 : Ideal.Quotient.ringCon (periodIdeal h) a b) : f a = f b :=
   sub_add_cancel a b ▸ Ideal.Quotient.eq.mp ((RingCon.eq _).mpr h0) b
 
@@ -131,8 +132,7 @@ The results in this mini-subsection is useful for Subcase 2.2 and 2.4. -/
 
 section QuasiPeriod
 
-variable {c : R} (h0 : f 0 = -1)
-  (h1 : c ∈ quasiPeriodIdeal h) (h2 : c ∉ periodIdeal h)
+variable (h0 : f 0 = -1) (h1 : c ∈ quasiPeriodIdeal h) (h2 : c ∉ periodIdeal h)
 
 theorem map_nonperiod_quasi_period : f c = 1 :=
   have h3 := (quasi_period_iff h).mpr h1
@@ -143,7 +143,7 @@ theorem map_quasi_period_add (x : R) : f (c + x) = -f x := by
   rw [← neg_one_mul, (quasi_period_iff h).mpr h1 x,
     map_nonperiod_quasi_period h h0 h1 h2]
 
-theorem is_period_or_eq_quasi_nonperiod {d : R} (h3 : d ∈ quasiPeriodIdeal h) :
+theorem is_period_or_eq_quasi_nonperiod (h3 : d ∈ quasiPeriodIdeal h) :
     d ∈ periodIdeal h ∨ d - c ∈ periodIdeal h :=
   Classical.or_iff_not_imp_left.mpr λ h4 x ↦ by
     rw [← add_sub_right_comm, add_sub_assoc, map_quasi_period_add h h0 h3 h4,
@@ -178,8 +178,9 @@ theorem equiv_mod_periodIdeal (x : R) :
 
 end QuasiPeriod
 
+
 theorem cases_of_nonperiod_quasi_period (h0 : ∀ c ∈ periodIdeal h, c = 0)
-    {c : R} (h1 : f 0 = -1) (h2 : c ∈ quasiPeriodIdeal h) (h3 : c ≠ 0) (x : R) :
+    (h1 : f 0 = -1) (h2 : c ∈ quasiPeriodIdeal h) (h3 : c ≠ 0) (x : R) :
     (x = 0 ∨ x = c) ∨ x = 1 ∨ x = c + 1 := by
   refine (equiv_mod_periodIdeal h h1 h2 (mt (h0 c) h3) x).imp
     (Or.imp (h0 x) ?_) (Or.imp ?_ ?_)

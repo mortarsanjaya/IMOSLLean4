@@ -10,13 +10,13 @@ import Mathlib.Algebra.Ring.Regular
 /-!
 # IMO 2012 A5 (Basic Results)
 
-This file collects basic results.
+This file collects some basic results.
 -/
 
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R R₀ S : Type _} [Ring R] [Ring R₀] [Ring S]
+variable [Ring R] [Ring R₀] [Ring S]
 
 /-- Given `f : R → S` and `φ : R₀ →+* R` surjective,
   `f` is good if `f ∘ φ` is good. -/

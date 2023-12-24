@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.Case1.Basic
 import IMOSLLean4.IMO2012.A5.A5Quotient
 
 /-!
-# IMO 2012 A5, Subcase 1.2: `f(-1) = 1 ≠ -2`
+# IMO 2012 A5, Subcase 1.2: $f(-1) = 1 ≠ -2$
 
 This file solves Subcase 1.2.
 -/
@@ -16,13 +16,13 @@ This file solves Subcase 1.2.
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+variable [CommRing R] [CommRing S] [IsDomain S]
   {f : R → S} (h : good f) (h0 : f (-1) ≠ 0) (h1 : f (-1) ≠ -2)
     (h2 : f (-1) = 1) (h3 : ∀ c ∈ periodIdeal h, c = 0)
 
 /-- (5.1) -/
 theorem case1_2_lem1 (h1 : ∀ c ∈ periodIdeal h, c = 0)
-    {c : R} (h2 : f (c + 1) = 0) : c = 0 :=
+    (h2 : f (c + 1) = 0) : c = 0 :=
   h1 c λ x ↦ by
     have h4 := case1_map_add_main_eq2 h c (x - 1)
     have h5 := case1_map_add_one_eq_zero_imp h h0 h2

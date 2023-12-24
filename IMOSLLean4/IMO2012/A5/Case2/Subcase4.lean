@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.Case2.Basic
 import IMOSLLean4.IMO2012.A5.A5Quotient
 
 /-!
-# IMO 2012 A5, Subcase 2.4: `f(-1) = 0` and `f(2) = 1`
+# IMO 2012 A5, Subcase 2.4: $f(-1) = 0$ and $f(2) = 1$
 
 This file solves Subcase 2.4.
 -/
@@ -20,7 +20,7 @@ namespace IMO2012A5
 
 namespace Char2
 
-variable {R : Type _} [CommRing R] (h : (2 : R) = 0)
+variable [CommRing R] (h : (2 : R) = 0)
 
 theorem add_self (x : R) : x + x = 0 :=
   (two_mul x).symm.trans (mul_eq_zero_of_left h x)
@@ -54,8 +54,7 @@ end Char2
 
 /-! ## The solution -/
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
-  {f : R → S} (h : good f)
+variable [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
 
 /-- `2 ∈ I` -/
 theorem case2_4_lem1 (h0 : f (-1) = 0) (h1 : f 2 = -1) :
@@ -375,8 +374,9 @@ end Rchar2
 
 
 /-- Solution for the current subcase (4 classes) -/
-theorem case2_4_quot_IsAnswer (h0 : f (-1) = 0) (h1 : f 2 = -1)
-    (h2 : ∀ c ∈ periodIdeal h, c = 0) : IsAnswer f := by
+theorem case2_4_quot_IsAnswer
+    (h0 : f (-1) = 0) (h1 : f 2 = -1) (h2 : ∀ c ∈ periodIdeal h, c = 0) :
+    IsAnswer f := by
   have h3 := h2 _ (case2_4_lem1 h h0 h1)
   have h4 : f 0 = -1 := h3 ▸ h1
   by_cases h5 : (2 : S) = 0

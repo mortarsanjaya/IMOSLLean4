@@ -8,12 +8,18 @@ import IMOSLLean4.IMO2012.A5.A5AnswerCheck
 import IMOSLLean4.IMO2012.A5.Case1.Main
 import IMOSLLean4.IMO2012.A5.Case2.Main
 
-/-! # IMO 2012 A5 -/
+/-!
+# IMO 2012 A5
+
+Let $R$ be a commutative ring and $S$ be a field.
+Find all functions $f : R → S$ such that, for any $x, y \in R$,
+$$ f(xy + 1) - f(x + y) = f(x) f(y). $$
+-/
 
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R S : Type _} [CommRing R] [Field S] {f : R → S}
+variable [CommRing R] [Field S] {f : R → S}
 
 theorem IsAnswer_of_good (h : good f) : IsAnswer f :=
   (em' <| f 0 = -1).elim

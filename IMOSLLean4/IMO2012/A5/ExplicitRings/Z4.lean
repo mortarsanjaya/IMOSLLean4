@@ -233,16 +233,14 @@ instance : CommRing ℤ₄ :=
 
 /-! ## Homomorphism from `ℤ₄` -/
 
-def cast {R : Type _} [AddGroupWithOne R] : ℤ₄ → R
+def cast [AddGroupWithOne R] : ℤ₄ → R
   | ℤ₄0 => 0
   | ℤ₄1 => 1
   | ℤ₄2 => 2
   | ℤ₄3 => -1
 
 
-section Ring
-
-variable {R : Type _} [Ring R]
+variable [Ring R]
 
 theorem cast_eq_zero_imp (h : (2 : R) ≠ 0) (x : ℤ₄) (h0 : cast (R := R) x = 0) :
     x = 0 :=
@@ -294,8 +292,6 @@ def castHom : ℤ₄ →+* R :=
 
 theorem castHom_injective (h0 : (2 : R) ≠ 0) : Function.Injective (castHom h) :=
   (injective_iff_map_eq_zero <| castHom h).mpr (cast_eq_zero_imp h0)
-
-end Ring
 
 end ℤ₄
 end IMO2012A5

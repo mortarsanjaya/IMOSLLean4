@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.Case1.Subcase1
 import IMOSLLean4.IMO2012.A5.Case1.Subcase2
 
 /-!
-# IMO 2012 A5, Case 1: `f(-1) ≠ 0` (Main File)
+# IMO 2012 A5, Case 1: $f(-1) ≠ 0$ (Main File)
 
 This file collects solutions to all subcases of Case 1.
 -/
@@ -16,7 +16,7 @@ This file collects solutions to all subcases of Case 1.
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+variable [CommRing R] [CommRing S] [IsDomain S]
   {f : R → S} (h : good f) (h0 : f (-1) ≠ 0)
 
 /-- Main claim -/

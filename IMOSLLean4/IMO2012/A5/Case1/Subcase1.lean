@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.Case1.Basic
 import Mathlib.Tactic.Ring
 
 /-!
-# IMO 2012 A5, Subcase 1.1: `f(-1) = -2 ≠ 0`
+# IMO 2012 A5, Subcase 1.1: $f(-1) = -2 ≠ 0$
 
 This file solves Subcase 1.1.
 -/
@@ -17,11 +17,11 @@ namespace IMOSL
 namespace IMO2012A5
 
 /-- Auxiliary lemma: `2 ≠ 0` -/
-private theorem case1_1_S_two_ne_zero {S : Type _} [AddGroup S]
+private theorem case1_1_S_two_ne_zero [AddGroup S]
     {a b : S} (h : a ≠ 0) (h0 : a = -b) : (b : S) ≠ 0 :=
   neg_ne_zero.mp λ h1 ↦ h <| h0.trans h1
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+variable [CommRing R] [CommRing S] [IsDomain S]
   {f : R → S} (h : good f) (h0 : f (-1) ≠ 0) (h1 : f (-1) = -2)
 
 /-- (4.1) -/

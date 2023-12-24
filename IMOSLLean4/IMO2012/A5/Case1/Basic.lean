@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.A5Basic
 import Mathlib.Algebra.GroupPower.Ring
 
 /-!
-# IMO 2012 A5, Case 1: `f(-1) ≠ 0` (Basic Results)
+# IMO 2012 A5, Case 1: $f(-1) ≠ 0$ (Basic Results)
 
 This file collects basic results in Case 1.
 -/
@@ -16,7 +16,7 @@ This file collects basic results in Case 1.
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+variable [CommRing R] [CommRing S] [IsDomain S]
   {f : R → S} (h : good f) (h0 : f (-1) ≠ 0)
 
 /-- (3.5) The lemma depends only on `good f`, but is useless in the case `f = 0`. -/

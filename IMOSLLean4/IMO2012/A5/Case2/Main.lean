@@ -9,7 +9,7 @@ import IMOSLLean4.IMO2012.A5.Case2.Subcase3
 import IMOSLLean4.IMO2012.A5.Case2.Subcase4
 
 /-!
-# IMO 2012 A5, Case 2: `f(-1) = 0` (Main File)
+# IMO 2012 A5, Case 2: $f(-1) = 0$ (Main File)
 
 This file collects solutions to all subcases of Case 2.
 -/
@@ -17,7 +17,7 @@ This file collects solutions to all subcases of Case 2.
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R : Type _} [CommRing R]
+variable [CommRing R]
 
 /-- Main claim -/
 theorem case2_map_two_cases [CommRing S] [IsDomain S]
@@ -45,8 +45,7 @@ theorem case2_map_two_cases [CommRing S] [IsDomain S]
 
 
 
-variable {S : Type _} [Field S]
-  {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 0 = -1)
+variable [Field S] {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 0 = -1)
 
 theorem case2_quot_IsAnswer (h2 : ∀ c ∈ periodIdeal h, c = 0) : IsAnswer f := by
   rcases eq_or_ne (f 2) (-1) with h3 | h3

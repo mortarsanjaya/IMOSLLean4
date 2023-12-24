@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.Case2.Basic
 import IMOSLLean4.IMO2012.A5.A5Quotient
 
 /-!
-# IMO 2012 A5, Subcase 2.2: `f(-1) = 0` and `f(2) = 1 ≠ -1`
+# IMO 2012 A5, Subcase 2.2: $f(-1) = 0$ and $f(2) = 1 ≠ -1$
 
 This file solves Subcase 2.2.
 -/
@@ -16,7 +16,7 @@ This file solves Subcase 2.2.
 namespace IMOSL
 namespace IMO2012A5
 
-variable {R S : Type _} [CommRing R] [CommRing S] [IsDomain S]
+variable [CommRing R] [CommRing S] [IsDomain S]
   {f : R → S} (h : good f) (h0 : f (-1) = 0) (h1 : f 2 = 1) (h2 : f 2 ≠ -1)
 
 /-- (8.1) -/
