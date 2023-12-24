@@ -67,7 +67,7 @@ theorem good_injective : f.Injective :=
   suffices f^[4].Injective from this.of_comp
   λ m n h0 ↦ by rwa [iter_four_eq h, iter_four_eq h n, add_right_inj] at h0
 
-noncomputable def finChainFnOfgood : Extra.FinChainFn f where
+noncomputable def finChainFnOfgood : FinChainFn f where
   injective' := good_injective h
   rangeCompl' := (range (f^[4] 0)).filter (· ∉ Set.range f)
   rangeCompl_spec' := Set.ext λ n ↦ by
@@ -125,7 +125,7 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
   have h1 := iterRangeCompl_three_subset h
   let C := finChainFnOfgood h
   rw [C.iterRangeCompl_succ, C.iterRangeCompl_succ, C.iterRangeCompl_one] at h1
-  unfold Extra.FinChainFn.exactIterRange at h1
+  unfold FinChainFn.exactIterRange at h1
   rw [h0, image_singleton, image_singleton, image_singleton, union_subset_iff,
     union_subset_iff, f.iterate_succ_apply, f.iterate_one] at h1
   iterate 3 rw [singleton_subset_iff, mem_union,

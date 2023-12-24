@@ -17,7 +17,7 @@ We prove some properties of finite-chain functions.
 -/
 
 namespace IMOSL
-namespace Extra
+namespace IMO2013A5
 
 open Function Finset
 
