@@ -9,7 +9,7 @@ import IMOSLLean4.IMO2013.A5.FinChainFn
 /-!
 # IMO 2013 A5
 
-Find all functions $f : \N \to \N$ such that, for any $n \in \N$,
+Find all functions $f : ℕ → ℕ$ such that, for any $n ∈ ℕ$,
 $$ f(f(f(n))) = f(n + 1) + 1. $$
 -/
 

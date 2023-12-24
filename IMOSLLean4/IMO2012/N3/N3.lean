@@ -11,7 +11,7 @@ import Mathlib.Data.Nat.Parity
 # IMO 2012 N3
 
 Determine all integers $m > 1$ such that $n ∣ \binom{n}{m - 2n}$
-  for every $n \in \N$ with $n \leq m/2$.
+  for every $n ∈ ℕ$ with $n ≤ m/2$.
 -/
 
 namespace IMOSL

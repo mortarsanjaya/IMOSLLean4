@@ -12,10 +12,11 @@ import Mathlib.RingTheory.Ideal.Quotient
 
 Let $R$ be a commutative ring and $S$ be an integral domain.
 Given a *good* function $f : R → S$, the set
-$$ I = \{c ∈ R | ∀ x ∈ R, f(c + x) = f(x)\} $$
+$$I = \\{c ∈ R : ∀ x ∈ R, f(c + x) = f(x)\\}$$
   is an ideal of $R$, and the induced map $\tilde{f} : R/I → S$ is good.
 The set
-$$ J = \{c ∈ R | ∀ x ∈ R, f(cx + 1) = 0\} $$ is also an ideal of $R$.
+$$J = \\{c ∈ R : ∀ x ∈ R, f(cx + 1) = 0\\}$$
+  is also an ideal of $R$.
 We prove this fact and prove more facts about $J$.
 -/
 

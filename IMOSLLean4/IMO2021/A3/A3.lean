@@ -138,7 +138,8 @@ theorem lowerBoundMk_targetSum :
 
 /-! #### Final solution -/
 
-/-- Final solution -/
+/-- Final solution.
+  Note: the answer `Nat.size n` is equal to $⌈\log_2 (n + 1)⌉$. -/
 theorem final_solution :
     IsLeast (targetSum '' {l : List ℕ | l ~ iota n}) n.size :=
   ⟨⟨lowerBoundMk n, lowerBoundMk_perm_iota n, lowerBoundMk_targetSum n⟩,

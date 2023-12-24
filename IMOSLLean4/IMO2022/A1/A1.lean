@@ -10,8 +10,9 @@ import Mathlib.Algebra.GroupPower.Order
 # IMO 2022 A1
 
 Let $R$ be a totally ordered ring.
-Let $(a_n)_{n ≥ 0}$ be a sequence of non-negative elements of $R$ such that
-$$ a_{n + 1}^2 + a_n a_{n + 2} ≤ a_n + a_{n + 2} \quad ∀ n ∈ ℕ. $$
+Let $(a_n)\_{n ≥ 0}$ be a sequence of non-negative
+  elements of $R$ such that, for any $n ∈ ℕ$,
+$$ a_{n + 1}^2 + a_n a_{n + 2} ≤ a_n + a_{n + 2}. $$
 Show that $a_N ≤ 1$ for all $N ≥ 2$.
 -/
 
