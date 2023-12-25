@@ -11,9 +11,9 @@ The board consists of $M$ cards in a row,
 
 Initially, all cards are labelled $1$.
 Then $A$ and $B$ take turns performing a move of the following form.
-Choose an index $i \in \N$ such that $i + n < M$ and
-  the $(i + n)^{\text{th}}$ card shows $1$.
-Then flip the $j^{\text{th}}$ card for any $i \leq j \leq i + n$.
+Choose an index $i ∈ ℕ$ such that $i + n < M$ and
+  the $(i + n)$<sup>th</sup> card shows $1$.
+Then flip the $j$<sup>th</sup> card for any $i ≤ j ≤ i + n$.
 The last player who can make a legal move wins.
 
 Assume that $A$ and $B$ uses the best strategy.
