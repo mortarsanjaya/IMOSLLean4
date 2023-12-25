@@ -16,9 +16,6 @@ $$ f(x - f(y)) = f(f(x)) - f(y) - 1. $$
 namespace IMOSL
 namespace IMO2015A2
 
-set_option profiler true
-set_option profiler.threshold 50
-
 /-- Final solution -/
 theorem final_solution {f : ℤ → ℤ} :
     (∀ x y : ℤ, f (x - f y) = f (f x) - f y - 1)
