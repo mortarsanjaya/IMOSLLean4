@@ -1,0 +1,73 @@
+Fix non-negative integers $M$ and $n$.
+Two players, $A$ and $B$, play the following game on the board.
+The board consists of $M$ cards in a row, one side labelled $0$ and another side labelled $1$.
+
+Initially, all cards are labelled $1$.
+Then $A$ and $B$ take turns performing a move of the following form.
+Choose an index $i \in \N$ such that $i + n < M$ and the $(i + n)^{\text{th}}$ card shows $1$.
+Then flip the $j^{\text{th}}$ card for any $i \leq j \leq i + n$.
+The last player who can make a legal move wins.
+
+Assume that $A$ and $B$ uses the best strategy.
+Show that the game always ends, and determine the outcome of the game.
+
+
+
+\subsection*{Answer}
+
+The game always ends.
+If $\lfloor M/(n + 1) \rfloor$ is even, then $B$ wins.
+If $\lfloor M/(n + 1) \rfloor$ is odd, then $A$ wins.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We follow the official solution.
+In fact, the official solution works no matter what strategy $A$ and $B$ uses.
+That is, we are actually going to show that the outcome purely depends on $M$ and $n$; no strategy involved.
+We will also show that the game ends in at most $2^M - 1$ turns.
+Although this bound is far from strict, it works.
+
+We represent the board as a finite subset $S$ of $S_0 = \{0, 1, \ldots, M - 1\}$.
+The elements of the set are the indices $i$ for which the $i^{\text{th}}$ card shows the face $1$.
+A move would consist of choosing an index $i$ with $i + n \in S$, and then replacing $S$ with $S \Delta \{i, i + 1, \ldots, i + n\}$.
+Here, $\Delta$ denotes symmetric difference.
+Note that only the initial state depends on $M$; the rest of the game runs independently from $M$.
+In particular, if $S \subseteq \{0, 1, \ldots, k - 1\}$ for some $k \in \N$ at some point in the game, this relation holds for the rest of the game.
+
+For the upper bound on the number of moves, consider the quantity
+\[ N_S = \sum_{j \in S} 2^j. \]
+It is easy to check that $N_{S_0} = 2^M - 1$.
+It can also be checked that as the game progresses, $N_S$ strictly decreases.
+Thus, the number of moves cannot exceed $N_{S_0} = 2^M - 1$.
+
+We now determine the winner of the game.
+Call a non-negative integer $i$ \emph{central} if $n + 1$ divides $i + 1$.
+Consider the number $C_S$ of central indices in $S$.
+For any $i \in \N$, the set $\{i, i + 1, \ldots, i + n\}$ contains exactly one central integer; namely,
+\[ (n + 1) \left\lfloor \frac{i}{n + 1} \right\rfloor + n. \]
+Thus, each move increases or decreases $C_S$ by one.
+Either way, it always changes the parity of $C_S$.
+The game ends if and only if the game reaches a state where $S \subseteq \{0, 1, \ldots, n - 1\}$.
+In this state, all cards at position of a central index shows $0$; that is, $C_S = 0$.
+In particular, the number of moves made until the game ends always has the same parity as $C_{S_0} = \lfloor M/(n + 1) \rfloor$.
+We are done.
+
+
+
+\subsection*{Implementation details}
+
+The implementation of the board has been described in the second paragraph of the solution.
+The only other detail to add is that we can simplify the game a lot since the game's outcome is independent of strategies.
+Thus, we implement just the following:
+\begin{itemize}
+    \item   the initial position of the board,
+    \item   the number of moves made,
+    \item   what are the valid moves,
+    \item   whether the game already finishes given the current state.
+\end{itemize}
+
+See also the \texttt{combinatorics.colex} on the \texttt{mathlib} library.
