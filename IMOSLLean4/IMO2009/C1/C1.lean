@@ -161,6 +161,8 @@ theorem moves_lt_two_pow (h : (init M n).IsReachable X) : X.numMoves < 2 ^ M :=
     (geomSum_lt_geomSum_iff_toColex_lt_toColex (le_refl 2)).mpr
       (Colex.toColex_lt_singleton.mpr λ _ ↦ mem_range.mp)
 
+
+
 /-! ### Winner of the game -/
 
 /-- The set of central cards with `1` face-up -/
