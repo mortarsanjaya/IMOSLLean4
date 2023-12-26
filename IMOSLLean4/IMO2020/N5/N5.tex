@@ -1,0 +1,201 @@
+Given two monoids $A$ and $B$, a monoid homomorphism $f : A \to B$ is a function such that $f(1_A) = 1_B$ and $f(xy) = f(x) f(y)$ for any $x, y \in A$.
+We will treat $\N^+$ as a multiplicative monoid.
+
+Let $M$ be an cancellative (multiplicative) monoid.
+Given a monoid homomorphism $f : \N^+ \to M$ and a positive integer $n$, we say that $n$ is $f$-\emph{nice} if the following holds:
+  for any $a, b \in \N^+$ such that $a + b = n$, we have $f(a) = f(b)$.
+Find all monoid homomorphism $f : \N^+ \to M$ such that there are infinitely many $f$-nice positive integers.
+
+
+
+\subsection*{Answer}
+
+The set of such monoid homomorphisms can be described as the union of several sets whose pairwise intersection is $\{0\}$.
+We describe these smaller sets below.
+
+First, fix a prime $p$, and consider the monoid $S_{p, M} = M \times \Hom(\F_p^{\times}/\{\pm 1\}, M)$.
+We view $\Hom(\F_p^{\times}/\{\pm 1\}, M)$ as the set of monoid homomorphisms $\phi : \F_p^{\times} \to M$ such that $\phi(-1) = 1$.
+For any pair $(c, \phi) \in S_{p, M}$, define the corresponding homomorphism $T_p(c, \phi) : \N^+ \to M$ by
+\[ T_p(c, \phi)(p^k t) = c^k \phi(t) \]
+  for any $k, t \in \N$ with $t$ coprime to $p$.
+One can check that $T_p(c, \phi)$ is indeed a monoid homomorphism.
+To see that $T_p(c, \phi)$ satisfies the main criterion, we claim that $p^k$ is $T_p(c, \phi)$-nice for any $k \geq 0$.
+Indeed, for any $a, b \in \N^+$ with $a + b = p^k$, we can write $a = p^{\ell} a'$ and $b = p^{\ell} b'$ for some $\ell < k$ and $a', b' \in \N^+$ coprime with $p$.
+But then $p \mid a' + b'$, so
+\[ T_p(c, \phi)(a) = c^{\ell} \phi(a') = c^{\ell} \phi(b') = T_p(c, \phi)(b). \]
+One can check that $T_p : S_{p, M} \to \Hom(\N^+, M)$ is an injective homomorphism.
+We obtain the small set of solutions $T_p(S_{p, M})$ for each prime $p$.
+
+Now, for the remaining class, consider an arbitrary sequence of pairs $(p_k, \phi_k)_{k \geq 1}$.
+Here, $p_1 < p_2 < \ldots$ are primes and each $\phi_k : \Hom(\F_{p_k}^{\times}/\{\pm 1\}, M)$ are homomorphisms.
+For a shorthand, we will denote this sequence by $(\phi_i)_{i \geq 1}$.
+Let $S_{\infty, M}$ be the set of such sequences with the following additional property:
+  for any $n, i, j \in \N^+$ with $n < \min\{p_i, p_j\}$, we have $\phi_i(n) = \phi_j(n)$.
+Each sequence in $S_{\infty, M}$ gives rise to a monoid homomorphism $T_{\infty}((\phi_i)_{i \geq 1}) : \N^+ \to M$ given by
+\[ T_{\infty}((\phi_i)_{i \geq 1})(n) = \phi_k(n) \]
+  where $k$ is an arbitrary index with $n < p_k$.
+Each $p_k$ is $T_{\infty}((\phi_i)_{i \geq 1})$-nice, so there are infinitely many $T_{\infty}((\phi_i)_{i \geq 1})$-nice primes.
+The image $T_{\infty}(S_{\infty, M})$ is the remaining small set of solutions.
+For each sequence $(\phi_i)_{i \geq 1}$, we have $T_{\infty}((\phi_i)_{i \geq 1}) = 1$ if and only if each $\phi_i$ is the constant one map.
+
+In the case where $M$ has no torsion element, we get $\Hom(\F_p^{\times}/\{\pm 1\}, M) = \{1\}$ for each prime $p$.
+Thus the set of solutions simplifies to homomorphisms of form $n \mapsto c^{\nu_p(n)}$ for some $p$ prime and $c \in M$.
+Each $S_{p, M}$ is isomorphic to $M$, and $T_{\infty}(S_{\infty, M}) = \{1\}$.
+
+Unfortunately, when $M$ has a torsion element, the set $T_{\infty}(S_{\infty, M})$ is non-trivial.
+The case $M = \Z/2\Z$ can be solved using quadratic reciprocity and Dirichlet's theorem on arithmetic progressions.
+The case $M = \Z/q\Z$ for arbitrary primes $q$ can be solved using generalizations: Eisenstein reciprocity and Chebotarev density theorem.
+These cases can be combined to construct a non-trivial element of $T_{\infty}(S_{\infty, M})$ whenever $M$ is not torsion-free.
+
+
+
+\subsection*{Solution}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h2625925p29340833}
+
+We reference a solution in AoPS thread for IMO 2020 N5 by the user \textbf{BlazingMuddy} (see post \#40).
+We have checked that each function in $T_p(S_{p, M})$ and $T_{\infty}(S_{\infty, M})$ works.
+We now go to prove that they are the only functions that work.
+We also prove that the $T_p(S_{p, M})$s and $T_{\infty}(S_{\infty, M})$ pairwise intersects at $\{1\}$.
+We just run through several lemmas.
+
+\begin{lemma}\label{2020n5-1}
+Let $f : \N^+ \to M$ be a homomorphism.
+Let $n \in \N^+$ be $f$-nice.
+Then for any $d \in \N^+$ such that $d \mid n$, $d$ is $f$-nice.
+\end{lemma}
+\begin{proof}
+Write $n = dk$ for some positive integer $k$.
+Then for any $a, b \in \N^+$ such that $a + b = d$, we have $ak + bk = n$.
+Since $n$ is $f$-nice,
+\[ f(a) f(k) = f(ak) = f(bk) = f(b) f(k). \]
+Thus $f(a) = f(b)$; this proves that $d$ is $f$-nice.
+\end{proof}
+
+\begin{lemma}\label{2020n5-2}
+Let $f : \N^+ \to M$ be a homomorphism.
+Let $p$ be a prime, and suppose that $p$ is $f$-nice.
+Then $f(km \mod{p}) = f(k) f(m)$ for any positive integers $k, m < p$. 
+Here $km \mod{p}$ denotes the remainder of $km$ under division by $p$.
+\end{lemma}
+\begin{proof}
+Proceed by double strong induction on the order of $k$, then $m$.
+The bases cases are all the cases with $km < p$; these are trivial cases.
+We now describe the induction hypothesis and the goal to be proved.
+
+Fix some $k_0, m_0 < p$, and WLOG assume that $k_0 m_0 > p$.
+The induction hypothesis is that:
+\begin{itemize}
+    \item   for any $k < k_0$ and $m < p$, we have $f(km \mod{p}) = f(k) f(m)$; and
+    \item   for any $m < m_0$, we have $f(k_0 m \mod{p}) = f(k_0) f(m)$.
+\end{itemize}
+
+The goal is to show that $f(k_0 m_0 \mod{p}) = f(k_0) f(m_0)$.
+Write $p = q m_0 + r$ for some $q, r \in \N$.
+Note that $0 < r < m_0$ and also $q < k_0$ since $p < k_0 m_0$.
+Then by the second induction hypothesis and the fact that $p$ is $f$-nice, we get
+\[ f(k_0 r \mod{p}) = f(k_0) f(r) = f(k_0) f(q m_0) = f(k_0) f(q) f(m_0). \]
+But $p$ divides $k_0 r + k_0 q m_0 = k_0 p$.
+Using the first induction hypothesis, we then get
+\[ f(k_0 r \mod{p}) = f(k_0 q m_0 \mod{p}) = f(q) f(k_0 m_0 \mod{p}). \]
+Finally, combine the two equalities and cancel out $f(q)$ from both sides.
+Induction step is complete; the lemma is proved.
+\end{proof}
+
+The above lemma tells us that $f$ restricts to a homomorphism $\F_p^{\times} \to M$ if $p$ is $f$-nice.
+Since we also require $f(p - 1) = f(1) = 1$, by the first isomorphism theorem, $f$ restricts to a homomorphism $\F_p^{\times}/\{\pm 1\} \to M$.
+
+Due to Lemma~\ref{2020n5-1}, we have two cases regarding $f$-nice positive integers.
+The first case is that there are infinitely many $f$-nice \emph{primes}.
+In this case, enumerate the $f$-nice primes, say as $(p_k)_{k \geq 1}$.
+By the argument on the previous paragraph, we get $f = T_{\infty}((\phi_i)_{i \geq 1})$ for some $(\phi_i)_{i \geq 1} \in S_{\infty, M}$.
+
+The second, more structurally well-behaved case, is that there exists a prime $p$ such that $p^k$ is $f$-nice for every $k \geq 0$.
+The following lemma allows us to prove that $f = T_p(c, \phi)$ for some $c \in M$ and $\phi : \F_p^{\times}/\{\pm 1\} \to M$.
+
+\begin{lemma}\label{2020n5-3}
+Let $f : \N^+ \to M$ be a homomorphism.
+Let $p$ be a prime, and suppose that $p^k$ is $f$-nice for every $k \in \N$.
+Then $f(n) = f(n \mod{p})$ for any $n \in \N^+$ coprime with $p$.
+\end{lemma}
+\begin{proof}
+Induction on $n$; the base cases $n < p$ are easy.
+Now suppose that $n > p$, and let $a$ be the positive integer such that $p^a < n < p^{a + 1}$.
+Then we can write $p^{a + 1} = qn + r$ for some $q, r \in \N^+$ with $q < p$ and $r < n$.
+Note that $r$ is coprime with $p$ since $q$ and $n$ are coprime with $p$.
+By induction hypothesis, $f(r) = f(r \mod{p})$.
+Since $p^{a + 1}$ and $p$ are $f$-nice (respectively), we get
+\[ f(q) f(n) = f(qn) = f(r) = f(r \mod{p}) = f(qn \mod{p}). \]
+By Lemma~\ref{2020n5-1}, since $q < p$, we get $f(qn \mod{p}) = f(q) f(n \mod{p})$.
+Finally, cancel out $f(q)$ from both sides.
+Induction step is complete.
+\end{proof}
+
+To finish from the lemma, recall by Lemma~\ref{2020n5-2} that $f$ restricts on $\{1, 2, \ldots, p - 1\}$ to a homomorphism $\phi : \F_p^{\times}/\{\pm 1\} \to M$.
+Then $f(n) = \phi(n)$ for all $n$ coprime with $p$.
+Thus we get $f = T_p(f(p), \phi)$.
+
+
+\subsubsection*{Disjointness of the Small Sets of Solutions}
+
+We now prove that the sets $T_p(S_{p, M})$ and $T_{\infty}(S_{\infty, M})$ only intersects at $\{1\}$, pairwise.
+The following lemma suffices.
+
+\begin{lemma}\label{2020n5-4}
+Fix a prime $p$, and let $f \in T_p(S_{p, M})$.
+Let $p$ be a prime and suppose that $p^k$ is $f$-nice for all $k \in \N$.
+Suppose that there exists $n > p^2$ such that $n$ is $f$-nice.
+Then $f \equiv 1$.
+\end{lemma}
+\begin{proof}
+First, for any $0 < k \leq p$, we know that $f(kp) = f(n - kp)$.
+By Lemma~\ref{2020n5-3}, $f(n - kp) = f((n - kp) \mod{p}) = f(n \mod{p})$ for all $k \leq p$.
+In particular, this means $f(kp) = f(p)$, and thus $f(k) = 1$, for all $k \leq p$.
+
+Now write $f = T_p(c, \rho)$ for some $c \in M$ and $\rho \in \Hom(\F_p^{\times}/\{\pm 1\}, M)$.
+Then $c = f(p) = 1$ and $\rho(k) = f(k) = 1$ for all $0 < k < p$; the latter yields $\rho = 1$.
+Thus $f = T_p(1, 1) = 1$, as desired.
+\end{proof}
+
+Now fix any $f \in T_p(S_{p, M})$.
+First suppose that $f \in T_q(S_{q, M})$ for some prime $q \neq p$.
+Without loss of generality, assume that $q > p$.
+Then $f$ is $q^2$-good and $q^2 > p^2$, so the above lemma implies $f \equiv 1$.
+
+Now suppose that $f = T_{\infty}((\phi_i)_{i \geq 1})$ for some $(\phi_i)_{i \geq 1} \in S_{\infty, M}$.
+Consider the underlying sequence of primes $(p_i)_{i \geq 1}$.
+We can choose $i$ large enough so that $p_i > p^2$, and $f$ would be $p_i$-good.
+Then the above lemma implies $f \equiv 1$.
+
+
+\subsubsection*{Non-triviality of $T_{\infty}(S_{\infty, M})$}
+
+If $M$ is torsion-free and $N$ is a torsion monoid, then $\Hom(N, M) = 1$.
+Thus Lemma~\ref{2020n5-2} yields that if $M$ is torsion-free and a prime $p$ is $f$-good, then $f(k) = 0$ for all $k < p$.
+This reduces the solution's description to just $n \mapsto c^{\nu_p(n)}$ for some $c \in M$ and $p$ prime.
+In particular, $T_p(S_{p, M}) \cong M$ and $T_{\infty}(S_{\infty, M}) = \{1\}$ in this case.
+
+The case where $M$ is not torsion-free is harder to deal with.
+We claim that actually, $T_{\infty}(S_{\infty, M})$ is non-trivial, i.e., not a singleton.
+To prove the claim, it suffices to consider the cases where $M \cong C_q$, the cyclic group on $q$ elements, for some prime $q$.
+We treat $C_q$ as a multiplicative group, isomorphic to $(\Z/q\Z, +)$.
+We demonstrate just one case, $q = 2$.
+
+For $q = 2$, consider $C_2 = \{\pm 1\}$.
+The goal is to find a sequence $(p_i, \phi_i)_{i \geq 1}$ such that $\phi_i \neq 1$ for some $i$ and also $\phi_i(n) = \phi_j(n)$ for any $n < p_i, p_j$.
+We can take each $\phi_i$ to be the Legendre symbol $\left(\frac{\cdot}{p_i}\right)$.
+The criterion $\phi_i(-1) = 1$ amounts to $p_i \equiv 1 \pmod{4}$ for all $i \geq 1$.
+Due to quadratic reciprocity, the condition $\phi_i(n) = \phi_j(n)$ for any $n < p_i, p_j$ is fulfilled whenever $p_{i + 1} \equiv p_i \pmod{4(p_i - 1)!}$ for all $i = 1, 2, \ldots$.
+Such sequence of primes exist due to Dirichlet's theorem on arithmetic progressions.
+
+For the general case on $q$, one has to work with the $q^{\text{th}}$ power symbol over $\Z[\zeta_q]$.
+The reciprocity result we need is called Eisenstein reciprocity.
+Construction of the desired primes/prime ideals follow from a corollary of Chebotarev's density theorem.
+
+
+
+\subsection*{Implementation details}
+
+The results we have to prove have disjointness from each other to some degree.
+They will be split into several files.
+...
