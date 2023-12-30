@@ -1,7 +1,7 @@
 Given two monoids $A$ and $B$, a monoid homomorphism $f : A \to B$ is a function such that $f(1_A) = 1_B$ and $f(xy) = f(x) f(y)$ for any $x, y \in A$.
 We will treat $\N^+$ as a multiplicative monoid.
 
-Let $M$ be an cancellative (multiplicative) monoid.
+Let $M$ be an commutative and cancellative monoid.
 Given a monoid homomorphism $f : \N^+ \to M$ and a positive integer $n$, we say that $n$ is $f$-\emph{nice} if the following holds:
   for any $a, b \in \N^+$ such that $a + b = n$, we have $f(a) = f(b)$.
 Find all monoid homomorphism $f : \N^+ \to M$ such that there are infinitely many $f$-nice positive integers.
@@ -198,4 +198,7 @@ Construction of the desired primes/prime ideals follow from a corollary of Chebo
 
 The results we have to prove have disjointness from each other to some degree.
 They will be split into several files.
-...
+
+Unfortunately, \texttt{mathlib4} has a way better API on \texttt{Nat} than \texttt{PNat}.
+Also, it seems to me that using $\Hom(\N^+, M)$ in the implementation results in slower definitions and lemmas.
+Thus, we implement monoid homomorphisms as a function $f : \N \to M$ satisfying $f(0) = f(1) = 1$ and $f(xy) = f(x) f(y)$ for $x, y \neq 0$.
