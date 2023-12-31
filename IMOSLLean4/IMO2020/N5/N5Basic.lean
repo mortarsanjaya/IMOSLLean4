@@ -27,6 +27,9 @@ namespace IMO2020N5
 
 def nice (f : ℕ → α) (n : ℕ) := ∀ a b, 0 < a → 0 < b → a + b = n → f a = f b
 
+lemma nice_one (f : ℕ → α) : nice f 1 :=
+  λ _ _ ha hb h ↦ absurd h (Nat.ne_of_lt <| Nat.add_le_add ha hb).symm
+
 lemma nice_of_dvd_nice [CancelMonoid M] (h : 0 < n)
     {f : MulMap M} (h0 : nice f n) (h1 : m ∣ n) : nice f m := by
   rcases h1 with ⟨k, rfl⟩
