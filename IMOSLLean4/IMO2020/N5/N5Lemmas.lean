@@ -40,21 +40,45 @@ lemma not_dvd_mul_of_pos_of_lt_prime (h : Nat.Prime p)
   h.not_dvd_mul (Nat.not_dvd_of_pos_of_lt ha hap)
     (Nat.not_dvd_of_pos_of_lt hb hbp)
 
+private lemma mul_mod_of_lt_equiv_not_dvd
+    (f : ℕ → α) (op : α → α → α) (h : Nat.Prime p) :
+    (∀ k m, 0 < k → k < p → 0 < m → m < p → f (k * m % p) = op (f k) (f m))
+      ↔ (∀ k m, ¬p ∣ k → ¬p ∣ m → f (k * m % p) = op (f (k % p)) (f (m % p))) :=
+  ⟨λ h0 k m hk hm ↦ (k.mul_mod m p).symm ▸ h0 _ _
+    (Nat.emod_pos_of_not_dvd hk) (k.mod_lt h.pos)
+    (Nat.emod_pos_of_not_dvd hm) (m.mod_lt h.pos),
+  λ h0 k m hk hkp hm hmp ↦
+    (h0 _ _ (Nat.not_dvd_of_pos_of_lt hk hkp)
+      (Nat.not_dvd_of_pos_of_lt hm hmp)).trans
+    (by rw [k.mod_eq_of_lt hkp, m.mod_eq_of_lt hmp])⟩
+
+private lemma mul_mod_of_not_dvd_equiv_coprime
+    (f : ℕ → α) (op : α → α → α) (h : Nat.Prime p) :
+    (∀ k m, ¬p ∣ k → ¬p ∣ m → f (k * m % p) = op (f (k % p)) (f (m % p)))
+      ↔ (∀ k m, p.Coprime k → p.Coprime m →
+          f (k * m % p) = op (f (k % p)) (f (m % p))) :=
+  forall_congr' λ k ↦ forall_congr' λ m ↦ by simp_rw [h.coprime_iff_not_dvd]
 
 
-/-! ### Main results -/
 
-variable [CancelMonoid M] {f : MulMap M} (h : Nat.Prime p) (h0 : nice f p)
+
+
+/-! #### Main results -/
+
+variable [CancelMonoid M] {f : MulMap M} (h : Nat.Prime p)
+
+
+section
+
+variable (h0 : nice f p)
 
 theorem nice_prime_map_pred : f (p - 1) = 1 :=
-  f.map_one ▸ h0 _ _ (Nat.sub_pos_of_lt h.one_lt)
-    Nat.one_pos (Nat.sub_add_cancel h.pos)
+  f.map_one ▸ h0 _ _ h.pred_pos Nat.one_pos (Nat.sub_add_cancel h.pos)
 
-theorem nice_prime_mul_mod_of_lt {k₀} (hk₀ : 0 < k₀) (hk₀p : k₀ < p) :
-    ∀ {m₀}, (hm₀ : 0 < m₀) → (hm₀p : m₀ < p) →
-      f (k₀ * m₀ % p) = f k₀ * f m₀ := by
+theorem nice_prime_mul_mod_of_lt (k₀ m₀) (hk₀ : 0 < k₀) (hk₀p : k₀ < p) :
+    (hm₀ : 0 < m₀) → (hm₀p : m₀ < p) → f (k₀ * m₀ % p) = f k₀ * f m₀ := by
   ---- Induction setup
-  induction' k₀ using Nat.strong_induction_on with k₀ ih_k₀; intro m₀
+  revert m₀; induction' k₀ using Nat.strong_induction_on with k₀ ih_k₀; intro m₀
   induction' m₀ using Nat.strong_induction_on with m₀ ih_m₀; intro hm₀ hm₀p
   ---- The case `k₀m₀ < p` is easy to pick
   rcases lt_or_le (k₀ * m₀) p with h1 | h1
@@ -74,7 +98,7 @@ theorem nice_prime_mul_mod_of_lt {k₀} (hk₀ : 0 < k₀) (hk₀p : k₀ < p) :
   replace X {n : ℕ} (hn : 0 < n) (hnp : n < p) : 0 < k₀ * n % p :=
     Nat.emod_pos_of_not_dvd (X hn hnp)
   specialize ih_k₀ (p / m₀) X1 X2 (X1.trans hk₀p)
-    (X hm₀ hm₀p) (Nat.mod_lt _ h.pos)
+    _ (X hm₀ hm₀p) (Nat.mod_lt _ h.pos)
   ---- Finishing
   rw [Nat.mul_mod, Nat.mod_mod, ← Nat.mul_mod, mul_rotate'] at ih_k₀
   replace X1 := Nat.div_add_mod p m₀
@@ -87,13 +111,62 @@ theorem nice_prime_mul_mod_of_lt {k₀} (hk₀ : 0 < k₀) (hk₀p : k₀ < p) :
     (mod_add_mod_eq_of_dvd_of_mod_pos ⟨k₀, ?_⟩ X4)
   rw [← mul_add, X1, mul_comm]
 
-theorem nice_prime_mul_mod_of_not_dvd (hk : ¬p ∣ k) (hm : ¬p ∣ m) :
-    f (k * m % p) = f (k % p) * f (m % p) :=
-  (k.mul_mod m p).symm ▸ nice_prime_mul_mod_of_lt h h0
-    (Nat.emod_pos_of_not_dvd hk) (k.mod_lt h.pos)
-    (Nat.emod_pos_of_not_dvd hm) (m.mod_lt h.pos)
+theorem nice_prime_mul_mod_of_not_dvd :
+    ∀ k m, (hk : ¬p ∣ k) → (hm : ¬p ∣ m) →
+      f (k * m % p) = f (k % p) * f (m % p) :=
+  (mul_mod_of_lt_equiv_not_dvd _ _ h).mp (nice_prime_mul_mod_of_lt h h0)
 
-theorem nice_prime_mul_mod_of_coprime (hk : p.Coprime k) (hm : p.Coprime m) :
-    f (k * m % p) = f (k % p) * f (m % p) :=
-  nice_prime_mul_mod_of_not_dvd h h0
-    (h.coprime_iff_not_dvd.mp hk) (h.coprime_iff_not_dvd.mp hm)
+theorem nice_prime_mul_mod_of_coprime :
+    ∀ k m, (hk : p.Coprime k) → (hm : p.Coprime m) →
+      f (k * m % p) = f (k % p) * f (m % p) :=
+  (mul_mod_of_not_dvd_equiv_coprime _ _ h).mp
+    (nice_prime_mul_mod_of_not_dvd h h0)
+
+end
+
+
+theorem nice_prime_of_map_pred_of_mul_mod_of_lt (h0 : f (p - 1) = 1)
+    (h1 : ∀ k m, 0 < k → k < p → 0 < m → m < p → f (k * m % p) = f k * f m) :
+    nice f p := λ a b ha hb h2 ↦ by
+  ---- First reduce to `a * (p - 1) % p = b`
+  have h3 : a < p := (Nat.lt_add_of_pos_right hb).trans_eq h2
+  specialize h1 (p - 1) a h.pred_pos (Nat.pred_lt_self h.pos) ha h3
+  rw [h0, one_mul] at h1
+  refine h1.symm.trans (congr_arg f ?_)
+  ---- Now prove `a * (p - 1) % p = b`
+  rw [← add_right_inj a, h2]
+  apply Nat.mod_eq_of_lt at h3; nth_rw 1 [← h3]
+  refine mod_add_mod_eq_of_dvd_of_mod_pos ⟨a, ?_⟩ (ha.trans_eq h3.symm)
+  rw [← one_add_mul, Nat.add_sub_cancel' h.one_lt.le]
+
+theorem nice_prime_of_map_pred_of_mul_mod_of_not_dvd (h0 : f (p - 1) = 1)
+    (h1 : ∀ k m, ¬p ∣ k → ¬p ∣ m → f (k * m % p) = f (k % p) * f (m % p)) :
+    nice f p :=
+  nice_prime_of_map_pred_of_mul_mod_of_lt h h0 <|
+    (mul_mod_of_lt_equiv_not_dvd _ _ h).mpr h1
+
+theorem nice_prime_of_map_pred_of_mul_mod_of_coprime
+    (h0 : f (p - 1) = 1)
+    (h1 : ∀ k m, p.Coprime k → p.Coprime m →
+      f (k * m % p) = f (k % p) * f (m % p)) :
+    nice f p :=
+  nice_prime_of_map_pred_of_mul_mod_of_not_dvd h h0 <|
+    (mul_mod_of_not_dvd_equiv_coprime _ _ h).mpr h1
+
+theorem nice_prime_iff_map_pred_of_mul_mod_of_lt :
+    nice f p ↔ (f (p - 1) = 1 ∧ ∀ k m,
+      0 < k → k < p → 0 < m → m < p → f (k * m % p) = f k * f m) :=
+  ⟨λ h0 ↦ ⟨nice_prime_map_pred h h0, nice_prime_mul_mod_of_lt h h0⟩,
+  λ h0 ↦ nice_prime_of_map_pred_of_mul_mod_of_lt h h0.1 h0.2⟩
+
+theorem nice_prime_iff_map_pred_of_mul_mod_of_not_dvd :
+    nice f p ↔ (f (p - 1) = 1 ∧ ∀ k m,
+      ¬p ∣ k → ¬p ∣ m → f (k * m % p) = f (k % p) * f (m % p)) := by
+  rw [← mul_mod_of_lt_equiv_not_dvd _ _ h]
+  exact nice_prime_iff_map_pred_of_mul_mod_of_lt h
+
+theorem nice_prime_iff_map_pred_of_mul_mod_of_coprime :
+  nice f p ↔ (f (p - 1) = 1 ∧ ∀ k m,
+    p.Coprime k → p.Coprime m → f (k * m % p) = f (k % p) * f (m % p)) := by
+  rw [← mul_mod_of_not_dvd_equiv_coprime _ _ h]
+  exact nice_prime_iff_map_pred_of_mul_mod_of_not_dvd h
