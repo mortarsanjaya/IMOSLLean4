@@ -40,14 +40,14 @@ variable [MulOneClass M] [HasDistribNeg M] [MulOneClass N]
 instance : CoeFun (EvenMonoidHom M N) (λ _ ↦ M → N) :=
   ⟨λ f ↦ f.toMonoidHom.toFun⟩
 
-@[simp] lemma map_one (f : EvenMonoidHom M N) :
-    f 1 = 1 := f.map_one'
+@[simp] lemma map_one (f : EvenMonoidHom M N) : f 1 = 1 :=
+  f.map_one'
 
-@[simp] lemma map_mul (f : EvenMonoidHom M N) (x y) :
-    f (x * y) = f x * f y := f.map_mul' x y
+@[simp] lemma map_mul (f : EvenMonoidHom M N) (x y) : f (x * y) = f x * f y :=
+  f.map_mul' x y
 
-@[simp] lemma map_neg_one (f : EvenMonoidHom M N) :
-    f (-1) = 1 := f.map_neg_one'
+@[simp] lemma map_neg_one (f : EvenMonoidHom M N) : f (-1) = 1 :=
+  f.map_neg_one'
 
 instance funLike (M : outParam Type*) [MulOneClass M] [HasDistribNeg M]
     (N : outParam Type*) [MulOneClass N] :

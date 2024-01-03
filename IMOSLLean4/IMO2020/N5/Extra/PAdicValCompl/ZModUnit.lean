@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2020.N5.ClassPrime.PAdicValCompl.Basic
+import IMOSLLean4.IMO2020.N5.Extra.PAdicValCompl.Basic
 import Mathlib.Data.ZMod.Basic
 
 /-!
@@ -45,5 +45,16 @@ lemma ZModUnit_mul (x y : ℕ+) :
 
 lemma ZModUnit_self : ZModUnit p p = 1 := by
   simp_rw [ZModUnit, self]; exact unitOfCoprime_one _
+
+lemma ZModUnit_self_pred : ZModUnit p (p - 1) = -1 := by
+  rw [← Units.eq_iff, ZModUnit_coeZMod]
+  sorry
+  -- rw [ZMod.val_nat_cast, Units.val_neg, Units.val_one]
+
+
+def ZModUnitHom : ℕ+ →* (ZMod p)ˣ :=
+  { toFun := ZModUnit p
+    map_one' := ZModUnit_one p
+    map_mul' := ZModUnit_mul p }
 
 end padicComplPNat
