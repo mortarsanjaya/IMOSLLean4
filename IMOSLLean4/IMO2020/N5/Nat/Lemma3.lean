@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2020.N5.N5Lemmas
+import IMOSLLean4.IMO2020.N5.Nat.Lemma2
 import Mathlib.Data.Nat.Log
 
 /-!

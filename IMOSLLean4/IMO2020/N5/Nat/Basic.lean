@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2020.N5.N5MulMap
+import IMOSLLean4.IMO2020.N5.Nat.MulMap
 
 /-!
 # IMO 2020 N5 (Basic File)

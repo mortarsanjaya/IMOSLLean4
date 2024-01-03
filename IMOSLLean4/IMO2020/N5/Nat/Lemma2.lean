@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2020.N5.N5Basic
+import IMOSLLean4.IMO2020.N5.Nat.Basic
 import Mathlib.Data.Nat.Prime
 
 /-!

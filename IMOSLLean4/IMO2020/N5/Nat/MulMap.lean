@@ -8,7 +8,7 @@ import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.FunLike.Basic
 
 /-!
-# IMO 2020 N5 (Multiplicative Map)
+# Multiplicative Map
 
 Let `M` be a commutative (multiplicative) monoid.
 A multiplicative map is a map `f : ℕ → M` such that
@@ -43,7 +43,8 @@ instance : CoeFun (MulMap M) (λ _ ↦ ℕ → M) := ⟨MulMap.toFun⟩
 @[simp] theorem map_zero (f : MulMap M) : f 0 = 1 := f.map_zero'
 @[simp] theorem map_one (f : MulMap M) : f 1 = 1 := f.map_one'
 @[simp] theorem map_mul (f : MulMap M) (h : 0 < x) (h0 : 0 < y) :
-    f (x * y) = f x * f y := f.map_mul' h h0
+    f (x * y) = f x * f y :=
+  f.map_mul' h h0
 
 instance funLike (M : outParam Type*) [One M] [Mul M] :
     FunLike (MulMap M) ℕ (λ _ ↦ M) where
