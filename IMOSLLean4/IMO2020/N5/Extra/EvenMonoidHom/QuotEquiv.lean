@@ -65,6 +65,7 @@ lemma toQuotHom'_ofQuotHom' (φ : M ⧸ Subgroup.zpowers (-1) →* N) :
     toQuotHom' M N (ofQuotHom' M N φ) = φ := by
   ext x; rfl
 
+/-- Isomorphism between `EvenMonoidHom M N` and `M/{±1} →* N` -/
 def equivQuotHom : EvenMonoidHom M N ≃* (M ⧸ Subgroup.zpowers (-1) →* N) :=
   { toFun := toQuotHom' M N
     invFun := ofQuotHom' M N

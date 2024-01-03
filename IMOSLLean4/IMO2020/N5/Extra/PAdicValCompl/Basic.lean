@@ -39,8 +39,7 @@ lemma one : padicValPNat p 1 = 0 := rfl
 
 lemma mul (x y : ℕ+) :
     padicValPNat p (x * y) = padicValPNat p x + padicValPNat p y := by
-  rw [padicValPNat, padicValPNat, padicValPNat,
-    factorMultiset_mul, count_add]
+  rw [padicValPNat, padicValPNat, padicValPNat, factorMultiset_mul, count_add]
 
 lemma pow (n : ℕ+) (k : ℕ) :
     padicValPNat p (n ^ k) = k * padicValPNat p n := by

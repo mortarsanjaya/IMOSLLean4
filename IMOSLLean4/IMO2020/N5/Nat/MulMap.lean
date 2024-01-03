@@ -8,7 +8,7 @@ import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.FunLike.Basic
 
 /-!
-# Multiplicative Map
+# Multiplicative Map (over ℕ)
 
 Let `M` be a commutative (multiplicative) monoid.
 A multiplicative map is a map `f : ℕ → M` such that
@@ -20,7 +20,6 @@ We also prove other properties for multiplicative maps.
 namespace IMOSL
 namespace IMO2020N5
 
-/-- The main structure used to define the generalized IMO 2020 N5. -/
 structure MulMap (M : Type*) [One M] [Mul M] :=
   toFun : ℕ → M
   map_zero' : toFun 0 = 1
