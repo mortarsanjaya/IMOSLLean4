@@ -43,18 +43,18 @@ lemma ZModUnit_mul (x y : ℕ+) :
   rw [← Units.eq_iff, ZModUnit_coeZMod, Units.val_mul, mul,
     PNat.mul_coe, Nat.cast_mul, ZModUnit_coeZMod, ZModUnit_coeZMod]
 
-lemma ZModUnit_self : ZModUnit p p = 1 := by
-  simp_rw [ZModUnit, self]; exact unitOfCoprime_one _
-
-lemma ZModUnit_self_pred : ZModUnit p (p - 1) = -1 := by
-  rw [← Units.eq_iff, ZModUnit_coeZMod]
-  sorry
-  -- rw [ZMod.val_nat_cast, Units.val_neg, Units.val_one]
-
-
 def ZModUnitHom : ℕ+ →* (ZMod p)ˣ :=
   { toFun := ZModUnit p
     map_one' := ZModUnit_one p
     map_mul' := ZModUnit_mul p }
+
+lemma ZModUnit_self : ZModUnit p p = 1 := by
+  simp_rw [ZModUnit, self]; exact unitOfCoprime_one _
+
+lemma ZModUnit_pred : ZModUnit p (p - 1) = -1 := by
+  rw [← Units.eq_iff, ZModUnit_coeZMod, padicComplPNat.pred, PNat.sub_coe]
+  change ((if 1 < (p : ℕ) then (p : ℕ).pred else 1 : ℕ) : ZMod p) = -1
+  rw [if_pos p.2.one_lt, eq_neg_iff_add_eq_zero, ← Nat.cast_succ,
+    Nat.succ_pred p.2.ne_zero, ZMod.nat_cast_self]
 
 end padicComplPNat
