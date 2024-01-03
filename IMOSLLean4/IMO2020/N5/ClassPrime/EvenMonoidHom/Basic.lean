@@ -16,7 +16,7 @@ That is, `M` has a negation operator `- : M → M` such that
 An even homomorphism `f : M →* N` is a homomorphism with `f(-1) = 1`.
 If `M` is a commutative group, then the set of such homomorphism is
   isomorphic with `M⧸{±1} →* N`, but is easier to work with than `M⧸{±1} →* N`.
-The isomorphism will be provided in `QuotIso.lean`.
+The isomorphism will be provided in `QuotEquiv.lean`.
 -/
 
 namespace IMOSL
