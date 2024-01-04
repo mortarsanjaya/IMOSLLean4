@@ -4,10 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2020.N5.Extra.MulMap.Basic
+import IMOSLLean4.IMO2020.N5.Nat.MulMap.Basic
 
 /-!
-# IMO 2020 N5 (Basic File)
+# IMO 2020 N5, ℕ-version (Basic File)
+
+(The ℕ-version files store the bulk of the proofs of the main lemmas.)
 
 Let `M` be a commutative cancellative monoid.
 Given `f : MulMap M` (as defined in `N5MulMap.lean`), a natural number
@@ -24,6 +26,7 @@ The others are deferred into other files, since they need more import.
 
 namespace IMOSL
 namespace IMO2020N5
+namespace Nat
 
 def nice (f : ℕ → α) (n : ℕ) := ∀ a b, 0 < a → 0 < b → a + b = n → f a = f b
 
