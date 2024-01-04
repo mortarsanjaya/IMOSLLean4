@@ -60,14 +60,17 @@ theorem replicate_add_factor_filter (n : ℕ+) :
       = n.factorMultiset := by
   rw [padicValPNat, ← filter_eq, filter_add_not]
 
-lemma pos_iff_dvd (n : ℕ+) : 0 < padicValPNat p n ↔ (p : ℕ+) ∣ n := by
+lemma pos_iff_dvd {n : ℕ+} : 0 < padicValPNat p n ↔ (p : ℕ+) ∣ n := by
   rw [← pow_one (p : ℕ+), spec]; rfl
 
-lemma zero_iff_not_dvd (n : ℕ+) : padicValPNat p n = 0 ↔ ¬(p : ℕ+) ∣ n := by
+lemma zero_iff_not_dvd {n : ℕ+} : padicValPNat p n = 0 ↔ ¬(p : ℕ+) ∣ n := by
   rw [← pos_iff_dvd, Nat.not_lt, Nat.le_zero]
 
+lemma zero_of_not_dvd (h : ¬(p : ℕ+) ∣ n) : padicValPNat p n = 0 :=
+  (zero_iff_not_dvd p).mpr h
+
 theorem zero_of_lt (h : n < (p : ℕ+)) : padicValPNat p n = 0 :=
-  (zero_iff_not_dvd p _).mpr (mt le_of_dvd h.not_le)
+  zero_of_not_dvd p (mt le_of_dvd h.not_le)
 
 theorem pred : padicValPNat p (p - 1) = 0 :=
   zero_of_lt p (PNat_pred_lt_self p.2.one_lt)
