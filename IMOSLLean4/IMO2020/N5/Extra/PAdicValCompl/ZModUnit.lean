@@ -57,4 +57,14 @@ lemma ZModUnit_pred : ZModUnit p (p - 1) = -1 := by
   rw [if_pos p.2.one_lt, eq_neg_iff_add_eq_zero, ← Nat.cast_succ,
     Nat.succ_pred p.2.ne_zero, ZMod.nat_cast_self]
 
+lemma ZModUnit_coeZMod_of_not_dvd (h : ¬(p : ℕ+) ∣ n) :
+    (ZModUnit p n).val = (n.val : ZMod p) := by
+  rw [ZModUnit_coeZMod, (padicComplPNat.fixedPt_iff_not_dvd p).mpr h]
+
+lemma ZModUnit_of_not_dvd_mod_eq
+    (hx : ¬(p : ℕ+) ∣ x) (hy : ¬(p : ℕ+) ∣ y) (h : x.1 ≡ y.1 [MOD p]) :
+    ZModUnit p x = ZModUnit p y := by
+  rwa [Units.ext_iff, ZModUnit_coeZMod_of_not_dvd p hx,
+    ZModUnit_coeZMod_of_not_dvd p hy, ZMod.nat_cast_eq_nat_cast_iff]
+
 end padicComplPNat
