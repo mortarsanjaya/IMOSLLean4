@@ -13,7 +13,7 @@ import IMOSLLean4.IMO2020.N5.Nat.Lemma3
 
 Let `p` be a prime and `M` be a cancellative commutative monoid.
 We say that `f : ℕ+ →* M` is of class `p` if `p^k` is `f`-nice for all `k ≥ 0`.
-Here, we prove that the image of `primeClassHom_mk` defined in
+Here, we prove that the image of `primeClass.Hom_mk` defined in
   `ClassPrime/Answers.lean` are precisely the functions of class `p`.
 Furthermore, the inverse mapping will be constructed explicitly.
 -/
