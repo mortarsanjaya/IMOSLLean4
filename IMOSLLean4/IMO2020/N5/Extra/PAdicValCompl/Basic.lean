@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.PNat.Factors
+import IMOSLLean4.IMO2020.N5.Extra.PNatProp
 
 /-!
 # p-adic Valuation and Complement in `ℕ+`
@@ -21,10 +22,6 @@ namespace IMOSL
 namespace IMO2020N5
 
 open PNat Multiset
-
-/-- Extra lemma: given `n : ℕ+` such that `n > 1`, we have `n - 1 < n` -/
-lemma PNat_pred_lt_self {n : ℕ+} (h : 1 < n) : n - 1 < n :=
-  ((n - 1).lt_add_left 1).trans_eq (PNat.add_sub_of_lt h)
 
 variable (p : Nat.Primes)
 
