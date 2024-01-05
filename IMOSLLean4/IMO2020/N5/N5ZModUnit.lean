@@ -7,8 +7,8 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2020.N5.N5Basic
 import IMOSLLean4.IMO2020.N5.Extra.EvenMonoidHom.Basic
 import IMOSLLean4.IMO2020.N5.Nat.Lemma2
+import IMOSLLean4.IMO2020.N5.Extra.ZModUnitProp
 import Mathlib.Data.PNat.Prime
-import Mathlib.Data.ZMod.Basic
 
 /-!
 # IMO 2020 N5 (Nice Primes to Even Homomorphism `(ZMod p)ˣ →* M`)
@@ -22,15 +22,6 @@ We implement the same result over `MulMap M` as an intermediate step.
 
 namespace IMOSL
 namespace IMO2020N5
-
-lemma ZModUnit_val_pos (h : Nat.Prime p) (x : (ZMod p)ˣ) : 0 < x.val.val := by
-  rw [Nat.pos_iff_ne_zero, Ne.def, ZMod.val_eq_zero]
-  haveI : Fact (1 < p) := ⟨h.one_lt⟩
-  exact Units.ne_zero x
-
-
-
-
 
 namespace MulMap
 
@@ -82,8 +73,7 @@ def PNatHom_toZModUnitEvenHom : EvenMonoidHom (ZMod p)ˣ M :=
   (MulMap.ofPNatHom φ).toZModUnitEvenHom p.2 (niceNat_of_nice h)
 
 lemma PNatHom_toZModUnitEvenHom_apply (x : (ZMod p)ˣ) :
-    PNatHom_toZModUnitEvenHom φ p h x =
-      φ.toFun ⟨x.val.val, ZModUnit_val_pos p.2 _⟩ :=
+    PNatHom_toZModUnitEvenHom φ p h x = φ (ZModUnit_toPNat p.2 x) :=
   MulMap.ofPNatHom_spec φ ⟨_, _⟩
 
 end PNatHom

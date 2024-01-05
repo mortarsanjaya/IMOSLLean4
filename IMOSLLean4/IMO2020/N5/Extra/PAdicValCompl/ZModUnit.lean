@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2020.N5.Extra.PAdicValCompl.Basic
-import Mathlib.Data.ZMod.Basic
+import IMOSLLean4.IMO2020.N5.Extra.ZModUnitProp
 
 /-!
 # Embedding of `p`-adic complement into `(ZMod p)ˣ`
@@ -13,17 +13,11 @@ import Mathlib.Data.ZMod.Basic
 Let `p : ℕ+` be a prime.
 We construct the function that sends `n : ℕ+` into the
   image of `p`-adic complement `n/p^ν_p(n)` in `(ZMod p)ˣ`.
+It is right inverse of the map `(ZMod p)ˣ → ℕ+` defined by `x ↦ x.val.val`.
 -/
 
 namespace IMOSL
 namespace IMO2020N5
-
-/-- `unitOfCoprime` always sends `1 : ℕ` to `1 : (ZMod p)ˣ` -/
-lemma unitOfCoprime_one (h : Nat.Coprime 1 p) : ZMod.unitOfCoprime 1 h = 1 :=
-  Units.val_eq_one.mp Nat.cast_one
-
-
-
 namespace padicComplPNat
 
 variable (p : Nat.Primes)
@@ -32,11 +26,10 @@ def ZModUnit (n : ℕ+) : (ZMod p)ˣ :=
   ZMod.unitOfCoprime (padicComplPNat p n) (coprimeNat p n)
 
 lemma ZModUnit_one : ZModUnit p 1 = 1 :=
-  unitOfCoprime_one _
+  unitOfCoprime_one
 
 lemma ZModUnit_coeZMod (n : ℕ+) :
-    (ZModUnit p n).val = (padicComplPNat p n).val :=
-  ZMod.coe_unitOfCoprime _ _
+    (ZModUnit p n).val = (padicComplPNat p n).val := rfl
 
 lemma ZModUnit_mul (x y : ℕ+) :
     ZModUnit p (x * y) = ZModUnit p x * ZModUnit p y := by
@@ -49,7 +42,7 @@ def ZModUnitHom : ℕ+ →* (ZMod p)ˣ :=
     map_mul' := ZModUnit_mul p }
 
 lemma ZModUnit_self : ZModUnit p p = 1 := by
-  simp_rw [ZModUnit, self]; exact unitOfCoprime_one _
+  simp_rw [ZModUnit, self]; exact unitOfCoprime_one
 
 lemma ZModUnit_pred : ZModUnit p (p - 1) = -1 := by
   rw [← Units.eq_iff, ZModUnit_coeZMod, padicComplPNat.pred, PNat.sub_coe]
@@ -62,9 +55,16 @@ lemma ZModUnit_coeZMod_of_not_dvd (h : ¬(p : ℕ+) ∣ n) :
   rw [ZModUnit_coeZMod, (padicComplPNat.fixedPt_iff_not_dvd p).mpr h]
 
 lemma ZModUnit_of_not_dvd_mod_eq
-    (hx : ¬(p : ℕ+) ∣ x) (hy : ¬(p : ℕ+) ∣ y) (h : x.1 ≡ y.1 [MOD p]) :
+    (hx : ¬(p : ℕ+) ∣ x) (hy : ¬(p : ℕ+) ∣ y) (h : (x : ℕ) % p = y % p) :
     ZModUnit p x = ZModUnit p y := by
   rwa [Units.ext_iff, ZModUnit_coeZMod_of_not_dvd p hx,
     ZModUnit_coeZMod_of_not_dvd p hy, ZMod.nat_cast_eq_nat_cast_iff]
+
+lemma ZModUnit_of_toPNat (x : (ZMod p)ˣ) :
+    ZModUnit p (ZModUnit_toPNat p.2 x) = x := by
+  rw [← Units.eq_iff, ZModUnit_coeZMod,
+    (fixedPt_iff_not_dvd p).mpr (not_dvd_ZModUnit_toPNat p.2 x)]
+  haveI : NeZero p.1 := ⟨p.2.ne_zero⟩
+  exact x.val.nat_cast_zmod_val
 
 end padicComplPNat
