@@ -136,10 +136,17 @@ lemma Hom_inv_mk (x : M × EvenMonoidHom (ZMod p)ˣ M) :
     Hom_inv p M (Hom_mk_spec p M x) = x :=
   Prod.ext (Hom_mk_apply_self p M x) (PNatHom_toZModUnitEvenHom_Hom_mk x)
 
-/-- Main theorem for the prime class -/
-theorem primeClass_iff_exists_eq_Hom_mk {φ : ℕ+ →* M} :
-    primeClass p φ.toFun ↔ ∃ x, Hom_mk p M x = φ :=
-  ⟨λ h ↦ ⟨Hom_inv p M h, Hom_mk_inv _⟩,
-  λ h ↦ h.elim λ x h ↦ h ▸ Hom_mk_spec p M x⟩
-
 end inverse
+
+end primeClass
+
+
+
+
+
+/-- Main theorem for the prime class -/
+theorem primeClass_iff_exists_eq_Hom_mk
+    {p : Nat.Primes} [CancelCommMonoid M] {φ : ℕ+ →* M} :
+    primeClass p φ.toFun ↔ ∃ x, primeClass.Hom_mk p M x = φ :=
+  ⟨λ h ↦ ⟨primeClass.Hom_inv p M h, primeClass.Hom_mk_inv _⟩,
+  λ h ↦ h.elim λ x h ↦ h ▸ primeClass.Hom_mk_spec p M x⟩
