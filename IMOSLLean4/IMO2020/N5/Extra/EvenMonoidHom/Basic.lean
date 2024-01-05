@@ -49,6 +49,9 @@ instance : CoeFun (EvenMonoidHom M N) (λ _ ↦ M → N) :=
 @[simp] lemma map_neg_one (f : EvenMonoidHom M N) : f (-1) = 1 :=
   f.map_neg_one'
 
+@[simp] lemma map_neg (f : EvenMonoidHom M N) (x) : f (-x) = f x := by
+  rw [← neg_one_mul, f.map_mul, f.map_neg_one, one_mul]
+
 instance funLike (M : outParam Type*) [MulOneClass M] [HasDistribNeg M]
     (N : outParam Type*) [MulOneClass N] :
     FunLike (EvenMonoidHom M N) M (λ _ ↦ N) where
