@@ -21,6 +21,7 @@ Furthermore, the inverse mapping will be constructed explicitly.
 namespace IMOSL
 namespace IMO2020N5
 
+/-- The class `p` predicate -/
 def primeClass (p : ℕ+) (f : ℕ+ → α) := ∀ k, nice f (p ^ k)
 
 
@@ -72,7 +73,7 @@ end
 
 
 
-/-! #### Image of `primeClassHom_mk` -/
+/-! #### Image of `primeClass.Hom_mk` -/
 
 theorem Hom_mk_spec (p : Nat.Primes) (M : Type*)
     [CancelCommMonoid M] (x : M × EvenMonoidHom (ZMod p)ˣ M) :
@@ -86,7 +87,7 @@ theorem Hom_mk_spec (p : Nat.Primes) (M : Type*)
 
 
 
-/-! #### Inverse of `primeClassHom_mk` -/
+/-! #### Inverse of `primeClass.Hom_mk` -/
 
 section
 
@@ -94,7 +95,7 @@ variable {p : Nat.Primes} [CancelCommMonoid M]
   {φ : ℕ+ →* M} (h : primeClass p φ.toFun)
 
 lemma PNatHom_toZModUnitEvenHom_apply_padicCompl (n : ℕ+) :
-    PNatHom_toZModUnitEvenHom φ p (nice_self h) (padicComplPNat.ZModUnit p n)
+    PNatHom_toZModUnitEvenHom (nice_self h) (padicComplPNat.ZModUnit p n)
       = φ (padicComplPNat p n) := by
   rw [PNatHom_toZModUnitEvenHom_apply, ← MulMap.ofPNatHom_spec,
     ZModUnit_toPNat_val, ← MulMap.ofPNatHom_spec,
@@ -104,15 +105,14 @@ lemma PNatHom_toZModUnitEvenHom_apply_padicCompl (n : ℕ+) :
 
 lemma pow_mul_PNatHom_toZModUnitEvenHom_padicCompl (n : ℕ+) :
     φ p ^ padicValPNat p n *
-      PNatHom_toZModUnitEvenHom φ p (nice_self h) (padicComplPNat.ZModUnit p n)
+      PNatHom_toZModUnitEvenHom (nice_self h) (padicComplPNat.ZModUnit p n)
       = φ n := by
   rw [PNatHom_toZModUnitEvenHom_apply_padicCompl h,
     ← φ.map_pow, ← φ.map_mul, padicComplPNat.self_pow_Val_mul]
 
 lemma PNatHom_toZModUnitEvenHom_Hom_mk (x : M × EvenMonoidHom (ZMod p)ˣ M) :
-    PNatHom_toZModUnitEvenHom (Hom_mk p M x) p (nice_self (Hom_mk_spec p M x))
-      = x.2 :=
-  EvenMonoidHom.ext λ y ↦ (PNatHom_toZModUnitEvenHom_apply _ p _ y).trans
+    PNatHom_toZModUnitEvenHom (nice_self (Hom_mk_spec p M x)) = x.2 :=
+  EvenMonoidHom.ext λ y ↦ (PNatHom_toZModUnitEvenHom_apply _ y).trans
     (Hom_mk_apply_ZModUnit_toPNat p M x _)
 
 end
@@ -124,9 +124,9 @@ section inverse
 def Hom_inv (p : Nat.Primes) (M : Type*) [CancelCommMonoid M]
     {φ : ℕ+ →* M} (h : primeClass p φ.toFun) :
     M × EvenMonoidHom (ZMod p)ˣ M :=
-  (φ.toFun p, PNatHom_toZModUnitEvenHom φ p (nice_self h))
+  (φ.toFun p, PNatHom_toZModUnitEvenHom (nice_self h))
 
-variable {p : Nat.Primes} {M : Type*} [CancelCommMonoid M]
+variable {p : Nat.Primes} [CancelCommMonoid M]
 
 lemma Hom_mk_inv {φ : ℕ+ →* M} (h : primeClass p φ.toFun) :
     (Hom_mk p M) (Hom_inv p M h) = φ :=

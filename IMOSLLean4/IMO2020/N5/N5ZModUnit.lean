@@ -67,13 +67,14 @@ end MulMap
 
 section PNatHom
 
-variable [CancelCommMonoid M] (φ : ℕ+ →* M) (p : Nat.Primes) (h : nice φ p)
+variable [CancelCommMonoid M] {φ : ℕ+ →* M}
+  {p : Nat.Primes} (h : nice φ.toFun p)
 
 def PNatHom_toZModUnitEvenHom : EvenMonoidHom (ZMod p)ˣ M :=
   (MulMap.ofPNatHom φ).toZModUnitEvenHom p.2 (niceNat_of_nice h)
 
 lemma PNatHom_toZModUnitEvenHom_apply (x : (ZMod p)ˣ) :
-    PNatHom_toZModUnitEvenHom φ p h x = φ (ZModUnit_toPNat p.2 x) :=
+    PNatHom_toZModUnitEvenHom h x = φ (ZModUnit_toPNat p.2 x) :=
   MulMap.ofPNatHom_spec φ ⟨_, _⟩
 
 end PNatHom
