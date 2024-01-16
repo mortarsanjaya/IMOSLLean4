@@ -10,14 +10,14 @@ import Mathlib.Data.MvPolynomial.CommRing
 /-!
 # IMO 2012 A7
 
-Given a lattice `α`, the *inf-closure* (resp. *sup-closure*) of a subset `S ⊆ α` is the
-  smallest set containing `S` that is closed under infimum (resp. supremum).
-The *meta-closure* of `S` is the sup-closure of the inf-closure of `S`.
+Given a distributing lattice $α$, the *inf-closure* (resp. *sup-closure*) of a subset
+  $S ⊆ α$ is the smallest set containing $S$ that is closed under infimum (resp. supremum).
+The *meta-closure* of $S$ is the sup-closure of the inf-closure of $S$.
 
-Let `R` be a totally ordered commutative ring and `σ` be a set.
-Let `R[σ]` denote the ring of multivariate polynomials with variable set `σ`.
-Let `S` denote the meta-closure of `R[σ]` as a subset of `R^σ → R`.
-Prove that `S` is a subring of `R^σ → R`.
+Let $R$ be a totally ordered commutative ring and $σ$ be a set.
+Let $R[σ]$ denote the ring of multivariate polynomials with variable set $σ$.
+Let $S$ denote the meta-closure of $R[σ]$ as a subset of $R^σ → R$.
+Prove that $S$ is a subring of $R^σ → R$.
 
 ### Note
 
