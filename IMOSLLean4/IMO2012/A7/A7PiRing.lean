@@ -45,52 +45,32 @@ section LinearOrderedRing
 
 variable [LinearOrderedRing R]
 
-lemma side_ineq {a b : R} (ha : 0 ≤ a) (hb : 0 ≤ b) :
-    a * b ≤ max (max 1 (a * b) * min a b) (min 1 (a * b) * max a b) := by
-  have hab := mul_nonneg ha hb
-  rcases le_total (a * b) 1 with h | h
-  · rw [max_eq_left h, one_mul, min_eq_right h]
-    rcases le_total a b with h0 | h0
-    · rw [min_eq_left h0, max_eq_right h0, le_max_iff]
-      exact (le_total b 1).imp (mul_le_of_le_one_right ha) (le_mul_of_one_le_right hab)
-    · rw [min_eq_right h0, max_eq_left h0, le_max_iff]
-      exact (le_total a 1).imp (mul_le_of_le_one_left hb) (le_mul_of_one_le_right hab)
-  · rw [max_eq_right h, min_eq_left h, one_mul]
-    rcases le_total a b with h0 | h0
-    · rw [min_eq_left h0, max_eq_right h0, le_max_iff]
-      exact (le_total 1 a).imp (le_mul_of_one_le_right hab) (mul_le_of_le_one_left hb)
-    · rw [min_eq_right h0, max_eq_left h0, le_max_iff]
-      exact (le_total 1 b).imp (le_mul_of_one_le_right hab) (mul_le_of_le_one_right ha)
+lemma le_max_one_sq (a : R) : a ≤ max 1 (a ^ 2) := by
+  apply (le_abs_self a).trans
+  rw [← sq_abs, le_max_iff]
+  exact (le_total |a| 1).imp_right λ h ↦ le_self_pow h (Nat.succ_ne_zero 1)
 
 lemma pos_part_mul_pos_part_main_formula (a b : R) :
-    a⁺ * b⁺ = (min (a * b) <| max (max (min a b) (min (a * b * a) (a * b * b)))
-      (max (min a (a * b * a)) (min b (a * b * b))))⁺ := by
-  rcases le_or_lt (a * b) 0 with h | h
-  ---- Case 1: `ab ≤ 0`
-  · rw [LatticeOrderedGroup.pos_eq_zero_iff.mpr (min_le_of_left_le h),
-      mul_eq_zero, LatticeOrderedGroup.pos_eq_zero_iff, ← not_lt,
-      LatticeOrderedGroup.pos_eq_zero_iff, ← not_lt, ← not_and_or]
-    intro h0; exact h.not_lt (mul_pos h0.1 h0.2)
-  rw [← mul_min_of_nonneg _ _ h.le]
-  rcases le_or_lt a 0 with h0 | h0
-  ---- Case 2: `a, b < 0`
-  · rw [LatticeOrderedGroup.pos_eq_zero_iff.mpr h0,
-      zero_mul, eq_comm, LatticeOrderedGroup.pos_eq_zero_iff]
-    have h1 : min a b ≤ 0 := min_le_of_left_le h0
-    exact min_le_of_right_le <| max_le
-      (max_le h1 (mul_nonpos_of_nonneg_of_nonpos h.le h1))
-      (max_le (min_le_of_left_le h0) (min_le_of_left_le (neg_of_mul_pos_right h h0).le))
-  ---- Case 3: `a, b > 0`
-  have h1 : 0 ≤ b := ((mul_pos_iff_of_pos_left h0).mp h).le
-  apply le_of_lt at h0
-  have h2 := min_mul_of_nonneg 1 (a * b) h0
-  have h3 := min_mul_of_nonneg 1 (a * b) h1
-  have h4 := max_mul_of_nonneg 1 (a * b) (le_min h0 h1)
-  rw [one_mul] at h2 h3 h4
-  rw [← h2, ← h3, ← h4, ← mul_max_of_nonneg _ _ (le_min zero_le_one h.le), eq_comm,
-    LatticeOrderedGroup.pos_of_nonneg _ h0, LatticeOrderedGroup.pos_of_nonneg _ h1]
-  exact (congr_arg _ <| min_eq_left (side_ineq h0 h1)).trans
-    (LatticeOrderedGroup.pos_of_nonneg _ h.le)
+    a⁺ * b⁺ = (min (a * b) <| min (max a (a * b ^ 2)) (max b (a ^ 2 * b)))⁺ := by
+  rcases le_total a 0 with h | h
+  ---- Case 1: `a ≤ 0`
+  · rw [LatticeOrderedGroup.pos_eq_zero_iff.mpr h, zero_mul, eq_comm,
+      LatticeOrderedGroup.pos_eq_zero_iff, min_le_iff, min_le_iff]
+    right; left; exact max_le h (mul_nonpos_of_nonpos_of_nonneg h (sq_nonneg b))
+  rcases le_total b 0 with h0 | h0
+  ---- Case 2: `b ≤ 0`
+  · rw [LatticeOrderedGroup.pos_eq_zero_iff.mpr h0, mul_zero, eq_comm,
+      LatticeOrderedGroup.pos_eq_zero_iff, min_le_iff, min_le_iff]
+    right; right; exact max_le h0 (mul_nonpos_of_nonneg_of_nonpos (sq_nonneg a) h0)
+  ---- Case 3: `ab ≥ 0`
+  rw [LatticeOrderedGroup.pos_of_nonneg _ h,
+    LatticeOrderedGroup.pos_of_nonneg _ h0, eq_comm]
+  refine (congr_arg _ (min_eq_left <| le_min ?_ ?_)).trans
+    (LatticeOrderedGroup.pos_of_nonneg _ (mul_nonneg h h0))
+  · have h1 := mul_le_mul_of_nonneg_left (le_max_one_sq b) h
+    rwa [mul_max_of_nonneg _ _ h, mul_one] at h1
+  · have h1 := mul_le_mul_of_nonneg_right (le_max_one_sq a) h0
+    rwa [max_mul_of_nonneg _ _ h0, one_mul] at h1
 
 end LinearOrderedRing
 
@@ -142,8 +122,7 @@ lemma Pi_sup_mul_pos_part (f a b : (i : I) → R i) :
   Pi_sup_mul_of_nonneg (LatticeOrderedGroup.pos_nonneg f) a b
 
 lemma Pi_pos_part_mul_pos_part_main_formula (f g : (i : I) → R i) :
-    f⁺ * g⁺ = ((f * g) ⊓ (((f ⊓ g) ⊔ (f * g * f ⊓ f * g * g)) ⊔
-      ((f ⊓ (f * g * f)) ⊔ (g ⊓ f * g * g))))⁺ :=
+    f⁺ * g⁺ = ((f * g) ⊓ ((f ⊔ f * g ^ 2) ⊓ (g ⊔ f ^ 2 * g)))⁺ :=
   funext λ i ↦ pos_part_mul_pos_part_main_formula (f i) (g i)
 
 
@@ -160,17 +139,10 @@ lemma Pi_one_mem : MetaClosure (λ x ↦ x ∈ S) 1 := ofMem S.one_mem
 
 theorem Pi_pos_part_mul_pos_part_mem (hf : f ∈ S) (hg : g ∈ S) :
     MetaClosure (λ x ↦ x ∈ S) (f⁺ * g⁺) :=
-  let T := S.toAddSubgroup
-  have hfg := S.mul_mem hf hg
-  have hfgf := S.mul_mem hfg hf
-  have hfgg := S.mul_mem hfg hg
-  have Xf : MetaClosure (λ x ↦ x ∈ T) f := ofMem hf
-  have Xg : MetaClosure (λ x ↦ x ∈ T) g := ofMem hg
-  have Xfg : MetaClosure (λ x ↦ x ∈ T) (f * g) := ofMem hfg
-  have Xfgf : MetaClosure (λ x ↦ x ∈ T) (f * g * f) := ofMem hfgf
-  have Xfgg : MetaClosure (λ x ↦ x ∈ T) (f * g * g) := ofMem hfgg
-  (Pi_pos_part_mul_pos_part_main_formula f g).symm ▸ pos_part_mem T <| ofInf Xfg <|
-    ofSup (ofSup (ofInf Xf Xg) (ofInf Xfgf Xfgg)) (ofSup (ofInf Xf Xfgf) (ofInf Xg Xfgg))
+  (Pi_pos_part_mul_pos_part_main_formula f g).symm ▸
+    pos_part_mem S.toAddSubgroup <| ofInf (ofMem <| S.mul_mem hf hg) <| ofInf
+      (ofSup (ofMem hf) (ofMem <| S.mul_mem hf (S.pow_mem hg 2)))
+      (ofSup (ofMem hg) (ofMem <| S.mul_mem (S.pow_mem hf 2) hg))
 
 theorem Pi_closure_pos_part_mul_closure_pos_part_mem
     (hf : MetaClosure (λ x ↦ x ∈ S) f) (hg : MetaClosure (λ x ↦ x ∈ S) g) :
