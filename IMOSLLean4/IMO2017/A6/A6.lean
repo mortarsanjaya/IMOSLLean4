@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Pi
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 
@@ -222,6 +221,3 @@ theorem map_zero_eq_one_imp_injective [Field F] :
 theorem final_solution [Field F] {f : F → F} :
     good f ↔ f = 0 ∨ f = Sub.sub 1 ∨ f = λ x ↦ -(1 - x) :=
   solution_of_map_zero_eq_one_imp_injective map_zero_eq_one_imp_injective
-
-end IMO2017A6
-end IMOSL

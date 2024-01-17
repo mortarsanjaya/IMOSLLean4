@@ -1,0 +1,77 @@
+Let $R$ be a totally ordered commutative ring and $\sigma$ be an arbitrary set.
+Let $R[\sigma]$ denotes the set of multivariate polynomials with variable set $\sigma$ (or $\{X_{\sigma} : s \in \sigma\}$).
+A function $f : R^{\sigma} \to R$ is called a \emph{metapolynomial} if we can represent $f$ as
+\[ f(\mathbf{x}) = \max_{i \leq m} \min_{j \leq n_i} P_{i, j}(\mathbf{x}) \]
+    for some positive integers $m, n_1, n_2, \ldots, n_m$ and $P_{i, j} \in R[\sigma]$.
+Prove that the product of two metapolynomials is a metapolynomial.
+
+
+\subsubsection*{Generalization of the above formulation}
+
+Given a distributive lattice $\alpha$, the \emph{inf-closure} (resp. \emph{sup-closure}) of a subset $S \subseteq \alpha$ is the smallest set containing $S$ that is closed under infimum (resp. supremum).
+The meta-closure of $S$, denoted $\overline{S}$, is the sup-closure of the inf-closure of $S$.
+
+Let $I$ be an indexing set and $R_i$ be a totally ordered ring for each $i \in I$.
+Consider $\prod_{i \in I} R_i$ as a distributive lattice, where supremum (infimum) is pointwise maximum (minimum).
+Given a subring $S \subseteq \prod_{i \in I} R_i$, prove that $\overline{S}$ is also a subring of $\prod_{i \in I} R_i$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2012SL.pdf}
+
+We follow the official solution and generalize it to solve the above generalized formulation.
+The original formulation follows by taking $I = R^{\sigma}$ and $S$ to be the image of $R[\sigma]$ in $R^{\sigma} \to R$.
+
+We first provide an alternative definition of meta-closure, which is much more convenient.
+We claim that the meta-closure of a subset $S$ of a distributive lattice $\alpha$ is precisely the smallest set containing $S$ that is closed under infimum and supremum simultaneously.
+Indeed, let $S'$ be the closure of $S$ under both infimum and supremum.
+Clearly $\overline{S} \subseteq S'$, so it suffices to show that $S' \subseteq \overline{S}$.
+
+Clearly, $S \subseteq \overline{S}$.
+By definition, $\overline{S}$ is closed under supremum.
+To show that $S' \subseteq \overline{S}$, it suffices to show that $\overline{S}$ is closed under infimum.
+For convenience, let $T$ denote the inf-closure of $S$.
+It is the set of elements of $\alpha$ of form $\inf\{s_i : i \leq m\}$ where $s_i \in S$ for each $i \leq m$.
+Indeed, fix $a = \sup\{a_i : i \leq m\}$ and $b = \sup\{b_j : j \leq n\}$, where each $a_i$ and $b_j$ are in $T$.
+Since $\alpha$ is a distributive lattice, we get
+\[ \inf\{a, b\} = \sup\{\inf\{a_i, b_j\} : i \leq m, j \leq n\}. \]
+Since each $\inf\{a_i, b_j\}$ belongs in $T$, the above implies that $\inf\{a, b\} \in \overline{S}$.
+This proves that $S'$ is a subset of $\overline{S}$, and thus they are equal.
+
+Now let $\alpha = \prod_{i \in I} R_i$.
+For any $f, g, h \in \alpha$, pointwise computation gives $f + \inf\{g, h\} = \inf\{f + g, f + h\}$ and $f + \sup\{g, h\} = \sup\{f + g, f + h\}$.
+Furthermore, for any $f, g \in \alpha$, we have $-\inf\{f, g\} = \sup\{-f, -g\}$.
+Thus it is not hard to show that if $S \subseteq \alpha$ is a subgroup, then $\overline{S}$ is also a subgroup.
+It remains to show that if $S$ is a subring of $\alpha$, then $\overline{S}$ is closed under multiplication.
+
+For each $f \in \alpha$, denote by $f^+$ and $f^-$ the positive part and negative part of $f$.
+They are defined by
+\[ f^+(i) = \max\{f(i), 0\} \in R_i, \quad f^-(i) = \max\{-f(i), 0\} = (-f)^+(i) \in R_i. \]
+Equivalently, $f^+ = \sup\{f, 0\}$ and $f^- = \sup\{-f, 0\}$.
+Clearly, $f = f^+ - f^-$, and given $f \in \overline{S}$, we have $f^+, f^- \in \overline{S}$ as well.
+Thus, it now suffices to show that given $f, g \in \overline{S}$, we have $f^+ g^+ \in \overline{S}$.
+Indeed, if this holds, then for any $f, g \in \overline{S}$,
+\[ fg = (f^+ - f^-)(g^+ - g^-) = f^+ g^+ - f^+ (-g)^+ - (-f)^+ g^+ + (-f)^+ (-g)^+ \in \overline{S}. \]
+We do one more reduction: it suffices to prove $f^+ g^+ \in \overline{S}$ just for $f, g \in S$.
+Indeed, one can check directly that $(\sup\{f, g\})^+ = \sup\{f^+, g^+\}$ and $(\inf\{f, g\})^+ = \inf\{f^+, g^+\}$ for any $f, g \in \alpha$.
+The rest would follow from, say, structural induction.
+
+Finally, fix $f, g \in S$.
+The goal now is to show that $f^+ g^+ \in \overline{S}$.
+For this purpose, we claim the following general explicit formula.
+Given a totally ordered ring $R$ and $x, y \in R$,
+\[ x^+ y^+ = (\min\{xy, \max\{x, xy^2\}, \max\{y, x^2 y\}\})^+. \]
+Indeed, if $x \leq 0$, then $\max\{x, xy^2\} \leq 0$, so RHS would be $0$.
+The same holds if $y \leq 0$, and in both cases the LHS is $0$.
+The remaining case if $xy \geq 0$, where we can rewrite the above equality as
+\[ xy = \min\{xy, \max\{x, xy^2\}, \max\{y, x^2 y\}\} = \min\{xy, x \max\{1, y^2\}, y \max\{1, x^2\}\}. \]
+This holds, since $\max\{1, x^2\} \geq x$ for any $x \in R$.
+
+
+
+\subsection*{Implementation details}
+
+The meta-closure is implemented as closure under simultaneous infimum and supremum.
+Sup-closure and inf-closure are instead implemented via \texttt{BinOpClosure}.

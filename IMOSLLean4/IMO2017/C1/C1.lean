@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.BigOperators.Order
-import Mathlib.Algebra.BigOperators.Ring
 
 /-!
 # IMO 2017 C1

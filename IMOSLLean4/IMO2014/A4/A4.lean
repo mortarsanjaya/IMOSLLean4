@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.Interval
 import IMOSLLean4.Extra.IntLinearSolver
+import Mathlib.Data.Int.Interval
+import Mathlib.Data.Int.Order.Lemmas
 
 /-!
 # IMO 2014 A4

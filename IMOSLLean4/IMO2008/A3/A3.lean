@@ -4,10 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Prod.Lex
-import Mathlib.Order.Iterate
-import Mathlib.Data.Nat.Pow
 import Mathlib.Data.Nat.SuccPred
+import Mathlib.Data.Prod.Lex
 
 /-!
 # IMO 2008 A3
@@ -103,7 +101,3 @@ theorem final_solution_part_2 :
     Prod.ext rfl (Nat.succ_iterate _ _)
   (funext h).symm ▸ final_solution_part_2_general
     (λ _ _ ↦ Nat.succ_lt_succ) Nat.lt_succ_self
-
-end IMO2008A3
-
-end IMOSL

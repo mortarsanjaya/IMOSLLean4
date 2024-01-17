@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Ring.Hom.Basic
+import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # Explicit construction of 𝔽₄
@@ -284,7 +284,3 @@ theorem castHom_eq_zero_imp : ∀ x : 𝔽₄, castHom h h0 x = 0 → x = 0
 
 theorem castHom_injective : Function.Injective (castHom h h0) :=
   (injective_iff_map_eq_zero <| castHom h h0).mpr (castHom_eq_zero_imp h h0 h1)
-
-end 𝔽₄
-end IMO2012A5
-end IMOSL

@@ -1,0 +1,92 @@
+\subsection*{Problem}
+
+Let $f, g : \N \to \N$ be functions such that $f(g(x)) = f(x) + 1$ and $g(f(x)) = g(x) + 1$ for all $x \in \N$.
+Prove that $f = g$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2010SL.pdf}
+
+We follow Solution 2 of the official solution.
+We proceed through a series of lemmas.
+The first two lemmas only rely on the first equation, $f(g(x)) = f(x) + 1$.
+
+\begin{lemma}\label{2010a6-1}
+There exists $a \in \N$ such that $f(\N) = \{a, a + 1, a + 2, \ldots\}$.
+\end{lemma}
+\begin{proof}
+Take $a$ to be the smallest element of $f(\N)$, which is non-empty since it contains $f(0)$.
+For any $a \in f(\N)$, we have $a + 1 = f(x) + 1 = f(g(x))$ for some $x \in \N$, and thus $a + 1 \in f(\N)$.
+It follows by induction that $k \in f(\N)$ for any $k \geq a$, and minimality yields $k \notin f(\N)$ for $k < a$.
+\end{proof}
+
+\begin{lemma}\label{2010a6-2}
+For any $x, y \in \N$, if $g(x) = g(y)$, then $f(x) = f(y)$.
+\end{lemma}
+\begin{proof}
+Indeed, $g(x) + 1 = g(f(x)) = g(f(y)) = g(y) + 1$.
+\end{proof}
+
+By symmetry, $g(\N)$ is also of form $\{b, b + 1, b + 2, \ldots\}$ for some $b \in \N$.
+Also, $f(x) = f(y)$ implies $g(x) = g(y)$.
+Now we let $a = \min f(\N)$ and $b = \min g(\N)$.
+
+\begin{lemma}\label{2010a6-3}
+We have $f(a) > a$.
+\end{lemma}
+\begin{proof}
+Clearly $f(a) \in f(\N)$, which yields $f(a) \geq a$.
+But if $f(a) = a$, then $g(a) = g(f(a)) = g(a) + 1$.
+\end{proof}
+
+\begin{lemma}\label{2010a6-4}
+For any $k, m \in f(\N)$, $f(k) = f(m)$ implies $k = m$.
+\end{lemma}
+\begin{proof}
+Write $k = f(x)$ and $m = f(y)$ for some $x, y \in \N$.
+Lemma~\ref{2010a6-4} leads to $g(k) = g(m)$, and thus
+\[ g(f(x)) = g(f(y)) \implies g(x) = g(y) \implies f(x) = f(y) \implies k = m, \]
+    as desired.
+\end{proof}
+
+\begin{lemma}\label{2010a6-5}
+We have $a = b$.
+\end{lemma}
+\begin{proof}
+By symmetry, we may assume that $a \leq b$.
+Since $g(\N) = \{b, b + 1, \ldots\}$, to prove $a = b$, it suffices to prove that $a \in g(\N)$.
+Indeed, since $f(a) > a$, we can find $x \in \N$ such that $f(a) = f(x) + 1 = f(g(x))$.
+But $a \in f(\N)$, and $g(x) \in f(\N)$ as well since $g(x) \geq b \geq a$.
+Thus, Lemma~\ref{2010a6-4} yields $a = g(x)$, as desired.
+\end{proof}
+
+\begin{lemma}\label{2010a6-6}
+We have $f(a) = a + 1$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{2010a6-3}, it suffices to show that $f(a) < a + 2$.
+
+Suppose for the sake of contradiction that $f(a) \geq a + 2$.
+Then we can write $f(a) = f(x) + 2$ for some $x \in \N$.
+Also, since $f(\N) = g(\N)$, we can write $g(x) = f(y)$ for some $y \in \N$.
+Note that $f(a) = f(x) + 2 = f(g(g(x)))$.
+Since $a, g(g(x)) \geq a$, we have $a, g(g(x)) \in f(\N)$.
+Lemma~\ref{2010a6-4} yields
+\[ a = g(g(x)) = g(f(y)) = g(y) + 1 \geq a + 1, \]
+    which is a contradiction.
+\end{proof}
+
+Note that by symmetry, we also have $g(a) = a + 1$.
+
+Finally, we prove that $f = g$.
+First, it suffices to prove that $f(x) = g(x) = x + 1$ for $x \geq a$.
+Indeed, for $x < a$, $f(x) \geq a$ would yield $f(x) + 1 = g(f(x)) = g(x) + 1$.
+
+To prove $f(x) = g(x) = x + 1$ for $x \geq a$, we proceed by induction on $x$.
+The base case $x = a$ has already been solved.
+For induction step, given $x \in \N$ such that $f(x) = g(x) = x + 1$, we have
+\[ f(x + 1) = f(g(x)) = g(x) + 1 = x + 2, \]
+    and symmetry yields $g(x + 1) = x + 2$.
+Induction step is complete; we are done.

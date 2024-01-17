@@ -46,6 +46,3 @@ theorem final_solution [LinearOrderedCommRing R]
   · apply (h1 0).antisymm
     specialize h (-1) 0
     rwa [add_zero, zero_mul, zero_add, h0 _ neg_one_lt_zero] at h
-
-end IMO2011A6
-end IMOSL

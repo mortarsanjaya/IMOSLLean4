@@ -23,7 +23,7 @@ We prove this fact and prove more facts about $J$.
 namespace IMOSL
 namespace IMO2012A5
 
-variable [CommRing R] [CommRing S] [IsDomain S] {f : R → S} (h : good f)
+variable [CommRing R] [Ring S] [IsDomain S] {f : R → S} (h : good f)
 
 theorem quasi_period_iff :
     (∀ x, f (c + x) = -f c * f x) ↔ ∀ x, f (c * x + 1) = 0 :=
