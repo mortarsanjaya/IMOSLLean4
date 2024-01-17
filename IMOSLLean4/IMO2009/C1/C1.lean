@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Combinatorics.Colex
+import Mathlib.Data.Nat.Factorization.Basic
 
 /-!
 # IMO 2009 C1

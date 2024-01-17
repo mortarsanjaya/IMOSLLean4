@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Multiset.Basic
 import Mathlib.Data.Nat.Parity
+import Mathlib.Algebra.BigOperators.Multiset.Basic
 
 /-!
 # IMO 2013 N2 (P1)

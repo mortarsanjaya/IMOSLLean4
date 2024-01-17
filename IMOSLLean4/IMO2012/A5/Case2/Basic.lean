@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2012.A5.A5Basic
-import Mathlib.Algebra.GroupPower.Ring
 
 /-!
 # IMO 2012 A5, Case 2: $f(-1) = 0$ (Basic Results)

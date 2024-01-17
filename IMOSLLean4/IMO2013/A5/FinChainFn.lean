@@ -4,9 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Image
 import Mathlib.Data.Finset.Card
-import Mathlib.Tactic.Change
 
 /-!
 # Finite-chain functions

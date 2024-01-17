@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Group.Hom.Basic
-import Mathlib.Algebra.Ring.Hom.Basic
+import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # Explicit construction of 𝔽₃
@@ -198,7 +198,3 @@ def castHom : 𝔽₃ →+* R :=
 
 theorem castHom_injective (h0 : (1 : R) ≠ 0) : Function.Injective (castHom h) :=
   (injective_iff_map_eq_zero (castHom h)).mpr (cast_eq_zero_imp h0)
-
-end 𝔽₃
-end IMO2012A5
-end IMOSL

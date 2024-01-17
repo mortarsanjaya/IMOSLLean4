@@ -1,4 +1,9 @@
-import Mathlib.Data.Nat.Basic
+/-
+Copyright (c) 2023 Gian Cordana Sanjaya. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gian Cordana Sanjaya
+-/
+
 import Mathlib.Order.Monotone.Basic
 
 /-!
