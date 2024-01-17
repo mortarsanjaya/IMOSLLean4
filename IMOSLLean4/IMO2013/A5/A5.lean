@@ -92,9 +92,9 @@ theorem iterRangeCompl_three_subset :
 
 theorem exists_rangeCompl_eq_singleton :
     ∃ a, (finChainFnOfgood h).rangeCompl = {a} := by
-  have h0 := (card_le_of_subset <| iterRangeCompl_three_subset h).trans <|
+  have h0 := (card_le_card <| iterRangeCompl_three_subset h).trans <|
     (card_union_le _ _).trans <| Nat.add_le_add
-      (card_doubleton (f 0).succ_ne_zero.symm).le card_image_le
+      (card_pair (f 0).succ_ne_zero.symm).le card_image_le
   rw [(finChainFnOfgood h).iterRangeCompl_card, Nat.succ_mul,
     add_le_add_iff_right, mul_le_iff_le_one_right (Nat.succ_pos 1)] at h0
   refine h0.eq_or_lt.elim card_eq_one.mp (λ h0 ↦ ?_)

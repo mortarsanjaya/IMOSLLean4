@@ -54,19 +54,16 @@ lemma pos_part_mul_pos_part_main_formula (a b : R) :
     a⁺ * b⁺ = (min (a * b) <| min (max a (a * b ^ 2)) (max b (a ^ 2 * b)))⁺ := by
   rcases le_total a 0 with h | h
   ---- Case 1: `a ≤ 0`
-  · rw [LatticeOrderedGroup.pos_eq_zero_iff.mpr h, zero_mul, eq_comm,
-      LatticeOrderedGroup.pos_eq_zero_iff, min_le_iff, min_le_iff]
+  · rw [posPart_eq_zero.mpr h, zero_mul, eq_comm, posPart_eq_zero, min_le_iff, min_le_iff]
     right; left; exact max_le h (mul_nonpos_of_nonpos_of_nonneg h (sq_nonneg b))
   rcases le_total b 0 with h0 | h0
   ---- Case 2: `b ≤ 0`
-  · rw [LatticeOrderedGroup.pos_eq_zero_iff.mpr h0, mul_zero, eq_comm,
-      LatticeOrderedGroup.pos_eq_zero_iff, min_le_iff, min_le_iff]
+  · rw [posPart_eq_zero.mpr h0, mul_zero, eq_comm, posPart_eq_zero, min_le_iff, min_le_iff]
     right; right; exact max_le h0 (mul_nonpos_of_nonneg_of_nonpos (sq_nonneg a) h0)
   ---- Case 3: `ab ≥ 0`
-  rw [LatticeOrderedGroup.pos_of_nonneg _ h,
-    LatticeOrderedGroup.pos_of_nonneg _ h0, eq_comm]
+  rw [posPart_eq_self.mpr h, posPart_eq_self.mpr h0, eq_comm]
   refine (congr_arg _ (min_eq_left <| le_min ?_ ?_)).trans
-    (LatticeOrderedGroup.pos_of_nonneg _ (mul_nonneg h h0))
+    (posPart_eq_self.mpr (mul_nonneg h h0))
   · have h1 := mul_le_mul_of_nonneg_left (le_max_one_sq b) h
     rwa [mul_max_of_nonneg _ _ h, mul_one] at h1
   · have h1 := mul_le_mul_of_nonneg_right (le_max_one_sq a) h0
@@ -95,7 +92,7 @@ lemma Pi_mul_inf_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) �
 
 lemma Pi_pos_part_mul_inf (f : (i : I) → R i) (a b : (i : I) → R i) :
     f⁺ * (a ⊓ b) = f⁺ * a ⊓ f⁺ * b :=
-  Pi_mul_inf_of_nonneg (LatticeOrderedGroup.pos_nonneg f) a b
+  Pi_mul_inf_of_nonneg (posPart_nonneg f) a b
 
 lemma Pi_mul_sup_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
     f * (a ⊔ b) = f * a ⊔ f * b :=
@@ -103,7 +100,7 @@ lemma Pi_mul_sup_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) �
 
 lemma Pi_pos_part_mul_sup (f : (i : I) → R i) (a b : (i : I) → R i) :
     f⁺ * (a ⊔ b) = f⁺ * a ⊔ f⁺ * b :=
-  Pi_mul_sup_of_nonneg (LatticeOrderedGroup.pos_nonneg f) a b
+  Pi_mul_sup_of_nonneg (posPart_nonneg f) a b
 
 lemma Pi_inf_mul_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
     (a ⊓ b) * f = a * f ⊓ b * f :=
@@ -111,7 +108,7 @@ lemma Pi_inf_mul_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) �
 
 lemma Pi_inf_mul_pos_part (f : (i : I) → R i) (a b : (i : I) → R i) :
     (a ⊓ b) * f⁺ = a * f⁺ ⊓ b * f⁺ :=
-  Pi_inf_mul_of_nonneg (LatticeOrderedGroup.pos_nonneg f) a b
+  Pi_inf_mul_of_nonneg (posPart_nonneg f) a b
 
 lemma Pi_sup_mul_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
     (a ⊔ b) * f = a * f ⊔ b * f :=
@@ -119,7 +116,7 @@ lemma Pi_sup_mul_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) �
 
 lemma Pi_sup_mul_pos_part (f a b : (i : I) → R i) :
     (a ⊔ b) * f⁺ = a * f⁺ ⊔ b * f⁺ :=
-  Pi_sup_mul_of_nonneg (LatticeOrderedGroup.pos_nonneg f) a b
+  Pi_sup_mul_of_nonneg (posPart_nonneg f) a b
 
 lemma Pi_pos_part_mul_pos_part_main_formula (f g : (i : I) → R i) :
     f⁺ * g⁺ = ((f * g) ⊓ ((f ⊔ f * g ^ 2) ⊓ (g ⊔ f ^ 2 * g)))⁺ :=
@@ -158,8 +155,8 @@ theorem Pi_closure_pos_part_mul_closure_pos_part_mem
 theorem Pi_mul_mem
     (hf : MetaClosure (λ x ↦ x ∈ S) f) (hg : MetaClosure (λ x ↦ x ∈ S) g) :
     MetaClosure (λ x ↦ x ∈ S) (f * g) := by
-  rw [← LatticeOrderedGroup.pos_sub_neg f, sub_mul,
-    ← LatticeOrderedGroup.pos_sub_neg g, mul_sub, mul_sub]
+  rw [← posPart_sub_negPart f, sub_mul,
+    ← posPart_sub_negPart g, mul_sub, mul_sub]
   let T := S.toAddSubgroup
   have hf₀ : MetaClosure (λ x ↦ x ∈ S) (-f) := neg_mem T hf
   have hg₀ : MetaClosure (λ x ↦ x ∈ S) (-g) := neg_mem T hg

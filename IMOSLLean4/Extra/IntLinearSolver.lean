@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.GroupPower.Lemmas
+import Mathlib.Data.Int.Cast.Lemmas
 
 /-!
 # Linear solver for functions $f : ℤ → G$
@@ -27,4 +27,4 @@ theorem IntLinearSolver [AddGroup G] {f : ℤ → G}
 
 theorem IntIntLinearSolverAlt {f : ℤ → ℤ}
     (h : ∀ n, f (n + 1) = g + f n) (n : ℤ) : f n = g * n + f 0 := by
-  rw [IntLinearSolver h, smul_eq_mul, mul_comm]
+  rw [IntLinearSolver h, zsmul_eq_mul, Int.cast_id, mul_comm]

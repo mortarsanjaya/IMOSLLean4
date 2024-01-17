@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.List.Perm
+import Mathlib.Data.Nat.Bitwise
 import Mathlib.Order.Bounds.Basic
 
 /-!
@@ -112,7 +112,7 @@ lemma targetSum_map_add_iota_length_succ (h : l.length = Nat.succ n) :
 theorem lowerBoundMk_targetSum :
     ∀ n : ℕ, targetSum (lowerBoundMk n) = n.size :=
   have X := Nat.succ_pos 1
-  have X0 m : m ≤ 2 * m := Nat.le_mul_of_pos_left X
+  have X0 m : m ≤ 2 * m := Nat.le_mul_of_pos_left m X
   Nat.binaryRec rfl λ b n ↦
     match b, n with
       | false, 0 => id
