@@ -11,6 +11,13 @@ import Mathlib.Data.Int.Parity
 
 Define the function $f : ℤ → ℤ$ by $f(n) = n ⌊n/2⌋$.
 Find all integers $M$ such that $f^k(M)$ is even for some $k ∈ ℕ$.
+
+### Notes
+
+The original formulation is slightly different.
+Instead of $f : ℤ → ℤ$, we define $f : ℚ → ℚ$ by $f(n) = n ⌊n⌋$.
+Then the problem asks for which $M ∈ ℕ⁺$ does there exists
+  $k ∈ ℕ$ such that $f^k(M + 1/2)$ is an integer.
 -/
 
 namespace IMOSL
