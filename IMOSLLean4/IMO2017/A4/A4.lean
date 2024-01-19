@@ -5,8 +5,9 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.SeqMax
-import Mathlib.Algebra.GroupPower.Order
-import Mathlib.Data.Pi.Algebra
+import Mathlib.Algebra.GroupPower.CovariantClass
+import Mathlib.Algebra.Order.Group.Abs
+import Mathlib.Data.Nat.Order.Basic
 
 /-!
 # IMO 2017 A4
