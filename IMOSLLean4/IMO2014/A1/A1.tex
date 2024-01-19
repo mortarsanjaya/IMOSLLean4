@@ -1,0 +1,32 @@
+Let $z_0 < z_1 < z_2 < \ldots$ be an infinite sequence of positive integers.
+Prove that there exists a unique non-negative integer $N$ such that
+\[ N z_N < \sum_{j = 0}^N z_j \leq (N + 1) z_{N + 1}. \tag{*}\label{2014a1-eq0} \]
+Furthermore, prove that $N$ is positive.
+
+\textbf{Extra}: Show that $\displaystyle \binom{N}{2} < z_0$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2014SL.pdf}
+
+We follow the official solution.
+For the extra part, we just do a slight improvement.
+
+For any $n \geq 0$, consider the expression
+\[ d_n = \sum_{j = 0}^n z_j - n z_n. \]
+Note that $d_0 = d_1 = z_0 > 0$.
+The equality~\eqref{2014a1-eq0} is just equivalent to $d_n > 0 \geq d_{n + 1}$.
+
+Notice that $d_n > d_{n + 1}$ for any $n \geq 1$, since
+\[ d_{n + 1} - d_n = n (z_n - z_{n + 1}) < 0. \]
+So, we have a sequence $d_1 > d_2 > d_3 > \ldots$ of integers with $d_1 > 0$.
+Finally, we just take $N$ to be the smallest index with $d_{N + 1} \leq 0$.
+Note that $N = 0$ does not work since $d_0$ and $d_1$ are both positive.
+
+For the extra part, we just notice that in fact,
+\[ d_{n + 1} + n \leq d_n \quad \text{for all } n \geq 0. \]
+Small induction gives us
+\[ d_n + \binom{n}{2} \leq d_0 \quad \text{for all } n \geq 0. \]
+Since $d_0 = z_0$ and $d_N > 0$ by definition, we have $\displaystyle \binom{N}{2} < z_0$, as desired.
