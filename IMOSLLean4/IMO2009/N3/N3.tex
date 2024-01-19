@@ -1,0 +1,31 @@
+Let $f : \N \to \Z$ be a non-constant function such that $a - b \mid f(a) - f(b)$ for any $a, b \in \N$.
+Prove that there exists infinitely many primes $p$ that divide $f(c)$ for some $c \in \N$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We follow Solution 1 of the official solution in a simplified manner.
+We go via contradiction; assuming that only finitely many primes divide a value of $f$, we show that $f$ is constant.
+
+First, we reduce to showing that infinitely many $k \in \N$ such that $f(k) = f(0)$.
+Indeed, suppose that this hypothesis holds, and fix some $b \in \N$.
+We can choose $k$ very large such that $k > b + |f(0) - f(b)|$ and $f(k) = f(0)$.
+Since $k - b$ divides and is greater than $|f(k) - f(b)| = |f(0) - f(b)|$, we get $f(b) = f(0)$, as desired.
+
+We show something stronger than the remaining goal.
+Letting $N = 4K! \cdot |f(0)|$, we show that in fact $f(kN) = f(0)$ for all $k \in \N$.
+Clearly, as long as $N > 0$, this yields that infinitely many $k \in \N$ satisfies $f(k) = f(0)$.
+Note that indeed $N > 0$ since $f(0) \neq 0$; otherwise all primes would divide $f(0)$.
+
+Fix a positive integer $k$.
+We have $N \mid kN \mid f(kN) - f(0)$ for any positive integer $k$.
+Since $f(0) \mid N$, we have $f(0) \mid f(kN)$.
+Letting $M = \frac{f(kN)}{f(0)} \in \Z$, we get $4K! \mid M - 1$.
+
+By the problem's initial condition, any prime greater than $K$ does not divide $M$.
+On the other hand, the above divisibility also means that the primes $p \leq K$ does not divide $M$; they divide $M - 1$.
+This forces $M = \pm 1$, and thus $M = 1$ since $4 \nmid -1 - 1$.
+Thus, we get $f(kN) = M f(0) = f(0)$, as desired.
