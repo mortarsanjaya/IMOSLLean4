@@ -19,7 +19,7 @@ $$ f(f(x) f(y)) + f(x + y) = f(xy). $$
 We have solved the problem when $F$ is a
   division ring with $\text{char}(F) ≠ 2$.
 We are still interested in lifting the commutativity
-  assumption on $F$ when $\text{char}(F) ≠ 2$.
+  assumption on $F$ when $\text{char}(F) = 2$.
 If this works, then we have a complete solution
   even when $F$ is just a division ring!
 -/
