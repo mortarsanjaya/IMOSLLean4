@@ -13,19 +13,19 @@ import Mathlib.Data.Nat.Order.Basic
 # IMO 2017 A4
 
 Let $G$ be a totally ordered abelian group and let $D$ be a natural number.
-A sequence $(a_n)_{n ≥ 0}$ of elements of $G$ satisfies the following properties:
+A sequence $(a_n)\_{n ≥ 0}$ of elements of $G$ satisfies the following properties:
 * for any $i, j ∈ ℕ$ with $i + j ≥ D$, we have $a_{i + j + 1} ≤ -a_i - a_j$,
 * for any $n ≥ D$, there exists $i, j ∈ ℕ$ such that
     $i + j = n$ and $a_{n + 1} = -a_i - a_j$.
-Prove that $(a_n)_{n ≥ 0}$ is bounded.
-Explicitly, prove that $|a_n| ≤ 2 \max\{B, C - B\}$, where
+Prove that $(a_n)\_{n ≥ 0}$ is bounded.
+Explicitly, prove that $|a_n| ≤ 2 \max\\{B, C - B\\}$, where
   $B = \max_{n ≤ D} a_n$ and $C = \max_{n ≤ D} (-a_n)$.
 -/
 
 namespace IMOSL
 namespace IMO2017A4
 
-variable {G : Type*} [LinearOrderedAddCommGroup G]
+variable [LinearOrderedAddCommGroup G]
 
 /-! ### Two definitions -/
 

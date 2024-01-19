@@ -21,8 +21,8 @@ Prove that $S$ is a subring of $R^σ → R$.
 
 ### Note
 
-The original formulation only asks to prove that `S` is closed under multiplication.
-However, the official solution states that it is easier to prove that `S` is a ring.
+The original formulation only asks to prove that $S$ is closed under multiplication.
+However, the official solution states that it is easier to prove that $S$ is a ring.
 -/
 
 namespace IMOSL

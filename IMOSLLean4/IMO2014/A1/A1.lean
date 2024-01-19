@@ -9,7 +9,7 @@ import Mathlib.Algebra.BigOperators.Basic
 /-!
 # IMO 2014 A1 (P1)
 
-Let $(z_n)_{n ≥ 0}$ be an infinite sequence of positive integers.
+Let $(z_n)\_{n ≥ 0}$ be an infinite sequence of positive integers.
 Prove that there exists a unique non-negative integer $N$ such that
 $$ N z_N < \sum_{j = 0}^N z_j \leq (N + 1) z_{N + 1}. $$
 Furthermore, prove that $N$ is positive.
