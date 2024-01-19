@@ -1,0 +1,55 @@
+Let $G$ be a totally ordered abelian group and let $D$ be a natural number.
+A sequence $(a_n)_{n \geq 0}$ of elements of $G$ satisfies the following properties:
+\begin{itemize}
+    \item   for any $i, j \in \N$ with $i + j \geq D$, $a_{i + j + 1} \leq -a_i - a_j$,
+    \item   for any $n \geq D$, there exists $i, j \in \N$ such that $i + j = n$ and $a_{n + 1} = -a_i - a_j$.
+\end{itemize}
+Prove that $(a_n)_{n \geq 0}$ is bounded.
+Explicitly, prove that $|a_n| \leq 2 \max\{B, C - B\}$, where $B = \max_{n \leq D} a_n$ and $C = \max_{n \leq D} (-a_n)$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2017SL.pdf}
+
+We follow Solution 1 of the official solution, but with some extra work for an explicit bound.
+It also gives an effective bound in terms of $\max\{a_0, a_1, \ldots, a_D\}$.
+
+For any $n \geq 0$, set $b_n = \max_{i \leq n} a_i$ and $c_n = \max_{i \leq n} (-a_i)$.
+The main observation is that $-2 b_n \leq a_{n + 1} \leq c_n - b_n$ for any $n \geq D$.
+For the former, we can write $a_{n + 1} = -a_i - a_j$ for some $i, j \geq 0$ with $i + j = n$.
+Then the definition of $b_n$ implies $a_{n + 1} \geq -2 b_n$.
+For the latter, by choosing an index $k \leq n$ such that $b_n = a_k$, one obtains $a_{n + 1} \leq -a_{n - k} - b_n \leq c_n - b_n$.
+
+This inequality implies $b_{n + 1} \leq \max\{b_n, c_n - b_n\}$ and $c_{n + 1} \leq \max\{c_n, 2 b_n\}$ for any $n \geq D$.
+In addition, by definition of maximum, it is clear that $b_n \leq b_{n + 1}$ and $c_n \leq c_{n + 1}$ for all $n \geq 0$.
+Note that $|a_n| \leq \max\{2 b_n, c_n\}$ is easy to check.
+This is all we need; we no longer deal with the original sequence.
+Since $(b_n)_{n \geq 0}$ and $(c_n)_{n \geq 0}$ are non-decreasing, it suffices to show that, for all $n \geq D$,
+\[ \max\{2 b_n, c_n\} \leq 2 \max\{b_D, c_D - b_D\}. \tag{1}\label{2017a4-eq1} \]
+
+First, for any $K \geq D$ such that $c_K \leq 2 b_K$, we have $b_K \leq b_{K + 1} \leq b_K$.
+Then $b_{K + 1} = b_K$ and $c_{K + 1} \leq 2 b_K = 2 b_{K + 1}$.
+This implies $\max\{2 b_{K + 1}, c_{K + 1}\} \leq \max\{2 b_K, c_K\}$.
+Also, we have the contrapositive: if $2 b_{K + 1} < c_{K + 1}$ then $2 b_K < c_K$.
+
+Since $c_{n + 1} \leq \max\{c_n, 2 b_n\}$, clearly $2 b_n < c_n$ implies $c_{n + 1} \leq c_n$.
+Since $(c_n)_{n \geq 0}$ is monotone, we get $c_{n + 1} = c_n$.
+By inducting downwards with the previous paragraph, we also get $c_{n + 1} = c_N$.
+We now prove~\eqref{2017a4-eq1} by induction on $n \geq D$.
+
+The base case $n = D$, reduces to showing that $2 b_D \leq c_D$ implies $b_D \leq 2 c_D - b_D$, which is trivial.
+Now suppose that $n \geq D$ and~\eqref{2017a4-eq1} holds for the given $n$.
+The previous two paragraphs imply that the case $c_n \leq 2 b_n$ is trivial.
+So now, suppose that $2 b_n < c_n$.
+Then $c_{n + 1} = c_n = c_D$ and $b_{n + 1} \leq \max\{b_n, c_n - b_n\} = c_n - b_n$.
+Thus $\max\{2 b_{n + 1}, c_{n + 1}\} \leq \max\{2 (c_n - b_n), c_n\} = 2 (c_n - b_n)$.
+Since $c_n = c_D$ and $b_n \geq b_D$, we have $2 (c_n - b_n) \leq 2 (c_D - b_D)$, which implies the desired inequality.
+
+
+
+\subsection*{Extra notes}
+
+The formulation might look awkwardly differentfrom the original formulation.
+However, it is equivalent to the original formulation after re-indexing due to an equivalent property of maximum.
