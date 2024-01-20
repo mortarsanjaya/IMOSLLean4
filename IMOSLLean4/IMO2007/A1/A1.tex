@@ -1,0 +1,38 @@
+Fix an ordered abelian group $G$ and a positive integer $n$.
+Consider a sequence $(a_i)_{i = 1}^n$ of elements of $G$.
+Fix an arbitrary non-decreasing sequence $(x_i)_{i = 1}^n$ in $G$, and let
+\[ L = \max_{j \leq n} |x_j - a_j|. \]
+
+\begin{enumerate}
+    \item   Prove that $2L \geq a_k - a_m$ for any $1 \leq k \leq m \leq n$.
+    \item   Fix an arbitrary $g \in G$ such that $2g \geq a_k - a_m$ for any $1 \leq k \leq m \leq n$.
+            Prove that there exists a choice of $(x_i)_{i = 1}^n$ such that $L \leq g$.
+\end{enumerate}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+We follow Solution 1 of the official solution for both parts.
+Our version is actually an equivalent version, toned-down in a way to avoid the usage of $\max$ and $\min$ in the problem statement.
+Unfortunately, it seems to lower the difficulty level of the problem.
+
+\begin{enumerate}
+
+    \item
+    For any $k \leq m$, we have
+    \[ 2L \geq |x_k - a_k| + |x_m - a_m| \geq (a_k - x_k) + (x_m - a_m) \geq a_k - a_m. \]
+
+    \item
+    We show a stronger property: such sequence $(x_i)_{i = 1}^n$ exists with $L = g$.
+    For each $i \leq n$, let
+    \[ x_i = \max_{j \leq i} a_j - g. \]
+    Clearly, $(x_i)_{i = 1}^n$ is non-decreasing.
+    Also, $x_i - a_i \geq -g$ for any $i \leq n$, and $x_1 - a_1 = -g$.
+    To show that $L = g$, it remains to show that $x_i - a_i \leq g$ for all $i \leq n$.
+    Indeed, letting $m \leq i$ be the index such that $x_i = a_m - g$, we have
+    \[ x_i - a_i = a_m - a_i - g \leq 2g - g = g. \]
+
+\end{enumerate}
