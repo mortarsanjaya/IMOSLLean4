@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2012.A5.A5Defs
+import Mathlib.Algebra.GroupWithZero.Basic
 import Mathlib.Algebra.Ring.Regular
 
 /-!

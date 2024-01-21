@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.List.Perm
 import Mathlib.Data.Nat.Bitwise
+import Mathlib.Data.Nat.Size
 import Mathlib.Order.Bounds.Basic
 
 /-!

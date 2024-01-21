@@ -52,27 +52,27 @@ section symmDiff
 
 variable [DecidableEq α] (A B : Finset α)
 
-theorem disjoint_symmDiff_inter : Disjoint (A ∆ B) (A ∩ B) :=
+theorem disjoint_symmDiff_inter : Disjoint (symmDiff A B) (A ∩ B) :=
   disjoint_symmDiff_inf A B
 
-theorem symmDiff_union_inter_eq_union : A ∆ B ∪ A ∩ B = A ∪ B :=
+theorem symmDiff_union_inter_eq_union : symmDiff A B ∪ A ∩ B = A ∪ B :=
   symmDiff_sup_inf A B
 
 theorem symmDiff_card_add_two_mul_inter_card :
-    (A ∆ B).card + 2 * (A ∩ B).card = A.card + B.card := by
+    (symmDiff A B).card + 2 * (A ∩ B).card = A.card + B.card := by
   rw [two_mul, ← add_assoc, ← card_union_eq (disjoint_symmDiff_inter A B),
     symmDiff_union_inter_eq_union, card_union_add_card_inter]
 
-theorem symmDiff_card_mod_two : (A ∆ B).card % 2 = (A.card + B.card) % 2 := by
+theorem symmDiff_card_mod_two : (symmDiff A B).card % 2 = (A.card + B.card) % 2 := by
   rw [← symmDiff_card_add_two_mul_inter_card, Nat.add_mul_mod_self_left]
 
 theorem mem_symmDiff_iff_mem_left {B : Finset α} (h : a ∉ B) :
-    a ∈ A ∆ B ↔ a ∈ A :=
+    a ∈ symmDiff A B ↔ a ∈ A :=
   mem_union.trans <| (or_iff_left <| not_mem_sdiff_of_not_mem_left h).trans <|
     mem_sdiff.trans <| and_iff_left h
 
 theorem filter_symmDiff (p : α → Prop) [DecidablePred p] :
-    (A ∆ B).filter p = A.filter p ∆ B.filter p :=
+    (symmDiff A B).filter p = symmDiff (A.filter p) (B.filter p) :=
   Finset.ext λ x ↦ by rw [mem_filter, mem_symmDiff, mem_symmDiff,
     mem_filter, mem_filter, not_and_or, not_and_or,
     and_and_or_not_iff, and_and_or_not_iff, ← or_and_right]
@@ -98,7 +98,7 @@ def init (M n : ℕ) : GameState n where
 /-- The valid moves -/
 inductive ValidMove (X : GameState n) : GameState n → Prop
   | flip (i : ℕ) (h : i + n ∈ X.board) :
-    ValidMove X ⟨X.board ∆ Icc i (i + n), X.numMoves.succ⟩
+    ValidMove X ⟨symmDiff X.board (Icc i (i + n)), X.numMoves.succ⟩
 
 /-- Can a state reach another state via a sequence of valid moves? -/
 def IsReachable : GameState n → GameState n → Prop := ReflTransGen ValidMove
@@ -112,7 +112,7 @@ def P1Wins {X : GameState n} (_ : X.Ends) : Prop := X.numMoves % 2 = 1
 
 
 theorem ValidMove_board {X Y : GameState n} (h : X.ValidMove Y) :
-    ∃ i : ℕ, i + n ∈ X.board ∧ Y.board = X.board ∆ Icc i (i + n) :=
+    ∃ i : ℕ, i + n ∈ X.board ∧ Y.board = symmDiff X.board (Icc i (i + n)) :=
   ValidMove.recOn h λ i h0 ↦ ⟨i, h0, rfl⟩
 
 theorem ValidMove_numMoves {X Y : GameState n} (h : X.ValidMove Y) :

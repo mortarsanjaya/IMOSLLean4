@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Basic
-import Mathlib.Tactic.WLOG
+import Mathlib.Data.Nat.Order.Basic
 
 /-!
 # IMO 2010 A6
