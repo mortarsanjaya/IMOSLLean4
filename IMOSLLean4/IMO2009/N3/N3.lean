@@ -64,6 +64,7 @@ lemma const_of_finite_prime_divisor
     · rw [Int.natAbs_eq_iff, Nat.cast_one] at h1
       exact h1.resolve_right λ h1 ↦ absurd ((dvd_mul_right _ _).trans (h1 ▸ h))
         (Nat.not_dvd_of_pos_of_lt (Nat.succ_pos 1) (Nat.le_succ 3))
+    -- Case 2: `|m| ≠ 1`
     · apply Nat.exists_prime_and_dvd at h1; rcases h1 with ⟨p, h1, h3⟩
       specialize h0 p h1 ⟨(f 0).natAbs * (4 * Nat.factorial K) * k,
         h2 ▸ dvd_mul_of_dvd_right (Int.coe_nat_dvd_left.mpr h3) _⟩
