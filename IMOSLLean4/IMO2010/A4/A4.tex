@@ -1,0 +1,80 @@
+Define the sequence $x_0, x_1, x_2, \ldots$ by $x_0 = 1$, $x_{2k} = (-1)^k x_k$, and $x_{2k + 1} = -x_k$ for all $k \geq 0$.
+For every $n \geq 0$, denote $S_n = \displaystyle \sum_{i < n} x_i$.
+Prove that $S_n \geq 0$ for all $n \geq 0$.
+
+\textbf{Extra}: Prove that $S_n = 0$ if and only if the base $4$ representation of $n$ only contains $0$ and $2$ as a digit.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2010SL.pdf}
+
+The presented solution below is Solution 2, but modified so that the index starts with $0$ instead of $1$.
+This approach also easily proves the extra part.
+
+Clearly, it suffices to show that $x_n = 1$ for any $n \geq 0$ such that $S_n = 0$.
+We start with some observations that allows us to completely describe all $n$ such that $S_n = 0$.
+
+We start with observing the following easy observations.
+First, for any $k \geq 0$, we have $x_{4k + 1} = -x_{4k} = -x_{2k}$, and $x_{4k + 2} = x_{4k + 3} = x_k$.
+The former also yields $S_{4k + 2} = S_{4k}$.
+We now prove by induction that $S_{4k} = 2 S_k$ for all $k \geq 0$.
+Indeed, clearly $S_0 = 0$, establishing the base case.
+For the induction step, simply note that
+\[ S_{4k + 4} - S_{4k} = x_{4k} + x_{4k + 1} + x_{4k + 2} + x_{4k + 3} = 0 + 2 x_k = 2 (S_{k + 1} - S_k). \]
+
+The above observation leads to the following description of every $n \geq 0$ such that $S_n = 0$.
+This is essential for the solution.
+
+\begin{lemma}\label{2010a4-1}
+We have $S_0 = 0$ and, for any $q, r \geq 0$ with $r < 4$, $S_{4q + r} = 0$ if and only if $S_q = 0$ and $r \in \{0, 2\}$.
+\end{lemma}
+\begin{proof}
+It is clear that $S_0 = 0$, so we focus on the second part.
+By checking parity, we see that for any $n \geq 0$, $S_n$ has the same parity as $n$.
+In particular, $S_{4q + r} = 0$ implies that $r$ is even, and thus $r \in \{0, 2\}$ since $r < 4$.
+Finally, if $r \in \{0, 2\}$, then $S_{4q + r} = S_{4q} = 2 S_q$.
+This implies that $S_{4q + r} = 0$ if and only if $S_q = 0$.
+This proves the lemma.
+\end{proof}
+
+Now, we prove by strong induction on $n$ that $x_n = 1$ whenever $S_n = 0$.
+The base case follows from $x_0 = 1$.
+For the inductive step, fix some $n > 0$ and suppose that $x_k = 1$ for any $k < n$ such that $S_n = 0$.
+Write $n = 4q + r$, where $q \geq 0$ and $0 \leq r < 4$.
+By Lemma~\ref{2010a4-1}, since $S_{4q + r} = 0$, we have $S_q = 0$ and $r \in \{0, 2\}$.
+If $q = 0$, then $r = 2$ and it is immediate to check that $x_2 = 1$.
+Otherwise, $q < 4q \leq n$, so the inductive hypothesis implies $x_q = 1$.
+If $r = 2$, then $x_n = x_{4q + 2} = x_q = 1$ from our observation before Lemma~\ref{2010a4-1}.
+If $r = 0$, then $x_n = x_{4q} = x_{2q} = (-1)^q x_q = (-1)^q$.
+But again, working modulo $2$, $S_q = 0$ implies that $q$ is even, so $x_n = 1$.
+Inductive step is complete.
+
+
+
+\subsubsection*{Solution for Extra Problem}
+
+Strong induction on $n$, using Lemma~\ref{2010a4-1}.
+Clearly, $S_0 = S_2 = 0$, and by parity argument, $S_1, S_3 \neq 0$.
+This establishes the base case.
+For the inductive step, suppose that $n > 4$.
+Write $n = 4q + r$, and suppose that $S_q = 0$ if and only if the base $4$ representation of $q$ only contains $0$ and $2$ as a digit.
+The base $4$ digit representation of $n$ consists of the base $4$ digit representation of $q$, plus $r$ as the least significant digit.
+By Lemma~\ref{2010a4-1}, $S_n = 0$ if and only if $S_q = 0$ and $r \in \{0, 2\}$.
+By the inductive hypothesis, the former holds if and only if the base $4$ digit representation of $n$ consists only of the digits $0$ and $2$, except possibly the last digit $r$.
+Combining with the condition $r \in \{0, 2\}$ finishes the inductive step.
+
+
+
+\subsection*{Extra notes}
+
+In the original problem, the index for the sequence starts with $1$.
+We shift the indexing to start at $0$ so that we can use the \texttt{Nat} API more comfortably.
+
+
+
+\subsection*{Implementation details}
+
+We will define $x_0, x_1, \ldots$ as a sequence of \texttt{Bool} as opposed to \texttt{Int}.
+We interpret false as the value $1$ and true as the value $-1$ using another function.
