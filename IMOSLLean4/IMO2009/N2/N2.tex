@@ -1,0 +1,37 @@
+For each positive integer $n$, let $\Omega(n)$ denote the number of prime factors of $n$, counting multiplicity.
+For convenience, we denote $\Omega(0) = 0$.
+\begin{enumerate}
+    \item Prove that for any $N \in \N$, there exists $a, b \in \N$ distinct such that $\Omega((a + k)(b + k))$ is even for all $k < N$.
+    \item Prove that for any $a, b \in \N$, if $\Omega((a + k)(b + k))$ is even for all $k \in \N$, then $a = b$.
+\end{enumerate}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We just use the official solution here.
+
+
+
+\subsubsection*{Part 1}
+
+For convenience, denote $[N] = \{0, 1, \ldots, N - 1\}$ and $S = (\Z/2\Z)^[N]$.
+Define the map $f : \N \to S$ by $f(a, k) = \overline{\Omega(a + k)}$ for all $a \in \N$ and $k \in S$.
+The overbar denotes reduction modulo $2$.
+Since $S$ is finite, there must exist $a \neq b$ such that $f(a) = f(b)$.
+This implies that $\Omega((a + k)(b + k))$ is even for all $k \in [N]$, as desired.
+
+
+\subsubsection*{Part 2}
+
+Without loss of generality, let $a \leq b$.
+Write $b = a + c$, $c \in \N$, and suppose for the sake of contradiction that $c > 0$.
+For any $m \geq 0$, taking $k = a(c - 1) + mc$, we get that $\Omega((a + m)(a + m + 1) c^2)$ is even.
+Since $c > 0$, this implies that $\Omega(k(k + 1))$ is even for all $k \geq a$.
+Using reduction modulo $2$, by small induction on $k$, we get $\overline{\Omega(k)} = \overline{\Omega(a)}$ for all $k \geq a$ if $a > 0$.
+Note that this also holds if $a = 0$.
+
+Finally, let $p$ be a prime greater than $a$.
+The previous result gives us $0 = \overline{\Omega(p^2)} = \overline{\Omega(p)} = 1$; a contradiction.
