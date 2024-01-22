@@ -1,29 +1,100 @@
 A \emph{floor function} $\lfloor \cdot \rfloor : R \to \Z$ on a totally ordered ring $R$ is a function such that, for any $r \in R$ and $n \in \Z$, $n \leq \lfloor r \rfloor$ if and only if $n \leq r$ in $R$.
 
-Let $F$ be a field with floor and $R$ be a ring with floor.
-Find all functions $f : F \to R$ such that
-\[ f(\lfloor x \rfloor y) = f(x) \lfloor f(y) \rfloor \quad \text{for all } x, y \in F. \tag{*}\label{2010a1-eq0} \]
+Let $R$ and $S$ be totally ordered rings with floor.
+Find all functions $f : F \to R$ such that, for any $x, y \in R$,
+\[ f(\lfloor x \rfloor y) = \lfloor f(y) \rfloor f(x). \tag{*}\label{2010a1-eq0} \]
+
+
+
+\subsection*{Answer}
+
+If $R \not\cong \Z$, then either $f \equiv 0$ or $f \equiv C$ for some $C \in S$ with $\lfloor C \rfloor = 1$.
+
+If $R = \Z$, then we have extra solutions aside from the above general case:
+\begin{itemize}
+    
+    \item
+    $f$ is induced from a monoid homomorphism $g : \Z \to \Z$.
+
+    \item
+    There exists a multiplicative submonoid $M \subseteq \N^+$ and $C \in R$ with $\lfloor C \rfloor = 1$ such that $f(x) = \mathbf{1}_M(x) C$.
+    Here $\mathbf{1}_M : \Z \to \{0, 1\}$ denotes the indicator function for $M$.
+    
+    \item
+    There exists a monoid homomorphism $\phi : \Z \to \N$ and an infinitesimal element $\epsilon \in R$ such that $f(x) = \phi(x)(1 + \epsilon)$.
+    Here infinitesimal means that $0 \leq \epsilon$ and $k \epsilon < 1$ for all $k \in \N$.
+
+\end{itemize}
 
 
 
 \subsection*{Solution}
 
-Official solution: \url{https://www.imo-official.org/problems/IMO2010SL.pdf}
-
-Although we start with the same substitution as Solution 1, we make a shortcut in the case $f(0) = 0$.
-
-First, plugging $x = y = 0$ into~\eqref{2010a1-eq0} yields $f(0) = f(0) \lfloor f(0) \rfloor$.
+Plugging $(x, y) = (0, 0)$ into~\eqref{2010a1-eq0} yields $f(0) = \lfloor f(0) \rfloor f(0)$.
 Thus either $\lfloor f(0) \rfloor = 1$ or $f(0) = 0$.
-We now split into two cases.
-
 In the former case, plugging $y = 0$ into~\eqref{2010a1-eq0} yields that $f$ is constant.
-It is easy to check that $f \equiv C$ works for any $C \in R$ with $1 \leq C < 2$.
+Clearly the underlying constant $C$ is equal to $f(0)$ and we have obtained $\lfloor C \rfloor = 1$.
 
-In the latter case, we claim that $f \equiv 0$.
+Plugging $(x, y) = (1, 1)$ into~\eqref{2010a1-eq0} yields $f(1) = \lfloor f(1) \rfloor f(1)$.
+Thus either $\lfloor f(1) \rfloor = 1$ or $f(1) = 0$.
+In the latter case, plugging $x = 1$ into~\eqref{2010a1-eq0} yields that $f \equiv 0$.
+It now remains to solve for the case where $f(0) = 0$ and $\lfloor f(1) \rfloor = 1$.
+
+We first show that there are no other possible functions $f$ when $R$ is not (isomorphic to) $\Z$.
+In this case, we can show that there exists $c \in R$ such that $0 < c < 1$.
+In particular, $\lfloor c \rfloor = 0$ and $\lfloor -c \rfloor = -1$.
+Plugging $(x, y) = (c, 1)$ into~\eqref{2010a1-eq0} yields $f(c) = f(0) = 0$.
+Plugging $x = -1$ into~\eqref{2010a1-eq0} yields $f(-y) = \lfloor f(y) \rfloor f(-1)$ for any $y \in R$.
+In particular, since $f(c) = 0$, we get $f(-c) = 0$.
+Plugging $(x, y) = (-c, 1)$ into~\eqref{2010a1-eq0} yields $f(-1) = 0$.
+Thus $f(-y) = 0$ for all $y \in R$, and thus $f \equiv 0$.
+
+It remains to consider the case where $R = \Z$.
+The functional equation reduces to $f(xy) = \lfloor f(y) \rfloor f(x)$ for all $x, y \in \Z$.
+Again, we can assume that $f(0) = 0$ and $\lfloor f(1) \rfloor = 1$.
+For convenience, denote $g(x) = \lfloor f(x) \rfloor$ for any $x \in R$.
 Plugging $x = 1$ into~\eqref{2010a1-eq0} yields
-\[ f(y) = f(1) \lfloor f(y) \rfloor \quad \text{for all } y \in F. \]
-Thus, to prove $f \equiv 0$, it suffices to show that $f(1) = 0$.
+\[ f(x) = \lfloor f(x) \rfloor f(1) = g(x) f(1) \quad \forall x \in R. \tag{1}\label{2010a1-eq1} \]
+Thus~\eqref{2010a1-eq0} becomes $g(xy) f(1) = g(x) g(y) f(1)$.
+Since $\lfloor f(1) \rfloor = 1$, we have $f(1) \neq 0$, so $g(xy) = g(x) g(y)$ for all $x, y \in R$.
+In other words, $g : \Z \to \Z$ is a homomorphism of multiplicative monoids.
+We divide into several cases:
 
-Plugging $x = y = 1/2$ into~\eqref{2010a1-eq0} yields
-\[ f(1/2) \lfloor f(1/2) \rfloor = f(0) = 0 \implies \lfloor f(1/2) \rfloor = 0. \]
-Then plugging $(x, y) = (2, 1/2)$ into~\eqref{2010a1-eq0} yields $f(1) = 0$, as desired.
+\begin{enumerate}
+
+    \item 
+    $g$ attains a negative value.
+
+    Choose some $n \in \Z$ such that $\lfloor f(n) \rfloor < 0$.
+    Since $f(1) \geq \lfloor f(1) \rfloor = 1$, we have
+    \[ f(n) = \lfloor f(n) \rfloor f(1) \leq \lfloor f(n) \rfloor \leq f(n). \]
+    The inequalities are all equalities, which forces $f(1) = 1$.
+    Thus $f : \Z \to R$ is just a lift from a monoid homomorphism $g : \Z \to \Z$.
+
+    \item
+    $g$ only attains positive values and is bounded.
+
+    Then one can easily show that $g$ only attains $0$ and $1$.
+    Namely, if $g(n) > 1$ for some $n \in \Z$, the sequence $(g(n^k))_{k \geq 1} = (g(n)^k)_{k \geq 1}$ is unbounded.
+    Then $g$ is an indicator function for a submonoid of $\N$.
+    One can also check that any value $C$ for $f(1)$ works as long as $\lfloor C \rfloor = 1$.
+
+    \item
+    $g$ only attains positive values and is unbounded.
+
+    For any $k \in \N$, we can choose some $n \in \Z$ such that $\lfloor f(x) \rfloor \geq k$.
+    Then we get
+    \[ \lfloor f(x) \rfloor + 1 > f(x) = \lfloor f(x) \rfloor f(1) \iff \lfloor f(x) \rfloor (f(1) - 1) < 1. \]
+    For convenience, denote $\epsilon = f(1) - 1$.
+    Since $\epsilon \geq 0$, this implies $k \epsilon < 1$ for any $k \in \N$.
+    That is, $\epsilon$ is either zero or an "infinitesimal" element.
+    In summary, we get $f(x) = g(x) (1 + \epsilon)$ for all $x \in \Z$, with $g : \Z \to \N$ being a monoid homomorphism.
+
+\end{enumerate}
+
+
+
+\subsection*{Extra notes}
+
+The right hand side in the original problem is $f(x) \lfloor f(y) \rfloor$, not $\lfloor f(y) \rfloor f(x)$.
+However, despite $R$ being not necessarily commutative, both expressions are equal since integers commute with every element of $R$.
