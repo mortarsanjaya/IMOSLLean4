@@ -101,3 +101,12 @@ We divide into several cases:
 
 The right hand side in the original problem is $f(x) \lfloor f(y) \rfloor$, not $\lfloor f(y) \rfloor f(x)$.
 However, despite $R$ being not necessarily commutative, both expressions are equal since integers commute with every element of $R$.
+
+The result for the case $R = \Z$ is indeed the best we can do.
+Each of the three non-trivial cases has at least one non-trivial example.
+In the first case, for example, we can take $g(n) = c^{\nu_2(n)}$ for some integer $c$ for $n \neq 0$ (and $g(0) = 0$).
+In the second case, the set $M$ that we can choose are precisely $\Z$ and those defined as the set of integers whose prime factors belong to a fixed subset of the primes.
+In the third case, there exists a floor ring $S$ with a non-zero infinitesimal element $\epsilon$.
+Indeed, take $S = \Z[X]$ with the ordering defined by $f(X) = a_0 + a_1 X + \ldots + a_n X^n > 0$ if and only if $a_i > 0$, where $i$ is the smallest index such that $a_i \neq 0$.
+One can check that $S$ is a totally ordered ring and for any $f \in \Z[X]$, we can choose a unique $n \in \Z$ such that $n \leq f < n + 1$.
+Namely, $n = f(0)$ if $f(X) - f(0) \geq 0$, and $n = f(0) - 1$ if $f(X) - f(0) < 0$.
