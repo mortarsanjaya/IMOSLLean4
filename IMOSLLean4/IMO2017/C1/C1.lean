@@ -33,8 +33,6 @@ def latticeRect (q : (ℕ × ℕ) × ℕ × ℕ) : Finset (ℕ × ℕ) :=
 
 
 
-
-
 theorem sum_neg_one_pow_Ico (a : ℕ) :
     ∀ n : ℕ, (Ico a (a + n)).sum ((-1 : ℤ) ^ ·)
       = bif n.bodd then (-1 : ℤ) ^ a else 0
@@ -71,8 +69,6 @@ theorem latticeRect_weight_pos_imp :
   · rw [neg_one_pow_eq_pow_mod_two (R := ℤ), Nat.mod_two_of_bodd]
     cases (q.1.1 + q.1.2).bodd
     exacts [λ _ ↦ ⟨rfl, rfl⟩, λ h ↦ absurd neg_one_lt_zero h.not_lt]
-
-
 
 
 

@@ -88,7 +88,7 @@ theorem eq_greatestDPos_iff :
 
 
 
-/-! ### Final solution -/
+/-! ## Final solution -/
 
 /-- Final solution, part 1: `N` is positive. -/
 theorem final_solution_part1 : 0 < greatestDPos h :=

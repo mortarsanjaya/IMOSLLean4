@@ -126,7 +126,7 @@ end SeqMax
 
 
 
-/-! ### Final solution -/
+/-! ## Final solution -/
 
 /-- Final solution -/
 theorem final_solution {a : ℕ → G} (h : good1 D a) (h0 : good2 D a) (n : ℕ) :

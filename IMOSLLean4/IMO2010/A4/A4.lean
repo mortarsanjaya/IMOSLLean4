@@ -112,9 +112,9 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
 
 
 
-/-! ### Final solution -/
+/-! ## Final solution -/
 
-/-- Final solution -/
+/-- Final solution for the main problem -/
 theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   ---- Reduce to showing that `x_k = ff` whenever `S_k = 0`
   suffices : ∀ k : ℕ, S k = 0 → x k = false
@@ -140,7 +140,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   apply_fun Int.bodd at h; rw [Int.bodd_zero, S_parity] at h
   rw [add_zero, x_mul4, h, k_ih]; rfl
 
-/-- Extra part -/
+/-- Final solution for the extra part -/
 theorem final_solution_extra (k : ℕ) :
     S k = 0 ↔ ∀ c : ℕ, c ∈ Nat.digits 4 k → c = 0 ∨ c = 2 := by
   induction' k using Nat.strong_induction_on with k k_ih

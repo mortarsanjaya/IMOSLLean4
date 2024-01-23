@@ -24,7 +24,7 @@ Can we generalize `S` to lattice ordered rings?
 namespace IMOSL
 namespace IMO2012A7
 
-/-! ### Extra lemmas -/
+/-! ###### Extra lemmas -/
 
 section LatticeOrderedGroup
 

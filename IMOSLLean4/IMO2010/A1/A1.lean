@@ -24,7 +24,7 @@ namespace IMO2010A1
 
 open Function
 
-/-! ### Extra lemmas -/
+/-! ###### Extra lemmas -/
 
 section
 
@@ -58,7 +58,8 @@ def IntEquiv_of_zero_one_discrete (h : ∀ x : R, x < 1 → x ≤ 0) : ℤ ≃+*
     right_inv := λ x ↦ (Int.floor_le x).antisymm <| le_of_sub_nonpos <|
       h _ (sub_left_lt_of_lt_add (Int.lt_floor_add_one x)) }
 
-/-- A floor ring is either isomorphic to `ℤ` or -/
+/-- For any floor ring `R` not isomorphic to `ℤ`,
+  there exists an element `x : R` strictly between `0` and `1`. -/
 theorem exists_equiv_Int_or_zero_one_dense :
     Nonempty (ℤ ≃+* R) ∨ (∃ x : R, 0 < x ∧ x < 1) :=
   (em (∀ x : R, x < 1 → x ≤ 0)).imp
@@ -77,7 +78,7 @@ end FloorRing
 
 
 
-/-! ### Start of the problem -/
+/-! ### Main definition -/
 
 section general
 
@@ -88,7 +89,7 @@ def good (f : R → S) := ∀ x y : R, f (⌊x⌋ • y) = ⌊f y⌋ • f x
 
 
 
-/-! ##### General case -/
+/-! ### General case -/
 
 lemma good_zero : good (0 : R → S) :=
   λ _ _ ↦ (zsmul_zero _).symm
@@ -139,7 +140,7 @@ end
 
 
 
-/-- Final solution for the case where `R` is not isomorphic to `ℤ` -/
+/-- Final solution for the case `R ≠ ℤ` -/
 theorem final_solution_non_Int [IsEmpty (ℤ ≃+* R)] {f : R → S} :
     good f ↔ f = 0 ∨ ∃ C : S, ⌊C⌋ = 1 ∧ f = const R C :=
   ⟨λ h ↦ solution_of_zero_one_dense h FloorRing_zero_one_dense,
@@ -152,7 +153,7 @@ end general
 
 
 
-/-! ##### Integer case -/
+/-! ### Integer case -/
 
 /-- A predicate for a subset of `ℤ` to be a submonoid closed under divisor. -/
 structure DvdClosedSubmonoid (M : Set ℤ) : Prop where

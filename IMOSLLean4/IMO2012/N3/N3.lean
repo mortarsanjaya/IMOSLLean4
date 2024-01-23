@@ -35,10 +35,6 @@ theorem prime_binom_not_dvd (h : p.Prime) (h0 : k ≠ 0) :
     Nat.succ_pred h0, Nat.descFactorial_eq_factorial_mul_choose, mul_comm]
   exact mul_dvd_mul (Nat.dvd_factorial h.pos p.le_refl) h1
 
-
-
-
-
 /-- Final solution -/
 theorem final_solution (h : 1 < m) :
     (∀ n : ℕ, 2 * n ≤ m → n ∣ n.choose (m - 2 * n)) ↔ m.Prime := by

@@ -19,7 +19,7 @@ Let $R[σ]$ denote the ring of multivariate polynomials with variable set $σ$.
 Let $S$ denote the meta-closure of $R[σ]$ as a subset of $R^σ → R$.
 Prove that $S$ is a subring of $R^σ → R$.
 
-### Note
+### Notes
 
 The original formulation only asks to prove that $S$ is closed under multiplication.
 However, the official solution states that it is easier to prove that $S$ is a ring.

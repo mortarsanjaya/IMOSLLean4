@@ -28,7 +28,7 @@ def targetSum : List ℕ → ℕ
 
 
 
-/-! ## Lower bound -/
+/-! ### Lower bound -/
 
 theorem succ_le_mul_two_pow_div (a) (h : 0 < b) : a + 1 ≤ 2 ^ (a / b) * b :=
   Nat.lt_mul_of_div_lt (a / b).lt_two_pow h
@@ -56,7 +56,7 @@ theorem targetSum_perm_iota_n_lower_bound (h : l ~ iota n) :
 
 
 
-/-! ## Construction -/
+/-! ### Construction -/
 
 /-- The main construction -/
 def lowerBoundMk : ℕ → List ℕ :=
@@ -137,7 +137,7 @@ theorem lowerBoundMk_targetSum :
 
 
 
-/-! #### Final solution -/
+/-! ## Final solution -/
 
 /-- Final solution.
   Note: the answer `Nat.size n` is equal to $⌈\log_2 (n + 1)⌉$. -/

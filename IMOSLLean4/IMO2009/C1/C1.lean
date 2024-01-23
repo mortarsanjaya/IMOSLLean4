@@ -31,7 +31,7 @@ namespace IMO2009C1
 
 open Relation Finset
 
-/-! #### Extra lemmas -/
+/-! ###### Extra lemmas -/
 
 theorem and_and_or_not_iff (P Q R : Prop) :
     (P ∧ Q) ∧ (R ∨ ¬Q) ↔ (P ∧ R) ∧ Q := by
