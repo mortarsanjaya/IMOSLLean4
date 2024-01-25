@@ -1,0 +1,60 @@
+Fix some $C \geq 0$.
+Find all functions $f : \N \to \N$ such that $a + f(b) \mid a^2 + b f(a)$ for any $a, b \in \N$ satisfying $a + b > C$.
+
+
+
+\subsection*{Answer}
+
+$n \mapsto kn$ for some $k \in \N$, regardless of $C$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2019SL.pdf}
+
+We modify Solution 1 of the official solution to work in our setting.
+We also avoid implicitly using pigeonhole principle.
+
+First, plugging $a = 1$ gives $1 + f(b) \mid 1 + b f(1)$, which implies
+\[ f(b) \leq b f(1) \quad \forall b > C. \tag{1}\label{2019n4-eq1} \]
+Next, for any $b > 0$, we show that $b \mid f(b)^2$.
+Indeed, there exists $n \in \N$ such that $nb > C + f(b)$.
+Then plugging $a = nb - f(b)$ yields $b \mid a^2$ and thus $b \mid f(b)^2$ since $b \mid a + f(b)$.
+In particular, for any $p$ prime with $p > C$, we have $p \mid f(p)$.
+Thus, by~\eqref{2019n4-eq1}, we can write $f(p) = kp$ for some $k \leq f(1)$.
+Now we prove the following claim.
+
+\begin{claim}
+Let $x \in \N$ and choose a prime $p > \max\{C, f(x), x f(1), x^2\}$.
+Then we can write $f(p) = kp$ for some $k \in \N$, and we also have $f(x) = kx$.
+\end{claim}
+\begin{proof}
+If $f(x) = 0$, plugging $(a, b) = (x, p)$ gives $x + kp \mid x^2$.
+If $k = 0$, then $f(x) = 0 = kx$ and we are done.
+If $k > 0$, then $x + kp > x^2$ forces $x = 0$ and again, we are done.
+
+Now assume that $f(x) > 0$.
+Plugging $(a, b) = (p, x)$ yields $p + f(x) \mid p^2 + x f(p) = p (p + kx)$.
+Since $0 < f(x) < p$, we know that $p$ and $p + f(x)$ are coprime, so $p + f(x) \mid p + kx$.
+Since $p > C$, we know that $k \leq f(1)$, so $p + kx \leq p + x f(1) < 2p$.
+Then this means that $p + f(x) = p + kx$, and thus $f(x) = kx$.
+\end{proof}
+
+For simplicity, write $B_x = \max\{C, f(x), x f(1), x^2\}$.
+Choose an arbitrary prime $p > C$, and write $f(p) = kp$ for some $k \leq f(1)$.
+We prove that $f(n) = kn$ for any $n \in \N$.
+Indeed, choose a prime $q > \max\{B_n, B_p\}$.
+Then by the claim, we can write $f(q) = mq$ for some $m \in \N$ and that $kp = f(p) = mp$.
+The latter yields $k = m$, and applying the claim to $n$ yields $f(n) = mn = kn$, as desired.
+
+
+
+\subsection*{Extra notes}
+
+The original problem can actually be deduced from this alternative problem.
+Indeed, fix some $g : \N^+ \to \N^+$ satisfying the original condition.
+Extend $g$ to $f : \N \to \N$ by defining $f(0) = 0$.
+Then one could verify that $f$ satisfies the above condition.
+Thus, by our solution above, $f = n \mapsto kn$ for some $k \in \N$.
+The same holds for $g$, and $k > 0$ since $f \neq 0$.
