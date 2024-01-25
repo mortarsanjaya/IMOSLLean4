@@ -15,6 +15,14 @@ Let $(a_n)\_{n ≥ 0}$ be a sequence of positive elements of $F$ such that
   $a_{k + 1} ≥ \frac{(k + 1) a_k}{a_k^2 + k}$ for all $k ∈ ℕ$.
 Prove that, for every $n ≥ 2$,
 $$ \sum_{i = 0}^{n - 1} a_i ≥ n. $$
+
+### Further directions
+
+None for generalizations itself.
+However, the code can be optimized and refactored.
+For example, we can generalize the above sequence to
+  two sequences $(a_n)\_{n ≥ 0}$, $(b_n)\_{n ≥ 0}$ satisfying
+  $b_{k + 1} ≤ a_k + b_k$ and $a_k b_k ≥ k$ for all $k ∈ ℕ$.
 -/
 
 namespace IMOSL
