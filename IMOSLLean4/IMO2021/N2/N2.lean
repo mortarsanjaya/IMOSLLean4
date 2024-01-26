@@ -60,11 +60,6 @@ theorem good_cond2 (h : n ≤ 2 * k ^ 2 + 4 * k) (h0 : k ^ 2 + 6 * k + 8 ≤ n) 
       add_sq, Nat.mul_pow, Nat.mul_right_comm, ← Nat.mul_assoc]
     rfl
 
-section
-
-set_option trace.profiler true
-set_option trace.profiler.threshold 200
-
 theorem good_cond2_k_witness :
     ∀ n, 99 ≤ n → ∃ k, n ≤ 2 * k ^ 2 + 4 * k ∧ k ^ 2 + 6 * k + 8 ≤ n :=
   Nat.le_induction
