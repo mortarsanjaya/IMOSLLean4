@@ -1,0 +1,33 @@
+Let $S$ be a finite set, and fix some $f : S \to S$.
+Suppose that, for any $g : S \to S$, $f \circ g \circ f = g \circ f \circ g$ implies $g = f$.
+Prove that $f^2(S) = f(S)$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2017SL.pdf}
+
+We will follow the official solution with shortcuts.
+
+Since $S^S$ is finite, there exists $m \in \N$ and $k > 0$ such that $f^{m + k} = f^m$.
+Indeed, the map $\N \to S^S$ defined by $n \mapsto f^n$ cannot be injective.
+By induction, we get $f^{m + tk} = f^m$ for all $t \in \N$.
+But then since $m \leq k \leq (m + 1) k$, we get $f^{(m + 1) k + (m + 1) k} = f^{(m + 1) k}$.
+That is, letting $n = (m + 1) k$, we have $n > 0$ and $f^{2n} = f^n$.
+
+Now notice that
+\[ f \circ f^{n + 1} \circ f = f^{n + 3} = f^{2n + 3} = f^{n + 1} \circ f \circ f^{n + 1}. \]
+So, the condition on $f$ yields $f^{n + 1} = f$.
+Since $n > 0$, this yields $f(S) \supseteq f^2(S) \supseteq f^{n + 1}(S) = f(S)$, as desired.
+
+
+
+\subsection*{Further directions}
+
+An interesting question is to classify all such functions $f$.
+Since $S$ is finite, the original question is equivalent to saying that $f$ is a permutation on its own image.
+This is not enough; for example $f = \id_S$ doesn't work if $|S| \geq 2$.
+
+One possible point of view is to consider the graph $G = (V, E)$ where $V = S^S$ and $(f, g) \in E$ iff $f \neq g$ and $f \circ g \circ f = g \circ f \circ g$.
+The question becomes classifying isolated points of $G$.
