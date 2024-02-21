@@ -147,7 +147,16 @@ end
 /-- `FinMap n` is a core of `f` iff there is an element of `f`-period `n + 1`.
   An explicit but noncomputable equivalence should be possible,
   but I don't have time to formalize it right now. -/
-theorem FinMapCore_Nonempty_iff (hf : irreducible f) :
+theorem FinMapCore_fixed_size_Nonempty_iff (hf : irreducible f) :
     Nonempty (Core f (FinMap n)) ↔ ∃ x, f.minimalPeriod x = n.succ :=
   ⟨λ h ↦ h.elim λ C ↦ ⟨C.ι 0, period_of_FinMap_core C 0⟩,
   λ h ↦ h.elim λ _ hx ↦ ⟨FinMapCore_of_periodicPt hf hx⟩⟩
+
+/-- `FinMap n` is a core of `f` for some `n` iff `f` has a periodic element. -/
+theorem FinMapCore_Nonempty_iff (hf : irreducible f) :
+    (∃ n, Nonempty (Core f (FinMap n))) ↔ f.periodicPts.Nonempty := by
+  simp_rw [FinMapCore_fixed_size_Nonempty_iff hf]; refine ⟨?_, ?_⟩
+  · rintro ⟨n, x, h⟩; exact ⟨x, n.succ, n.succ_pos,
+      h ▸ isPeriodicPt_minimalPeriod f x⟩
+  · rintro ⟨x, h⟩; exact ⟨(f.minimalPeriod x).pred, x,
+      (Nat.succ_pred_eq_of_pos (minimalPeriod_pos_of_mem_periodicPts h)).symm⟩
