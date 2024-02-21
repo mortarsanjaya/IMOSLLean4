@@ -16,18 +16,17 @@ This file defines the category of self-maps.
 namespace IMOSL
 namespace IMO2017A3
 
-open CategoryTheory
+open SelfMap CategoryTheory
 
 structure SelfMapCat where
   α : Type*
   f : α → α
 
 instance : Category SelfMapCat where
-  Hom := λ e₁ e₂ ↦ SelfMapHom e₁.f e₂.f
-  id := λ X ↦ SelfMapHom.id X.f
-  comp := λ e₁ e₂ ↦ SelfMapHom.comp e₂ e₁
-  /- The category axioms are proved for the
-    sake of speeding up instance inference -/
-  id_comp := SelfMapHom.comp_id
-  comp_id := SelfMapHom.id_comp
-  assoc := λ e₁ e₂ e₃ ↦ SelfMapHom.comp_assoc e₃ e₂ e₁
+  Hom := λ e₁ e₂ ↦ Hom e₁.f e₂.f
+  id := λ X ↦ Hom.id X.f
+  comp := λ e₁ e₂ ↦ Hom.comp e₂ e₁
+  /- The category axioms proven for speeding up instance inference -/
+  id_comp := Hom.comp_id
+  comp_id := Hom.id_comp
+  assoc := λ e₁ e₂ e₃ ↦ Hom.comp_assoc e₃ e₂ e₁

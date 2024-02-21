@@ -17,6 +17,7 @@ We say that `f` is irreducible if every two elements of `α` are equivalent.
 
 namespace IMOSL
 namespace IMO2017A3
+namespace SelfMap
 
 variable {α : Type*}
 

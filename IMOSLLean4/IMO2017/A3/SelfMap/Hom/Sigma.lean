@@ -18,18 +18,16 @@ This file constructs this map.
 
 namespace IMOSL
 namespace IMO2017A3
-namespace SelfMapHom
+namespace SelfMap
+namespace Hom
 
-variable {α : ι → Type*} {F : (i : ι) → α i → α i}
-  (e : (i : ι) → SelfMapHom (F i) g)
+variable {α : ι → Type*} {F : (i : ι) → α i → α i} (e : (i : ι) → Hom (F i) g)
 
 /-- Given a collection of self-map homomorphisms `F(i) → g`,
   construct the self-map homomorphism `Σ F(i) → g`. -/
-def sigma_elim : SelfMapHom (Sigma.map _root_.id F) g :=
-  ⟨λ p ↦ (e p.1).toFun p.2, λ p ↦ (e p.1).Semiconj p.2⟩
+def sigma_mk : Hom (Sigma.map _root_.id F) g :=
+  ⟨λ p ↦ e p.1 p.2, λ p ↦ (e p.1).Semiconj p.2⟩
 
-lemma sigma_elim_apply (p : (i : ι) × α i) :
-    (sigma_elim e).toFun p = (e p.1).toFun p.2 := rfl
+lemma sigma_mk_apply (p : (i : ι) × α i) : (sigma_mk e) p = e p.1 p.2 := rfl
 
-lemma sigma_elim_apply' (a : α i) :
-    (sigma_elim e).toFun ⟨i, a⟩ = (e i).toFun a := rfl
+lemma sigma_mk_apply' (a : α i) : (sigma_mk e) ⟨i, a⟩ = e i a := rfl
