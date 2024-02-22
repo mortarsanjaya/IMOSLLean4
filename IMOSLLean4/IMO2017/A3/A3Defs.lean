@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 /-!
-# IMO 2017 A3
+# IMO 2017 A3 (Definitions)
 
 Given functions $f, g : α → α$, we say that $(f, g)$ is
   a *bad pair* if $f ∘ g ∘ f = g ∘ f ∘ g$.
