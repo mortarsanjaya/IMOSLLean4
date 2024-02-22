@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.A3Defs
+import IMOSLLean4.IMO2017.A3.A3Equiv
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.SplitMap
 import Mathlib.Data.Sum.Basic
 
@@ -25,23 +25,6 @@ namespace IMOSL
 namespace IMO2017A3
 
 open SelfMap Function
-
-lemma bad_pair_of_core (C : Core f g) (h : bad_pair g g') :
-    bad_pair f (C.ι ∘ g' ∘ C.φ) := funext λ x ↦ by
-  simp only [Function.comp_apply]
-  rw [← C.ι.Semiconj, C.φ.Semiconj, C.φ.Semiconj, C.is_inv]
-  exact congr_arg _ (congr_fun h _)
-
-lemma good_of_core (C : Core f g) (h : good f) : good g := λ g' h0 ↦ by
-  change id ∘ g' ∘ id = g
-  rw [← C.half_conj, ← C.φ_comp_ι]
-  exact congr_arg (λ s ↦ C.φ ∘ s ∘ C.ι) (h _ (bad_pair_of_core C h0))
-
-lemma good_of_equiv (e : SelfMap.Equiv f g) (h : good f) : good g :=
-  good_of_core e.toCore h
-
-lemma good_iff_equiv (e : SelfMap.Equiv f g) : good f ↔ good g :=
-  ⟨good_of_equiv e, good_of_equiv e.symm⟩
 
 lemma good_core_splits (C : Core f g) (h : good f) : C.ι ∘ g ∘ C.φ = f :=
   h _ (bad_pair_of_core C rfl)
