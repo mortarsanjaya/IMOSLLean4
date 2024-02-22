@@ -142,8 +142,6 @@ end
 
 
 
-
-
 /-- `FinMap n` is a core of `f` iff there is an element of `f`-period `n + 1`.
   An explicit but noncomputable equivalence should be possible,
   but I don't have time to formalize it right now. -/

@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Basic
 import Mathlib.Logic.Equiv.Defs
+import Mathlib.Tactic.Common
 
 /-!
 ### Homomorphisms from `Nat.succ`
@@ -20,7 +21,6 @@ Categorically, the category mk self-maps is representable by `Nat.succ`.
 namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
-
 namespace NatSuccHom
 
 def mk (f : α → α) (x : α) : Hom Nat.succ f :=
@@ -50,5 +50,3 @@ lemma mk_surjective (f : α → α) : (mk f).Surjective :=
 
 lemma mk_bijective (f : α → α) : (mk f).Bijective :=
   (type_equiv f).bijective
-
-end NatSuccHom

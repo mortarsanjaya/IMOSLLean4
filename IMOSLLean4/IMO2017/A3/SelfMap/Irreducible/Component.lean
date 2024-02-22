@@ -5,7 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Irreducible.Decomposition
-import Mathlib.Data.Finite.Basic
+import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Sigma
+import Mathlib.Logic.Equiv.Basic
 
 /-!
 # Irreducible component of self-maps
@@ -53,9 +54,6 @@ end
 namespace IrredComponent
 
 variable (f : α → α) (s : Quotient (ptEquiv.mkSetoid f))
-
-instance [Finite α] (f : α → α) (s : Quotient (ptEquiv.mkSetoid f)) :
-    Finite (IrredComponentType f s) := Subtype.finite
 
 /-- The component's underlying type is non-empty -/
 lemma type_nonempty : Nonempty (IrredComponentType f s) :=

@@ -5,8 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Equiv
-import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Sigma
 import IMOSLLean4.IMO2017.A3.SelfMap.Irreducible.Basic
+import Mathlib.Data.Sigma.Basic
 
 /-!
 # Decomposition of self-maps into irreducible components
