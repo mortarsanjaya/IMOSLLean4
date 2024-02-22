@@ -9,7 +9,7 @@ import IMOSLLean4.IMO2017.A3.SelfMap.Hom.SplitMap
 import Mathlib.Data.Sum.Basic
 
 /-!
-# IMO 2017 A3 (`good` maps and core structures)
+# IMO 2017 A3 (`good` maps and splitting of core structures)
 
 This file proves results relating core structures and good maps.
 In particular, we prove the following results:
