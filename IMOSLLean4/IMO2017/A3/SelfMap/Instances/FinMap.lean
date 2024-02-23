@@ -19,6 +19,8 @@ Let `f : α → α` be an arbitrary self-map.
 Every core structure of `FinMap n` over `f` gives an element of period `n + 1`.
 Conversely, if `f` is irreducible, then every `x : α` of period `n + 1`
   induces a core structure of `FinMap n` over `f`, sending `0` to `x`.
+Thus, when `f` is irreducible, it has a `FinMap n` as a
+  core for some `n : ℕ` if and only if `f` has a periodic point.
 -/
 
 namespace IMOSL
@@ -40,6 +42,7 @@ lemma FinMap_iterate_eq_self_iff (m : Fin n.succ) :
     (FinMap n)^[k] m = m ↔ n.succ ∣ k := by
   rw [FinMap_iterate_Nat, add_right_eq_self, Fin.nat_cast_eq_zero]
 
+/-- `FinMap n` is irreducible for any `n : ℕ`. -/
 theorem FinMap_is_irreducible (n : ℕ) : irreducible (FinMap n) :=
   λ k m ↦ ⟨m, k, by rw [FinMap_iterate_Nat, FinMap_iterate_Nat,
     Fin.cast_val_eq_self, Fin.cast_val_eq_self, add_comm]⟩
