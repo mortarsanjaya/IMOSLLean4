@@ -13,6 +13,7 @@ import Mathlib.Dynamics.PeriodicPts
 
 For any `n : ℕ`, we denote by `FinMap n` the
   self-map on `Fin (n + 1)` defined by `x ↦ x + 1`.
+It is an irreducible map.
 
 Let `f : α → α` be an arbitrary self-map.
 Every core structure of `FinMap n` over `f` gives an element of period `n + 1`.
@@ -38,6 +39,10 @@ lemma FinMap_iterate_Nat (m : Fin n.succ) :
 lemma FinMap_iterate_eq_self_iff (m : Fin n.succ) :
     (FinMap n)^[k] m = m ↔ n.succ ∣ k := by
   rw [FinMap_iterate_Nat, add_right_eq_self, Fin.nat_cast_eq_zero]
+
+theorem FinMap_is_irreducible (n : ℕ) : irreducible (FinMap n) :=
+  λ k m ↦ ⟨m, k, by rw [FinMap_iterate_Nat, FinMap_iterate_Nat,
+    Fin.cast_val_eq_self, Fin.cast_val_eq_self, add_comm]⟩
 
 
 
