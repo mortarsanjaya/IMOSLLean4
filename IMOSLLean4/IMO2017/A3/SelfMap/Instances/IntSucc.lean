@@ -10,7 +10,7 @@ import Mathlib.Dynamics.PeriodicPts
 import Mathlib.Data.Int.SuccPred
 
 /-!
-# `Int.succ`
+# Homomorphism to `Int.succ`
 
 Let `f : α → α` be an arbitrary self-map.
 We show that `f` has a homomorphism to `Int.succ : ℤ → ℤ`
