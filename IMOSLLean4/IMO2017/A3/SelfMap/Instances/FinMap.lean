@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Basic
-import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.Component
+import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.IrredComponent
 import Mathlib.Dynamics.PeriodicPts
 
 /-!

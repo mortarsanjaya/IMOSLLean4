@@ -12,7 +12,9 @@ import Mathlib.Logic.Equiv.Basic
 /-!
 # Irreducible component of self-maps
 
-Let `f : α → α` be a self-map with corresponding equivalence relation `∼`.
+Let `f : α → α` be a self-map with `∼` being the point-equivalence.
+We say that `f` is *irreducible* if `∼` only
+
 For each equivalence class `S`, there is an induced restriction map `S → S`.
 We call this map an irreducible component of `f`.
 We show that this restriction map is irreducible.
