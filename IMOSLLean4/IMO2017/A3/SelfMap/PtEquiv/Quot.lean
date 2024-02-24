@@ -36,6 +36,12 @@ lemma mkQuotient_apply_eq (f : α → α) (x : α) :
     mkQuotient f (f x) = mkQuotient f x :=
   mkQuotient_eq_iff.mpr (of_self_apply_left f x)
 
+lemma mkQuotient_iterate_eq (f : α → α) (x : α) :
+    ∀ k, mkQuotient f (f^[k] x) = mkQuotient f x
+  | 0 => rfl
+  | k + 1 => by rw [f.iterate_succ_apply', mkQuotient_apply_eq,
+                  mkQuotient_iterate_eq f _ k]
+
 /-- A representative of a given quotient -/
 noncomputable def quotientRep {f : α → α} (s : Quotient (mkSetoid f)) : α :=
   Quotient.out (s := mkSetoid f) s

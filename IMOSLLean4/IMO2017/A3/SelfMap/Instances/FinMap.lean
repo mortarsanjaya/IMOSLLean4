@@ -4,30 +4,30 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Basic
-import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.IrredComponent
+import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Sigma
+import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.Quot
 import Mathlib.Dynamics.PeriodicPts
+-- import Mathlib.Data.Setoid.Basic
 
 /-!
-# `FinMap`
+# `FinMap` and cyclic self-maps
 
 For any `n : ℕ`, we denote by `FinMap n` the
   self-map on `Fin (n + 1)` defined by `x ↦ x + 1`.
-It is an irreducible map.
 
 Let `f : α → α` be an arbitrary self-map.
-Every core structure of `FinMap n` over `f` gives an element of period `n + 1`.
-Conversely, if `f` is irreducible, then every `x : α` of period `n + 1`
-  induces a core structure of `FinMap n` over `f`, sending `0` to `x`.
-Thus, when `f` is irreducible, it has a `FinMap n` as a
-  core for some `n : ℕ` if and only if `f` has a periodic point.
+We say that `f` is cyclic iff every element is
+  point-equivalent to an `f`-periodic element.
+We show that every cyclic self-map admits a core of form
+  `Σ_{n ∈ S} FinMap n` for some subset `S ⊆ ℕ`.
 -/
 
 namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
 
-open Function
+open Function ptEquiv
+open scoped Classical
 
 /-- The map `x ↦ x + 1` on `Fin n.succ`. -/
 abbrev FinMap (n : ℕ) (k : Fin n.succ) : Fin n.succ := k + 1
@@ -42,27 +42,8 @@ lemma FinMap_iterate_eq_self_iff (m : Fin n.succ) :
     (FinMap n)^[k] m = m ↔ n.succ ∣ k := by
   rw [FinMap_iterate_Nat, add_right_eq_self, Fin.nat_cast_eq_zero]
 
-/-- `FinMap n` is irreducible for any `n : ℕ`. -/
-theorem FinMap_is_irreducible (n : ℕ) : irreducible (FinMap n) :=
-  λ k m ↦ ⟨m, k, by rw [FinMap_iterate_Nat, FinMap_iterate_Nat,
-    Fin.cast_val_eq_self, Fin.cast_val_eq_self, add_comm]⟩
-
-
-
-
-
-/-! ### Periodic points and core instances of `FinMap n` -/
-
-lemma period_of_FinMap_core (C : Core f (FinMap n)) (m : Fin n.succ) :
-    f.minimalPeriod (C.ι m) = n.succ :=
-  Nat.dvd_right_iff_eq.mp λ k ↦ by
-    rw [← isPeriodicPt_iff_minimalPeriod_dvd, IsPeriodicPt, IsFixedPt,
-      ← FinMap_iterate_eq_self_iff m, ← C.ι.semiconj_iterate_apply]
-    exact C.ι_injective.eq_iff
-
 /-- Homomorphism from `FinMap` defined by a periodic point -/
-def FinMapHom (f : α → α) (hx : f.minimalPeriod x = Nat.succ n) :
-    Hom (FinMap n) f where
+def FinMapHom (hx : minimalPeriod f x = Nat.succ n) : Hom (FinMap n) f where
   toFun := λ k ↦ f^[k] x
   Semiconj := λ k ↦ by
     change f^[(k + 1 % _) % _] x = f (f^[k] x)
@@ -70,98 +51,247 @@ def FinMapHom (f : α → α) (hx : f.minimalPeriod x = Nat.succ n) :
       eq_comm, ← iterate_mod_minimalPeriod_eq, hx]
 
 
+
+
+
+/-! ### Cyclic self-maps -/
+
+def cyclic (f : α → α) :=
+  ∀ x : α, ∃ y : α, ptEquiv f y x ∧ y ∈ f.periodicPts
+
+
+
+namespace cyclic
+
+variable {f : α → α} (h : cyclic f)
+
+/-! #### Periodic representative under point-equivalence -/
+
 section
 
-open scoped Classical
+variable (s : Quotient (mkSetoid f))
 
-variable {f : α → α} (hf : irreducible f) (hx : f.minimalPeriod x = Nat.succ n)
+lemma exists_ptEquiv_periodic_rep :
+    ∃ y, mkQuotient f y = s ∧ y ∈ f.periodicPts :=
+  (h (quotientRep s)).elim λ y ⟨h, h0⟩ ↦ ⟨y, rep_eq_quotient_iff.mpr h, h0⟩
 
-lemma periodicPt_exists_iterate_eq (y : α) : ∃ k, f^[k] y = x := by
-  rcases hf x y with ⟨u, v, h⟩; refine ⟨n * u + v, ?_⟩
-  rw [iterate_add_apply, ← h, ← iterate_add_apply, ← Nat.succ_mul,
-    ← iterate_mod_minimalPeriod_eq, hx, Nat.mul_mod_right]; rfl
+noncomputable def ptEquivRep :=
+  Classical.choose (exists_ptEquiv_periodic_rep h s)
 
-noncomputable def dist_to_periodicPt (y : α) :=
-  Nat.find (periodicPt_exists_iterate_eq hf hx y)
+lemma ptEquivRep_is_rep : mkQuotient f (ptEquivRep h s) = s :=
+  (Classical.choose_spec (exists_ptEquiv_periodic_rep h s)).1
 
-lemma dist_to_periodicPt_eq_zero_iff :
-    dist_to_periodicPt hf hx y = 0 ↔ y = x :=
-  Nat.find_eq_zero _
+lemma ptEquivRep_is_periodic : ptEquivRep h s ∈ f.periodicPts :=
+  (Classical.choose_spec (exists_ptEquiv_periodic_rep h s)).2
 
-lemma dist_to_periodicPt_eq_iff :
-    dist_to_periodicPt hf hx y = m ↔
-      f^[m] y = x ∧ ∀ k, k < m → f^[k] y ≠ x :=
-  Nat.find_eq_iff _
+lemma ptEquivRep_is_periodic' :
+    ∃ n : ℕ, f.minimalPeriod (ptEquivRep h s) = n.succ :=
+  ⟨Nat.pred _, Eq.symm <| Nat.succ_pred_eq_of_pos <|
+    minimalPeriod_pos_of_mem_periodicPts <| ptEquivRep_is_periodic h s⟩
 
-lemma dist_to_periodicPt_apply_of_dist_eq_succ
-    (hy : dist_to_periodicPt hf hx y = Nat.succ k) :
-    dist_to_periodicPt hf hx (f y) = k := by
-  rw [dist_to_periodicPt_eq_iff] at hy ⊢
-  exact hy.imp_right λ h k' h0 ↦ h _ (Nat.succ_lt_succ h0)
+noncomputable def ptEquivRep_periodPred :=
+  Classical.choose (ptEquivRep_is_periodic' h s)
 
-lemma dist_to_periodicPt_apply_self :
-    dist_to_periodicPt hf hx (f x) = n := by
-  have h : x ∈ f.periodicPts :=
-    minimalPeriod_pos_iff_mem_periodicPts.mp (hx ▸ n.succ_pos)
-  rw [dist_to_periodicPt_eq_iff, ← iterate_succ_apply]
-  rw [minimalPeriod, dif_pos h] at hx
-  refine ⟨hx ▸ (Nat.find_spec h).2, λ k h0 ↦ ?_⟩
-  have h1 := Nat.find_min h ((Nat.succ_lt_succ h0).trans_eq hx.symm)
-  exact not_and.mp h1 k.succ_pos
+lemma ptEquivRep_periodPred_spec :
+    f.minimalPeriod (ptEquivRep h s) = (ptEquivRep_periodPred h s).succ :=
+  Classical.choose_spec (ptEquivRep_is_periodic' h s)
 
-lemma dist_to_periodicPt_Fin_apply (y : α) :
-    (dist_to_periodicPt hf hx (f y) : Fin n.succ) + 1
-      = dist_to_periodicPt hf hx y := by
-  rcases (dist_to_periodicPt hf hx y).eq_zero_or_eq_succ_pred with h | h
-  ---- Case 1: `y = x`
-  · rw [h, Nat.cast_zero, (dist_to_periodicPt_eq_zero_iff hf hx).mp h,
-      dist_to_periodicPt_apply_self, Fin.cast_nat_eq_last, Fin.last_add_one]
-  ---- Case 2: `y ≠ x`
-  · rw [h, dist_to_periodicPt_apply_of_dist_eq_succ _ _ h, Nat.cast_succ]
+lemma ptEquivRep_periodPred_iterate_succ :
+    f^[(ptEquivRep_periodPred h s).succ] (ptEquivRep h s) = ptEquivRep h s :=
+  ptEquivRep_periodPred_spec h s ▸ iterate_minimalPeriod
 
-lemma dist_to_periodicPt_Fin_iterate (y : α) :
-    ∀ k, (dist_to_periodicPt hf hx (f^[k] y) : Fin n.succ) + k
-      = dist_to_periodicPt hf hx y
-  | 0 => by rw [Nat.cast_zero, add_zero]; rfl
-  | k + 1 => by rw [iterate_succ_apply, Nat.cast_succ, ← add_assoc,
-      dist_to_periodicPt_Fin_iterate _ k, dist_to_periodicPt_Fin_apply]
-
-lemma dist_to_periodicPt_Fin_iterate_self (k : ℕ) :
-    (dist_to_periodicPt hf hx (f^[k] x) : Fin n.succ) = -(k : Fin n.succ) := by
-  rw [eq_neg_iff_add_eq_zero, dist_to_periodicPt_Fin_iterate,
-    (dist_to_periodicPt_eq_zero_iff hf hx).mpr rfl, Nat.cast_zero]
-
-noncomputable def periodicPtHom : Hom f (FinMap n) where
-  toFun := λ y ↦ -(dist_to_periodicPt hf hx y)
-  Semiconj := λ y ↦ by
-    rw [FinMap, eq_neg_add_iff_add_eq, add_neg_eq_iff_eq_add, add_comm]
-    exact (dist_to_periodicPt_Fin_apply hf hx y).symm
-
-noncomputable def FinMapCore_of_periodicPt : Core f (FinMap n) where
-  φ := periodicPtHom hf hx
-  ι := FinMapHom f hx
-  is_inv := λ k ↦ by
-    change -(dist_to_periodicPt hf hx (f^[k] x) : Fin n.succ) = k
-    rw [dist_to_periodicPt_Fin_iterate_self, neg_neg]
-    exact k.cast_val_eq_self
+lemma iterate_succ_of_lt_ptEquivRep_periodPred
+    (h0 : n < ptEquivRep_periodPred h s) :
+    f^[n.succ] (ptEquivRep h s) ≠ ptEquivRep h s :=
+  not_isPeriodicPt_of_pos_of_lt_minimalPeriod n.succ_ne_zero <|
+    ptEquivRep_periodPred_spec h s ▸ Nat.succ_lt_succ h0
 
 end
 
 
 
-/-- `FinMap n` is a core of `f` iff there is an element of `f`-period `n + 1`.
-  An explicit but noncomputable equivalence should be possible,
-  but I don't have time to formalize it right now. -/
-theorem FinMapCore_fixed_size_Nonempty_iff (hf : irreducible f) :
-    Nonempty (Core f (FinMap n)) ↔ ∃ x, f.minimalPeriod x = n.succ :=
-  ⟨λ h ↦ h.elim λ C ↦ ⟨C.ι 0, period_of_FinMap_core C 0⟩,
-  λ h ↦ h.elim λ _ hx ↦ ⟨FinMapCore_of_periodicPt hf hx⟩⟩
 
-/-- `FinMap n` is a core of `f` for some `n` iff `f` has a periodic element. -/
-theorem FinMapCore_Nonempty_iff (hf : irreducible f) :
-    (∃ n, Nonempty (Core f (FinMap n))) ↔ f.periodicPts.Nonempty := by
-  simp_rw [FinMapCore_fixed_size_Nonempty_iff hf]; refine ⟨?_, ?_⟩
-  · rintro ⟨n, x, h⟩; exact ⟨x, n.succ, n.succ_pos,
-      h ▸ isPeriodicPt_minimalPeriod f x⟩
-  · rintro ⟨x, h⟩; exact ⟨(f.minimalPeriod x).pred, x,
-      (Nat.succ_pred_eq_of_pos (minimalPeriod_pos_of_mem_periodicPts h)).symm⟩
+
+/-! #### Dense `FinMap` core structure of cyclic self-maps -/
+
+lemma ptEquivRep_exists_iterate_eq (y : α) :
+    ∃ k, f^[k] y = ptEquivRep h (mkQuotient f y) := by
+  let s := mkQuotient f y
+  obtain ⟨k, m, h0⟩ : ptEquiv f y (ptEquivRep h s) :=
+    mkQuotient_eq_iff.mp (ptEquivRep_is_rep _ _).symm
+  refine ⟨ptEquivRep_periodPred h s * m + k, ?_⟩
+  rw [iterate_add_apply, h0, ← iterate_add_apply,
+    ← Nat.succ_mul, ← ptEquivRep_periodPred_spec]
+  exact (isPeriodicPt_minimalPeriod f _).mul_const m
+
+noncomputable def ptEquivRep_dist (x : α) : ℕ :=
+  Nat.find (ptEquivRep_exists_iterate_eq h x)
+
+lemma ptEquivRep_dist_eq_zero_iff :
+    ptEquivRep_dist h x = 0 ↔ x = ptEquivRep h (mkQuotient f x) :=
+  Nat.find_eq_zero _
+
+lemma ptEquivRep_dist_of_rep (s) : ptEquivRep_dist h (ptEquivRep h s) = 0 :=
+  (ptEquivRep_dist_eq_zero_iff h).mpr <|
+    congr_arg _ (ptEquivRep_is_rep h s).symm
+
+lemma ptEquivRep_dist_eq_iff :
+    ptEquivRep_dist h x = m ↔ f^[m] x = ptEquivRep h (mkQuotient f x) ∧
+      ∀ k, k < m → f^[k] x ≠ ptEquivRep h (mkQuotient f x) :=
+  Nat.find_eq_iff _
+
+lemma ptEquivRep_dist_eq_succ_imp_apply (h0 : ptEquivRep_dist h x = n.succ) :
+    ptEquivRep_dist h (f x) = n := by
+  rw [ptEquivRep_dist_eq_iff, mkQuotient_apply_eq]
+  exact ((ptEquivRep_dist_eq_iff h).mp h0).imp_right
+    λ h0 k h1 ↦ h0 _ (Nat.succ_lt_succ h1)
+
+lemma ptEquivRep_dist_apply_rep (s : Quotient (mkSetoid f)) :
+    ptEquivRep_dist h (f (ptEquivRep h s)) = ptEquivRep_periodPred h s := by
+  rw [ptEquivRep_dist_eq_iff, mkQuotient_apply_eq, ptEquivRep_is_rep]
+  exact ⟨ptEquivRep_periodPred_iterate_succ h s,
+    λ k ↦ iterate_succ_of_lt_ptEquivRep_periodPred h s⟩
+
+noncomputable def ptEquivRep_neg_dist_Fin (x : α) (n : ℕ) : Fin n.succ :=
+  -ptEquivRep_dist h x
+
+lemma ptEquivRep_neg_dist_Fin_of_rep (s : Quotient (mkSetoid f)) (n : ℕ) :
+    ptEquivRep_neg_dist_Fin h (ptEquivRep h s) n = 0 :=
+  neg_eq_zero.mpr <| congr_arg Nat.cast (ptEquivRep_dist_of_rep h _)
+
+lemma ptEquivRep_neg_dist_Fin_apply_eq
+    (h0 : ptEquivRep_periodPred h (mkQuotient f x) = n) :
+    ptEquivRep_neg_dist_Fin h (f x) n = ptEquivRep_neg_dist_Fin h x n + 1 := by
+  unfold ptEquivRep_neg_dist_Fin
+  rcases (ptEquivRep_dist h x).eq_zero_or_eq_succ_pred with h1 | h1
+  ---- Case 1: `x` is a representative
+  · nth_rw 1 [(ptEquivRep_dist_eq_zero_iff h).mp h1]
+    rw [ptEquivRep_dist_apply_rep, h0, Fin.cast_nat_eq_last,
+      Fin.neg_last, h1, Nat.cast_zero, neg_zero, zero_add]
+  ---- Case 2: `x` is not a representative
+  · rw [ptEquivRep_dist_eq_succ_imp_apply h h1, h1,
+      Nat.pred_succ, Nat.cast_succ, neg_add, neg_add_cancel_right]
+
+/-- The inner homomorphism to dense `FinMap` sigma -/
+noncomputable def toSigmaFinMapHom :
+    Hom f (Sigma.map id λ s ↦ FinMap (ptEquivRep_periodPred h s)) where
+  toFun := λ x ↦ ⟨mkQuotient f x, ptEquivRep_neg_dist_Fin h x _⟩
+  Semiconj := λ x ↦ by
+    simp only [Sigma.map, id_eq]; rw [mkQuotient_apply_eq]
+    exact Sigma.ext rfl (heq_of_eq (ptEquivRep_neg_dist_Fin_apply_eq h rfl))
+
+lemma ptEquivRep_neg_dist_Fin_iterate_eq
+    (h0 : ptEquivRep_periodPred h (mkQuotient f x) = n) :
+    ∀ k, ptEquivRep_neg_dist_Fin h (f^[k] x) n
+      = ptEquivRep_neg_dist_Fin h x n + k
+  | 0 => (add_zero _).symm
+  | k + 1 => by
+      rw [f.iterate_succ_apply, Nat.cast_succ, ← add_assoc,
+        ptEquivRep_neg_dist_Fin_iterate_eq ?_ k, add_right_comm,
+        ptEquivRep_neg_dist_Fin_apply_eq h h0]
+      rwa [mkQuotient_apply_eq]
+
+/-- The dense core structure of `FinMap` sigma on `f` -/
+noncomputable def SigmaFinMapDenseCore :
+    Core f (Sigma.map id λ s ↦ FinMap (ptEquivRep_periodPred h s)) where
+  φ := toSigmaFinMapHom h
+  ι := Hom.sigma_elim λ s ↦ FinMapHom (ptEquivRep_periodPred_spec h s)
+  is_inv := λ p ↦ by
+    change ⟨mkQuotient f (f^[_] _), ptEquivRep_neg_dist_Fin h (f^[_] _) _⟩ = p
+    rw [mkQuotient_iterate_eq, ptEquivRep_neg_dist_Fin_iterate_eq h rfl,
+      ptEquivRep_neg_dist_Fin_of_rep h, zero_add,
+      ptEquivRep_is_rep, Fin.cast_val_eq_self]
+
+theorem SigmaFinMapDenseCore_is_dense (x : α) :
+    ptEquiv f x ((SigmaFinMapDenseCore h).ι <| (SigmaFinMapDenseCore h).φ x) :=
+  mkQuotient_eq_iff.mp
+    ((mkQuotient_iterate_eq f _ _).trans <| ptEquivRep_is_rep h _).symm
+
+
+
+
+
+/-! #### Reduced `FinMap` core structure of cyclic self-maps -/
+
+def periodPred_set : Set ℕ := Set.range (ptEquivRep_periodPred h)
+
+section
+
+variable (n : periodPred_set h)
+
+noncomputable def periodPred_ptEquivRep := Classical.choose n.2
+
+lemma periodPred_ptEquivRep_spec :
+    ptEquivRep_periodPred h (periodPred_ptEquivRep h n) = n.1 :=
+  Classical.choose_spec n.2
+
+noncomputable def periodPred_rep : α :=
+  ptEquivRep h (periodPred_ptEquivRep h n)
+
+lemma periodPred_rep_spec :
+    mkQuotient f (periodPred_rep h n) = periodPred_ptEquivRep h n :=
+  ptEquivRep_is_rep h _
+
+lemma ptEquivRep_neg_dist_Fin_of_periodPred_rep (n : periodPred_set h) (m) :
+    ptEquivRep_neg_dist_Fin h (periodPred_rep h n) m = 0 :=
+  ptEquivRep_neg_dist_Fin_of_rep h _ _
+
+lemma periodPred_rep_minimalPeriod :
+    f.minimalPeriod (periodPred_rep h n) = n.1.succ :=
+  periodPred_ptEquivRep_spec h n ▸ ptEquivRep_periodPred_spec h _
+
+end
+
+
+
+noncomputable def ptEquivRep_toSet (x : α) : periodPred_set h :=
+  ⟨ptEquivRep_periodPred h (mkQuotient f x), _, rfl⟩
+
+lemma ptEquivRep_toSet_rep (n : periodPred_set h) :
+    ptEquivRep_toSet h (periodPred_rep h n) = n :=
+  Subtype.ext <| periodPred_ptEquivRep_spec h n ▸
+    congr_arg (ptEquivRep_periodPred h) (periodPred_rep_spec h _)
+
+lemma ptEquivRep_toSet_apply_eq (x : α) :
+    ptEquivRep_toSet h (f x) = ptEquivRep_toSet h x :=
+  Subtype.ext <| congr_arg (ptEquivRep_periodPred h) (mkQuotient_apply_eq f x)
+
+noncomputable def toSigmaFinMapReducedHom :
+    Hom f (Sigma.map id λ n : periodPred_set h ↦ FinMap n) where
+  toFun := λ x ↦ ⟨ptEquivRep_toSet h x, ptEquivRep_neg_dist_Fin h x _⟩
+  Semiconj := λ x ↦ by
+    simp only; rw [ptEquivRep_toSet_apply_eq]
+    exact Sigma.ext rfl (heq_of_eq (ptEquivRep_neg_dist_Fin_apply_eq h rfl))
+
+lemma toSigmaFinMapReducedHom_apply_periodPred_rep (n : periodPred_set h) :
+    toSigmaFinMapReducedHom h (periodPred_rep h n) = ⟨n, 0⟩ := by
+  simp only [toSigmaFinMapReducedHom]
+  rw [ptEquivRep_toSet_rep, ptEquivRep_neg_dist_Fin_of_periodPred_rep]
+
+lemma sigma_map_reduced_apply (n : periodPred_set h) (k : Fin n.1.succ) :
+    ∀ m, (Sigma.map id λ n : periodPred_set h ↦ FinMap n)^[m] ⟨n, k⟩ = ⟨n, k + m⟩
+  | 0 => by rw [Nat.cast_zero, add_zero]; rfl
+  | m + 1 => by rw [Nat.cast_succ, ← add_assoc,
+      iterate_succ_apply', sigma_map_reduced_apply n k m]; rfl
+
+/-- The reduced core structure of `FinMap` sigma on `f` -/
+noncomputable def SigmaFinMapReducedCore :
+    Core f (Sigma.map id λ n : periodPred_set h ↦ FinMap n) where
+  φ := toSigmaFinMapReducedHom h
+  ι := Hom.sigma_elim λ n ↦ FinMapHom (periodPred_rep_minimalPeriod h n)
+  is_inv := λ ⟨n, k⟩ ↦ by
+    change toSigmaFinMapReducedHom h (f^[k] (periodPred_rep h n)) = _
+    rw [(toSigmaFinMapReducedHom h).semiconj_iterate_apply,
+      toSigmaFinMapReducedHom_apply_periodPred_rep,
+      sigma_map_reduced_apply, zero_add, Fin.cast_val_eq_self]
+
+end cyclic
+
+
+
+
+
+/-- Nonempty version of `SigmaFinMapReducedCore` -/
+theorem exists_SigmaFinMapReducedCore_of_cyclic (h : cyclic f) :
+    ∃ S : Set ℕ, Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) :=
+  ⟨_, ⟨h.SigmaFinMapReducedCore⟩⟩

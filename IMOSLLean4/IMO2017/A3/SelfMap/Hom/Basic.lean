@@ -44,8 +44,6 @@ instance (f : α → α) (g : β → β) : CoeFun (Hom f g) (λ _ ↦ α → β)
 theorem ext_iff {e₁ e₂ : Hom f g} : (∀ x, e₁ x = e₂ x) ↔ e₁ = e₂ :=
   ⟨ext, λ h _ ↦ h ▸ rfl⟩
 
-/-- Copy of a `MyHom` with a new `toFun` equal to the old one.
-  Useful to fix definitional equalities. -/
 protected def copy (e : Hom f g) (e') (h : e' = ⇑e) : Hom f g :=
   ⟨e', h ▸ e.Semiconj⟩
 
