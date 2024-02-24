@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Basic
-import IMOSLLean4.IMO2017.A3.SelfMap.Irreducible.Basic
+import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.Component
 import Mathlib.Dynamics.PeriodicPts
 
 /-!
@@ -74,8 +74,7 @@ section
 
 open scoped Classical
 
-variable {f : α → α} (hf : irreducible f)
-  (hx : f.minimalPeriod x = Nat.succ n)
+variable {f : α → α} (hf : irreducible f) (hx : f.minimalPeriod x = Nat.succ n)
 
 lemma periodicPt_exists_iterate_eq (y : α) : ∃ k, f^[k] y = x := by
   rcases hf x y with ⟨u, v, h⟩; refine ⟨n * u + v, ?_⟩

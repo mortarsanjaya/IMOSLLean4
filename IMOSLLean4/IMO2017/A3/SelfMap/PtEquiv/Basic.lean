@@ -7,12 +7,12 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Logic.Function.Iterate
 
 /-!
-# Irreducible self-maps
+# Point-equivalence of self-maps
 
 Let `f : α → α` be a self-map.
 Given `a, b : α`, we denote `α ∼ b` if `f^m(a) = f^n(b)` for some `m, n : ℕ`.
 One can check that `∼` defines an equivalence relation on `α`.
-We say that `f` is irreducible if every two elements of `α` are equivalent.
+This equivalence is called the *point-equivalence* (with respect to `f`).
 -/
 
 namespace IMOSL
@@ -80,13 +80,3 @@ lemma of_apply_right : ptEquiv f a (f b) :=
   of_iterate_right h 1
 
 end
-
-end ptEquiv
-
-
-
-/-- Irreducible self-maps -/
-def irreducible (f : α → α) := ∀ a b : α, ptEquiv f a b
-
-lemma irreducible_def (f : α → α) :
-    irreducible f ↔ ∀ a b : α, ∃ m n : ℕ, f^[m] a = f^[n] b := by rfl

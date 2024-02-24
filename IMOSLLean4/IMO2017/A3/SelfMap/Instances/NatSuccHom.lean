@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Basic
 import Mathlib.Logic.Equiv.Defs
-import Mathlib.Tactic.Common
 
 /-!
 ### Homomorphisms from `Nat.succ`
@@ -15,7 +14,7 @@ Given `x : α`, there is a (unique) homomorphism from `Nat.succ` to `f`,
   defined by  mapping each `k : ℕ` to `f^[k] x`.
 We denote this homomorphism by `NatSuccHomOf f x`.
 
-Categorically, the category mk self-maps is representable by `Nat.succ`.
+Categorically, the category of self-maps is representable by `Nat.succ`.
 -/
 
 namespace IMOSL

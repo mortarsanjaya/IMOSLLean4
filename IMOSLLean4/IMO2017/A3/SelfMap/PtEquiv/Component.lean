@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.SelfMap.Irreducible.Decomposition
+import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.Quot
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Sigma
+import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Equiv
 import Mathlib.Logic.Equiv.Basic
 
 /-!
@@ -22,17 +23,11 @@ namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
 
-namespace ptEquiv
+/-- Irreducible self-maps -/
+def irreducible (f : α → α) := ∀ a b : α, ptEquiv f a b
 
-variable (f : α → α)
-
-/-- The setoid induced by the point equivalence -/
-def mkSetoid : Setoid α := ⟨ptEquiv f, ptEquiv.equivalence f⟩
-
-/-- The quotient induced by the point equivalence -/
-def mkQuotient : α → Quotient (mkSetoid f) := Quotient.mk _
-
-end ptEquiv
+lemma irreducible_iff (f : α → α) :
+    irreducible f ↔ ∀ a b : α, ∃ m n : ℕ, f^[m] a = f^[n] b := by rfl
 
 
 
@@ -86,14 +81,6 @@ def inclusion : Hom (IrredComponent f s) f :=
 
 def mkEquiv : Equiv (Sigma.map _root_.id (IrredComponent f)) f where
   toEquiv := Equiv.sigmaFiberEquiv (Quotient.mk (ptEquiv.mkSetoid f))
-  Semiconj := (SelfMap.Hom.sigma_mk (inclusion f)).Semiconj
-
-def decomposition : Decomposition f where
-  irreducible := is_irreducible f
-  type_nonempty := type_nonempty f
-  SelfMap_equiv := mkEquiv f
-
-/-- Existence of decompositions without explicit description -/
-instance : Inhabited (Decomposition f) := ⟨decomposition f⟩
+  Semiconj := (SelfMap.Hom.sigma_elim (inclusion f)).Semiconj
 
 end IrredComponent

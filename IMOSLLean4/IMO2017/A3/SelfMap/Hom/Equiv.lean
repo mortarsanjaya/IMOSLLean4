@@ -38,3 +38,8 @@ def trans (e₁ : Equiv f g) (e₂ : Equiv g h) : Equiv f h where
 
 def toCore (e : Equiv f g) : Core f g :=
   ⟨e.toHom, e.symm.toHom, e.right_inv⟩
+
+/-- Useful to show the existence of isomorphism of
+  a self-map to an equivalent type. -/
+def ofEquiv (e : α ≃ β) : Equiv f (e.conj f) :=
+  of_conj rfl
