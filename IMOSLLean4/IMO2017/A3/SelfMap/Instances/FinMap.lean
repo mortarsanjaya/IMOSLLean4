@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.Sigma
 import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.Quot
 import Mathlib.Dynamics.PeriodicPts
--- import Mathlib.Data.Setoid.Basic
 
 /-!
 # `FinMap` and cyclic self-maps
