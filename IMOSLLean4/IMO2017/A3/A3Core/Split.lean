@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.A3Equiv
+import IMOSLLean4.IMO2017.A3.A3Basic
 import IMOSLLean4.IMO2017.A3.SelfMap.Hom.SplitMap
 import Mathlib.Data.Sum.Basic
 
