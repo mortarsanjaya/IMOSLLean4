@@ -25,8 +25,10 @@ namespace SelfMap
 open Function ptEquiv
 open scoped Classical
 
-def cyclic (f : α → α) :=
-  ∀ x : α, ∃ y : α, ptEquiv f y x ∧ y ∈ f.periodicPts
+abbrev in_cyclicComponent (f : α → α) (x : α) :=
+  ∃ y : α, ptEquiv f y x ∧ y ∈ f.periodicPts
+
+def cyclic (f : α → α) := ∀ x : α, in_cyclicComponent f x
 
 
 
@@ -184,6 +186,10 @@ theorem SigmaFinMapDenseCore_is_dense (x : α) :
 
 def periodPred_set : Set ℕ := Set.range (ptEquivRep_periodPred h)
 
+lemma periodPred_set_nonempty (h0 : Nonempty α) : (periodPred_set h).Nonempty :=
+  Set.range_nonempty_iff_nonempty.mpr ((nonempty_quotient_iff _).mpr h0)
+
+
 section
 
 variable (n : periodPred_set h)
@@ -258,7 +264,14 @@ end cyclic
 
 
 
-/-- Nonempty version of `SigmaFinMapReducedCore` -/
-theorem exists_SigmaFinMapReducedCore_of_cyclic (h : cyclic f) :
+/-- Nonempty core version of `SigmaFinMapReducedCore` -/
+theorem exists_SigmaFinMapReducedCore (h : cyclic f) :
     ∃ S : Set ℕ, Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) :=
   ⟨_, ⟨h.SigmaFinMapReducedCore⟩⟩
+
+/-- Nonempty core version of `SigmaFinMapReducedCore` over nonempty set -/
+theorem exists_nonempty_SigmaFinMapReducedCore
+    (h : Nonempty α) {f : α → α} (h0 : cyclic f) :
+    ∃ S : Set ℕ, S.Nonempty ∧
+      Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) :=
+  ⟨_, h0.periodPred_set_nonempty h, ⟨h0.SigmaFinMapReducedCore⟩⟩

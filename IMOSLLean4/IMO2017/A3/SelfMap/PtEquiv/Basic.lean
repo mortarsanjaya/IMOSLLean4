@@ -79,4 +79,10 @@ lemma of_apply_left : ptEquiv f (f a) b :=
 lemma of_apply_right : ptEquiv f a (f b) :=
   of_iterate_right h 1
 
+lemma trans_iff_left : ptEquiv f a c ↔ ptEquiv f b c :=
+  ⟨trans h.symm, trans h⟩
+
+lemma trans_iff_right : ptEquiv f c a ↔ ptEquiv f c b :=
+  ⟨λ h0 ↦ h0.trans h, λ h0 ↦ h0.trans h.symm⟩
+
 end

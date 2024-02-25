@@ -98,6 +98,6 @@ end
 
 
 /-- `f → Int.succ` iff `f` has no periodic points. -/
-theorem toIntSucc_Nonempty_iff (f : α → α) :
+theorem toIntSucc_Nonempty_iff {f : α → α} :
     Nonempty (Hom f Int.succ) ↔ f.periodicPts = ∅ :=
   ⟨λ h ↦ h.elim nonperiodic_of_toIntSucc, λ h ↦ ⟨absolute_Int_grade_Hom h⟩⟩

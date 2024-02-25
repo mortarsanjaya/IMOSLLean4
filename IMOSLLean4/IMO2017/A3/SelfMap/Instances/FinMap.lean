@@ -24,6 +24,12 @@ open Function
 /-- The map `x ↦ x + 1` on `Fin n.succ`. -/
 abbrev FinMap (n : ℕ) (k : Fin n.succ) : Fin n.succ := k + 1
 
+def FinMap_asEquiv (n : ℕ) : Equiv.Perm (Fin n.succ) where
+  toFun := FinMap n
+  invFun := λ k ↦ k - 1
+  left_inv := λ k ↦ add_sub_cancel k 1
+  right_inv := λ k ↦ sub_add_cancel k 1
+
 lemma FinMap_iterate_Nat (m : Fin n.succ) :
     ∀ k, (FinMap n)^[k] m = m + (k : Fin n.succ)
   | 0 => by rw [Nat.cast_zero, add_zero]; rfl
