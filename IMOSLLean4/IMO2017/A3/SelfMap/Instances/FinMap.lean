@@ -13,6 +13,7 @@ import Mathlib.Dynamics.PeriodicPts
 For any `n : ℕ`, we denote by `FinMap n` the
   self-map on `Fin (n + 1)` defined by `x ↦ x + 1`.
 We prove some properties of `FinMap n`.
+We also define the coproduct of multiple `FinMap`s.
 -/
 
 namespace IMOSL
@@ -47,3 +48,27 @@ def FinMapHom (hx : minimalPeriod f x = Nat.succ n) : Hom (FinMap n) f where
     change f^[(k + 1 % _) % _] x = f (f^[k] x)
     rw [Nat.add_mod_mod, ← f.iterate_succ_apply',
       eq_comm, ← iterate_mod_minimalPeriod_eq, hx]
+
+
+
+/-- `Σ_{i ∈ I} FinMap β(i)`, where `β : I → ℕ` is an arbitrary function. -/
+def FinMapSigma (β : I → ℕ) :
+    (i : I) × Fin (β i).succ → (i : I) × Fin (β i).succ :=
+  Sigma.map id λ i ↦ FinMap (β i)
+
+lemma FinMapSigma_apply (β : I → ℕ) (p) :
+    FinMapSigma β p = ⟨p.1, p.2 + 1⟩ := rfl
+
+lemma FinMapSigma_apply' (β : I → ℕ) (x : Fin (β i).succ) :
+    FinMapSigma β ⟨i, x⟩ = ⟨i, x + 1⟩ := rfl
+
+
+
+/-- `Σ_{n ∈ S} FinMap n` for a subset `S ⊆ ℕ`. -/
+def FinMapSetSigma (S : Set ℕ) := FinMapSigma λ n : S ↦ n.1
+
+lemma FinMapSetSigma_apply (S : Set ℕ) (p) :
+    FinMapSetSigma S p = ⟨p.1, p.2 + 1⟩ := rfl
+
+lemma FinMapSetSigma_apply' (S : Set ℕ) {n : S} (x : Fin n.1.succ) :
+    FinMapSetSigma S ⟨n, x⟩ = ⟨n, x + 1⟩ := rfl

@@ -29,9 +29,7 @@ namespace SelfMap
 open Function ptEquiv
 open scoped Classical
 
-variable (f : α → α)
-
-lemma in_cyclicComponent_apply_iff {x : α} :
+lemma in_cyclicComponent_apply_iff {f : α → α} {x : α} :
     in_cyclicComponent f (f x) ↔ in_cyclicComponent f x :=
   exists_congr λ _ ↦ and_congr
     (trans_iff_right (of_self_apply_left f x)) Iff.rfl
@@ -42,13 +40,15 @@ lemma in_cyclicComponent_apply_iff {x : α} :
 
 /-! ### Cyclic part -/
 
-def cyclicPart := {x : α // in_cyclicComponent f x}
+def cyclicPart (f : α → α) := {x : α // in_cyclicComponent f x}
 
 
 namespace cyclicPart
 
+variable (f : α → α)
+
 def lift (x : cyclicPart f) : cyclicPart f :=
-  ⟨f x.1, (in_cyclicComponent_apply_iff f).mpr x.2⟩
+  ⟨f x.1, in_cyclicComponent_apply_iff.mpr x.2⟩
 
 lemma lift_fst (x : cyclicPart f) : (lift f x).1 = f x.1 := rfl
 
@@ -67,14 +67,13 @@ lemma periodic_iff : y ∈ (lift f).periodicPts ↔ y.1 ∈ f.periodicPts :=
 lemma lift_is_cyclic : cyclic (lift f) := λ ⟨_, y, h, h0⟩ ↦
     ⟨⟨y, y, refl f y, h0⟩, (ptEquiv_iff f).mpr h, (periodic_iff f).mpr h0⟩
 
-theorem exists_SigmaFinMapReducedCore :
-    ∃ S : Set ℕ, Nonempty (Core (lift f) (Sigma.map id λ n : S ↦ FinMap n)) :=
+theorem exists_FinMapSetSigmaCore :
+    ∃ S, Nonempty (Core (lift f) (FinMapSetSigma S)) :=
   SelfMap.exists_SigmaFinMapReducedCore (cyclicPart.lift_is_cyclic f)
 
-theorem exists_nonempty_SigmaFinMapReducedCore
+theorem exists_nonempty_FinMapSetSigmaCore
     {f : α → α} (h : Nonempty (cyclicPart f)) :
-    ∃ S : Set ℕ, S.Nonempty ∧
-      Nonempty (Core (lift f) (Sigma.map id λ n : S ↦ FinMap n)) :=
+    ∃ S, S.Nonempty ∧ Nonempty (Core (lift f) (FinMapSetSigma S)) :=
   SelfMap.exists_nonempty_SigmaFinMapReducedCore h (cyclicPart.lift_is_cyclic f)
 
 end cyclicPart
@@ -85,13 +84,15 @@ end cyclicPart
 
 /-! ### `Int.succ` part -/
 
-def IntSuccPart := {x : α // ¬in_cyclicComponent f x}
+def IntSuccPart (f : α → α) := {x : α // ¬in_cyclicComponent f x}
 
 
 namespace IntSuccPart
 
+variable (f : α → α)
+
 def lift (x : IntSuccPart f) : IntSuccPart f :=
-  ⟨f x.1, mt (in_cyclicComponent_apply_iff f).mp x.2⟩
+  ⟨f x.1, mt in_cyclicComponent_apply_iff.mp x.2⟩
 
 lemma lift_fst (x : IntSuccPart f) : (lift f x).1 = f x.1 := rfl
 
@@ -120,7 +121,7 @@ end IntSuccPart
 /-! ### The period decomposition -/
 
 /-- The period decomposition -/
-noncomputable def periodDecomposition :
+noncomputable def periodDecomposition (f : α → α) :
     SelfMap.Equiv (Sum.map (cyclicPart.lift f) (IntSuccPart.lift f)) f where
   toEquiv := Equiv.sumCompl (in_cyclicComponent f)
   Semiconj := λ x ↦ match x with
@@ -128,34 +129,32 @@ noncomputable def periodDecomposition :
     | Sum.inr _ => rfl
 
 /-- If `S : Set ℕ` is non-empty, then `Int.succ` has a
-  homomorphism to the coproduct `Σ_{n ∈ S} FinMap n`. -/
-theorem IntSuccHom_to_SigmaFinMap_of_Nonempty {S : Set ℕ} (h : S.Nonempty) :
-    Nonempty (Hom Int.succ (Sigma.map id λ n : S ↦ FinMap n)) :=
+  homomorphism to `FinMapSetSigma S`. -/
+theorem IntSuccHom_to_FinMapSetSigma_of_Nonempty (h : S.Nonempty) :
+    Nonempty (Hom Int.succ (FinMapSetSigma S)) :=
   h.elim λ n h0 ↦ ⟨(Hom.sigma_incl (λ n : S ↦ FinMap n) ⟨n, h0⟩).comp
     (IntSuccHom.mk (FinMap_asEquiv n) 0)⟩
 
-/-- If the cyclic part is non-empty, then `Σ_{n ∈ S} FinMap n` is a core. -/
-theorem Nonempty_SigmaFinMapCore_of_cyclicPart
-    {f : α → α} (h : Nonempty (cyclicPart f)) :
-    ∃ S : Set ℕ, S.Nonempty ∧
-      Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) := by
-  obtain ⟨S, h0, ⟨C⟩⟩ := cyclicPart.exists_nonempty_SigmaFinMapReducedCore h
+/-- If the cyclic part is non-empty, then `FinMapSetSigma S` is a core. -/
+theorem FinMapSetSigmaCore_of_cyclicPart (h : Nonempty (cyclicPart f)) :
+    ∃ S, S.Nonempty ∧ Nonempty (Core f (FinMapSetSigma S)) := by
+  obtain ⟨S, h0, ⟨C⟩⟩ := cyclicPart.exists_nonempty_FinMapSetSigmaCore h
   refine ⟨S, h0, ?_⟩
   let e := (periodDecomposition f).symm.toCore
   obtain ⟨I⟩ := IntSuccPart.exists_toIntSucc f
-  obtain ⟨M⟩ := IntSuccHom_to_SigmaFinMap_of_Nonempty h0
+  obtain ⟨M⟩ := IntSuccHom_to_FinMapSetSigma_of_Nonempty h0
   exact ⟨e.trans (C.sum_Hom (M.comp I))⟩
 
 /-- If the cyclic part is empty, then we have a homomorphism to `Int.succ`. -/
-theorem Nonempty_IntSuccHom_of_cyclicPart
-    {f : α → α} (h : IsEmpty (cyclicPart f)) : Nonempty (Hom f Int.succ) := by
+theorem IntSuccHom_of_cyclicPart (h : IsEmpty (cyclicPart f)) :
+    Nonempty (Hom f Int.succ) := by
   let C := Hom_ofIsEmpty h (cyclicPart.lift f) Int.succ
   obtain ⟨I⟩ := IntSuccPart.exists_toIntSucc f
   exact ⟨(C.sum_elim I).comp (periodDecomposition f).symm.toHom⟩
 
-/-- Either `f` maps to `Int.succ` or `Σ_{n ∈ S} FinMap n` is a core. -/
-theorem IntSuccHom_or_SigmaFinMapCore :
-    Nonempty (Hom f Int.succ) ∨ ∃ S : Set ℕ, S.Nonempty ∧
-      Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) :=
+/-- Either `f` maps to `Int.succ` or `FinMapSetSigma S` is a core. -/
+theorem IntSuccHom_or_FinMapSetSigmaCore (f : α → α) :
+    Nonempty (Hom f Int.succ) ∨
+      ∃ S, S.Nonempty ∧ Nonempty (Core f (FinMapSetSigma S)) :=
   (isEmpty_or_nonempty (cyclicPart f)).imp
-    Nonempty_IntSuccHom_of_cyclicPart Nonempty_SigmaFinMapCore_of_cyclicPart
+    IntSuccHom_of_cyclicPart FinMapSetSigmaCore_of_cyclicPart

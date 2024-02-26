@@ -145,7 +145,7 @@ lemma ptEquivRep_neg_dist_Fin_apply_eq
 
 /-- The inner homomorphism to dense `FinMap` sigma -/
 noncomputable def toSigmaFinMapHom :
-    Hom f (Sigma.map id λ s ↦ FinMap (ptEquivRep_periodPred h s)) where
+    Hom f (FinMapSigma (ptEquivRep_periodPred h)) where
   toFun := λ x ↦ ⟨mkQuotient f x, ptEquivRep_neg_dist_Fin h x _⟩
   Semiconj := λ x ↦ by
     simp only [Sigma.map, id_eq]; rw [mkQuotient_apply_eq]
@@ -162,9 +162,9 @@ lemma ptEquivRep_neg_dist_Fin_iterate_eq
         ptEquivRep_neg_dist_Fin_apply_eq h h0]
       rwa [mkQuotient_apply_eq]
 
-/-- The dense core structure of `FinMap` sigma on `f` -/
+/-- The dense `FinMapSigma` core structure on `f` -/
 noncomputable def SigmaFinMapDenseCore :
-    Core f (Sigma.map id λ s ↦ FinMap (ptEquivRep_periodPred h s)) where
+    Core f (FinMapSigma (ptEquivRep_periodPred h)) where
   φ := toSigmaFinMapHom h
   ι := Hom.sigma_elim λ s ↦ FinMapHom (ptEquivRep_periodPred_spec h s)
   is_inv := λ p ↦ by
@@ -174,7 +174,7 @@ noncomputable def SigmaFinMapDenseCore :
       ptEquivRep_is_rep, Fin.cast_val_eq_self]
 
 theorem SigmaFinMapDenseCore_is_dense (x : α) :
-    ptEquiv f x ((SigmaFinMapDenseCore h).ι <| (SigmaFinMapDenseCore h).φ x) :=
+    ptEquiv f x ((SigmaFinMapDenseCore h).ι ((SigmaFinMapDenseCore h).φ x)) :=
   mkQuotient_eq_iff.mp
     ((mkQuotient_iterate_eq f _ _).trans <| ptEquivRep_is_rep h _).symm
 
@@ -232,7 +232,7 @@ lemma ptEquivRep_toSet_apply_eq (x : α) :
   Subtype.ext <| congr_arg (ptEquivRep_periodPred h) (mkQuotient_apply_eq f x)
 
 noncomputable def toSigmaFinMapReducedHom :
-    Hom f (Sigma.map id λ n : periodPred_set h ↦ FinMap n) where
+    Hom f (FinMapSetSigma (periodPred_set h)) where
   toFun := λ x ↦ ⟨ptEquivRep_toSet h x, ptEquivRep_neg_dist_Fin h x _⟩
   Semiconj := λ x ↦ by
     simp only; rw [ptEquivRep_toSet_apply_eq]
@@ -244,14 +244,14 @@ lemma toSigmaFinMapReducedHom_apply_periodPred_rep (n : periodPred_set h) :
   rw [ptEquivRep_toSet_rep, ptEquivRep_neg_dist_Fin_of_periodPred_rep]
 
 lemma sigma_map_reduced_apply (n : periodPred_set h) (k : Fin n.1.succ) :
-    ∀ m, (Sigma.map id λ n : periodPred_set h ↦ FinMap n)^[m] ⟨n, k⟩ = ⟨n, k + m⟩
+    ∀ m, (FinMapSetSigma (periodPred_set h))^[m] ⟨n, k⟩ = ⟨n, k + m⟩
   | 0 => by rw [Nat.cast_zero, add_zero]; rfl
   | m + 1 => by rw [Nat.cast_succ, ← add_assoc,
       iterate_succ_apply', sigma_map_reduced_apply n k m]; rfl
 
-/-- The reduced core structure of `FinMap` sigma on `f` -/
+/-- The reduced `FinMapSetSigma` core structure on `f` -/
 noncomputable def SigmaFinMapReducedCore :
-    Core f (Sigma.map id λ n : periodPred_set h ↦ FinMap n) where
+    Core f (FinMapSetSigma (periodPred_set h)) where
   φ := toSigmaFinMapReducedHom h
   ι := Hom.sigma_elim λ n ↦ FinMapHom (periodPred_rep_minimalPeriod h n)
   is_inv := λ ⟨n, k⟩ ↦ by
@@ -265,13 +265,12 @@ end cyclic
 
 
 /-- Nonempty core version of `SigmaFinMapReducedCore` -/
-theorem exists_SigmaFinMapReducedCore (h : cyclic f) :
-    ∃ S : Set ℕ, Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) :=
+theorem exists_FinMapSetSigmaCore (h : cyclic f) :
+    ∃ S, Nonempty (Core f (FinMapSetSigma S)) :=
   ⟨_, ⟨h.SigmaFinMapReducedCore⟩⟩
 
 /-- Nonempty core version of `SigmaFinMapReducedCore` over nonempty set -/
-theorem exists_nonempty_SigmaFinMapReducedCore
+theorem exists_nonempty_FinMapSetSigmaCore
     (h : Nonempty α) {f : α → α} (h0 : cyclic f) :
-    ∃ S : Set ℕ, S.Nonempty ∧
-      Nonempty (Core f (Sigma.map id λ n : S ↦ FinMap n)) :=
+    ∃ S, S.Nonempty ∧ Nonempty (Core f (FinMapSetSigma S)) :=
   ⟨_, h0.periodPred_set_nonempty h, ⟨h0.SigmaFinMapReducedCore⟩⟩
