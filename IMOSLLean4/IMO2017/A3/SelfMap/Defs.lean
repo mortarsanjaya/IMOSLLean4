@@ -25,6 +25,10 @@ namespace SelfMap
 
 def of {α} (f : α → α) : SelfMap := ⟨α, f⟩
 
+def EmptySelfMap : SelfMap := ⟨Empty, id⟩
+
+def UnitSelfMap : SelfMap := ⟨Unit, id⟩
+
 def sum (X Y : SelfMap) : SelfMap :=
   ⟨X.α ⊕ Y.α, λ a ↦ match a with
     | Sum.inl a => Sum.inl (X.f a)

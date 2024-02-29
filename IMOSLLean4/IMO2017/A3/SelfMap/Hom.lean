@@ -29,8 +29,6 @@ structure Hom (X Y : SelfMap) where
 
 namespace Hom
 
-/-! ##### Coercion as functions -/
-
 instance (X Y : SelfMap) : FunLike (Hom X Y) X.α Y.α :=
   ⟨toFun, λ e₁ e₂ h ↦ by cases e₁; cases e₂; congr⟩
 
@@ -47,8 +45,6 @@ protected def copy (e : Hom X Y) (e') (h : e' = ⇑e) : Hom X Y :=
 
 
 
-/-! ##### Categorical properties -/
-
 def id (X : SelfMap) : Hom X X :=
   ⟨_root_.id, Function.Semiconj.id_left⟩
 
@@ -64,8 +60,6 @@ theorem comp_assoc (φ₁ : Hom Y Z) (φ₂ : Hom X Y) (φ₃ : Hom W X) :
 
 
 
-/-! ##### Basic lemmas -/
-
 lemma semiconj (φ : Hom X Y) : φ ∘ X.f = Y.f ∘ φ :=
   funext φ.Semiconj
 
@@ -78,6 +72,16 @@ lemma semiconj_iterate (φ : Hom X Y) (k : ℕ) : φ ∘ X.f^[k] = Y.f^[k] ∘ �
 lemma semiconj_iterate_apply (φ : Hom X Y) :
     ∀ k x, φ (X.f^[k] x) = Y.f^[k] (φ x) :=
   φ.Semiconj.iterate_right
+
+
+
+/-! ##### Empty and Unit -/
+
+def fromEmpty (X : SelfMap) : Hom EmptySelfMap X :=
+  ⟨Empty.elim, λ x ↦ Empty.elim x⟩
+
+def toUnit (X : SelfMap) : Hom X UnitSelfMap :=
+  ⟨λ _ ↦ (), λ _ ↦ rfl⟩
 
 
 
