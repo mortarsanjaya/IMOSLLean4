@@ -81,3 +81,11 @@ def sigma_map_id (E : (i : I) → Core (F i) (G i)) :
   φ := Hom.sigma_map_id λ i ↦ (E i).φ
   ι := Hom.sigma_map_id λ i ↦ (E i).ι
   is_inv := λ ⟨i, a⟩ ↦ Sigma.ext rfl (heq_of_eq <| (E i).is_inv a)
+
+/-- Given `X` as a core of `G(i)` across all `i`, and a fixed `i`,
+  construct a core instance of `X` over `Σ G`. -/
+def sigma_fixed_source (E : (i : I) → Core (G i) X) (i : I) :
+    Core (sigma G) X where
+  φ := Hom.sigma_elim λ i ↦ (E i).φ
+  ι := (Hom.sigma_incl G i).comp (E i).ι
+  is_inv := (E i).is_inv
