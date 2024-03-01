@@ -38,27 +38,3 @@ lemma mkQuotient_iterate_eq (X : SelfMap) (x : X.α) :
   | 0 => rfl
   | k + 1 => by rw [X.f.iterate_succ_apply', mkQuotient_apply_eq,
                   mkQuotient_iterate_eq X _ k]
-
-/-
-/-- A representative of a given quotient -/
-noncomputable def quotientRep (s : Quotient (mkSetoid X)) : X.α :=
-  Quotient.out (s := mkSetoid X) s
-
-lemma quotient_eq_rep_iff {s : Quotient (mkSetoid X)} :
-    s = mkQuotient X x ↔ ptEquiv X (quotientRep s) x :=
-  Quotient.eq_mk_iff_out (s := mkSetoid X)
-
-lemma rep_eq_quotient_iff {s : Quotient (mkSetoid X)} :
-    mkQuotient X x = s ↔ ptEquiv X x (quotientRep s) :=
-  Quotient.mk_eq_iff_out (s := mkSetoid X)
-
-/-- A representative equivalent to a given element -/
-noncomputable def eltRep (X : SelfMap) (x : X.α) :=
-  quotientRep (mkQuotient X x)
-
-lemma eltRep_equiv_self (X : SelfMap) (x : X.α) : ptEquiv X (eltRep X x) x :=
-  quotient_eq_rep_iff.mp rfl
-
-lemma eltRep_apply_eq (X : SelfMap) (x : X.α) : eltRep X (X.f x) = eltRep X x :=
-  congr_arg quotientRep (mkQuotient_apply_eq X x)
--/
