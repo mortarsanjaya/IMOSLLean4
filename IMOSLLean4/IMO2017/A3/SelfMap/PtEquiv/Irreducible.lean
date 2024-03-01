@@ -27,9 +27,6 @@ namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
 
-set_option trace.profiler true
-set_option trace.profiler.threshold 50
-
 /-- Irreducible self-maps -/
 def Irreducible (X : SelfMap) := Nonempty X.α ∧ ∀ a b, ptEquiv X a b
 
