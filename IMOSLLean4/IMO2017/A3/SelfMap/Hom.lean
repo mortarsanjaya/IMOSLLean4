@@ -94,6 +94,11 @@ def sum_inr (X Y : SelfMap) : Hom Y (sum X Y) := ⟨Sum.inr, λ _ ↦ rfl⟩
 def sum_elim (e₁ : Hom X₁ Y) (e₂ : Hom X₂ Y) : Hom (sum X₁ X₂) Y :=
   ⟨Sum.elim e₁ e₂, Sum.rec e₁.Semiconj e₂.Semiconj⟩
 
+def sum_map (e₁ : Hom X₁ Y₁) (e₂ : Hom X₂ Y₂) : Hom (sum X₁ X₂) (sum Y₁ Y₂) :=
+  ⟨Sum.map e₁ e₂, λ a ↦ match a with
+    | Sum.inl a => congr_arg Sum.inl (e₁.Semiconj a)
+    | Sum.inr a => congr_arg Sum.inr (e₂.Semiconj a)⟩
+
 
 
 /-! ##### Sigma -/

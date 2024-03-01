@@ -71,6 +71,12 @@ def ofHom_inl (e : Hom X Y) : Core (sum Y X) Y := sum_Core_Hom (refl Y) e
 
 def ofHom_inr (e : Hom X Y) : Core (sum X Y) Y := sum_Hom_Core e (refl Y)
 
+def sum_map (C₁ : Core X₁ Y₁) (C₂ : Core X₂ Y₂) :
+    Core (sum X₁ X₂) (sum Y₁ Y₂) :=
+  ⟨C₁.φ.sum_map C₂.φ, C₁.ι.sum_map C₂.ι, λ a ↦ match a with
+    | Sum.inl a => congr_arg Sum.inl (C₁.is_inv a)
+    | Sum.inr a => congr_arg Sum.inr (C₂.is_inv a)⟩
+
 
 
 /-! ##### Sigma -/
@@ -89,3 +95,11 @@ def sigma_fixed_source (E : (i : I) → Core (G i) X) (i : I) :
   φ := Hom.sigma_elim λ i ↦ (E i).φ
   ι := (Hom.sigma_incl G i).comp (E i).ι
   is_inv := (E i).is_inv
+
+/-- Given `I`-indexed self-maps `X(i)` and a pi-function `α : (i : I) → s(i)`,
+  `Σ X` is a core of the `Σ s`-indexed sigma `Σ_{(i, a) : Σ s} X(i)`. -/
+def sigma_sigma_reduction (X : I → SelfMap) (α : (i : I) → s i) :
+    Core (sigma λ p : Sigma s ↦ X p.1) (sigma X) where
+  φ := Hom.sigma_map Sigma.fst λ p ↦ Hom.id (X p.1)
+  ι := Hom.sigma_map (λ i ↦ ⟨i, α i⟩) (λ i ↦ Hom.id (X i))
+  is_inv := λ _ ↦ rfl
