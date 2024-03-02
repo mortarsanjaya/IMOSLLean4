@@ -12,15 +12,13 @@ import Mathlib.Data.Subtype
 /-!
 # Irreducible self-maps and irreducible component of self-maps
 
-Let `X` be a (bundled) self-map.
-We say that `X` is irreducible if `X.α` is non-empty and every
-  two points in `X.α` are point-equivalent with respect to `X.f`.
+Let `X` be a self-map and `∼` be the point-equivalence relation.
 For each equivalence class `S`, there is an induced restriction map `S → S`.
 We call this (bundled) map an *irreducible component* of `X`.
 We show that this restriction map is irreducible.
 Furthermore, we show that these maps give a decomposition of `X`.
 
-This is a self-map version of connected graphs and connected component.
+This is a self-map version of connected components of a graph.
 -/
 
 namespace IMOSL
