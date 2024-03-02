@@ -127,6 +127,9 @@ def toUnit (X : SelfMap) : Hom X UnitSelfMap :=
 def fromUnit_ofFixedPt (X : SelfMap) {x} (h : X.f x = x) : Hom UnitSelfMap X :=
   ⟨λ _ ↦ x, λ _ ↦ h.symm⟩
 
+lemma fixedPt_ofUnit (e : Hom UnitSelfMap X) : X.f (e ()) = e () :=
+  (e.Semiconj ()).symm
+
 def fromNatSucc (X : SelfMap) (x : X.α) : Hom NatSuccMap X :=
   ⟨λ k ↦ X.f^[k] x, λ k ↦ X.f.iterate_succ_apply' k x⟩
 
