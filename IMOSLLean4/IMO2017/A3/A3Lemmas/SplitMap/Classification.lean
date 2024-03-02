@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.A3Lemmas.Core
-import IMOSLLean4.IMO2017.A3.SelfMap.Core.Split
-import IMOSLLean4.IMO2017.A3.SelfMap.SplitMap.Core
+import IMOSLLean4.IMO2017.A3.A3Defs
+import IMOSLLean4.IMO2017.A3.SelfMap.SplitMap.Defs
+import Mathlib.Logic.Function.Basic
 
 /-!
 # IMO 2017 A3 (Good maps and splitting of core structures)
@@ -18,30 +18,13 @@ We prove a nice characterization of good split maps, and we prove when
 
 namespace IMOSL
 namespace IMO2017A3
-
-open SelfMap Function
-
-lemma good_core_splits (C : Core X Y) (h : good X) : C.splits :=
-  h _ (bad_pair_of_core C rfl)
-
-lemma good_core_exists_SplitMapEquiv
-    {X : SelfMap.{u}} (C : Core X Y) (h : good X) :
-    ∃ (β : Type u) (s : β → Y.α), Nonempty ((SplitMap Y s).Equiv X) :=
-  C.Nonempty_SplitMapEquiv_of_splits (good_core_splits C h)
-
-
-
-
+open SelfMap
 
 /-! ### Good split maps; necessary condition -/
 
-lemma good_SplitMap_imp_core (h : good (SplitMap X s)) : good X :=
-  good_of_core (SplitMap.toCore X s) h
-
-
 section
 
-open SplitMap
+open SplitMap Function
 open scoped Classical
 
 variable (h : good (SplitMap X s))
@@ -83,6 +66,8 @@ lemma good_SplitMap_imp3 (h0 : ∀ a', X.f (X.f a') ≠ a) (b) :
   rw [h2, h2]
   exact (update_noteq (a := fY (fY z)) (λ h2 ↦ h0 _ (Sum.inl.inj h2)) _ _).symm
 
+end
+
 
 
 /-- The three necessary condition for `SplitMap X s` to be good.
@@ -92,12 +77,12 @@ structure SplitMap_good_cond (X : SelfMap) (s : β → X.α) : Prop where
   cond2 : ∀ a, (∀ a', X.f a' ≠ a) → ∀ b, s b ≠ X.f a
   cond3 : ∀ a, (∀ a', X.f (X.f a') ≠ a) → ∀ b, s b ≠ X.f a
 
-lemma SplitMap_good_imp : SplitMap_good_cond X s where
+lemma SplitMap_good_imp (h : good (SplitMap X s)) :
+    SplitMap_good_cond X s where
   cond1 := good_SplitMap_imp1 h
   cond2 := λ _ ↦ good_SplitMap_imp2 h
   cond3 := λ _ ↦ good_SplitMap_imp3 h
 
-end
 
 
 
@@ -106,7 +91,7 @@ end
 /-! ### Good split maps; sufficient and iff condition -/
 
 lemma SplitMap_good_of_cond {X : SelfMap} {s : β → X.α}
-    (h : good X) (h0 : Injective X.f) (h1 : SplitMap_good_cond X s) :
+    (h : good X) (h0 : X.f.Injective) (h1 : SplitMap_good_cond X s) :
     good (SplitMap X s) := λ g h2 ↦ by
   let φ := SplitMap_sum_proj X s
   replace h : ∀ a, φ (g (Sum.inl a)) = X.f a :=
@@ -131,6 +116,6 @@ lemma SplitMap_good_of_cond {X : SelfMap} {s : β → X.α}
 
 /-- Assuming that `X` is good, `SplitMap X s` is good iff
   the condition `SplitMap_good_cond X s` holds. -/
-theorem SplitMap_good_iff (h : good X) (h0 : Injective X.f) {s : β → X.α}:
+theorem SplitMap_good_iff (h : good X) (h0 : X.f.Injective) {s : β → X.α} :
     good (SplitMap X s) ↔ SplitMap_good_cond X s :=
   ⟨SplitMap_good_imp, SplitMap_good_of_cond h h0⟩

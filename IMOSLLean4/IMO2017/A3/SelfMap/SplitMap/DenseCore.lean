@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A3.SelfMap.SplitMap.Core
-import IMOSLLean4.IMO2017.A3.SelfMap.Core.Dense
+import IMOSLLean4.IMO2017.A3.SelfMap.Core.Dense.Defs
 
 /-!
 # Core of a split map is a dense core
