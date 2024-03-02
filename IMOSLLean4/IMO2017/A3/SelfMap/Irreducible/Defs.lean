@@ -8,14 +8,16 @@ import IMOSLLean4.IMO2017.A3.SelfMap.Defs
 import Mathlib.Logic.Function.Iterate
 
 /-!
-# Point-equivalence of self-maps
+# Point-equivalence and irreducibility of self-maps
 
 Let `X = ⟨α, f⟩` be a bundled self-map.
 Given `a, b : α`, we denote `α ∼ b` if `f^m(a) = f^n(b)` for some `m, n : ℕ`.
 One can check that `∼` defines an equivalence relation on `α`.
 This equivalence is called the *point-equivalence* (with respect to `f`).
+A self-map `X` is *irreducible* if `X.α` is non-empty and every
+  two points in `X.α` are point-equivalent (with respect to `f`).
 
-This is a self-map version of two points being connected in graphs.
+This is a self-map version of connectedness in graphs.
 -/
 
 namespace IMOSL
@@ -87,3 +89,39 @@ lemma trans_iff_right : ptEquiv X c a ↔ ptEquiv X c b :=
   ⟨λ h0 ↦ h0.trans h, λ h0 ↦ h0.trans h.symm⟩
 
 end
+
+
+
+/-! ### Quotient with respect to point-equivalence -/
+
+/-- The setoid induced by the point equivalence -/
+instance mkSetoid (X : SelfMap) : Setoid X.α := ⟨ptEquiv X, equivalence X⟩
+
+/-- The quotient induced by the point equivalence -/
+def mkQuotient (X : SelfMap) := Quotient.mk (mkSetoid X)
+
+lemma mkQuotient_eq_iff : mkQuotient X x = mkQuotient X y ↔ ptEquiv X x y :=
+  ⟨Quotient.exact, Quotient.sound (s := mkSetoid X)⟩
+
+lemma mkQuotient_apply_eq (X : SelfMap) (x : X.α) :
+    mkQuotient X (X.f x) = mkQuotient X x :=
+  mkQuotient_eq_iff.mpr (of_self_apply_left X x)
+
+lemma mkQuotient_iterate_eq (X : SelfMap) (x : X.α) :
+    ∀ k, mkQuotient X (X.f^[k] x) = mkQuotient X x
+  | 0 => rfl
+  | k + 1 => by rw [X.f.iterate_succ_apply', mkQuotient_apply_eq,
+                  mkQuotient_iterate_eq X _ k]
+
+end ptEquiv
+
+
+
+/-! ### Irreducible self-maps -/
+
+/-- Irreducible self-maps -/
+def Irreducible (X : SelfMap) := Nonempty X.α ∧ ∀ a b, ptEquiv X a b
+
+lemma Irreducible_def (X : SelfMap) :
+    Irreducible X ↔ Nonempty X.α ∧
+      ∀ a b, ∃ m n : ℕ, X.f^[m] a = X.f^[n] b := by rfl

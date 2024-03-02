@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.SelfMap.PtEquiv.Quotient
+import IMOSLLean4.IMO2017.A3.SelfMap.Irreducible.Defs
 import IMOSLLean4.IMO2017.A3.SelfMap.Equiv.Defs
 import Mathlib.Logic.Equiv.Basic
 import Mathlib.Data.Subtype
@@ -26,16 +26,6 @@ This is a self-map version of connected graphs and connected component.
 namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
-
-/-- Irreducible self-maps -/
-def Irreducible (X : SelfMap) := Nonempty X.α ∧ ∀ a b, ptEquiv X a b
-
-lemma Irreducible_def (X : SelfMap) :
-    Irreducible X ↔ Nonempty X.α ∧
-      ∀ a b, ∃ m n : ℕ, X.f^[m] a = X.f^[n] b := by rfl
-
-
-
 namespace Irreducible
 
 variable (X : SelfMap) (s : Quotient (ptEquiv.mkSetoid X))
