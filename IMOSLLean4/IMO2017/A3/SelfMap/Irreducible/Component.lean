@@ -24,6 +24,36 @@ This is a self-map version of connected components of a graph.
 namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
+
+namespace ptEquiv
+
+/-! ### Quotient with respect to point-equivalence -/
+
+/-- The setoid induced by the point equivalence -/
+instance mkSetoid (X : SelfMap) : Setoid X.α := ⟨ptEquiv X, equivalence X⟩
+
+/-- The quotient induced by the point equivalence -/
+def mkQuotient (X : SelfMap) := Quotient.mk (mkSetoid X)
+
+lemma mkQuotient_eq_iff : mkQuotient X x = mkQuotient X y ↔ ptEquiv X x y :=
+  ⟨Quotient.exact, Quotient.sound (s := mkSetoid X)⟩
+
+lemma mkQuotient_apply_eq (X : SelfMap) (x : X.α) :
+    mkQuotient X (X.f x) = mkQuotient X x :=
+  mkQuotient_eq_iff.mpr (of_self_apply_left X x)
+
+lemma mkQuotient_iterate_eq (X : SelfMap) (x : X.α) :
+    ∀ k, mkQuotient X (X.f^[k] x) = mkQuotient X x
+  | 0 => rfl
+  | k + 1 => by rw [X.f.iterate_succ_apply', mkQuotient_apply_eq,
+                  mkQuotient_iterate_eq X _ k]
+
+end ptEquiv
+
+
+
+/-! ### Irreducible components -/
+
 namespace Irreducible
 
 variable (X : SelfMap) (s : Quotient (ptEquiv.mkSetoid X))
@@ -49,7 +79,6 @@ lemma is_irreducible : Irreducible (Component X s) :=
     rcases Quotient.exact (a.2.trans b.2.symm) with ⟨m, n, h⟩
     refine ⟨m, n, Subtype.ext ?_⟩
     rwa [iterate_apply_fst, iterate_apply_fst]⟩
-
 
 
 

@@ -4,18 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A3.SelfMap.Core.Defs
+import IMOSLLean4.IMO2017.A3.SelfMap.Core.Dense
 import IMOSLLean4.IMO2017.A3.SelfMap.Equiv.Defs
+import Mathlib.Tactic.Common
 
 /-!
-# Isomorphism of self-maps as cores
+# Isomorphism of self-maps as (dense) cores
 
-We provide some relation between isomorphism and core instances of self-maps.
+We provide some relation between isomorphism and
+  (dense) core instances of self-maps.
 -/
 
 namespace IMOSL
 namespace IMO2017A3
 namespace SelfMap
+
+/- ### "Normal" core -/
+
 namespace Core
 
 def ofEquiv (e : Equiv X Y) : Core X Y :=
@@ -29,3 +34,22 @@ def equivTrans (e : Equiv X Y) (C : Core Y Z) : Core X Z :=
 
 def transEquiv (C : Core X Y) (e : Equiv Y Z) : Core X Z :=
   C.trans (ofEquiv e)
+
+end Core
+
+
+
+/-! ### Dense core -/
+
+namespace DenseCore
+
+def ofEquiv (e : Equiv X Y) : DenseCore X Y :=
+  ⟨Core.ofEquiv e, λ x ↦ ⟨e.toHom x, 0, 0, (e.toEquiv.symm_apply_apply x).symm⟩⟩
+
+def equivTrans (e : Equiv X Y) (C : DenseCore Y Z) : DenseCore X Z :=
+  (ofEquiv e).trans C
+
+def transEquiv (C : DenseCore X Y) (e : Equiv Y Z) : DenseCore X Z :=
+  C.trans (ofEquiv e)
+
+end DenseCore
