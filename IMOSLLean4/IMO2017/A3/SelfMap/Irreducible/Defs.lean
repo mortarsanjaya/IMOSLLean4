@@ -125,3 +125,12 @@ def Irreducible (X : SelfMap) := Nonempty X.α ∧ ∀ a b, ptEquiv X a b
 lemma Irreducible_def (X : SelfMap) :
     Irreducible X ↔ Nonempty X.α ∧
       ∀ a b, ∃ m n : ℕ, X.f^[m] a = X.f^[n] b := by rfl
+
+
+namespace Irreducible
+
+variable (h : Irreducible X)
+
+lemma nonempty : Nonempty X.α := h.1
+
+lemma ptEquiv : ∀ a b, ptEquiv X a b := h.2
