@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2017.A3.SelfMap.Core.Dense
 import IMOSLLean4.IMO2017.A3.SelfMap.Equiv.Defs
-import Mathlib.Tactic.Common
 
 /-!
 # Isomorphism of self-maps as (dense) cores

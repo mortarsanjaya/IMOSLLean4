@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2017.A3.SelfMap.Irreducible.Defs
 import IMOSLLean4.IMO2017.A3.SelfMap.Equiv.Defs
 import Mathlib.Logic.Equiv.Basic
-import Mathlib.Data.Subtype
 
 /-!
 # Irreducible self-maps and irreducible component of self-maps
