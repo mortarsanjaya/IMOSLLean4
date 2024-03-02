@@ -53,3 +53,13 @@ def sigma_map (e : I ≃ J) (E : (i : I) → Equiv (X i) (Y (e i))) :
 def sigma_map_id (E : (i : I) → Equiv (X i) (Y i)) :
     Equiv (sigma X) (sigma Y) :=
   sigma_map (_root_.Equiv.refl I) E
+
+
+
+/-! ##### Concrete self-maps -/
+
+def toEmpty_of_IsEmpty (X : SelfMap) [IsEmpty X.α] : Equiv X EmptySelfMap :=
+  ⟨Equiv.equivEmpty X.α, congrFun rfl⟩
+
+def toUnit_of_Unique (X : SelfMap) [Unique X.α] : Equiv X UnitSelfMap :=
+  ⟨Equiv.equivPUnit X.α, congrFun rfl⟩

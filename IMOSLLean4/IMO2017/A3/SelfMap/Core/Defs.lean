@@ -103,3 +103,13 @@ def sigma_sigma_reduction (X : I → SelfMap) (α : (i : I) → s i) :
   φ := Hom.sigma_map Sigma.fst λ p ↦ Hom.id (X p.1)
   ι := Hom.sigma_map (λ i ↦ ⟨i, α i⟩) (λ i ↦ Hom.id (X i))
   is_inv := λ _ ↦ rfl
+
+
+
+/-! ##### `UnitSelfMap` as a core -/
+
+def Unit_ofFixedPt (X : SelfMap) {x : X.α} (h : X.f x = x) :
+    Core X UnitSelfMap where
+  φ := Hom.toUnit X
+  ι := Hom.fromUnit_ofFixedPt X h
+  is_inv := λ _ ↦ rfl

@@ -75,16 +75,6 @@ lemma semiconj_iterate_apply (φ : Hom X Y) :
 
 
 
-/-! ##### Empty and Unit -/
-
-def fromEmpty (X : SelfMap) : Hom EmptySelfMap X :=
-  ⟨Empty.elim, λ x ↦ Empty.elim x⟩
-
-def toUnit (X : SelfMap) : Hom X UnitSelfMap :=
-  ⟨λ _ ↦ (), λ _ ↦ rfl⟩
-
-
-
 /-! ##### Binary sum -/
 
 def sum_inl (X Y : SelfMap) : Hom X (sum X Y) := ⟨Sum.inl, λ _ ↦ rfl⟩
@@ -123,3 +113,29 @@ def sigma_map (s : I → J) (E : (i : I) → Hom (F i) (G (s i))) :
   construct the self-map homomorphism `Σ F → Σ G`. -/
 def sigma_map_id (E : (i : I) → Hom (F i) (G i)) : Hom (sigma F) (sigma G) :=
   sigma_map _root_.id E
+
+
+
+/-! ##### Concrete self-maps -/
+
+def fromEmpty (X : SelfMap) : Hom EmptySelfMap X :=
+  ⟨Empty.elim, λ x ↦ Empty.elim x⟩
+
+def toUnit (X : SelfMap) : Hom X UnitSelfMap :=
+  ⟨λ _ ↦ (), λ _ ↦ rfl⟩
+
+def fromUnit_ofFixedPt (X : SelfMap) {x} (h : X.f x = x) : Hom UnitSelfMap X :=
+  ⟨λ _ ↦ x, λ _ ↦ h.symm⟩
+
+def fromNatSucc (X : SelfMap) (x : X.α) : Hom NatSuccMap X :=
+  ⟨λ k ↦ X.f^[k] x, λ k ↦ X.f.iterate_succ_apply' k x⟩
+
+def fromFinSucc (X : SelfMap) {x : X.α} (h : X.f^[n.succ] x = x) :
+    Hom (FinSuccMap n) X :=
+  ⟨λ k ↦ X.f^[k.1] x, λ k ↦ by
+    change X.f^[(k.1 + 1 % n.succ) % _] x = X.f (X.f^[k.1] x)
+    rw [Nat.add_mod_mod, ← X.f.iterate_succ_apply', ← Nat.succ_eq_add_one]
+    have h0 : X.f^[n.succ * _ + _] x = X.f^[_] x :=
+      congr_arg (λ m ↦ X.f^[m] x) (Nat.div_add_mod k.1.succ n.succ)
+    rwa [Nat.add_comm, X.f.iterate_add_apply,
+      X.f.iterate_mul, Function.iterate_fixed h] at h0⟩
