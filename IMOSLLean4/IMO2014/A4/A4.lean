@@ -11,8 +11,8 @@ import Mathlib.Data.Int.Order.Lemmas
 /-!
 # IMO 2014 A4
 
-Let $b$ and $c$ be integers with $|b| > 1$ and $c \neq 0$.
-Find all functions $f : ℤ \to ℤ$ such that, for any $x, y \in ℤ$,
+Let $b$ and $c$ be integers with $|b| > 1$ and $c ≠ 0$.
+Find all functions $f : ℤ → ℤ$ such that, for any $x, y ∈ ℤ$,
 $$ f(y + f(x)) - f(y) = f(bx) - f(x) + c. $$
 -/
 
@@ -42,8 +42,8 @@ def good (b c : ℤ) (f : ℤ → ℤ) :=
 
 
 theorem linear_good' (k m : ℤ) : good (k + 1) (k * m) (k * · + m) := λ x y ↦ by
-  rw [add_sub_add_right_eq_sub, mul_add, add_sub_cancel', add_one_mul,
-    add_sub_add_right_eq_sub, ← mul_sub, add_sub_cancel, ← mul_add]
+  rw [add_sub_add_right_eq_sub, mul_add, add_sub_cancel_left, add_one_mul (α := ℤ),
+    add_sub_add_right_eq_sub, ← mul_sub, add_sub_cancel_right, ← mul_add]
 
 theorem linear_good (h : b - 1 ∣ c) : good b c ((b - 1) * · + c / (b - 1)) := by
   nth_rw 1 [← sub_add_cancel b 1, ← Int.mul_ediv_cancel' h]
@@ -60,7 +60,7 @@ theorem map_map_zero_add (y : ℤ) : f (y + f 0) = c + f y :=
 
 theorem map_mul_map_zero_add (y k : ℤ) : f (y + f 0 * k) = c * k + f y := by
   have h0 n : f (y + f 0 * (n + 1)) = c + f (y + f 0 * n) := by
-    rw [mul_add_one, ← add_assoc, map_map_zero_add h]
+    rw [mul_add_one (α := ℤ), ← add_assoc, map_map_zero_add h]
   replace h0 := Extra.IntIntLinearSolverAlt (f := λ n ↦ f (y + f 0 * n)) h0 k
   rwa [mul_zero, add_zero] at h0
 
@@ -68,7 +68,7 @@ theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) :
     ∀ k : ℕ, f (b ^ k * x) = f (b ^ k * y)
   | 0 => by rwa [pow_zero, one_mul, one_mul]
   | k + 1 => by
-      rw [pow_succ, mul_assoc, mul_assoc]
+      rw [pow_succ', mul_assoc, mul_assoc]
       have h1 := h (b ^ k * y) 0
       rwa [← map_b_pow_mul_eq_of_map_eq h0 k,
         h, add_left_inj, sub_left_inj] at h1
@@ -76,13 +76,13 @@ theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) :
 variable (h0 : 1 < b.natAbs) (h1 : c ≠ 0)
 
 theorem map_is_linear : ∀ n : ℤ, f n = (b - 1) * n + f 0 := by
-  suffices : f.Injective
+  suffices f.Injective by
   ---- Solve the problem assuming `f` is injective
-  · intro n
+    intro n
     have h2 := eq_add_of_sub_eq' (h 0 (b * n))
     rw [mul_zero, sub_self, zero_add, ← sub_left_inj (a := f n),
       add_sub_right_comm, ← h n n, sub_left_inj] at h2
-    rw [sub_one_mul, ← add_sub_right_comm, this h2, add_sub_cancel']
+    rw [sub_one_mul, ← add_sub_right_comm, this h2, add_sub_cancel_left]
   ---- Some preliminary
   have h2 : f 0 ≠ 0 := λ h2 ↦ by
     have h3 := map_map_zero_add h 0
@@ -105,7 +105,7 @@ theorem map_is_linear : ∀ n : ℤ, f n = (b - 1) * n + f 0 := by
 theorem c_eq_b_sub_one_mul_map_zero : c = (b - 1) * f 0 := by
   have h3 := h 0 0
   rwa [zero_add, mul_zero, sub_self, zero_add,
-    map_is_linear h h0 h1, add_sub_cancel, eq_comm] at h3
+    map_is_linear h h0 h1, add_sub_cancel_right, eq_comm] at h3
 
 end good_lemmas
 

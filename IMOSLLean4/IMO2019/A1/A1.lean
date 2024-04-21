@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Extra.IntLinearSolver
 import Mathlib.Algebra.GroupWithZero.Basic
 import Mathlib.Algebra.Ring.Regular
+import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2019 A1 (P1)

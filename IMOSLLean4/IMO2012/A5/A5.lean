@@ -12,7 +12,7 @@ import IMOSLLean4.IMO2012.A5.Case2.Main
 # IMO 2012 A5
 
 Let $R$ be a commutative ring and $S$ be a field.
-Find all functions $f : R → S$ such that, for any $x, y \in R$,
+Find all functions $f : R → S$ such that, for any $x, y ∈ R$,
 $$ f(xy + 1) - f(x + y) = f(x) f(y). $$
 -/
 

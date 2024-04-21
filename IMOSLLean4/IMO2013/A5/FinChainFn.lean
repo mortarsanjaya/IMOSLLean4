@@ -163,10 +163,10 @@ theorem iterRangeCompl_card :
     ∀ n, (h.iterRangeCompl n).card = n * h.rangeCompl.card
   | 0 => card_empty.trans h.rangeCompl.card.zero_mul.symm
   | n + 1 => by
-      have h0 := card_union_eq
+      have h0 := card_union_of_disjoint
         (h.iterRangeCompl_disjoint_exactIterRange n.le_refl)
       rw [h.iterRangeCompl_succ, h0, h.exactIterRange_card,
-        iterRangeCompl_card n, add_one_mul, add_comm]
+        iterRangeCompl_card n, add_one_mul (α := ℕ), add_comm]
 
 theorem iter_range_of_rangeCompl_singleton (h0 : h.rangeCompl = {a}) :
     ∀ n, h.iterRangeCompl n = (range n).image (λ k ↦ f^[k] a)

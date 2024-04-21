@@ -27,8 +27,8 @@ theorem case2_2_lem1 (x : R) : f (x + 2) + f x = f (x + 1) + f (x - 1) := by
 theorem case2_2_lem2 : 2 + 2 ∈ periodIdeal h := λ x ↦ by
   have h2 := case2_2_lem1 h h0 h1
   have h3 := (h2 (x + 1 + 1)).symm
-  rwa [add_sub_cancel, add_assoc, one_add_one_eq_two, h2, add_sub_cancel, add_comm,
-    add_left_inj, add_assoc x, one_add_one_eq_two, add_rotate, eq_comm] at h3
+  rwa [add_sub_cancel_right, add_assoc, one_add_one_eq_two, h2, add_sub_cancel_right,
+    add_comm, add_left_inj, add_assoc x, one_add_one_eq_two, add_rotate, eq_comm] at h3
 
 theorem case2_2_lem3 : 2 ∈ quasiPeriodIdeal h := λ x ↦ by
   -- First get `f(2x + 1) = f(2x - 1)`
@@ -38,7 +38,7 @@ theorem case2_2_lem3 : 2 ∈ quasiPeriodIdeal h := λ x ↦ by
     ← mul_one (f x), ← h1, ← eq_add_of_sub_eq' (h x 2)] at h3
   -- Now use `f(4x + 1) = 0` to obtain `f(2x + 1) = f(2x - 1) = 0`
   have h4 := eq_add_of_sub_eq (case2_good_alt h h0 (x * 2 + 1) (1 + 1))
-  rw [add_sub_add_right_eq_sub, add_one_mul (x * 2), ← add_assoc, add_sub_cancel,
+  rw [add_sub_add_right_eq_sub, add_one_mul (x * 2), ← add_assoc, add_sub_cancel_right,
     h3, one_add_one_eq_two, h1, mul_one, ← two_mul, mul_rotate, two_mul,
     period_imp_quasi_period h (case2_2_lem2 h h0 h1), zero_eq_mul, mul_comm] at h4
   refine h4.resolve_left λ h4 ↦ h2 ?_

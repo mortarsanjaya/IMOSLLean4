@@ -68,12 +68,12 @@ theorem case2_4_lem1 (h0 : f (-1) = 0) (h1 : f 2 = -1) :
   intro x
   rw [← one_add_one_eq_two, ← add_rotate]
   rcases h2 (x + 1) with h3 | h3
-  rwa [add_sub_cancel] at h3
+  rwa [add_sub_cancel_right] at h3
   specialize h2 (-(x + 1))
   have h4 := case2_map_even h h0
-  rw [← neg_add', h4, h4, neg_add_eq_sub, sub_add_cancel'', h4] at h2
+  rw [← neg_add', h4, h4, neg_add_eq_sub, sub_add_cancel_right, h4] at h2
   refine h2.elim Eq.symm λ h2 ↦ ?_
-  rwa [add_sub_cancel, ← h2, add_right_inj, eq_comm] at h3
+  rwa [add_sub_cancel_right, ← h2, add_right_inj, eq_comm] at h3
 
 section Rchar2
 

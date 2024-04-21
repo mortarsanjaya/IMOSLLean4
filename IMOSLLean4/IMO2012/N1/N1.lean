@@ -32,8 +32,8 @@ theorem admissible_ideal [CommSemiring R] (I : Ideal R) :
 theorem admissible_mem_sq_mul [CommRing R] {A : Set R} (h : admissible A)
     (h0 : z ∈ A) (k : R) : k * z ^ 2 ∈ A := by
   have h1 := h z z h0 h0 (k - 2)
-  rwa [mul_assoc, ← sq, ← one_add_mul, ← add_one_mul,
-    add_right_comm, one_add_one_eq_two, add_sub_cancel'_right] at h1
+  rwa [mul_assoc, ← sq, ← one_add_mul (α := R), ← add_one_mul (α := R),
+    add_right_comm, one_add_one_eq_two, add_sub_cancel] at h1
 
 theorem admissible_add_sq [CommSemiring R] {A : Set R} (h : admissible A)
     (h0 : x ∈ A) (h1 : y ∈ A) : (x + y) ^ 2 ∈ A :=
@@ -41,8 +41,7 @@ theorem admissible_add_sq [CommSemiring R] {A : Set R} (h : admissible A)
 
 /-- Final solution -/
 theorem final_solution [CommRing R] (x y : R) :
-    (∀ A : Set R, admissible A → x ∈ A → y ∈ A → ∀ z : R, z ∈ A)
-      ↔ IsCoprime x y :=
+    (∀ A : Set R, admissible A → x ∈ A → y ∈ A → ∀ z : R, z ∈ A) ↔ IsCoprime x y :=
   ---- `→`
   ⟨λ h ↦ by
     specialize h (Ideal.span {x, y}) (admissible_ideal _)

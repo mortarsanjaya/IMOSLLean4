@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Digits
+import Mathlib.Algebra.CharZero.Lemmas
 
 /-!
 # IMO 2010 A4
@@ -27,6 +28,9 @@ namespace IMOSL
 namespace IMO2010A4
 
 open Finset
+
+/-- Somehow this is needed -/
+instance : LeftDistribClass ℕ := Distrib.leftDistribClass ℕ
 
 /-! ### The sequence `(x_n)_{n ≥ 0}` -/
 
@@ -117,8 +121,8 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
 /-- Final solution for the main problem -/
 theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   ---- Reduce to showing that `x_k = ff` whenever `S_k = 0`
-  suffices : ∀ k : ℕ, S k = 0 → x k = false
-  · refine Nat.rec (Int.le_refl 0) (λ k h ↦ ?_)
+  suffices ∀ k : ℕ, S k = 0 → x k = false by
+    refine Nat.rec (Int.le_refl 0) (λ k h ↦ ?_)
     rw [le_iff_lt_or_eq, Int.lt_iff_add_one_le, zero_add, or_comm] at h
     rw [S_succ]; rcases h with h | h
     · rw [← h, zero_add, this k h.symm]

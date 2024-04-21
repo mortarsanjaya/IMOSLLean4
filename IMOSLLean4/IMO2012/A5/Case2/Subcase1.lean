@@ -22,7 +22,7 @@ variable [CommRing R] [CommRing S] [IsDomain S]
 /-- If `f(2) = 0`, then `3 ∈ I` -/
 theorem case2_1_lem1 (h1 : f 2 = 0) : 3 ∈ periodIdeal h := λ x ↦ by
   rw [← two_add_one_eq_three, add_rotate, case2_map_add_two_eq h h0,
-    h1, zero_mul, zero_add, add_sub_cancel']
+    h1, zero_mul, zero_add, add_sub_cancel_left]
 
 
 section ThreeEqZero
@@ -39,7 +39,8 @@ theorem case2_1_lem2 (x : R) : f x * f (x + 1) - f (x - 1) ^ 2 = f (x - 1) := by
 theorem case2_1_lem3 (x : R) : f (x + 1) * f (x - 1) - f x ^ 2 = f x := by
   have h2 := case2_1_lem2 h h0 h1 (x + 1)
   rw [← two_add_one_eq_three, add_eq_zero_iff_eq_neg] at h1
-  rwa [add_sub_cancel, add_assoc, one_add_one_eq_two, h1, ← sub_eq_add_neg] at h2
+  rwa [add_sub_cancel_right, add_assoc,
+    one_add_one_eq_two, h1, ← sub_eq_add_neg] at h2
 
 /-- (7.2) -/
 theorem case2_1_lem4 (x : R) :

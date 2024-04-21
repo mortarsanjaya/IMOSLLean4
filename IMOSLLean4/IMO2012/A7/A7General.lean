@@ -58,8 +58,8 @@ lemma MetaClosure_imp_SupInfClosure (h : MetaClosure P a) :
     (λ _ _ ha hb ↦ ha.recOn
       (λ ha ↦ hb.recOn
         (λ hb ↦ BinOpClosure.ofMem (BinOpClosure.ofOp ha hb))
-        (λ _ _ ↦ inf_sup_left (α := α) ▸ BinOpClosure.ofOp))
-      (λ _ _ ↦ inf_sup_right (α := α) ▸ BinOpClosure.ofOp))
+        (λ _ _ ↦ inf_sup_left (α := α) _ _ _ ▸ BinOpClosure.ofOp))
+      (λ _ _ ↦ inf_sup_right (α := α) _ _ _ ▸ BinOpClosure.ofOp))
     (λ _ _ ↦ BinOpClosure.ofOp)
 
 lemma SupInfClosure_iff_MetaClosure :

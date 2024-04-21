@@ -68,8 +68,8 @@ theorem period_mul (h0 : ∀ x, f (c + x) = f x) (d : R) :
   rcases ne_or_eq (f 0) (-1) with h1 | h1
   · intros x; rw [eq_zero_of_map_zero_ne_neg_one h h1]; rfl
   -- Now assume `f(0) = 1`. Reduce the goal to the case `d ∉ quasiPeriodIdeal`
-  suffices h2 : ∀ d ∉ quasiPeriodIdeal h, ∀ x, f (d * c + x) = f x
-  · by_cases h3 : d ∈ quasiPeriodIdeal h
+  suffices h2 : ∀ d ∉ quasiPeriodIdeal h, ∀ x, f (d * c + x) = f x by
+    by_cases h3 : d ∈ quasiPeriodIdeal h
     on_goal 2 => exact h2 d h3
     have h4 : 1 ∉ quasiPeriodIdeal h := λ h4 ↦ by
       specialize h4 (-1)
@@ -148,7 +148,7 @@ theorem is_period_or_eq_quasi_nonperiod (h3 : d ∈ quasiPeriodIdeal h) :
     d ∈ periodIdeal h ∨ d - c ∈ periodIdeal h :=
   Classical.or_iff_not_imp_left.mpr λ h4 x ↦ by
     rw [← add_sub_right_comm, add_sub_assoc, map_quasi_period_add h h0 h3 h4,
-      ← map_quasi_period_add h h0 h1 h2, add_sub_cancel'_right]
+      ← map_quasi_period_add h h0 h1 h2, add_sub_cancel]
 
 theorem mul_nonquasi_period_is_nonperiod (h3 : d ∉ quasiPeriodIdeal h) :
     d * c ∉ periodIdeal h := by

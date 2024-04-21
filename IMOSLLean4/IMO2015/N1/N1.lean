@@ -36,8 +36,8 @@ theorem main_claim (h : 2 * c ∣ m - 3) (h0 : 2 * c ∣ f m - 3) :
     have X0 : (3 / 2 : ℤ) = 1 := rfl
     rw [f, eq_add_of_sub_eq h, add_mul, add_sub_assoc, mul_assoc, ← mul_sub_one,
       dvd_add_right ⟨_, rfl⟩, mul_assoc, add_comm, Int.add_mul_ediv_left _ _ X,
-      X0, add_sub_cancel', ← two_add_one_eq_three, add_one_mul, ← mul_assoc,
-      dvd_add_right ⟨_, rfl⟩, mul_comm] at h0
+      X0, add_sub_cancel_left, ← two_add_one_eq_three, add_one_mul (α := ℤ),
+      ← mul_assoc, dvd_add_right ⟨_, rfl⟩, mul_comm] at h0
     exact Int.dvd_of_mul_dvd_mul_left h1 h0
 
 /-- Final solution -/
@@ -52,7 +52,7 @@ theorem final_solution : (∃ k : ℕ, 2 ∣ f^[k] M) ↔ M ≠ 3 := by
   suffices h0 : ∀ n k, 2 ^ (n + 1) ∣ f^[k] M - 3 by
     let K := (M - 3).natAbs
     refine eq_of_sub_eq_zero <| Int.eq_zero_of_abs_lt_dvd (h0 K 0) <| ?_
-    rw [← Int.coe_natAbs, ← Nat.cast_ofNat (n := 2), ← Int.coe_nat_pow]
+    rw [← Int.natCast_natAbs, ← Nat.cast_ofNat (n := 2), ← Int.coe_nat_pow]
     exact Int.ofNat_lt.mpr (K.lt_succ_self.trans K.succ.lt_two_pow)
   ---- For any `k n : ℕ`, we have `2^(n + 1) ∣ f^[k] M - 3`
   refine Nat.rec (λ k ↦ ?_) (λ n h0 k ↦ ?_)
@@ -60,7 +60,7 @@ theorem final_solution : (∃ k : ℕ, 2 ∣ f^[k] M) ↔ M ≠ 3 := by
       ← Int.even_iff, Int.even_sub', Int.odd_iff_not_even,
       Int.even_iff, ← Int.dvd_iff_emod_eq_zero]
     exact iff_of_true (h k) (Int.odd_iff.mpr rfl)
-  · rw [pow_succ, pow_succ]
+  · rw [pow_succ', pow_succ']
     refine main_claim ?_ ?_
-    · rw [← pow_succ]; exact h0 k
-    · rw [← pow_succ, ← f.iterate_succ_apply']; exact h0 (k + 1)
+    · rw [← pow_succ']; exact h0 k
+    · rw [← pow_succ', ← f.iterate_succ_apply']; exact h0 (k + 1)

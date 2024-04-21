@@ -8,6 +8,7 @@ import Mathlib.Data.List.Perm
 import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.Nat.Size
 import Mathlib.Order.Bounds.Basic
+import Mathlib.Algebra.BigOperators.List.Basic
 
 /-!
 # IMO 2021 A3
@@ -52,7 +53,7 @@ theorem targetSum_perm_iota_n_lower_bound (h : l ~ iota n) :
   have h0 := targetSum_general_lower_bound l
   rw [(h.map Nat.succ).prod_eq, h.length_eq,
     prod_map_succ_iota, length_iota] at h0
-  exact Nat.size_le.mpr <| le_of_mul_le_mul_right h0 n.factorial_pos
+  exact Nat.size_le.mpr (Nat.le_of_mul_le_mul_right h0 n.factorial_pos)
 
 
 
@@ -105,7 +106,7 @@ lemma targetSum_map_add_iota_length_succ (h : l.length = Nat.succ n) :
   | 0 => rfl
   | k + 1 => by
       rw [iota_succ, map_cons, cons_append, targetSum, length_cons,
-        targetSum_map_add_iota_length_succ h k, add_left_eq_self]
+        targetSum_map_add_iota_length_succ h k, Nat.add_eq_right]
       refine Nat.div_eq_of_lt ?_
       rw [length_append, length_map, length_iota, h]
       exact (congr_arg (· + 2) (n.add_comm k)).le
@@ -122,7 +123,7 @@ theorem lowerBoundMk_targetSum :
             congr_arg Nat.succ (lowerBoundMk_length (k + 1))
           rw [lowerBoundMk_bit0_succ, Nat.bit_false, Nat.size_bit0 k.succ_ne_zero,
             (k + 1).size.succ_eq_add_one, targetSum_map_add_iota_length_succ h0,
-            targetSum, h0, h, add_comm, add_right_inj]
+            targetSum, h0, h, add_comm, Nat.add_right_inj]
           exact Nat.div_eq_of_lt_le
             ((one_mul _).trans_le <| Nat.add_le_add_right (X0 _) 2)
             (Nat.mul_lt_mul_of_pos_left (k + 1).lt_succ_self X)
@@ -131,7 +132,7 @@ theorem lowerBoundMk_targetSum :
             congr_arg Nat.succ (lowerBoundMk_length n)
           rw [lowerBoundMk_bit1, Nat.bit_true, Nat.size_bit1,
             targetSum_map_add_iota_length_succ h0, targetSum, h0, h,
-            n.size.succ_eq_add_one, add_comm, add_right_inj]
+            n.size.succ_eq_add_one, add_comm, Nat.add_right_inj]
           exact Nat.div_eq_of_lt_le
             ((one_mul _).trans_le <| Nat.succ_le_succ (X0 _)) (Nat.le_refl _)
 

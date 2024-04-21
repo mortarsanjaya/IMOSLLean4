@@ -181,7 +181,8 @@ lemma hom_smul_one_add_infinitesimal_is_good
   change φ (m * n) • (1 + ε) = ⌊φ.toFun n • (1 + ε)⌋ • φ.toFun m • (1 + ε)
   rw [nsmul_add _ _ (φ.toFun n), nsmul_one, Int.floor_nat_add,
     Int.floor_eq_zero_iff.mpr ⟨nsmul_nonneg h _, h0 _⟩,
-    add_zero, ofNat_zsmul, ← mul_nsmul, φ.map_mul]
+    add_zero]
+  rw [zsmul_eq_mul, Int.cast_natCast, ← nsmul_eq_mul, ← mul_nsmul, φ.map_mul]
   rfl
 
 lemma indicator_smul_is_good (h : DvdClosedSubmonoid M) (h0 : ⌊(C : S)⌋ = 1) :
@@ -239,9 +240,9 @@ lemma eq_hom_smul_one_add_infinitesimal (h1 : ∀ n, 0 ≤ ⌊f n⌋) (h2 : 1 < 
   refine ⟨f 1 - 1, h3, λ k ↦ ?_, funext λ k ↦ ?_⟩
   · have h4 := Int.floor_add_fract (f 1)
     rw [h0, Int.cast_one] at h4
-    rw [← h4, add_sub_cancel', ← ofNat_zsmul]
-    suffices : k ≤ ⌊f (N ^ k)⌋
-    · have h5 := eq_floor_smul_map_one h (N ^ k)
+    rw [← h4, add_sub_cancel_left, ← natCast_zsmul]
+    suffices k ≤ ⌊f (N ^ k)⌋ by
+      have h5 := eq_floor_smul_map_one h (N ^ k)
       rw [← h4, zsmul_add, zsmul_one, ← sub_eq_iff_eq_add'] at h5
       exact (zsmul_le_zsmul (Int.fract_nonneg (f 1)) this).trans_lt
         (h5.symm.trans_lt <| Int.fract_lt_one _)
@@ -250,7 +251,7 @@ lemma eq_hom_smul_one_add_infinitesimal (h1 : ∀ n, 0 ≤ ⌊f n⌋) (h2 : 1 < 
     refine (Nat.lt_pow_self ?_ _).le
     rwa [← Int.ofNat_lt, h4]
   · change f k = (⌊f k⌋).natAbs • (1 + (f 1 - 1))
-    rw [add_sub_cancel'_right, ← ofNat_zsmul, Int.natAbs_of_nonneg (h1 k)]
+    rw [add_sub_cancel, ← natCast_zsmul, Int.natAbs_of_nonneg (h1 k)]
     exact eq_floor_smul_map_one h k
 
 lemma eq_indicator_smul (h1 : ∀ n, ⌊f n⌋ = 0 ∨ ⌊f n⌋ = 1) :

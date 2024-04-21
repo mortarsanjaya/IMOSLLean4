@@ -106,7 +106,7 @@ theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
       rcases this with ⟨a, b, h1, h2⟩
       apply sub_pos_of_lt at h1
       refine ⟨a, (b - a).natAbs, Int.natAbs_pos.mpr h1.ne.symm, ?_⟩
-      rw [Int.coe_natAbs, abs_of_pos h1, add_sub_cancel'_right, h2]
+      rw [Int.natCast_natAbs, abs_of_pos h1, add_sub_cancel, h2]
     simp_rw [Injective, not_forall] at h0
     rcases h0 with ⟨a, b, h0, h1⟩
     rcases ne_iff_lt_or_gt.mp h1 with h2 | h2
@@ -115,10 +115,10 @@ theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
   obtain ⟨K, M, h3⟩ : ∃ K M, f^[K] a = f^[M] 0 := by
     rcases le_total a 0 with h3 | h3
     · rcases exists_iter_add_large_eq h a a.natAbs with ⟨N, h4⟩
-      rw [Int.coe_natAbs, abs_of_nonpos h3, add_neg_self] at h4
+      rw [Int.natCast_natAbs, abs_of_nonpos h3, add_neg_self] at h4
       exact ⟨_, _, h4⟩
     · rcases exists_iter_add_large_eq h 0 a.natAbs with ⟨N, h4⟩
-      rw [Int.coe_natAbs, abs_of_nonneg h3, zero_add] at h4
+      rw [Int.natCast_natAbs, abs_of_nonneg h3, zero_add] at h4
       exact ⟨_, _, h4.symm⟩
   -- Finishing
   rcases exists_iter_add_large_eq h a k with ⟨N, h4⟩

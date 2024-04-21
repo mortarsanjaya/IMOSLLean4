@@ -218,7 +218,9 @@ instance : CommRing 𝔽₄ :=
     add_left_neg := 𝔽₄.add_left_neg
     mul_comm := 𝔽₄.mul_comm
     left_distrib := 𝔽₄.mul_add
-    right_distrib := 𝔽₄.add_mul }
+    right_distrib := 𝔽₄.add_mul
+    nsmul := nsmulRec
+    zsmul := zsmulRec }
 
 
 

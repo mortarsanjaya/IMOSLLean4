@@ -5,7 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Order
+import Mathlib.Algebra.BigOperators.Ring
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # IMO 2017 C1
@@ -41,7 +42,7 @@ theorem sum_neg_one_pow_Ico (a : ℕ) :
   | n + 2 => by
       have h : a ≤ a + n := a.le_add_right n
       rw [← add_assoc, sum_Ico_succ_top (h.trans (a + n).le_succ),
-        pow_succ, neg_one_mul, sum_Ico_succ_top h, sum_neg_one_pow_Ico a n,
+        pow_succ', neg_one_mul, sum_Ico_succ_top h, sum_neg_one_pow_Ico a n,
         add_neg_cancel_right, Nat.bodd_add, Nat.bodd_two, Bool.xor_false]
 
 /-- The weight of a finset in `ℕ × ℕ` -/

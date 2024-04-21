@@ -51,7 +51,7 @@ theorem case1_map_add_one_add_map_sub_one (x : R) :
 /-- (3.4) -/
 theorem case1_map_two_mul_add_one (x : R) :
     f (2 * x + 1) = -(f (x + 1) * f (-1)) := by
-  rw [← case1_map_add_one_add_map_sub_one h h0, add_sub_cancel, add_rotate,
+  rw [← case1_map_add_one_add_map_sub_one h h0, add_sub_cancel_right, add_rotate,
     one_add_one_eq_two, ← sub_eq_iff_eq_add', h, case1_map_two h h0, one_mul]
 
 /-- (3.7) -/
@@ -73,9 +73,9 @@ theorem case1_map_add_one_eq_zero_imp {x : R} (h1 : f (x + 1) = 0) :
   have h3 := case1_map_two_mul_add_one h h0
   have h4 := case1_map_add_main_eq1 h x (x + 1)
   rw [h1, mul_zero, sub_zero, ← add_assoc, ← two_mul, h3, h1, zero_mul,
-    neg_zero, zero_sub, ← sub_add_cancel'' (1 : R), add_assoc,
+    neg_zero, zero_sub, ← sub_add_cancel_right (1 : R), add_assoc,
     one_add_one_eq_two, ← mul_add_one _ x, ← neg_add_eq_sub, ← mul_neg,
-    h3, neg_neg, neg_add_eq_sub, sub_add_cancel'', h2] at h4
+    h3, neg_neg, neg_add_eq_sub, sub_add_cancel_right, h2] at h4
   -- Finish with (3.6)
   have h5 := case1_map_add_main_eq2 h x (-(x + 1))
   rwa [neg_neg, h1, mul_zero, zero_sub, neg_inj, add_right_comm, add_neg_self,
