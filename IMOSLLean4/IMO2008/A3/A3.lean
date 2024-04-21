@@ -88,7 +88,7 @@ theorem final_solution_part_2_general [Preorder β]
       rw [← h3.1]
     spec := λ p ↦ by
       refine prod_lex_lt_iff.mpr <| Or.inr <| ⟨rfl, ?_⟩
-      rw [← Function.iterate_add_apply, ← two_mul, pow_succ]
+      rw [← Function.iterate_add_apply, ← two_mul, pow_succ']
       exact h.strictMono_iterate_of_lt_map (h0 p.2)
         (Nat.mul_lt_mul_of_pos_right (Nat.lt_succ_self 2)
           (pow_pos (Nat.succ_pos 2) _)) }

@@ -28,12 +28,12 @@ theorem case1_map_neg_one_cases : f (-1) = -2 ∨ f (-1) = 1 := by
   -- `f(4) = C^2 - 1`, where `C = f(-1)`
   have h3 := case1_map_add_one_add_map_sub_one h h0
   have h4 := h3 (2 + 1)
-  rw [add_sub_cancel, h2, ← h1, neg_mul, neg_neg, ← eq_sub_iff_add_eq] at h4
+  rw [add_sub_cancel_right, h2, ← h1, neg_mul, neg_neg, ← eq_sub_iff_add_eq] at h4
   -- Double-evaluating `f(5)` gives `(C - 1) C = -(C^2 - 1) C`, where `C = f(-1)`
   have h5 := h3 (2 + 1 + 1)
-  rw [add_sub_cancel, h4, ← h1, ← neg_mul, add_assoc (2 : R), ← one_add_one_eq_two,
+  rw [add_sub_cancel_right, h4, ← h1, ← neg_mul, add_assoc (2 : R), ← one_add_one_eq_two,
     ← two_mul, eq_add_of_sub_eq (h _ _), ← add_assoc, h4, one_add_one_eq_two, h2,
-    one_mul, add_sub_cancel'_right, ← sub_eq_add_neg, ← sub_one_mul] at h5
+    one_mul, add_sub_cancel, ← sub_eq_add_neg, ← sub_one_mul] at h5
   -- Finishing
   replace h5 := mul_right_cancel₀ h0 h5
   replace h3 := sq_sub_sq (f (-1)) 1

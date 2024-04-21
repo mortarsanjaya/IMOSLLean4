@@ -54,7 +54,7 @@ theorem final_solution [LinearOrderedField F]
     · exact add_le_add h2 h3
     ---- The hard cases
     refine le_trans ?_ (add_le_add_right (?_ : (n : F) / a n ≤ _) _)
-    rw [div_add' _ _ _ (h n).ne.symm, le_div_iff (h n), add_one_mul,
+    rw [div_add' _ _ _ (h n).ne.symm, le_div_iff (h n), add_one_mul (α := F),
       ← sub_le_iff_le_add, add_sub_assoc, ← mul_one_sub,
       ← le_sub_iff_add_le', ← mul_one_sub, ← sub_nonneg, ← sub_mul]
     refine mul_nonneg (sub_nonneg.mpr (h3.trans ?_)) (sub_nonneg.mpr h3)

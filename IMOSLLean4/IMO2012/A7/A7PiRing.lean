@@ -32,7 +32,7 @@ variable [DistribLattice G] [AddGroup G] [CovariantClass G G (· + ·) (· ≤ �
     [CovariantClass G G (Function.swap (· + ·)) (· ≤ ·)]
 
 lemma inf_pos_part (a b : G) : (a ⊓ b)⁺ = a⁺ ⊓ b⁺ :=
-  sup_inf_right
+  sup_inf_right _ _ _
 
 lemma sup_pos_part (a b : G) : (a ⊔ b)⁺ = a⁺ ⊔ b⁺ :=
   sup_sup_distrib_right a b 0

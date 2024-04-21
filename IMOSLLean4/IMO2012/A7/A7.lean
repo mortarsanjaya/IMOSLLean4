@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2012.A7.A7PiRing
-import Mathlib.Data.MvPolynomial.CommRing
+import Mathlib.Algebra.MvPolynomial.CommRing
 
 /-!
 # IMO 2012 A7

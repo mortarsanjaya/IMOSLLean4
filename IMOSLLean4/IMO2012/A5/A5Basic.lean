@@ -68,7 +68,7 @@ theorem map_neg_sub_map1 (x : R) : f (1 - x) - f (x - 1) = f x * f (-1) := by
 
 /-- (1.3) -/
 theorem map_neg_sub_map2 (x : R) : f (-x) - f x = f (x + 1) * f (-1) := by
-  rw [← map_neg_sub_map1 h, sub_add_cancel'', add_sub_cancel]
+  rw [← map_neg_sub_map1 h, sub_add_cancel_right, add_sub_cancel_right]
 
 /-- Auxiliary lemma for two sub-cases -/
 theorem eq_hom_sub_one_of (h0 : ∀ x y, f (x + y) = f x + f y + 1) :
@@ -81,7 +81,7 @@ theorem eq_hom_sub_one_of (h0 : ∀ x y, f (x + y) = f x + f y + 1) :
   have h4 : ∀ x y, g (x * y) = g x * g y := λ x y ↦ by
     rw [add_one_mul (f x), mul_add_one (f x), add_assoc, ← add_assoc (f x),
       ← h0, ← h, sub_add_cancel, h0, add_assoc, h1, zero_add]
-  ⟨RingHom.mk' ⟨⟨g, h2⟩, h4⟩ h3, funext λ x ↦ (add_sub_cancel (f x) 1).symm⟩
+  ⟨RingHom.mk' ⟨⟨g, h2⟩, h4⟩ h3, funext λ x ↦ (add_sub_cancel_right (f x) 1).symm⟩
 
 /-- Corollary of the previous result -/
 theorem IsAnswer_of_add_one_additive (h0 : ∀ x y, f (x + y) = f x + f y + 1) :

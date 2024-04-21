@@ -35,7 +35,7 @@ lemma const_of_infinite_map_eq_map_zero (h0 : ∀ k, ∃ n, k ≤ n ∧ f n = f 
     specialize h n b
     rw [Nat.succ_le_iff, lt_iff_exists_add] at h0
     rcases h0 with ⟨C, h0, rfl⟩
-    rw [h1, add_assoc, Nat.cast_add, add_sub_cancel', Int.coe_nat_dvd_left] at h
+    rw [h1, add_assoc, Nat.cast_add, add_sub_cancel_left, Int.natCast_dvd] at h
     have h2 := Nat.eq_zero_of_dvd_of_lt h (Nat.lt_add_of_pos_right h0)
     rwa [Int.natAbs_eq_zero, sub_eq_zero, eq_comm] at h2⟩
 
@@ -54,10 +54,10 @@ lemma const_of_finite_prime_divisor
   · specialize h ((f 0).natAbs * (4 * K.factorial) * k) 0
     rw [Nat.cast_zero, Int.sub_zero, Nat.cast_mul] at h
     apply (dvd_mul_right _ _).trans at h
-    rw [Nat.cast_mul, ← abs_dvd, Int.coe_natAbs,
+    rw [Nat.cast_mul, ← abs_dvd, Int.natCast_natAbs,
       abs_mul, abs_abs, ← abs_mul, abs_dvd] at h
     obtain ⟨m, h2⟩ := dvd_sub_self_right.mp (dvd_of_mul_right_dvd h)
-    rw [h2, ← mul_sub_one, mul_dvd_mul_iff_left h1, Int.coe_nat_dvd_left] at h
+    rw [h2, ← mul_sub_one, mul_dvd_mul_iff_left h1, Int.natCast_dvd] at h
     rw [h2, mul_right_eq_self₀, or_iff_left h1]
     clear h1; by_cases h1 : m.natAbs = 1
     -- Case 1: `|m| = 1`
@@ -67,10 +67,10 @@ lemma const_of_finite_prime_divisor
     -- Case 2: `|m| ≠ 1`
     · apply Nat.exists_prime_and_dvd at h1; rcases h1 with ⟨p, h1, h3⟩
       specialize h0 p h1 ⟨(f 0).natAbs * (4 * Nat.factorial K) * k,
-        h2 ▸ dvd_mul_of_dvd_right (Int.coe_nat_dvd_left.mpr h3) _⟩
+        h2 ▸ dvd_mul_of_dvd_right (Int.natCast_dvd.mpr h3) _⟩
       replace h := (Nat.dvd_factorial h1.pos h0.le).trans (dvd_of_mul_left_dvd h)
-      rw [← Int.coe_nat_dvd_left] at h h3
-      exact absurd (Int.coe_nat_dvd_left.mp <|
+      rw [← Int.natCast_dvd] at h h3
+      exact absurd (Int.natCast_dvd.mp <|
         (Int.dvd_iff_dvd_of_dvd_sub h).mp h3) h1.not_dvd_one
 
 

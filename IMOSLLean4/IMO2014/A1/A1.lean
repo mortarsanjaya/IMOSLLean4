@@ -29,7 +29,8 @@ theorem d_zero (z : ℕ → ℤ) : d z 0 = z 0 := by
 
 theorem d_succ (z : ℕ → ℤ) (n : ℕ) :
     d z (n + 1) = (range (n + 1)).sum z - n * z (n + 1) := by
-  rw [d, sum_range_succ, Nat.cast_succ, add_one_mul, add_sub_add_right_eq_sub]
+  rw [d, sum_range_succ, Nat.cast_succ, add_one_mul (α := ℤ),
+    add_sub_add_right_eq_sub]
 
 theorem d_one (z : ℕ → ℤ) : d z 1 = z 0 := by
   rw [d_succ, sum_range_one, Nat.cast_zero, zero_mul, sub_zero]
@@ -37,9 +38,10 @@ theorem d_one (z : ℕ → ℤ) : d z 1 = z 0 := by
 variable {z : ℕ → ℤ} (h : StrictMono z)
 
 theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
-  rw [d_succ, d, sub_sub, ← mul_add_one]
-  refine sub_le_sub_left (mul_le_mul_of_nonneg_left ?_ n.cast_nonneg) _
-  rw [Int.add_one_le_iff]; exact h n.lt_succ_self
+  rw [d_succ, d, sub_sub, ← mul_add_one (α := ℤ)]
+  refine sub_le_sub_left (mul_le_mul_of_nonneg_left ?_ ?_) _
+  · rw [Int.add_one_le_iff]; exact h n.lt_succ_self
+  · exact Int.ofNat_zero_le n
 
 theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
   | 0 => ((d_zero z).trans (sub_zero _).symm).le
@@ -50,11 +52,11 @@ theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
 
 theorem d_nonpos_of_big (h0 : (z 0).natAbs ≤ n.choose 2) : d z n ≤ 0 :=
   (binom_bound h n).trans <| Int.sub_nonpos_of_le <| (le_abs_self _).trans <|
-    (z 0).coe_natAbs.symm.trans_le <| Int.ofNat_le.mpr h0
+    (z 0).natCast_natAbs.symm.trans_le <| Int.ofNat_le.mpr h0
 
 theorem d_nonpos_mono (h0 : d z n ≤ 0) : (h1 : n ≤ k) → d z k ≤ 0 :=
   Nat.le_induction h0 (λ x _ h2 ↦ (main_lemma h x).trans <|
-    Int.sub_nonpos_of_le (h2.trans x.cast_nonneg)) k
+    Int.sub_nonpos_of_le (h2.trans <| Int.ofNat_zero_le x)) k
 
 theorem d_one_pos (h0 : 0 < z 0) : 0 < d z 1 :=
   h0.trans_eq (d_one z).symm

@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.GroupTheory.GroupAction.Defs
-import Mathlib.Data.Int.Order.Basic
+import Mathlib.Algebra.Order.Group.Int
 
 /-!
 # Linear solver for functions $f : ℤ → G$
@@ -24,7 +24,7 @@ theorem IntLinearSolver [AddGroup G] {f : ℤ → G}
     (by rw [zero_zsmul, zero_add])
     (λ k _ h1 ↦ by rw [h, h1, ← add_assoc, add_comm, one_add_zsmul])
     (λ k _ h1 ↦ by rwa [← add_right_inj g, ← h, sub_add_cancel,
-                     ← add_assoc, ← one_add_zsmul, add_sub_cancel'_right])
+                     ← add_assoc, ← one_add_zsmul, add_sub_cancel])
 
 theorem IntIntLinearSolverAlt {f : ℤ → ℤ}
     (h : ∀ n, f (n + 1) = g + f n) (n : ℤ) : f n = g * n + f 0 := by

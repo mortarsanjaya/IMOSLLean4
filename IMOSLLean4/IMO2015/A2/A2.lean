@@ -31,7 +31,7 @@ theorem final_solution {f : ℤ → ℤ} :
     rw [sub_self, zero_sub 1] at h0
     replace h0 x : f (x + 1) = f (f x) := by
       have h1 := h x (0 - f (f 0))
-      rwa [h0, sub_neg_eq_add (f (f x)), add_sub_cancel] at h1
+      rwa [h0, sub_neg_eq_add (f (f x)), add_sub_cancel_right] at h1
     -- Now prove that `f` is linear (with linear coefficient `f(-1) + 1`)
     have h1 : ∀ n, f n = (f (-1) + 1) * n + f 0 := by
       refine Extra.IntIntLinearSolverAlt λ n ↦ ?_
@@ -42,9 +42,9 @@ theorem final_solution {f : ℤ → ℤ} :
     -- Finishing in two cases
     refine (eq_or_ne (f (-1) + 1) 0).imp
       (λ h2 ↦ funext λ x ↦ ?_) (λ h2 ↦ funext λ x ↦ ?_)
-    · rw [h1, h2, zero_mul, zero_add, ← eq_neg_of_add_eq_zero_left h2]
+    · rw [h1, h2, Int.zero_mul, zero_add, ← eq_neg_of_add_eq_zero_left h2]
       specialize h1 (-1)
-      rw [h2, zero_mul, zero_add] at h1
+      rw [h2, Int.zero_mul, zero_add] at h1
       exact h1.symm
     · specialize h0 x
       rw [h1, h1 (f x), add_left_inj, Int.mul_eq_mul_left_iff h2] at h0

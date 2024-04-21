@@ -21,7 +21,7 @@ For convenience, we denote $Ω(0) = 0$.
 namespace IMOSL
 namespace IMO2009N2
 
-open Nat.ArithmeticFunction
+open ArithmeticFunction
 
 /-! ### Part 1 -/
 

@@ -25,13 +25,13 @@ theorem final_solution [LinearOrderedCommRing R]
   have h0 : ∀ t x : R, f (f t) - f (f x) ≤ (f t - x) * f x := λ t x ↦ by
     rw [sub_le_iff_le_add]
     apply (h _ _).trans_eq'
-    rw [add_sub_cancel'_right]
+    rw [add_sub_cancel]
   replace h0 : ∀ t x : R, 0 ≤ (f t - x) * f x + (f x - t) * f t := λ t x ↦ by
     rw [← sub_self (f (f t)), ← sub_add_sub_cancel _ (f (f x))]
     exact add_le_add (h0 t x) (h0 x t)
   replace h0 : ∀ x : R, x * f x ≤ 0 := λ x ↦ by
     have h1 := h0 x (f x + f x)
-    rwa [sub_add_cancel', sub_mul, neg_mul, mul_comm,
+    rwa [sub_add_cancel_left, sub_mul, neg_mul, mul_comm,
       ← add_sub_assoc, neg_add_self, zero_sub, neg_nonneg] at h1
   have h1 : ∀ x : R, f x ≤ f (f x) := λ x ↦ by
     have h1 := h x 0

@@ -222,7 +222,9 @@ instance : CommRing 𝔽₂ε :=
     add_left_neg := 𝔽₂ε.add_left_neg
     mul_comm := 𝔽₂ε.mul_comm
     left_distrib := 𝔽₂ε.mul_add
-    right_distrib := 𝔽₂ε.add_mul }
+    right_distrib := 𝔽₂ε.add_mul
+    nsmul := nsmulRec
+    zsmul := zsmulRec }
 
 
 
