@@ -43,7 +43,7 @@ theorem final_solution {a : ℕ → R} (h : ∀ i, 0 ≤ a i)
   have h2 (i : ℕ) (h1 : 1 < a (i + 1)) (h2 : 1 < a (i + 2)) : False :=
     (main_ineq h1.le h2 (h _) (h0 _)).asymm <| main_ineq2 (h i) h1 h2.le (h0 _)
   -- Now use the above to finish
-  rw [le_iff_exists_add'] at h1; rcases h1 with ⟨n, rfl⟩
+  rcases Nat.exists_eq_add_of_le' h1 with ⟨n, rfl⟩
   refine le_of_not_lt λ h1 ↦ (h0 (n + 1)).not_lt ?_
   rw [← sub_lt_iff_lt_add, add_sub_assoc, ← one_sub_mul]
   exact (one_lt_pow h1 <| Nat.succ_ne_zero 1).trans_le' <|

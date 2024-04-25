@@ -61,8 +61,8 @@ theorem case2_3_lem4 (h2 : f 2 ≠ 1) (x : R) :
   -- Obtain contradiction via `f(x + 2) + f(x) = 2 f(x + 1) + 2`
   · intros h4; apply h5
     specialize X (x + 1)
-    rwa [add_sub_cancel, add_assoc, one_add_one_eq_two, case2_3_lem1 h h0 h1,
-      ← h3, h4, sub_add_cancel'', mul_neg_one, add_left_inj, add_add_add_comm,
+    rwa [add_sub_cancel_right, add_assoc, one_add_one_eq_two, case2_3_lem1 h h0 h1,
+      ← h3, h4, sub_add_cancel_right, mul_neg_one, add_left_inj, add_add_add_comm,
       ← two_mul, add_comm, add_right_inj, ← two_add_one_eq_three, neg_add',
       sub_add_cancel, eq_comm, eq_sub_iff_add_eq, one_add_one_eq_two, or_self,
       eq_neg_iff_add_eq_zero, ← two_mul, ← sq, sq_eq_zero_iff] at X
@@ -75,9 +75,9 @@ theorem case2_3_lem5 (h2 : f 2 ≠ 1) (x : R) :
       f x = 0 ∧ f (x + 1) = 0 ∧ f (x - 1) = 0 := by
   have X := case2_3_lem4 h h0 h1 h2
   refine (X x).elim Or.inl λ h3 ↦ (X (x + 1)).imp
-    (λ h4 ↦ ?_) (λ h4 => ⟨add_sub_cancel x 1 ▸ h4.2, h3⟩)
+    (λ h4 ↦ ?_) (λ h4 => ⟨add_sub_cancel_right x 1 ▸ h4.2, h3⟩)
   rw [h3.1, mul_zero, zero_add, add_assoc, one_add_one_eq_two,
-    add_sub_cancel, case2_3_lem1 h h0 h1, h3.1, zero_sub, h3.2,
+    add_sub_cancel_right, case2_3_lem1 h h0 h1, h3.1, zero_sub, h3.2,
     add_zero, mul_neg, neg_add_eq_iff_eq_add, ← two_add_one_eq_three,
     add_one_mul (2 : S), add_right_comm, self_eq_add_left] at h4
   rw [h3.1, h3.2, h4, zero_add]
@@ -107,7 +107,7 @@ theorem case2_3_lem6 (h2 : f 2 ≠ 1) (h3 : f 0 = -1) (x : R) :
       have h8 := case2_good_alt h h0 (x + 1) (1 + 1)
       rw [h4.2.1, zero_mul, add_sub_add_right_eq_sub,
         h4.2.2, sub_zero, add_one_mul x, ← add_assoc,
-        add_sub_cancel, one_add_one_eq_two, mul_comm] at h8
+        add_sub_cancel_right, one_add_one_eq_two, mul_comm] at h8
       rw [h7, h8, zero_add, ← mul_add_one (2 : S), zero_eq_mul] at h6
       rcases h6 with h6 | h6
       · refine absurd ?_ h2
@@ -149,7 +149,7 @@ theorem case2_3_lem_g1 : homGuess f 0 = 0 :=
 theorem case2_3_lem_g2 (x : R) : homGuess f (x + 1) = homGuess f x + 1 := by
   have h4 : (2 : S) ≠ 0 := λ h4 ↦ h2 <| by
     rw [h1, ← two_add_one_eq_three, h4, zero_add]
-  rw [homGuess, homGuess, div_add_one h4, add_sub_cancel]
+  rw [homGuess, homGuess, div_add_one h4, add_sub_cancel_right]
   refine congr_arg₂ _ ?_ rfl
   rw [add_right_comm, add_left_inj, ← add_sub_right_comm,
     eq_sub_iff_add_eq, ← add_sub_right_comm, sub_eq_iff_eq_add,
@@ -162,7 +162,7 @@ theorem case2_3_lem_g2' (x : R) : homGuess f (x - 1) = homGuess f x - 1 := by
 /-- (9.g3) -/
 theorem case2_3_lem_g3 (x : R) : homGuess f (-x) = -homGuess f x := by
   have X := case2_map_even h h0
-  rw [← add_left_inj 1, ← case2_3_lem_g2 h h0 h1 h2 h3, homGuess, add_sub_cancel,
+  rw [← add_left_inj 1, ← case2_3_lem_g2 h h0 h1 h2 h3, homGuess, add_sub_cancel_right,
     X, neg_add_eq_sub, ← X, neg_sub, homGuess, ← neg_div, neg_add', neg_sub]
   replace X : (2 : S) ≠ 0 := λ h4 ↦ h2 <| by
     rw [h1, ← two_add_one_eq_three, h4, zero_add]
@@ -260,14 +260,14 @@ theorem case2_3_sol : ∃ φ : R →+* S, f = λ x => φ x ^ 2 - 1 := by
   have hOne : homGuess f 1 = 1 := by
     rw [← zero_add (1 : R), X, hZero, zero_add]
   -- Multiplicativity
-  have hMul x y : homGuess f (x * y) = homGuess f x * homGuess f y
-  · have h4 := case2_3_lem_g7 h h0 h1 h2 h3 x y
+  have hMul x y : homGuess f (x * y) = homGuess f x * homGuess f y := by
+    have h4 := case2_3_lem_g7 h h0 h1 h2 h3 x y
     rw [sq_sub_sq, X0, sub_eq_add_neg, ← case2_3_lem_g3 h h0 h1 h2 h3,
       neg_sub, add_comm x, X0, mul_mul_mul_comm, ← sq] at h4
     exact mul_left_cancel₀ (pow_ne_zero 2 X1) h4
   -- Additivity
-  have hAdd x y : homGuess f (x + y) = homGuess f x + homGuess f y
-  · specialize X0 (x + y) (x - y)
+  have hAdd x y : homGuess f (x + y) = homGuess f x + homGuess f y := by
+    specialize X0 (x + y) (x - y)
     rw [add_add_sub_cancel, add_sub_sub_cancel, ← two_mul, hMul, ← two_mul,
       hMul, ← mul_add, ← one_add_one_eq_two, X, hOne, one_add_one_eq_two] at X0
     exact (mul_left_cancel₀ X1 X0).symm

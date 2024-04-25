@@ -40,7 +40,7 @@ theorem case1_2_lem3 : (3 : R) = 0 :=
     have h4 y : f (y + 1) = -f y - f (y - 1) :=
       eq_sub_of_add_eq <| eq_neg_of_add_eq_zero_left (case1_2_lem2 h h0 h2 y)
     rw [add_comm, ← two_add_one_eq_three, ← add_assoc, h4, ← one_add_one_eq_two,
-      ← add_assoc, add_sub_cancel, ← neg_add', h4, add_sub_cancel,
+      ← add_assoc, add_sub_cancel_right, ← neg_add', h4, add_sub_cancel_right,
       ← add_sub_right_comm, neg_add_self, zero_sub, neg_neg]
 
 /-- (5.3) -/

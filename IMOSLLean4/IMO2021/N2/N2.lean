@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Sqrt
+import Mathlib.Algebra.GroupPower.Ring
+import Mathlib.Algebra.Ring.Nat
 
 /-!
 # IMO 2021 N2 (P1)

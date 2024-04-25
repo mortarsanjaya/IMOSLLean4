@@ -5,9 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.SeqMax
-import Mathlib.Algebra.GroupPower.CovariantClass
 import Mathlib.Algebra.Order.Group.Abs
-import Mathlib.Data.Nat.Order.Basic
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 # IMO 2017 A4
@@ -104,7 +103,7 @@ theorem max_two_nsmul_b_and_c_bdd (h2 : Monotone c) (n : ℕ) :
     max (c n) (2 • b n) ≤ max (2 • b D) (2 • (c D - b D)) := by
   have h3 : max (c D) (2 • b D) ≤ max (2 • b D) (2 • (c D - b D)) := by
     refine max_le (le_max_of_two_nsmul_le_add ?_) (le_max_left _ _)
-    rw [← nsmul_add, add_sub_cancel'_right]
+    rw [← nsmul_add, add_sub_cancel]
   refine (le_total n D).elim -- Focus on the case `D ≤ n`; induction
     (λ h4 ↦ h3.trans' (max_le_max (h2 h4) (nsmul_le_nsmul_right (h1 h4) 2)))
     (Nat.le_induction h3 (λ n h4 h5 ↦ ?_) n)

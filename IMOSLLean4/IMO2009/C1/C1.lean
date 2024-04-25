@@ -42,7 +42,7 @@ theorem Iic_filter_dvd_card (k n : ℕ) :
     ((Icc k (k + n)).filter λ i : ℕ ↦ n + 1 ∣ i + 1).card = 1 := by
   let h := (k + (n + 1)).card_multiples (n + 1)
   rwa [range_eq_Ico, ← Ico_union_Ico_eq_Ico k.zero_le le_self_add, filter_union,
-    card_union_eq (disjoint_filter_filter <| Ico_disjoint_Ico_consecutive 0 k _),
+    card_union_of_disjoint (disjoint_filter_filter <| Ico_disjoint_Ico_consecutive 0 k _),
     ← range_eq_Ico, Nat.card_multiples, k.add_div_right n.succ_pos,
     Nat.succ_eq_add_one, add_right_inj] at h
 
@@ -60,7 +60,7 @@ theorem symmDiff_union_inter_eq_union : symmDiff A B ∪ A ∩ B = A ∪ B :=
 
 theorem symmDiff_card_add_two_mul_inter_card :
     (symmDiff A B).card + 2 * (A ∩ B).card = A.card + B.card := by
-  rw [two_mul, ← add_assoc, ← card_union_eq (disjoint_symmDiff_inter A B),
+  rw [two_mul, ← add_assoc, ← card_union_of_disjoint (disjoint_symmDiff_inter A B),
     symmDiff_union_inter_eq_union, card_union_add_card_inter]
 
 theorem symmDiff_card_mod_two : (symmDiff A B).card % 2 = (A.card + B.card) % 2 := by

@@ -1,4 +1,4 @@
-{"platform": "macOS-64",
+{"platform": "x86_64-apple-darwin21.6.0",
  "options": {"env": "dev"},
- "leanHash": "b614ff1d12bc38f39077f9ce9f2d48b42c003ad0",
+ "leanHash": "6fce8f7d5cd18a4419bca7fd51780c71c9b1cc5a",
  "configHash": "3287198758646152189"}

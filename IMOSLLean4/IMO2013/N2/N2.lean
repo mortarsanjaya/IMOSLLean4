@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Nat.Parity
 import Mathlib.Algebra.BigOperators.Multiset.Basic
+import Mathlib.Data.Rat.Field
 
 /-!
 # IMO 2013 N2 (P1)
@@ -55,7 +56,7 @@ theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := by
     refine ⟨(2 * t + 1) ::ₘ T, card_cons _ T,
       forall_mem_cons.mpr ⟨(2 * t).succ_pos, h1⟩, ?_⟩
     rw [map_cons, prod_cons, ← h2, add_add_add_comm, add_right_comm,
-      add_assoc (2 * t) 1, ← mul_add_one, ← mul_add, div_mul_div_comm,
+      add_assoc (2 * t) 1, ← mul_add_one (α := ℕ), ← mul_add, div_mul_div_comm,
       Nat.cast_mul, Nat.cast_mul, mul_right_comm]
     exact (mul_div_mul_right _ _ <| Nat.cast_ne_zero.mpr X.ne.symm).symm
 
@@ -68,4 +69,4 @@ theorem final_solution : ∀ k : ℕ, good k (2 ^ k - 1)
       have h := good_two_mul_add_one (final_solution k)
       have h0 := k.one_le_pow 2 (Nat.succ_pos 1)
       rwa [two_mul, add_assoc, Nat.sub_add_cancel h0, add_comm _ (2 ^ k),
-        ← Nat.add_sub_assoc h0, ← two_mul, ← pow_succ] at h
+        ← Nat.add_sub_assoc h0, ← two_mul, ← pow_succ'] at h

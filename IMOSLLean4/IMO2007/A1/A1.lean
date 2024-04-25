@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.SeqMax
 import Mathlib.Algebra.Order.Group.Abs
-import Mathlib.Data.Nat.Order.Basic
+import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 # IMO 2007 A1 (P1)
@@ -57,5 +57,5 @@ theorem final_solution_part2
         rw [← h2, sub_le_iff_le_add, ← two_nsmul]
         exact h j i h1 h0
     · apply (le_seqMax_of_le _ n.zero_le).trans'
-      rw [sub_sub, seqMax, sub_add_cancel'', abs_neg]
+      rw [sub_sub, seqMax, sub_add_cancel_right, abs_neg]
       exact le_abs_self g⟩

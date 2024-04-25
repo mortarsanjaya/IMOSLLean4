@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Order.Basic
+import Mathlib.Data.Nat.Defs
+import Mathlib.Order.Basic
+import Mathlib.Tactic.WLOG
 
 /-!
 # IMO 2010 A6
@@ -35,7 +37,7 @@ lemma lem2 (h0 : g x = g y) : f x = f y :=
   Nat.succ_injective (h x ▸ h y ▸ congr_arg f h0)
 
 lemma lem3 (h0 : ∀ k, (∃ x, g x = k) ↔ a ≤ k) : a < g a :=
-  ((h0 (g a)).mp ⟨a, rfl⟩).lt_or_eq.resolve_right
+  (lt_or_eq_of_le <| (h0 (g a)).mp ⟨a, rfl⟩).resolve_right
     λ h1 ↦ (f a).succ_ne_self <| (h a).symm.trans (congr_arg f h1.symm)
 
 variable (h0 : good g f)

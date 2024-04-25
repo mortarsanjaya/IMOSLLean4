@@ -69,8 +69,8 @@ theorem good_is_linear {f : ℕ → ℕ} (h : good C f) : ∃ k, f = (k * ·) :=
       (h 1 n <| Nat.lt_one_add_iff.mpr h0.le)
   ---- For any `p` prime, there exists `k ≤ f(1)` such that `f(p) = kp`
   have h1 {p} (h1 : C < p) (h2 : p.Prime) : ∃ k ≤ f 1, f p = k * p := by
-    suffices : p ∣ f p ^ 2
-    · rcases h2.dvd_of_dvd_pow this with ⟨k, h3⟩
+    suffices p ∣ f p ^ 2 by
+      rcases h2.dvd_of_dvd_pow this with ⟨k, h3⟩
       exact ⟨k, Nat.le_of_mul_le_mul_left (h3.ge.trans (h0 h1)) h2.pos,
         h3.trans (p.mul_comm k)⟩
     rcases exists_gt (C + f p) with ⟨n, h3⟩

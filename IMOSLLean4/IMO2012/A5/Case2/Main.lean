@@ -26,19 +26,19 @@ theorem case2_map_two_cases [CommRing S] [IsDomain S]
   -- `f(3) = f(2)^2 - 1`
   have h2 := case2_map_sq_sub_one h h0 h1 2
   rw [sq, two_mul, ← one_add_one_eq_two, ← add_assoc,
-    add_sub_cancel, one_add_one_eq_two] at h2
+    add_sub_cancel_right, one_add_one_eq_two] at h2
   rw [← or_assoc, ← sq_eq_sq_iff_eq_or_eq_neg, one_pow, ← sub_eq_zero, ← h2]
   -- `f(4) = (f(2) - 1) f(3) - 1`
   have h3 := case2_map_add_two_eq h h0
   have h4 := h3 (1 + 1)
-  rw [add_sub_cancel, good_map_one h, add_zero, one_add_one_eq_two, mul_sub, ← sq,
+  rw [add_sub_cancel_right, good_map_one h, add_zero, one_add_one_eq_two, mul_sub, ← sq,
     ← sub_sub_sub_cancel_right _ _ 1, ← h2, sub_right_comm, ← sub_one_mul] at h4
   -- `f(5) = f(2) f(3) = f(2) (f(2) - 2) f(3)`
   replace h2 := case2_map_self_mul_add_one_sub_one h h0 (1 + 1)
   rw [mul_add_one (1 + 1 : R), ← add_assoc,
-    add_sub_cancel, one_add_one_eq_two] at h2
+    add_sub_cancel_right, one_add_one_eq_two] at h2
   specialize h3 (2 + 1)
-  rwa [add_sub_cancel, add_right_comm, ← two_mul, h2, add_assoc, one_add_one_eq_two,
+  rwa [add_sub_cancel_right, add_right_comm, ← two_mul, h2, add_assoc, one_add_one_eq_two,
     ← mul_add_one (f 2), ← add_sub_right_comm, h4, sub_add_cancel, ← sub_one_mul,
     mul_eq_mul_left_iff, eq_comm, mul_left_eq_self₀, sub_sub, one_add_one_eq_two,
     sub_eq_iff_eq_add', two_add_one_eq_three, or_assoc, or_left_comm] at h3
