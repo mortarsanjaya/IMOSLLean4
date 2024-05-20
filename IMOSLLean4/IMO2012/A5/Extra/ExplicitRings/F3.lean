@@ -4,14 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Hom.Basic
 import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
-# Explicit construction of 𝔽₃
+# Explicit construction of `𝔽₃`
 
-In this file, we explicitly construct the field of 3 elements.
-We prove just the necessary properties for the purpose of the main problem.
+In this file, we explicitly construct `𝔽₃`, the field of 3 elements.
+We prove that it is a ring, and we construct ring homomorphisms from `𝔽₃`.
 -/
 
 namespace IMOSL
@@ -21,7 +20,6 @@ inductive 𝔽₃
   | 𝔽₃0 : 𝔽₃
   | 𝔽₃1 : 𝔽₃
   | 𝔽₃2 : 𝔽₃
-
 
 
 namespace 𝔽₃
@@ -55,6 +53,10 @@ instance : Mul 𝔽₃ := ⟨𝔽₃.mul⟩
 
 
 
+
+
+/-! ### `𝔽₃` is a commutative group -/
+
 protected theorem add_zero : ∀ x : 𝔽₃, x + 0 = x
   | 𝔽₃0 => rfl
   | 𝔽₃1 => rfl
@@ -87,6 +89,21 @@ protected theorem add_left_neg : ∀ x : 𝔽₃, -x + x = 0
   | 𝔽₃0 => rfl
   | 𝔽₃1 => rfl
   | 𝔽₃2 => rfl
+
+instance : AddCommGroup 𝔽₃ :=
+  { add_assoc := 𝔽₃.add_assoc
+    zero_add := 𝔽₃.zero_add
+    add_zero := 𝔽₃.add_zero
+    add_comm := 𝔽₃.add_comm
+    add_left_neg := 𝔽₃.add_left_neg
+    nsmul := nsmulRec
+    zsmul := zsmulRec }
+
+
+
+
+
+/-! ### `𝔽₃` is a ring -/
 
 protected theorem zero_mul (x : 𝔽₃) : 0 * x = 0 := rfl
 
@@ -135,52 +152,29 @@ protected theorem add_mul (x y z : 𝔽₃) : (x + y) * z = x * z + y * z :=
   by rw [𝔽₃.mul_comm, 𝔽₃.mul_add, z.mul_comm, z.mul_comm]
 
 instance : CommRing 𝔽₃ :=
-  { add_assoc := 𝔽₃.add_assoc
-    zero_add := 𝔽₃.zero_add
-    add_zero := 𝔽₃.add_zero
-    add_comm := 𝔽₃.add_comm
+  { 𝔽₃.instAddCommGroup𝔽₃ with
     zero_mul := 𝔽₃.zero_mul
     mul_zero := 𝔽₃.mul_zero
     mul_assoc := 𝔽₃.mul_assoc
     one_mul := 𝔽₃.one_mul
     mul_one := 𝔽₃.mul_one
-    add_left_neg := 𝔽₃.add_left_neg
     mul_comm := 𝔽₃.mul_comm
     left_distrib := 𝔽₃.mul_add
-    right_distrib := 𝔽₃.add_mul
-    nsmul := nsmulRec
-    zsmul := zsmulRec }
+    right_distrib := 𝔽₃.add_mul }
 
 
 
 
 
-/-! ## Homomorphism from `𝔽₃` -/
+/-! ### Ring homomorphism from `𝔽₃` -/
 
 def cast [AddGroupWithOne R] : 𝔽₃ → R
   | 𝔽₃0 => 0
   | 𝔽₃1 => 1
   | 𝔽₃2 => -1
 
-
-variable [Ring R]
-
-theorem cast_eq_zero_imp (h : (1 : R) ≠ 0) :
-    ∀ x : 𝔽₃, cast (R := R) x = 0 → x = 0
-  | 𝔽₃0 => λ _ ↦ rfl
-  | 𝔽₃1 => λ h0 ↦ absurd h0 h
-  | 𝔽₃2 => λ h0 ↦ absurd (neg_eq_zero.mp h0) h
-
-theorem cast_mul : ∀ x y : 𝔽₃, cast (R := R) (x * y) = cast x * cast y
-  | 𝔽₃0, _ => (zero_mul _).symm
-  | 𝔽₃1, _ => (one_mul _).symm
-  | 𝔽₃2, 𝔽₃0 => (mul_zero (-1)).symm
-  | 𝔽₃2, 𝔽₃1 => (mul_one (-1)).symm
-  | 𝔽₃2, 𝔽₃2 => ((neg_mul_neg _ _).trans <| mul_one 1).symm
-
-variable (h : (3 : R) = 0)
-
-theorem cast_add (x y : 𝔽₃) : cast (R := R) (x + y) = cast x + cast y :=
+theorem cast_add [AddGroupWithOne R] (h : (3 : R) = 0) (x y : 𝔽₃) :
+    cast (R := R) (x + y) = cast x + cast y :=
   have h : (1 : R) + 1 = -1 :=
     by rwa [one_add_one_eq_two, eq_neg_iff_add_eq_zero, two_add_one_eq_three]
   match x, y with
@@ -189,14 +183,25 @@ theorem cast_add (x y : 𝔽₃) : cast (R := R) (x + y) = cast x + cast y :=
     | 𝔽₃1, 𝔽₃1 => h.symm
     | 𝔽₃1, 𝔽₃2 => (add_neg_self 1).symm
     | 𝔽₃2, 𝔽₃1 => (neg_add_self 1).symm
-    | 𝔽₃2, 𝔽₃2 => (neg_eq_iff_eq_neg.mpr h).symm.trans (neg_add _ _)
+    | 𝔽₃2, 𝔽₃2 => (neg_eq_iff_eq_neg.mpr h).symm.trans (neg_add_rev _ _)
 
-def castHom : 𝔽₃ →+* R :=
+theorem cast_mul [Ring R] : ∀ x y : 𝔽₃, cast (R := R) (x * y) = cast x * cast y
+  | 𝔽₃0, _ => (zero_mul _).symm
+  | 𝔽₃1, _ => (one_mul _).symm
+  | 𝔽₃2, 𝔽₃0 => (mul_zero (-1)).symm
+  | 𝔽₃2, 𝔽₃1 => (mul_one (-1)).symm
+  | 𝔽₃2, 𝔽₃2 => ((neg_mul_neg _ _).trans <| mul_one 1).symm
+
+def castRingHom [Ring R] (h : (3 : R) = 0) : 𝔽₃ →+* R :=
   { toFun := cast
     map_one' := rfl
     map_mul' := cast_mul
     map_zero' := rfl
     map_add' := cast_add h }
 
-theorem castHom_injective (h0 : (1 : R) ≠ 0) : Function.Injective (castHom h) :=
-  (injective_iff_map_eq_zero (castHom h)).mpr (cast_eq_zero_imp h0)
+theorem castRingHom_injective [Ring R] (h : (3 : R) = 0) (h0 : (1 : R) ≠ 0) :
+    Function.Injective (castRingHom h) :=
+  (injective_iff_map_eq_zero _).mpr λ x h1 ↦ match x with
+    | 𝔽₃0 => rfl
+    | 𝔽₃1 => absurd h1 h0
+    | 𝔽₃2 => absurd (neg_eq_zero.mp h1) h0

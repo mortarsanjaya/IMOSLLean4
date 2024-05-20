@@ -4,23 +4,24 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Hom.Basic
 import Mathlib.Algebra.Ring.Hom.Defs
+import IMOSLLean4.Extra.CharTwo.Ring
 
 /-!
-# Explicit construction of 𝔽₂
+# Explicit construction of `𝔽₂`
 
-In this file, we explicitly construct the field of 2 elements.
-We prove just the necessary properties for the purpose of the main problem.
+In this file, we explicitly construct `𝔽₂`, the field of 2 elements.
+We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂`.
 -/
 
 namespace IMOSL
 namespace IMO2012A5
 
+open Extra
+
 inductive 𝔽₂
   | O : 𝔽₂
   | I : 𝔽₂
-
 
 
 namespace 𝔽₂
@@ -42,6 +43,10 @@ instance : Mul 𝔽₂ := ⟨𝔽₂.mul⟩
 
 
 
+
+
+/-! ### `𝔽₂` is a commutative group -/
+
 protected theorem zero_add (x : 𝔽₂) : 0 + x = x := rfl
 
 protected theorem add_zero : ∀ x : 𝔽₂, x + 0 = x
@@ -49,7 +54,8 @@ protected theorem add_zero : ∀ x : 𝔽₂, x + 0 = x
   | I => rfl
 
 protected theorem add_comm : ∀ x y : 𝔽₂, x + y = y + x
-  | O, x => x.add_zero.symm
+  | O, O => rfl
+  | O, I => rfl
   | I, O => rfl
   | I, I => rfl
 
@@ -62,6 +68,23 @@ protected theorem add_assoc : ∀ x y z : 𝔽₂, x + y + z = x + (y + z)
 protected theorem add_left_neg : ∀ x : 𝔽₂, -x + x = 0
   | O => rfl
   | I => rfl
+
+instance : AddCommGroup 𝔽₂ :=
+  { add_assoc := 𝔽₂.add_assoc
+    zero_add := 𝔽₂.zero_add
+    add_zero := 𝔽₂.add_zero
+    add_comm := 𝔽₂.add_comm
+    add_left_neg := 𝔽₂.add_left_neg
+    nsmul := nsmulRec
+    zsmul := zsmulRec }
+
+instance : CharTwo 𝔽₂ := ⟨add_left_neg⟩
+
+
+
+
+
+/-! ### `𝔽₂` is a ring -/
 
 protected theorem zero_mul (x : 𝔽₂) : 0 * x = 0 := rfl
 
@@ -76,9 +99,10 @@ protected theorem mul_one : ∀ x : 𝔽₂, x * 1 = x
   | I => rfl
 
 protected theorem mul_comm : ∀ x y : 𝔽₂, x * y = y * x
-  | I, x => x.mul_one.symm
   | O, O => rfl
   | O, I => rfl
+  | I, O => rfl
+  | I, I => rfl
 
 protected theorem mul_assoc : ∀ x y z : 𝔽₂, x * y * z = x * (y * z)
   | O, _, _ => rfl
@@ -90,62 +114,51 @@ protected theorem mul_add : ∀ x y z : 𝔽₂, x * (y + z) = x * y + x * z
 
 protected theorem add_mul : ∀ x y z : 𝔽₂, (x + y) * z = x * z + y * z
   | O, _, _ => rfl
-  | I, O, z => z.add_zero.symm
+  | I, O, O => rfl
+  | I, O, I => rfl
   | I, I, O => rfl
   | I, I, I => rfl
 
 instance : CommRing 𝔽₂ :=
-  { add_assoc := 𝔽₂.add_assoc
-    zero_add := 𝔽₂.zero_add
-    add_zero := 𝔽₂.add_zero
-    add_comm := 𝔽₂.add_comm
+  { 𝔽₂.instAddCommGroup𝔽₂ with
     zero_mul := 𝔽₂.zero_mul
     mul_zero := 𝔽₂.mul_zero
     mul_assoc := 𝔽₂.mul_assoc
     one_mul := 𝔽₂.one_mul
     mul_one := 𝔽₂.mul_one
-    add_left_neg := 𝔽₂.add_left_neg
     mul_comm := 𝔽₂.mul_comm
     left_distrib := 𝔽₂.mul_add
-    right_distrib := 𝔽₂.add_mul
-    nsmul := nsmulRec
-    zsmul := zsmulRec }
+    right_distrib := 𝔽₂.add_mul }
 
 
 
 
 
-/-! ## Homomorphism from `𝔽₂` -/
+/-! ### Ring homomorphism from `𝔽₂` -/
 
 def cast [AddGroupWithOne R] : 𝔽₂ → R
   | O => 0
   | I => 1
 
+theorem cast_add [AddGroupWithOne R] [CharTwo R] :
+    ∀ x y : 𝔽₂, cast (R := R) (x + y) = cast x + cast y
+  | O, _ => (zero_add _).symm
+  | I, O => (add_zero 1).symm
+  | I, I => (CharTwo.add_self_eq_zero 1).symm
 
-variable [Ring R]
-
-theorem cast_eq_zero_imp (h : (1 : R) ≠ 0) :
-    ∀ x : 𝔽₂, cast (R := R) x = 0 → x = 0
-  | O => λ _ ↦ rfl
-  | I => λ h0 ↦ absurd h0 h
-
-theorem cast_mul : ∀ x y : 𝔽₂, cast (R := R) (x * y) = cast x * cast y
+theorem cast_mul [Ring R] : ∀ x y : 𝔽₂, cast (R := R) (x * y) = cast x * cast y
   | O, _ => (zero_mul _).symm
   | I, _ => (one_mul _).symm
 
-variable (h : (2 : R) = 0)
-
-theorem cast_add : ∀ x y : 𝔽₂, cast (R := R) (x + y) = cast x + cast y
-  | O, _ => (zero_add _).symm
-  | I, O => (add_zero 1).symm
-  | I, I => (one_add_one_eq_two.trans h).symm
-
-def castHom : 𝔽₂ →+* R :=
+def castRingHom [Ring R] [CharTwo R] : 𝔽₂ →+* R :=
   { toFun := cast
     map_one' := rfl
     map_mul' := cast_mul
     map_zero' := rfl
-    map_add' := cast_add h }
+    map_add' := cast_add }
 
-theorem castHom_injective (h0 : (1 : R) ≠ 0) : Function.Injective (castHom h) :=
-  (injective_iff_map_eq_zero (castHom h)).mpr (cast_eq_zero_imp h0)
+theorem castRingHom_injective [Ring R] [CharTwo R] (h : (1 : R) ≠ 0) :
+    Function.Injective (castRingHom : 𝔽₂ →+* R) :=
+  (injective_iff_map_eq_zero _).mpr λ x h1 ↦ match x with
+    | O => rfl
+    | I => absurd h1 h

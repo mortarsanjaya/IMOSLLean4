@@ -4,27 +4,28 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Hom.Basic
 import Mathlib.Algebra.Ring.Hom.Defs
+import IMOSLLean4.Extra.CharTwo.Ring
 
 /-!
-# Explicit construction of 𝔽₂[X]/⟨X²⟩
+# Explicit construction of `𝔽₂[ε]`
 
 In this file, we explicitly construct the ring `𝔽₂[ε] := 𝔽₂[X]/⟨X²⟩`.
-We prove just the necessary properties for the purpose of the main problem.
-The explicit construction is used instead of the `dual_number` API for
-  the purpose of avoiding the use of `algebra` instances.
+We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂[ε]`.
+The explicit construction is used instead of the `DualNumber` API for
+  the purpose of avoiding the use of `Algebra` instances.
 -/
 
 namespace IMOSL
 namespace IMO2012A5
+
+open Extra
 
 inductive 𝔽₂ε
   | O : 𝔽₂ε
   | I : 𝔽₂ε
   | X : 𝔽₂ε
   | Y : 𝔽₂ε
-
 
 
 namespace 𝔽₂ε
@@ -63,6 +64,10 @@ instance : Neg 𝔽₂ε := ⟨id⟩
 instance : Mul 𝔽₂ε := ⟨𝔽₂ε.mul⟩
 
 
+
+
+
+/-! ### `𝔽₂[ε]` is a commutative group -/
 
 protected theorem add_zero : ∀ x : 𝔽₂ε, x + 0 = x
   | O => rfl
@@ -122,6 +127,21 @@ protected theorem add_left_neg : ∀ x : 𝔽₂ε, -x + x = 0
   | I => rfl
   | X => rfl
   | Y => rfl
+
+instance : AddCommGroup 𝔽₂ε :=
+  { add_assoc := 𝔽₂ε.add_assoc
+    zero_add := 𝔽₂ε.zero_add
+    add_zero := 𝔽₂ε.add_zero
+    add_comm := 𝔽₂ε.add_comm
+    add_left_neg := 𝔽₂ε.add_left_neg
+    nsmul := nsmulRec
+    zsmul := zsmulRec }
+
+
+
+
+
+/-! ### `𝔽₂[ε]` is a ring -/
 
 protected theorem zero_mul (x : 𝔽₂ε) : 0 * x = 0 := rfl
 
@@ -210,27 +230,23 @@ protected theorem add_mul (x y z : 𝔽₂ε) : (x + y) * z = x * z + y * z :=
   by rw [𝔽₂ε.mul_comm, 𝔽₂ε.mul_add, z.mul_comm, z.mul_comm]
 
 instance : CommRing 𝔽₂ε :=
-  { add_assoc := 𝔽₂ε.add_assoc
-    zero_add := 𝔽₂ε.zero_add
-    add_zero := 𝔽₂ε.add_zero
-    add_comm := 𝔽₂ε.add_comm
+  { 𝔽₂ε.instAddCommGroup𝔽₂ε with
     zero_mul := 𝔽₂ε.zero_mul
     mul_zero := 𝔽₂ε.mul_zero
     mul_assoc := 𝔽₂ε.mul_assoc
     one_mul := 𝔽₂ε.one_mul
     mul_one := 𝔽₂ε.mul_one
-    add_left_neg := 𝔽₂ε.add_left_neg
     mul_comm := 𝔽₂ε.mul_comm
     left_distrib := 𝔽₂ε.mul_add
-    right_distrib := 𝔽₂ε.add_mul
-    nsmul := nsmulRec
-    zsmul := zsmulRec }
+    right_distrib := 𝔽₂ε.add_mul }
 
 
 
 
 
-/-! ## Homomorphism from `𝔽₂ε` -/
+/-! ## Ring homomorphism from `𝔽₂[ε]` -/
+
+open CharTwo
 
 def cast [AddGroupWithOne R] (r : R) : 𝔽₂ε → R
   | O => 0
@@ -238,57 +254,44 @@ def cast [AddGroupWithOne R] (r : R) : 𝔽₂ε → R
   | X => r
   | Y => r + 1
 
+theorem cast_add [AddGroupWithOne R] [CharTwo R] (r : R) :
+    ∀ x y, cast r (x + y) = cast r x + cast r y
+  | O, _ => (zero_add _).symm
+  | x, O => x.add_zero.symm ▸ (add_zero _).symm
+  | I, I => (add_self_eq_zero _).symm
+  | I, X => CharTwo.add_comm r 1
+  | I, Y => (add_add_cancel_middle₁ 1 r).symm
+  | X, I => rfl
+  | X, X => (add_self_eq_zero _).symm
+  | X, Y => (add_add_cancel_left _ _).symm
+  | Y, I => (add_add_cancel_right _ _).symm
+  | Y, X => (add_add_cancel_middle₂ _ _).symm
+  | Y, Y => (add_self_eq_zero _).symm
 
-variable [Ring R] (h : (2 : R) = 0)
-
-theorem cast_add (r : R) (x y : 𝔽₂ε) : cast r (x + y) = cast r x + cast r y :=
-  have h0 : (1 : R) + 1 = 0 := one_add_one_eq_two.trans h
-  have h1 : r + r = 0 := by rw [← two_mul, h, zero_mul]
-  match x, y with
-    | O, _ => (zero_add _).symm
-    | x, O => x.add_zero.symm ▸ (add_zero _).symm
-    | I, I => h0.symm
-    | I, X => add_comm r 1
-    | I, Y => (self_eq_add_right.mpr h0).trans (add_left_comm r 1 1)
-    | X, I => rfl
-    | X, X => h1.symm
-    | X, Y => (self_eq_add_left.mpr h1).trans (add_assoc r r 1)
-    | Y, I => (self_eq_add_right.mpr h0).trans (add_assoc r 1 1).symm
-    | Y, X => (self_eq_add_left.mpr h1).trans (add_right_comm r r 1)
-    | Y, Y => (mul_eq_zero_of_left h (r + 1)).symm.trans (two_mul _)
-
-variable {r : R} (h0 : r * r = 0)
+variable [Ring R] [CharTwo R] {r : R} (h : r * r = 0)
 
 theorem cast_mul : ∀ x y : 𝔽₂ε, cast r (x * y) = cast r x * cast r y
   | O, _ => (zero_mul _).symm
   | I, _ => (one_mul _).symm
+  | x, O => x.mul_zero.symm ▸ (mul_zero _).symm
   | x, I => x.mul_one.symm ▸ (mul_one _).symm
-  | X, O => (mul_zero r).symm
-  | X, X => h0.symm
-  | X, Y => (add_left_eq_self.mpr h0).symm.trans (mul_add_one r r).symm
-  | Y, O => (mul_zero (r + 1)).symm
-  | Y, X => (add_left_eq_self.mpr h0).symm.trans (add_one_mul r r).symm
-  | Y, Y => by change 1 = (r + 1) * (r + 1)
-               rw [add_one_mul r, mul_add_one r, h0, zero_add,
-                 ← add_assoc, ← two_mul, h, zero_mul, zero_add]
+  | X, X => h.symm
+  | X, Y => (add_left_eq_self.mpr h).symm.trans (mul_add_one r r).symm
+  | Y, X => (add_left_eq_self.mpr h).symm.trans (add_one_mul r r).symm
+  | Y, Y => by change 1 = (r + 1) * (r + 1); rw [add_one_mul_self, h, zero_add]
 
-def castHom : 𝔽₂ε →+* R :=
+def castRingHom : 𝔽₂ε →+* R :=
   { toFun := cast r
     map_one' := rfl
-    map_mul' := cast_mul h h0
+    map_mul' := cast_mul h
     map_zero' := rfl
-    map_add' := cast_add h r }
+    map_add' := cast_add r }
 
-variable (h1 : (r : R) ≠ 0)
-
-theorem castHom_eq_zero_imp (x : 𝔽₂ε) (h2 : castHom h h0 x = 0) : x = 0 :=
-  have h3 : (1 : R) ≠ 0 := λ h3 ↦ h1 <| by rw [← one_mul r, h3, zero_mul]
-  match x with
+theorem castRingHom_injective (h0 : (r : R) ≠ 0) :
+    Function.Injective (castRingHom h) :=
+  have h1 : (1 : R) ≠ 0 := λ h1 ↦ h0 <| by rw [← one_mul r, h1, zero_mul]
+  (injective_iff_map_eq_zero _).mpr λ x h2 ↦ match x with
     | O => rfl
-    | I => absurd h2 h3
-    | X => absurd h2 h1
-    | Y => by apply Not.elim h3
-              rwa [eq_neg_of_add_eq_zero_left h2, neg_mul_neg, one_mul] at h0
-
-theorem castHom_injective : Function.Injective (castHom h h0) :=
-  (injective_iff_map_eq_zero (castHom h h0)).mpr (castHom_eq_zero_imp h h0 h1)
+    | I => absurd h2 h1
+    | X => absurd h2 h0
+    | Y => Not.elim h1 <| by rwa [add_eq_zero_iff_eq.mp h2, one_mul] at h
