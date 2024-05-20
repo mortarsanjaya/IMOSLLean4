@@ -76,6 +76,107 @@ We now continue with more observations.
 
 
 
+\subsubsection*{Quasi-periodic elements}
+
+We say that $c \in R$ is \emph{quasi-periodic} if one of the following conditions hold:
+\begin{itemize}
+    \item   $f(c + x) = -f(c) f(x)$ for all $x \in R$,
+    \item   $f(cx + 1) = 0$ for all $x \in R$,
+    \item   $f(x + c) = -f(x) f(c)$ for all $x \in R$,
+    \item   $f(xc + 1) = 0$ for all $x \in R$.
+\end{itemize}
+
+Actually, we will show shortly that these four conditions are all equivalent.
+Indeed, by~\eqref{2012a5-eq0}, the first two and the last two are equivalent.
+For the first and third, we prove a more general result.
+
+\begin{claim}
+For any $c \in R$ satisfying the first or the third condition, we have $f(c) = f(-c) = \pm 1$.
+\end{claim}
+\begin{proof}
+By symmetry, we can assume that $c \in R$ satisfies the first condition.
+Then $f(c + 1) = -f(c) f(1) = 0$, and so~\eqref{2012a5-eq0} with $(x, y) = (c + 1, -1)$ yields $f(-c) = f(c)$.
+For the last equality, note that $-f(c)^2 = -f(c) f(-c) = f(0) = -1$.
+Thus we get $f(c)^2 = 1 \iff f(c) = \pm 1$.
+\end{proof}
+
+In particular, $f(c)$ always commutes with $f(x)$.
+This shows that the first and third condition are indeed equivalent.
+Thus, all four conditions are indeed equivalent.
+
+Now let $J \subseteq R$ be the set of quasi-periodic elements.
+The first condition yields that $J$ is closed under addition.
+The second and fourth condition yields that $J$ is closed under right and left multiplication by elements of $R$, respectively.
+Thus, $J$ is a two-sided ideal of $R$.
+
+\begin{lemma}\label{2012a5-quasi-periodic-non-zero}
+Suppose that $f$ is reduced and $J$ contains a non-zero element, say $c$.
+Then $R = \{0, 1, c, c + 1\}$.
+\end{lemma}
+\begin{proof}
+First note that $f(c) = \pm 1$ for any $c \in J$.
+If $f(c) = -1$, then $f(x + c) = f(x)$ for all $x \in R$ and thus $c = 0$.
+Thus, if $c \in J$ is non-zero, then $f(c) = 1$.
+This case is possible only if $\rchar(S) \nmid 2$, so we will assume this.
+
+Now fix a non-zero element $c \in J$.
+Then $f(c) = 1$, and so $f(x + c) = -f(x)$ for all $x \in R$.
+For any $d \in J$ non-zero, this yields $1 = f(d) = -f(d - c)$.
+So $f(d - c) = -1$ and so, since $d - c \in J$, this implies $d = c$.
+In summary, $J = \{0, c\}$.
+
+Next, we show that for any $d \in R$, if $dc = 0$, then $d \in J$.
+Indeed, for any $x \in R$, we have
+\[ f(dx + 1) = f(d(x + c) + 1) = f(d) f(x + c) + f(d + x + c) = -(f(d) f(x) + f(d + x)) = -f(dx + 1). \]
+Since $\rchar(S) \nmid 2$, this means $f(dx + 1) = 0$ for all $x \in J$.
+Thus $d \in J$, as desired.
+
+Finally, for any $r \in R$, we have $rc \in J = \{0, c\}$, so either $rc = 0$ or $(r - 1)c = 0$.
+By the above result, the former yields $r \in \{0, c\}$, and the latter yields $r \in \{1, c + 1\}$.
+\end{proof}
+
+
+
+
+\subsubsection*{Periodic elements}
+
+Consider the set $I$ of periodic elements of $R$ (with respect to $f$).
+That is, $I = \{c \in R : \forall x \in R, f(x + c) = f(x)\}$.
+Here, we prove that $I$ is in fact a double-sided ideal of $R$.
+Clearly $I$ is a group under addition, so we just have to prove that it is closed under multiplication from both sides.
+By symmetry, it suffices to show that $dc \in I$ for any $d \in R$ and $c \in I$.
+
+Let $J$ be the ideal of quasi-periodic elements as in the previous part.
+Clearly, $c \in I$ implies $f(c) = f(0) = -1$ and $c \in J$.
+The converse is easy to check, so we have
+\[ c \in I \iff c \in J \wedge f(c) = -1. \]
+
+Now fix $c \in I$ and $d \in R$; the goal is to show that $dc \in I$.
+Since $J$ is a two-sided ideal, we have $dc \in J$ and thus $f(dc) = \pm 1$.
+The goal is to show that $f(dc) = -1$.
+
+\begin{proof}
+Since $c \in I$, for any $x \in R$ we have
+\[ f(d) f(c + x) + f(d + c + x) = f(d) f(x) + f(d + x) \implies f(dc + dx + 1) = f(dx + 1). \]
+But $dc \in J$, so this gives us $-f(dx + 1) = f(dx + 1)$.
+Thus, either $\rchar(S) = 2$ or $f(dx + 1) = 0$ for all $x \in R$.
+In the former case, we are done since $f(dc) = \pm 1 = -1$.
+The latter case means that $d \in J$.
+Thus, for any $d \in R$, either $dc \in I$ or $d \in J$.
+
+Now if $d \in J$, then $d - 1 \notin J$, so $(d - 1)c \in I$.
+Since $c \in I$, we still get $dc \in I$.
+Either way, we have $dc \in I$ for any $d \in R$, as desired.
+\end{proof}
+
+Since $I$ is a two-sided ideal and $f(x + c) = f(x)$ for any $c \in I$, $f$ lifts to a function $\tilde{f} : R/I \to S$.
+That is, $\tilde{f}$ satisfies $f = \tilde{f} \circ q$, where $q : R \to R/I$ is the canonical quotient map.
+One can check that $\tilde{f}$ is a reduced good map.
+Using this result, from now on, we can assume that $f$ is a reduced good map whenever necessary.
+
+
+
+
 \subsubsection*{A solver for $f(x + 1) = f(x) + 1$.}
 
 We now solve the problem when $f(x + 1) = f(x) + 1$ for all $x \in R$.
@@ -100,10 +201,8 @@ The trick is to write $f(x(x + 1) y + 1)$ in two ways.
 Let $a = f(x)$, $b = f(y)$, and $c = f(x + y)$, and note again that $f(x + 1) = f(x) + 1$ for all $x \in R$.
 We get
 \begin{align*}
-    a f((x + 1) y) + f(x + (x + 1) y)
-        &= (a + 1) f(xy) + f(x + 1 + xy) \\
-        a((a + 1) b + c) + (a + 1)(b + 1) + c
-            &= (a + 1) (ab + c - 1) + a(b + 1) + c + 1
+    a f((x + 1) y) + f(x + (x + 1) y) &= (a + 1) f(xy) + f(x + 1 + xy) \\
+    a((a + 1) b + c) + (a + 1)(b + 1) + c &= (a + 1) (ab + c - 1) + a(b + 1) + c + 1
 \end{align*}
     which simplifies to $c = a + b + 1$ after some heavy algebraic manipulation.
 It is the desired equality.
