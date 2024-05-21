@@ -136,28 +136,30 @@ instance : CommRing 𝔽₂ :=
 
 /-! ### Ring homomorphism from `𝔽₂` -/
 
-def cast [AddGroupWithOne R] : 𝔽₂ → R
+def cast [AddMonoidWithOne R] : 𝔽₂ → R
   | O => 0
   | I => 1
 
-theorem cast_add [AddGroupWithOne R] [CharTwo R] :
+theorem cast_add [AddMonoidWithOne R] [CharTwo R] :
     ∀ x y : 𝔽₂, cast (R := R) (x + y) = cast x + cast y
   | O, _ => (zero_add _).symm
   | I, O => (add_zero 1).symm
   | I, I => (CharTwo.add_self_eq_zero 1).symm
 
-theorem cast_mul [Ring R] : ∀ x y : 𝔽₂, cast (R := R) (x * y) = cast x * cast y
+variable [NonAssocSemiring R] [CharTwo R]
+
+theorem cast_mul : ∀ x y : 𝔽₂, cast (R := R) (x * y) = cast x * cast y
   | O, _ => (zero_mul _).symm
   | I, _ => (one_mul _).symm
 
-def castRingHom [Ring R] [CharTwo R] : 𝔽₂ →+* R :=
+def castRingHom : 𝔽₂ →+* R :=
   { toFun := cast
     map_one' := rfl
     map_mul' := cast_mul
     map_zero' := rfl
     map_add' := cast_add }
 
-theorem castRingHom_injective [Ring R] [CharTwo R] (h : (1 : R) ≠ 0) :
+theorem castRingHom_injective (h : (1 : R) ≠ 0) :
     Function.Injective (castRingHom : 𝔽₂ →+* R) :=
   (injective_iff_map_eq_zero _).mpr λ x h1 ↦ match x with
     | O => rfl

@@ -248,13 +248,13 @@ instance : CommRing 𝔽₄ :=
 
 open CharTwo
 
-def cast [AddGroupWithOne R] (r : R) : 𝔽₄ → R
+def cast [AddMonoidWithOne R] (r : R) : 𝔽₄ → R
   | O => 0
   | I => 1
   | X => r
   | Y => r + 1
 
-variable [Ring R] [CharTwo R]
+variable [NonAssocSemiring R] [CharTwo R]
 
 theorem cast_add (r : R) : ∀ x y : 𝔽₄, cast r (x + y) = cast r x + cast r y
   | O, _ => (zero_add _).symm

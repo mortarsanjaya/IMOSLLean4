@@ -248,13 +248,13 @@ instance : CommRing 𝔽₂ε :=
 
 open CharTwo
 
-def cast [AddGroupWithOne R] (r : R) : 𝔽₂ε → R
+def cast [AddMonoidWithOne R] (r : R) : 𝔽₂ε → R
   | O => 0
   | I => 1
   | X => r
   | Y => r + 1
 
-theorem cast_add [AddGroupWithOne R] [CharTwo R] (r : R) :
+theorem cast_add [AddMonoidWithOne R] [CharTwo R] (r : R) :
     ∀ x y, cast r (x + y) = cast r x + cast r y
   | O, _ => (zero_add _).symm
   | x, O => x.add_zero.symm ▸ (add_zero _).symm
@@ -268,7 +268,7 @@ theorem cast_add [AddGroupWithOne R] [CharTwo R] (r : R) :
   | Y, X => (add_add_cancel_middle₂ _ _).symm
   | Y, Y => (add_self_eq_zero _).symm
 
-variable [Ring R] [CharTwo R] {r : R} (h : r * r = 0)
+variable [NonAssocSemiring R] [CharTwo R] {r : R} (h : r * r = 0)
 
 theorem cast_mul : ∀ x y : 𝔽₂ε, cast r (x * y) = cast r x * cast r y
   | O, _ => (zero_mul _).symm
@@ -276,9 +276,9 @@ theorem cast_mul : ∀ x y : 𝔽₂ε, cast r (x * y) = cast r x * cast r y
   | x, O => x.mul_zero.symm ▸ (mul_zero _).symm
   | x, I => x.mul_one.symm ▸ (mul_one _).symm
   | X, X => h.symm
-  | X, Y => (add_left_eq_self.mpr h).symm.trans (mul_add_one r r).symm
-  | Y, X => (add_left_eq_self.mpr h).symm.trans (add_one_mul r r).symm
-  | Y, Y => by change 1 = (r + 1) * (r + 1); rw [add_one_mul_self, h, zero_add]
+  | X, Y => (zero_add r).symm.trans <| h ▸ (mul_add_one r r).symm
+  | Y, X => (zero_add r).symm.trans <| h ▸ (add_one_mul r r).symm
+  | Y, Y => (zero_add 1).symm.trans <| h ▸ (add_one_mul_self r).symm
 
 def castRingHom : 𝔽₂ε →+* R :=
   { toFun := cast r
