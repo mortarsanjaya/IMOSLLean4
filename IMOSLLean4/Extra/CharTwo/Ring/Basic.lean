@@ -10,7 +10,8 @@ import Mathlib.Algebra.Ring.Defs
 /-!
 # Characteristic two (semi)rings
 
-We prove several lemmas about semirings of characteristic two (using `CharTwo`).
+We prove several lemmas about `CharTwo` semirings.
+The lemmas here do not need extra imports beyond `Mathlib.Algebra.Ring.Defs`.
 -/
 
 namespace IMOSL
