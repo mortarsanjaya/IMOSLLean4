@@ -66,6 +66,12 @@ theorem add_eq_iff_eq_add''' {x y z : M} : x + y = z ↔ y = z + x := by
 theorem add_eq_zero_iff_eq {x y : M} : x + y = 0 ↔ x = y := by
   rw [add_eq_iff_eq_add, zero_add]
 
+theorem add_add_add_cancel_left (x y z : M) : (x + y) + (x + z) = y + z := by
+  rw [← add_assoc, add_add_cancel_middle₂]
+
+theorem add_add_add_cancel_right (x y z : M) : (x + z) + (y + z) = x + y := by
+  rw [add_assoc, add_add_cancel_middle₁]
+
 end
 
 
