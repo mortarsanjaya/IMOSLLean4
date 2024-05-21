@@ -254,7 +254,7 @@ def cast [AddGroupWithOne R] : ℤ₄ → R
   | ℤ₄2 => 2
   | ℤ₄3 => -1
 
-variable [Ring R] (h : (4 : R) = 0)
+variable [NonAssocRing R] (h : (4 : R) = 0)
 
 theorem cast_add (x y : ℤ₄) : cast (R := R) (x + y) = cast x + cast y :=
   have h : (2 : R) + 2 = 0 := by rw [← h, ← Nat.cast_two, ← Nat.cast_add]; rfl

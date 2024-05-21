@@ -211,4 +211,98 @@ It is the desired equality.
 
 
 
+\newpage
+\subsubsection*{Case 1: $f(-1) \neq 0$}
+
+By replacing $(x, y)$ with $(x + 1, -1)$ in~\eqref{2012a5-eq0}, we get
+\[ f(-x) = f(x + 1) f(-1) + f(x). \tag{1.1}\label{2012a5-eq1-1} \]
+Using~\eqref{2012a5-eq1-1} twice yields $f(x) = f(-x) + f(-x + 1) f(-1) = f(-x) - f(x + 1) f(-1)$.
+Since $f(-1) \neq 0$, this gives us $f(-x + 1) = -f(x + 1)$, or
+\[ f(-x) = -f(x + 2). \tag{1.2}\label{2012a5-eq1-2} \]
+In particular, $f(2) = 1$.
+Now we prove more equalities.
+
+By comparing $(x, y)$ with $(-x, -y)$, we get
+\[ f(-x) f(-y) + f(-(x + y)) = f(x) f(y) + f(x + y). \tag{1.3}\label{2012a5-eq1-3} \]
+By plugging $y = 2$ into~\eqref{2012a5-eq0} and using~\eqref{2012a5-eq1-2}, we get
+\[ f(2x + 1) = f(x) - f(-x). \tag{1.4}\label{2012a5-eq1-4} \]
+
+Now we show that for any $x \in R$,
+\[ f(x + 1) = 0 \vee f(-x) + f(x) = f(-1), \tag{1.5}\label{2012a5-eq1-5} \]
+By~\eqref{2012a5-eq1-3} with $y = x$, we get
+\[ f(x)^2 - f(-x)^2 = f(-2x) - f(2x). \]
+Since $x$ and $-x$ commute, so does $f(x)$ and $f(-x)$.
+Thus the LHS factors as $(f(x) - f(-x))(f(x) + f(-x))$.
+Applying~\eqref{2012a5-eq1-4} on the LHS and~\eqref{2012a5-eq1-1} on the RHS gives
+\[ f(2x + 1) (f(x) + f(-x)) = f(2x + 1) f(-1). \]
+Thus either $f(2x + 1) = 0$ or $f(x) + f(-x) = f(-1)$.
+But combining~\eqref{2012a5-eq1-4} and~\eqref{2012a5-eq1-1} yields $f(2x + 1) = -f(x + 1) f(-1)$.
+Since $f(-1) \neq 0$, $f(2x + 1) = 0$ implies $f(x + 1) = 0$, as desired.
+
+Next, we show that
+\[ f(x + 1) = 0 \implies f(-x) = f(x) = -1. \tag{1.6}\label{2012a5-eq1-6} \]
+First note that~\eqref{2012a5-eq1-1} already gives $f(-x) = f(x)$.
+Now~\eqref{2012a5-eq1-3} with $y = -(x + 1)$ gives
+\[ f(x) f(-(x + 1)) + f(-1) = 0 \iff f(x) f(-(x + 1)) = -f(-1). \]
+Meanwhile, with $y = x + 1$, we get
+\[ f(-x) f(-(x + 1)) + f(-(2x + 1)) = f(2x + 1). \]
+Note that $f(-x) = f(x)$, so applying the previous equality and using~\eqref{2012a5-eq1-4} gives
+\[ -f(-1) - f(-x) f(-1) = -f(x + 1) f(-1) = 0. \]
+Since $f(-1) \neq 0$, this gives $f(-x) = -1$.
+This proves~\eqref{2012a5-eq1-6}.
+
+\begin{claim}
+We have $f(-1) \in \{-2, 1\}$.
+\end{claim}
+\begin{proof}
+Recall that $f(2) = 1$.
+By~\eqref{2012a5-eq0} with $x = y = -1$, we have $f(-2) = 1 - f(-1)^2$.
+By~\eqref{2012a5-eq1-5} with $x = -2$, since $f(-1) \neq 0$, we have $f(-2) = f(-1) - 1$.
+Thus we have $1 - f(-1)^2 = f(-1) - 1$, which implies the claim.
+\end{proof}
+
+We now split cases based on the value of $f(-1)$.
+
+\begin{itemize}
+
+    \item
+    $f(-1) = -2$ and $\rchar(S) \nmid 2$.
+    
+    Then combining~\eqref{2012a5-eq1-5} with~\eqref{2012a5-eq1-6} yields $f(-x) + f(x) = -2$ for all $x \in R$.
+    Combining with~\eqref{2012a5-eq1-1} now gives $2 f(x + 1) = 2 (f(x) + 1)$ for all $x \in R$.
+    Since $\rchar(S) \nmid 2$, this gives us $f(x + 1) = f(x) + 1$ for all $x \in R$.
+    We are done by Lemma~\ref{2012a5-linear-solver}.
+
+
+    
+    \item
+    $f(-1) = 1$ and $\rchar(S) \nmid 3$.
+
+    We will assume that $f$ is reduced in this subcase.
+    We start by strengthening~\eqref{2012a5-eq1-6}: $f(x + 1) = 0$ implies $x = 0$.
+    Indeed, $f(-x) = f(x) = -1$, so~\eqref{2012a5-eq1-3} yields
+    \[ -f(-y) + f(-(x + y)) = -f(y) + f(x + y) \iff f(-(x + y)) - f(x + y) = f(-y) - f(y). \]
+    By~\eqref{2012a5-eq1-1} and $f(-1) \neq 0$, we get $f(x + y + 1) = f(y + 1)$ for all $y \in R$.
+    Replace $y$ with $y - 1$, and we get that $f$ is $x$-periodic, thus $x = 0$.
+
+    By~\eqref{2012a5-eq1-5}, we have $f(-x) + f(x) = 1$ if $x \neq 0$.
+    By~\eqref{2012a5-eq1-1} and~\eqref{2012a5-eq1-2}, we get $f(x) + f(x + 1) + f(x + 2) = 0$ for all $x \in R$.
+    Thus, it is clear that $f$ is $3$-periodic, hence $\rchar(R) \mid 3$.
+    Next, for any $x \in R$,
+    \[ f(x) + f(x + 1) + f(x + 2) + f(-x) + f(-(x + 1)) + f(-(x + 2)) = 0. \]
+    If $x \notin \{0, 1, 2\}$, then we would have $3 = 0$ in $S$, contradicting $\rchar(S) \nmid 3$.
+    Thus, $R = \{0, 1, 2\}$, and it is easy to check now that $R \cong \F_3$.
+    The isomorphism then induces the second map ($\F_3 \to \Z$) on the table.
+
+\end{itemize}
+
+
+
+
+\newpage
+\subsubsection*{Case 2: $f(-1) = 0$, $\rchar(R) \nmid 2$}
+
+...
+
 %% ...
+

@@ -27,7 +27,7 @@ theorem sub_one_is_NontrivialGood : NontrivialGood (λ (x : R) ↦ x - 1) :=
   ⟨sub_one_is_good, sub_self 1, sub_add_cancel 0 1⟩
 
 theorem sub_one_solver [NonAssocRing S] {f : R → S} (hf : NontrivialGood f)
-    (h : ∀ x, f (x + 1) = f x + 1) : ∃ φ : R →+* S, f = λ x ↦ φ (x - 1) := by
+    (h : ∀ x, f (x + 1) = f x + 1) : ∃ φ : R →+* S, ∀ x, f x = φ (x - 1) := by
   ---- Reduce to showing `f(x + y) = f(x) + f(y) + 1` for all `x y : R`
   suffices ∀ x y, f (x + y) = f x + f y + 1 by
     have h0 (x y) : f (x + y + 1) = f (x + 1) + f (y + 1) := by
@@ -37,7 +37,7 @@ theorem sub_one_solver [NonAssocRing S] {f : R → S} (hf : NontrivialGood f)
         ← mul_add_one (f x), ← add_one_mul (f x)]
     exact ⟨⟨⟨⟨λ x ↦ f (x + 1), (h 1).trans <| by rw [hf.map_one, zero_add]⟩, h1⟩,
         ((h 0).trans hf.map_zero_add_one), h0⟩,
-      funext λ x ↦ congrArg f (sub_add_cancel x 1).symm⟩
+      λ x ↦ congrArg f (sub_add_cancel x 1).symm⟩
   ---- Collect some results
   have h0 (x y) : f (x * y) + 1 = f x * f y + f (x + y) :=
     (h _).symm.trans (hf.is_good x y)

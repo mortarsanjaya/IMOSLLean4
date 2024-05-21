@@ -43,3 +43,7 @@ structure ReducedGood (f : R → S) extends NontrivialGood f : Prop where
 lemma ReducedGood.period_imp_zero {f : R → S} (hf : ReducedGood f)
     (h : ∀ x, f (x + c) = f x) : c = 0 :=
   hf.period_imp_eq c 0 λ x ↦ by rw [h, add_zero]
+
+theorem map_commute_of_commute [IsCancelAdd S]
+    {f : R → S} (h : good f) (h0 : x * y = y * x) : f x * f y = f y * f x :=
+  add_right_cancel (b := f (x + y)) (by rw [← h, h0, h, add_comm x])

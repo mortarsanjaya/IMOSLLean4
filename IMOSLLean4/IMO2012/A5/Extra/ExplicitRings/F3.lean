@@ -185,21 +185,23 @@ theorem cast_add [AddGroupWithOne R] (h : (3 : R) = 0) (x y : 𝔽₃) :
     | 𝔽₃2, 𝔽₃1 => (neg_add_self 1).symm
     | 𝔽₃2, 𝔽₃2 => (neg_eq_iff_eq_neg.mpr h).symm.trans (neg_add_rev _ _)
 
-theorem cast_mul [Ring R] : ∀ x y : 𝔽₃, cast (R := R) (x * y) = cast x * cast y
+variable [NonAssocRing R] (h : (3 : R) = 0)
+
+theorem cast_mul : ∀ x y : 𝔽₃, cast (R := R) (x * y) = cast x * cast y
   | 𝔽₃0, _ => (zero_mul _).symm
   | 𝔽₃1, _ => (one_mul _).symm
   | 𝔽₃2, 𝔽₃0 => (mul_zero (-1)).symm
   | 𝔽₃2, 𝔽₃1 => (mul_one (-1)).symm
   | 𝔽₃2, 𝔽₃2 => ((neg_mul_neg _ _).trans <| mul_one 1).symm
 
-def castRingHom [Ring R] (h : (3 : R) = 0) : 𝔽₃ →+* R :=
+def castRingHom : 𝔽₃ →+* R :=
   { toFun := cast
     map_one' := rfl
     map_mul' := cast_mul
     map_zero' := rfl
     map_add' := cast_add h }
 
-theorem castRingHom_injective [Ring R] (h : (3 : R) = 0) (h0 : (1 : R) ≠ 0) :
+theorem castRingHom_injective (h0 : (1 : R) ≠ 0) :
     Function.Injective (castRingHom h) :=
   (injective_iff_map_eq_zero _).mpr λ x h1 ↦ match x with
     | 𝔽₃0 => rfl
