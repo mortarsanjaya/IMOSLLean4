@@ -274,7 +274,6 @@ We now split cases based on the value of $f(-1)$.
     We are done by Lemma~\ref{2012a5-linear-solver}.
 
 
-    
     \item
     $f(-1) = 1$ and $\rchar(S) \nmid 3$.
 
@@ -302,7 +301,115 @@ We now split cases based on the value of $f(-1)$.
 \newpage
 \subsubsection*{Case 2: $f(-1) = 0$, $\rchar(R) \nmid 2$}
 
-...
+\iffalse
+Plugging $y = -1$ into~\eqref{2012a5-eq0} immediately implies that $f$ is even.
+In particular, by replacing $y$ with $-y$ in~\eqref{2012a5-eq0} yields
+\[ f(xy - 1) = f(x) f(y) + f(x - y). \tag{2.1}\label{2012a5-eq2-1} \]
+Applying~\eqref{2012a5-eq0} and the above equation to $f(2x + 1) = f(2(x + 1) - 1)$ yields
+\[ f(x) f(2) + f(x + 2) = f(x + 1) f(2) + f(x - 1). \tag{2.2}\label{2012a5-eq2-2} \]
+\fi
 
 %% ...
 
+
+
+
+\newpage
+\subsubsection*{Case 3: $\rchar(R) \mid 2$}
+
+In this subcase, we rely on the following three equations deduced from~\eqref{2012a5-eq0}:
+\[ f(x^2 + x + 1) = f(x) f(x + 1) \tag{3.1}\label{2012a5-eq3-1} \]
+\[ f(x^2 + 1) = f(x)^2 - 1 \tag{3.2}\label{2012a5-eq3-2} \]
+The above also gives $f(x^2) = f(x + 1)^2 - 1$ for any $x \in R$.
+Next, comparing~\eqref{2012a5-eq0} using $(x, x^2 + x)$ and $(x^2, x + 1)$ yields
+\[ f(x) f(x^2 + x) + f(x^2) = f(x^2) f(x + 1) + f(x^2 + x + 1). \]
+By~\eqref{2012a5-eq3-1},~\eqref{2012a5-eq3-2}, and some rearranging, we get
+\[ f(x) f(x^2 + x) = (f(x + 1)^2 - 1)(f(x + 1) - 1) + f(x) f(x + 1). \tag{3.3}\label{2012a5-eq3-3} \]
+Next, we prove that for any $x \in R$,
+\[ f(x)^2 + f(x + 1)^2 = 1 \vee f(x) + f(x + 1) = 1. \tag{3.4}\label{2012a5-eq3-4} \]
+
+\begin{proof}
+Write $f(x) f(x + 1) f(x^2 + x)$ in two ways using~\eqref{2012a5-eq3-3}:
+\[ f(x + 1) ((f(x + 1)^2 - 1)(f(x + 1) - 1) + f(x) f(x + 1)) = f(x) ((f(x)^2 - 1)(f(x) - 1) + f(x + 1) f(x)). \]
+Note that this can be regarded as an equality in commutative rings since $f(x)$ and $f(x + 1)$ commute.
+Rearranging yields
+\[ (f(x + 1) - f(x))(f(x)^2 + f(x + 1)^2 - 1)(f(x) + f(x + 1) - 1) = 0. \]
+So either~\eqref{2012a5-eq3-4} holds, or $f(x + 1) = f(x)$.
+
+In the latter case,~\eqref{2012a5-eq3-3} becomes $f(x) f(x^2 + x) = f(x)^3 - f(x) + 1$.
+Note that by~\eqref{2012a5-eq3-1} and~\eqref{2012a5-eq3-2},
+\[ f(x^2 + x)^2 = f(x^4 + x^2 + 1) + 1 = f(x^2) f(x^2 + 1) + 1 = (f(x)^2 - 1)^2 + 1. \]
+For convenience, if we denote $f(x) = c$, we get
+\[ c^2 (c^4 - 2c^2 + 2) = (c^3 - c + 1)^2 \iff (1 - 2c)(c^2 - 1) = 0. \]
+If $2c = 1$, then we are done as $f(x) + f(x + 1) = 2c$.
+Otherwise, $f(x^2) = f(x^2 + 1) = c^2 - 1 = 0$.
+Plugging back into~\eqref{2012a5-eq3-3} with $x$ replaced by $x^2$ yields a contradiction.
+\end{proof}
+
+In particular, if $\rchar(S) \mid 2$, we are done.
+Indeed,~\eqref{2012a5-eq3-4} yields $f(x + 1) = f(x) + 1$ for all $x \in R$.
+Then Lemma~\ref{2012a5-linear-solver} yields that $f + 1$ is a ring homomorphism.
+Thus, from now on, we assume that $\rchar(S) \nmid 2$.
+
+The next statement we prove is
+\[ f(x) = 0 \vee f(x + 1) = 0 \vee (f(x) + f(x + 1) = 1 \wedge f(x) f(x + 1) = -1). \tag{3.5}\label{2012a5-eq3-5} \]
+
+\begin{proof}
+First notice that by double application of~\eqref{2012a5-eq3-2}, for any $x \in R$,
+\[ f(x^4) = (f(x)^2 - 1)^2 - 1 = f(x)^4 - 2 f(x)^2. \]
+Now write $f(x^8 + x^4 + 1)$ in two ways, using the above and using~\eqref{2012a5-eq3-1}.
+Since $f(x^2 + x + 1) = f(x) f(x + 1)$, we get
+\[ (f(x)^4 - 2 f(x)^2)(f(x + 1)^4 - 2 f(x + 1)^2) = (f(x) f(x + 1))^4 - 2 (f(x) f(x + 1))^2, \]
+    which rearranges to
+\[ (f(x) f(x + 1))^2 (f(x)^2 + f(x + 1)^2 - 3) = 0 \iff f(x) = 0 \vee f(x + 1) = 0 \vee f(x)^2 + f(x + 1)^2 = 3. \]
+The last case, by~\eqref{2012a5-eq3-4}, also implies $f(x) + f(x + 1) = 1$, as $f(x)^2 + f(x + 1)^2 = 1$ is impossible.
+Then expanding $(f(x) + f(x + 1))^2$ and simplifying yields $f(x) f(x + 1) = -1$, as desired.
+\end{proof}
+
+By~\eqref{2012a5-eq3-3}, if $f(x) = 0$, we know that $f(x + 1) = \pm 1$.
+On the other hand,~\eqref{2012a5-eq3-5} gives us the converse, so we have
+\[ f(x) = 0 \iff f(x + 1) = \pm 1. \tag{3.6}\label{2012a5-eq3-6} \]
+Next, we prove the following:
+\[ f(r) = -1 \implies r = 0. \tag{3.7}\label{2012a5-eq3-7} \]
+
+\begin{proof}
+By~\eqref{2012a5-eq3-6}, $f(r) = -1$ implies $f(r + 1) = 0$.
+Plugging into~\eqref{2012a5-eq3-2} yields $f(r^2) = -1$.
+Meanwhile, plugging back into~\eqref{2012a5-eq3-3} gives $f(r^2 + r) = -1$.
+Note again that this holds for any $r \in R$ such that $f(r) = -1$.
+
+Plugging into~\eqref{2012a5-eq0} yields $f(rx + 1) = f(x + r) - f(r)$ for any $x \in R$.
+This also yields $f(r^2 + rx + 1) = -f(rx + 1)$ since $\rchar(R) \mid 2$.
+In particular, for any $y \in R$ of form $rx + 1$ for some $x$, we have $f(r^2 + y) = -f(y)$.
+
+Apply the same reasoning with $r^2$ and $r^2 + r$ in place of $r$.
+For the former, we have $f(r^4 + y) = -f(y)$ if $y$ is of form $r^2 x + 1$.
+These numbers are also of form $rx + 1$ for some $x \in R$, so we get $f(r^4 + r^2 + y) = -f(r^2 + y) = f(y)$.
+On the other hand, we have $f(r^4 + r^2 + y) = -f(y)$ if $y$ is of form $(r^2 + r) x + 1$ for some $x \in R$.
+Thus, since $\rchar(S) \nmid 2$, this implies $f(y) = 0$ if $y$ is of both forms.
+In particular, $f((r^3 + r^2) x + 1) = 0$ for all $r \in R$, so $r^3 + r^2$ is quasi-perodic.
+The same holds for $r^4 + r^2 = (r^3 + r^2)(r + 1)$.
+Since $f(r) = -1 \implies f(r^2) = -1 \implies f(r^4 + r^2) = -1$, we get $r^4 + r^2 = 0$.
+
+Now go back to the equality $f(r^4 + r^2 + y) = -f(y)$, which holds whenever $y$ is of form $(r^2 + r) x + 1$ for some $x \in R$.
+Since $r^4 + r^2 = 0$, this yields $f((r^2 + r) x + 1) = 0$ for all $x \in R$, so $r^2 + r$ is quasi-periodic.
+Since $f(r^2 + r) = -1$, we get $r^2 + r = 0$.
+Finally,~\eqref{2012a5-eq0} yields that for any $x \in R$,
+\[ 0 = f((r + 1)rx + 1) = f(rx + r + 1) = f(r(x + 1) + 1). \]
+So $r$ is quasi-periodic.
+Since $f(r) = -1$, this gives $r = 0$, as desired.
+\end{proof}
+
+As a result, these are the following possible cases for an element $r \in R$:
+\begin{itemize}
+    \item   $r = 0$ or $r = 1$;
+    \item   $(f(r), f(r + 1)) = (1, 0)$, for which $r^2 = 0$ but $r \neq 0$;
+    \item   $(f(r), f(r + 1)) = (0, 1)$, for which $r^2 = 1$ but $r \neq 1$;
+    \item   $f(r) + f(r + 1) = 1$ and $f(r) f(r + 1) = -1$, for which $r^2 + r + 1 = 0$.
+\end{itemize}
+
+Note that $r$ falls into the second category if and only if $r + 1$ falls into the third category.
+Thus, in the ring $R$, every element $r$ either satisfies $r^2 = 0$, $r^2 = 1$, or $r^2 + r + 1 = 0$.
+We now analyze such rings and in fact show that it is isomorphic to $\F_2$, $\F_2[\varepsilon]$, or $\F_4$.
+
+...
