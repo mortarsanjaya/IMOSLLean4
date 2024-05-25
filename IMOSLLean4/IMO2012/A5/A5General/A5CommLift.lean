@@ -77,6 +77,31 @@ lemma oneVarCommLift_is_NontrivialGood {f : R → S} (hf : NontrivialGood f) :
   codomainLift_is_NontrivialGood (oneVarDomainLift_is_NontrivialGood c hf)
 
 /-- Existence version of the above -/
+theorem oneVarCommLift_exists {R : Type u} {S : Type v} [Ring R] [Ring S]
+    {f : R → S} (hf : NontrivialGood f) (c : R) :
+    ∃ (R' : Type u) (_ : CommRing R')
+        (φ : R' →+* R) (_ : Function.Injective φ) (_ : c ∈ Set.range φ)
+      (S' : Type v) (_ : CommRing S') (ρ : S' →+* S) (_ : Function.Injective ρ)
+      (f' : R' → S') (_ : ∀ a, f (φ a) = ρ (f' a)), NontrivialGood f' :=
+  ---- Constructing `R'`
+  ⟨Subring.closure {c},
+  instCommRingClosure_of_singleton c,
+  SubringClass.subtype _,
+  λ _ _ ↦ Subtype.ext,
+  ⟨⟨c, Subring.subset_closure rfl⟩, rfl⟩,
+  ---- Constructing `S'`
+  OneVarRange c f,
+  OneVarRange_commRing_of_good c hf.is_good,
+  SubringClass.subtype _,
+  λ _ _ ↦ Subtype.ext,
+  ---- Constructing `f'`
+  λ a ↦ ⟨f a.1, Subring.subset_closure ⟨a, rfl⟩⟩,
+  λ _ ↦ rfl,
+  oneVarCommLift_is_NontrivialGood c hf⟩
+
+
+
+/-- Existence version of the above (target has no zero divisors) -/
 theorem oneVarCommLiftDomain_exists {R : Type u} {S : Type v} [Ring R] [Ring S]
     [NoZeroDivisors S] {f : R → S} (hf : NontrivialGood f) (c : R) :
     ∃ (R' : Type u) (_ : CommRing R')

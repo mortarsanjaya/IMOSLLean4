@@ -25,32 +25,6 @@ namespace IMO2012A5
 namespace Case3
 
 open Extra Extra.CharTwo
-/-
-/-! ### Classification of elements of `R` with respect to `f` -/
-
-section
-
-variable [AddMonoidWithOne R] [NonAssocRing S] (f : R → S) (x : R)
-
-structure 𝔽₂_zero : Prop where
-  map_self : f x = -1
-  map_add_one : f (x + 1) = 0
-
-structure 𝔽₄_prim : Prop where
-  add : f x + f (x + 1) = 1
-  mul : f x * f (x + 1) = -1
-
-lemma 𝔽₄_prim.map_mul_self_eq {f : R → S} {x : R} (h : 𝔽₄_prim f x) :
-    f x * f x = f x + 1 := by
-  rw [← add_neg_eq_iff_eq_add, ← eq_sub_iff_add_eq',
-    ← mul_one_sub, ← h.mul, ← h.add, add_sub_cancel_left]
-
-end
--/
-
-
-
-
 
 /-! ### General lemmas -/
 
@@ -276,11 +250,11 @@ end
 
 
 
-/-! ### Rest of the solution -/
+/-! ### Characterization of elements of `R` -/
 
 variable (hS : (2 : S) ≠ 0) {f : R → S} (hf : ReducedGood f)
 
-theorem map_neg_one_reduced_imp (h : f r = -1) : r = 0 := by
+theorem map_eq_neg_one_reduced_imp (h : f r = -1) : r = 0 := by
   let hf' := hf.toNontrivialGood
   ---- First show that `r^4 + r^2 = 0`
   have h0 : (r * r + r) * (r * r + r) = 0 := by
@@ -305,19 +279,186 @@ theorem map_neg_one_reduced_imp (h : f r = -1) : r = 0 := by
     ← add_rotate, ← mul_add_one r, sub_add_cancel, eq_comm] at h1
 
 lemma map_add_one_eq_zero_imp (h : f (x + 1) = 0) : x * x = 0 :=
-  map_neg_one_reduced_imp hS hf <| by
+  map_eq_neg_one_reduced_imp hS hf <| by
     rw [Eq2_v2 hf.toNontrivialGood, h, sq, zero_mul, zero_sub]
 
-/- ... -/
+theorem reduced_eq_zero_iff : r = 0 ↔ f r = -1 :=
+  ⟨λ h ↦ h ▸ hf.map_zero, map_eq_neg_one_reduced_imp hS hf⟩
 
-theorem solution :
-    (∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x)) ∨
-    (∃ φ : R →+* 𝔽₂ε, ∀ x, f x = 𝔽₂εMap (φ x)) ∨
-    (∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x))) := by
+theorem reduced_𝔽₂ε_iff : r * r = 0 ↔ f (r + 1) = 0 := by
+  rw [reduced_eq_zero_iff hS hf, Eq2_v2 hf.toNontrivialGood,
+    sub_eq_neg_self, sq_eq_zero_iff]
+
+theorem reduced_𝔽₄_iff :
+    r * (r + 1) + 1 = 0 ↔ (f r + f (r + 1) = 1 ∧ f r * f (r + 1) = -1) := by
+  rw [reduced_eq_zero_iff hS hf, Eq1 hf.toNontrivialGood, iff_and_self]
+  intro h; refine (main_cases hS hf.toNontrivialGood r).elim (λ h0 ↦ ?_) And.left
+  rw [← mul_eq_zero, h, neg_eq_zero] at h0
+  rw [← mul_one (_ + _), h0, mul_zero]
+
+theorem R_elts_cases (r : R) :
+    ((r + 1) * (r + 1) = 0 ∨ r * r = 0) ∨ r * (r + 1) + 1 = 0 := by
+  rw [reduced_𝔽₂ε_iff hS hf, reduced_𝔽₂ε_iff hS hf,
+    reduced_𝔽₄_iff hS hf, CharTwo.add_add_cancel_right]
+  exact main_cases hS hf.toNontrivialGood r
+
+theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
+    r = 0 ∨ s = 0 ∨ r = s := by
+  ---- First show that `(rs)^2 = 0`
+  have h : (r * s) * (r * s) = 0 := by
+    have h : (r + s) * (r + s) = r * s + s * r := by
+      rw [add_mul, mul_add, hr, zero_add, mul_add, hs, add_zero]
+    rcases R_elts_cases hS hf (r + s) with (h0 | h0) | h0
+    · rw [CharTwo.add_one_mul_self, h, CharTwo.add_eq_zero_iff_eq] at h0
+      have h1 : (r * s) * (r * s) = r * s := by
+        apply congrArg (λ x ↦ r * x * s) at h0
+        rwa [mul_add, ← mul_assoc, hr, zero_mul, zero_add,
+          mul_one, mul_assoc, mul_assoc, ← mul_assoc] at h0
+      rcases R_elts_cases hS hf (r * s) with (h2 | h2) | h2
+      · rw [CharTwo.add_one_mul_self, h1, CharTwo.add_eq_zero_iff_eq] at h2
+        rw [h2, add_right_eq_self] at h0
+        apply congrArg (r * ·) at h0
+        rw [mul_zero, ← mul_assoc, h2, one_mul] at h0
+        rw [h0, zero_mul, zero_mul]
+      · exact h2
+      · rw [mul_add_one (r * s), h1, CharTwo.add_self_eq_zero, zero_add] at h2
+        rw [← mul_one (r * s * _), h2, mul_zero]
+    · rw [h, CharTwo.add_eq_zero_iff_eq] at h0
+      rw [← mul_assoc, mul_assoc r, ← h0, mul_assoc, mul_assoc, hs, mul_zero, mul_zero]
+    · rw [mul_add_one (r + s), h] at h0
+      replace h : r * _ = r * 0 := congrArg (r * ·) h0
+      rw [mul_zero, mul_add_one r, mul_add, mul_add, ← mul_assoc,
+        mul_add, hr, zero_mul, zero_add, zero_add, ← mul_assoc] at h
+      have h1 : _ * r = 0 * r := congrArg (· * r) h
+      rw [zero_mul, add_mul, add_mul, mul_assoc, hr, add_zero, mul_zero, zero_add] at h1
+      rw [h1, zero_add, CharTwo.add_eq_zero_iff_eq] at h
+      rw [h, hr]
+  save
+  ---- Now plug in back to the functional equation
+  rw [reduced_𝔽₂ε_iff hS hf, hf.is_good] at h
+  rw [reduced_𝔽₂ε_iff hS hf, map_add_one_eq_zero_iff_map_eq hS hf.toNontrivialGood,
+    _root_.sq_eq_one_iff, or_comm] at hr hs
+  have h0 {x} : f x = -1 → x = 0 := map_eq_neg_one_reduced_imp hS hf
+  revert hr; refine Or.imp h0 λ hr ↦ ?_
+  revert hs; refine Or.imp h0 λ hs ↦ ?_
+  rw [hr, hs, mul_one, ← neg_eq_iff_add_eq_zero, eq_comm] at h
+  exact CharTwo.add_eq_zero_iff_eq.mp (h0 h)
+
+theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r = 0 := by
+  rcases R_elts_cases hS hf (r + s) with (h | h) | h
+  ---- Case 1: `(r + s + 1)^2 = 0`
+  · rcases R_elts_claim1 hS hf hr h with hr | h | h0
+    · exact hr
+    · rw [add_assoc, CharTwo.add_eq_zero_iff_eq] at h
+      rw [h, add_one_mul s, CharTwo.add_eq_zero_iff_eq] at hr
+      rw [hr, CharTwo.add_add_cancel_right] at hs
+      rwa [← h, hs, zero_mul, eq_comm] at hr
+    · rw [add_assoc, self_eq_add_right] at h0
+      rw [h0, mul_zero, zero_add] at hs
+      rw [← mul_one r, hs, mul_zero]
+    save
+  ---- Case 2: `(r + s)^2 = 0`
+  · rcases R_elts_claim1 hS hf hr h with hr | h | h0
+    · exact hr
+    · rw [← CharTwo.add_eq_zero_iff_eq.mp h, mul_add_one r, hr, zero_add] at hs
+      rw [CharTwo.add_eq_zero_iff_eq.mp hs, mul_one] at hr
+      rwa [hr, add_zero] at hs
+    · rw [self_eq_add_right] at h0
+      rw [h0, zero_mul, zero_add] at hs
+      rw [← mul_one r, hs, mul_zero]
+    save
+  ---- Case 3: `(r + s)^2 = (r + s) + 1`
+  · rw [add_assoc, mul_add, add_mul, hr, zero_add,
+      add_mul, ← add_assoc, add_assoc, hs, add_zero] at h
+    have h0 : r * _ * s = r * 0 * s := congrArg (r * · * s) h
+    rw [mul_zero, zero_mul, mul_add, ← mul_assoc,
+      ← mul_assoc, hr, zero_mul, add_zero, mul_assoc] at h0
+    rcases R_elts_claim1 hS hf hr h0 with hr | h0 | h0
+    · exact hr
+    · apply congrArg (· * (s + 1)) at h0
+      rwa [zero_mul, mul_assoc, CharTwo.add_eq_zero_iff_eq.mp hs, mul_one] at h0
+    · apply congrArg (r * ·) at hs
+      rwa [mul_zero, mul_add_one r, ← mul_assoc, ← h0,
+        mul_add_one r, ← h0, CharTwo.add_add_cancel_right] at hs
+
+set_option trace.profiler true
+set_option trace.profiler.threshold 500
+
+theorem 𝔽₂_solution (hR : ∀ r : R, r = 0 ∨ r = 1) :
+    ∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x) :=
+  have h : (𝔽₂.cast : 𝔽₂ → R).Bijective :=
+    ⟨𝔽₂.castRingHom_injective λ h ↦ hS <| by
+      apply congrArg f at h; rw [hf.map_one, hf.map_zero, zero_eq_neg] at h
+      rw [← mul_one 2, h, mul_zero],
+    λ x ↦ (hR x).elim (λ h ↦ ⟨𝔽₂.O, h.symm⟩) (λ h ↦ ⟨𝔽₂.I, h.symm⟩)⟩
+  have h0 : ∀ x, f (𝔽₂.cast x) = 𝔽₂Map x
+    | 𝔽₂.O => by
+        change f 0 = ((-1 : ℤ) : S)
+        rw [hf.map_zero, Int.cast_neg, Int.cast_one]
+    | 𝔽₂.I => (hf.map_one).trans Int.cast_zero.symm
+  let ρ := RingEquiv.ofBijective 𝔽₂.castRingHom h
+  ⟨ρ.symm, λ x ↦ h0 _ ▸ congrArg f (Equiv.apply_symm_apply ρ.toEquiv _).symm⟩
+
+theorem 𝔽₂ε_solution {r : R} (hr : r ≠ 0) (hr0 : r * r = 0) :
+    ∃ φ : R →+* 𝔽₂ε, ∀ x, f x = 𝔽₂εMap (φ x) :=
+  have h : (𝔽₂ε.cast r : 𝔽₂ε → R).Bijective := by
+    refine ⟨𝔽₂ε.castRingHom_injective hr0 hr, λ x ↦ ?_⟩
+    rcases R_elts_cases hS hf x with (h0 | h0) | h0
+    · exact ((R_elts_claim1 hS hf hr0 h0).resolve_left hr).elim
+        (λ h1 ↦ ⟨1, (CharTwo.add_eq_zero_iff_eq.mp h1).symm⟩)
+        (λ h1 ↦ ⟨𝔽₂ε.Y, CharTwo.add_eq_iff_eq_add.mpr h1⟩)
+    · exact ((R_elts_claim1 hS hf hr0 h0).resolve_left hr).elim
+        (λ h1 ↦ ⟨0, h1.symm⟩) (λ h1 ↦ ⟨𝔽₂ε.X, h1⟩)
+    · exact absurd (R_elts_claim2 hS hf hr0 h0) hr
+  have h0 : ∀ x, f (𝔽₂ε.cast r x) = 𝔽₂εMap x
+    | 𝔽₂ε.O => by
+        change f 0 = ((-1 : ℤ) : S)
+        rw [hf.map_zero, Int.cast_neg, Int.cast_one]
+    | 𝔽₂ε.I => (hf.map_one).trans Int.cast_zero.symm
+    | 𝔽₂ε.X => by
+        change f r = ((1 : ℤ) : S)
+        have h0 := Eq2 hf.toNontrivialGood r
+        rw [hr0, zero_add, hf.map_one, eq_comm, sub_eq_zero, _root_.sq_eq_one_iff] at h0
+        refine (h0.resolve_right λ h1 ↦ hr ?_).trans Int.cast_one.symm
+        exact map_eq_neg_one_reduced_imp hS hf h1
+    | 𝔽₂ε.Y => ((reduced_𝔽₂ε_iff hS hf).mp hr0).trans Int.cast_zero.symm
+  let ρ := RingEquiv.ofBijective (𝔽₂ε.castRingHom hr0) h
+  ⟨ρ.symm, λ x ↦ h0 _ ▸ congrArg f (Equiv.apply_symm_apply ρ.toEquiv _).symm⟩
+
+theorem 𝔽₄_solution {r : R} (hr : r * (r + 1) + 1 = 0) :
+    ∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x)) := by
   have hS := hS
   have hf := hf
-  ---- Remove the above once the proof is complete
+  have hr := hr
+    /-
+  have h : (𝔽₄.cast r : 𝔽₄ → R).Bijective := by
+    refine ⟨?_, ?_⟩
+    /-
+    ⟨𝔽₄.castRingHom_injective λ h ↦ sorry,
+    λ x ↦ (hR x).elim (λ h ↦ ⟨𝔽₂.O, h.symm⟩) (λ h ↦ ⟨𝔽₂.I, h.symm⟩)⟩
+    -/
+  have h0 : ∀ x, f (𝔽₄.cast r x) = ℤφ.cast (f r) (𝔽₄Map x)
+    | 𝔽₄.O => by
+        change f 0 = ℤφ.cast (f r) (-1)
+        rw [hf.map_zero, ℤ.cast_neg, Int.cast_one]
+    | 𝔽₄.I => (hf.map_one).trans RingHom.map_zero.symm
+  let ρ := RingEquiv.ofBijective 𝔽₂.castRingHom h
+  ⟨ρ.symm, λ x ↦ h0 _ ▸ congrArg f (Equiv.apply_symm_apply ρ.toEquiv _).symm⟩
+  `-/
   sorry
+
+theorem solution :
+    (∃ φ : R →+* 𝔽₂ε, ∀ x, f x = 𝔽₂εMap (φ x)) ∨
+    (∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x))) ∨
+    (∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x)) :=
+  (em (∃ r : R, r ≠ 0 ∧ r * r = 0)).imp
+    (λ ⟨_, h, h0⟩ ↦ 𝔽₂ε_solution hS hf h h0)
+  λ h ↦ (em (∃ r : R, r * (r + 1) + 1 = 0)).imp
+    (λ ⟨_, h⟩ ↦ 𝔽₄_solution hS hf h)
+  λ h0 ↦ 𝔽₂_solution hS hf λ r ↦
+    ((R_elts_cases hS hf r).resolve_right λ h1 ↦ h0 ⟨r, h1⟩).symm.imp
+      (λ h1 ↦ by_contra λ h2 ↦ h ⟨r, h2, h1⟩)
+      (λ h1 ↦ CharTwo.add_eq_zero_iff_eq.mp <| by_contra λ h2 ↦ h ⟨r + 1, h2, h1⟩)
 
 end SCharNeTwo
 
@@ -329,9 +470,9 @@ end SCharNeTwo
 
 theorem solution {f : R → S} (hf : ReducedGood f) :
     (∃ φ : R →+* S, ∀ x, f x = φ (x - 1)) ∨
-    (∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x)) ∨
     (∃ φ : R →+* 𝔽₂ε, ∀ x, f x = 𝔽₂εMap (φ x)) ∨
-    (∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x))) :=
+    (∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x))) ∨
+    (∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x)) :=
   (em ((2 : S) = 0)).imp
     (λ h ↦ haveI : CharTwo S := CharTwo.Semiring_of_two_eq_zero h
            SCharTwo.solution hf.toNontrivialGood)
