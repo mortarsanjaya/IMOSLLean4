@@ -18,6 +18,8 @@ import Mathlib.Algebra.Ring.Equiv
 # IMO 2012 A5 (Case 3: `char(R) ∣ 2`)
 
 We solve the case where `f` is reduced good and `char(R) ∣ 2`.
+
+TODO: Optimize/clean up the proofs if possible, starting from `R_elts_claim1`.
 -/
 
 namespace IMOSL
@@ -299,7 +301,7 @@ theorem reduced_𝔽₄_iff :
 theorem R_elts_cases (r : R) :
     ((r + 1) * (r + 1) = 0 ∨ r * r = 0) ∨ r * (r + 1) + 1 = 0 := by
   rw [reduced_𝔽₂ε_iff hS hf, reduced_𝔽₂ε_iff hS hf,
-    reduced_𝔽₄_iff hS hf, CharTwo.add_add_cancel_right]
+    reduced_𝔽₄_iff hS hf, add_add_cancel_right]
   exact main_cases hS hf.toNontrivialGood r
 
 theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
@@ -309,21 +311,21 @@ theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
     have h : (r + s) * (r + s) = r * s + s * r := by
       rw [add_mul, mul_add, hr, zero_add, mul_add, hs, add_zero]
     rcases R_elts_cases hS hf (r + s) with (h0 | h0) | h0
-    · rw [CharTwo.add_one_mul_self, h, CharTwo.add_eq_zero_iff_eq] at h0
+    · rw [add_one_mul_self, h, add_eq_zero_iff_eq] at h0
       have h1 : (r * s) * (r * s) = r * s := by
         apply congrArg (λ x ↦ r * x * s) at h0
         rwa [mul_add, ← mul_assoc, hr, zero_mul, zero_add,
           mul_one, mul_assoc, mul_assoc, ← mul_assoc] at h0
       rcases R_elts_cases hS hf (r * s) with (h2 | h2) | h2
-      · rw [CharTwo.add_one_mul_self, h1, CharTwo.add_eq_zero_iff_eq] at h2
+      · rw [add_one_mul_self, h1, add_eq_zero_iff_eq] at h2
         rw [h2, add_right_eq_self] at h0
         apply congrArg (r * ·) at h0
         rw [mul_zero, ← mul_assoc, h2, one_mul] at h0
         rw [h0, zero_mul, zero_mul]
       · exact h2
-      · rw [mul_add_one (r * s), h1, CharTwo.add_self_eq_zero, zero_add] at h2
+      · rw [mul_add_one (r * s), h1, add_self_eq_zero, zero_add] at h2
         rw [← mul_one (r * s * _), h2, mul_zero]
-    · rw [h, CharTwo.add_eq_zero_iff_eq] at h0
+    · rw [h, add_eq_zero_iff_eq] at h0
       rw [← mul_assoc, mul_assoc r, ← h0, mul_assoc, mul_assoc, hs, mul_zero, mul_zero]
     · rw [mul_add_one (r + s), h] at h0
       replace h : r * _ = r * 0 := congrArg (r * ·) h0
@@ -331,7 +333,7 @@ theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
         mul_add, hr, zero_mul, zero_add, zero_add, ← mul_assoc] at h
       have h1 : _ * r = 0 * r := congrArg (· * r) h
       rw [zero_mul, add_mul, add_mul, mul_assoc, hr, add_zero, mul_zero, zero_add] at h1
-      rw [h1, zero_add, CharTwo.add_eq_zero_iff_eq] at h
+      rw [h1, zero_add, add_eq_zero_iff_eq] at h
       rw [h, hr]
   save
   ---- Now plug in back to the functional equation
@@ -342,16 +344,16 @@ theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
   revert hr; refine Or.imp h0 λ hr ↦ ?_
   revert hs; refine Or.imp h0 λ hs ↦ ?_
   rw [hr, hs, mul_one, ← neg_eq_iff_add_eq_zero, eq_comm] at h
-  exact CharTwo.add_eq_zero_iff_eq.mp (h0 h)
+  exact add_eq_zero_iff_eq.mp (h0 h)
 
 theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r = 0 := by
   rcases R_elts_cases hS hf (r + s) with (h | h) | h
   ---- Case 1: `(r + s + 1)^2 = 0`
   · rcases R_elts_claim1 hS hf hr h with hr | h | h0
     · exact hr
-    · rw [add_assoc, CharTwo.add_eq_zero_iff_eq] at h
-      rw [h, add_one_mul s, CharTwo.add_eq_zero_iff_eq] at hr
-      rw [hr, CharTwo.add_add_cancel_right] at hs
+    · rw [add_assoc, add_eq_zero_iff_eq] at h
+      rw [h, add_one_mul s, add_eq_zero_iff_eq] at hr
+      rw [hr, add_add_cancel_right] at hs
       rwa [← h, hs, zero_mul, eq_comm] at hr
     · rw [add_assoc, self_eq_add_right] at h0
       rw [h0, mul_zero, zero_add] at hs
@@ -360,8 +362,8 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
   ---- Case 2: `(r + s)^2 = 0`
   · rcases R_elts_claim1 hS hf hr h with hr | h | h0
     · exact hr
-    · rw [← CharTwo.add_eq_zero_iff_eq.mp h, mul_add_one r, hr, zero_add] at hs
-      rw [CharTwo.add_eq_zero_iff_eq.mp hs, mul_one] at hr
+    · rw [← add_eq_zero_iff_eq.mp h, mul_add_one r, hr, zero_add] at hs
+      rw [add_eq_zero_iff_eq.mp hs, mul_one] at hr
       rwa [hr, add_zero] at hs
     · rw [self_eq_add_right] at h0
       rw [h0, zero_mul, zero_add] at hs
@@ -376,13 +378,10 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
     rcases R_elts_claim1 hS hf hr h0 with hr | h0 | h0
     · exact hr
     · apply congrArg (· * (s + 1)) at h0
-      rwa [zero_mul, mul_assoc, CharTwo.add_eq_zero_iff_eq.mp hs, mul_one] at h0
+      rwa [zero_mul, mul_assoc, add_eq_zero_iff_eq.mp hs, mul_one] at h0
     · apply congrArg (r * ·) at hs
       rwa [mul_zero, mul_add_one r, ← mul_assoc, ← h0,
-        mul_add_one r, ← h0, CharTwo.add_add_cancel_right] at hs
-
-set_option trace.profiler true
-set_option trace.profiler.threshold 500
+        mul_add_one r, ← h0, add_add_cancel_right] at hs
 
 theorem 𝔽₂_solution (hR : ∀ r : R, r = 0 ∨ r = 1) :
     ∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x) :=
@@ -405,8 +404,8 @@ theorem 𝔽₂ε_solution {r : R} (hr : r ≠ 0) (hr0 : r * r = 0) :
     refine ⟨𝔽₂ε.castRingHom_injective hr0 hr, λ x ↦ ?_⟩
     rcases R_elts_cases hS hf x with (h0 | h0) | h0
     · exact ((R_elts_claim1 hS hf hr0 h0).resolve_left hr).elim
-        (λ h1 ↦ ⟨1, (CharTwo.add_eq_zero_iff_eq.mp h1).symm⟩)
-        (λ h1 ↦ ⟨𝔽₂ε.Y, CharTwo.add_eq_iff_eq_add.mpr h1⟩)
+        (λ h1 ↦ ⟨1, (add_eq_zero_iff_eq.mp h1).symm⟩)
+        (λ h1 ↦ ⟨𝔽₂ε.Y, add_eq_iff_eq_add.mpr h1⟩)
     · exact ((R_elts_claim1 hS hf hr0 h0).resolve_left hr).elim
         (λ h1 ↦ ⟨0, h1.symm⟩) (λ h1 ↦ ⟨𝔽₂ε.X, h1⟩)
     · exact absurd (R_elts_claim2 hS hf hr0 h0) hr
@@ -427,25 +426,59 @@ theorem 𝔽₂ε_solution {r : R} (hr : r ≠ 0) (hr0 : r * r = 0) :
 
 theorem 𝔽₄_solution {r : R} (hr : r * (r + 1) + 1 = 0) :
     ∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x)) := by
-  have hS := hS
-  have hf := hf
-  have hr := hr
-    /-
+  have X : (1 : R) ≠ 0 := λ X ↦ hS <| by
+    apply congrArg f at X; rw [hf.map_one, hf.map_zero, zero_eq_neg] at X
+    rw [← mul_one 2, X, mul_zero]
+  obtain ⟨hr0, hr1⟩ := (reduced_𝔽₄_iff hS hf).mp hr
+  have hr' : r * r + r = 1 := by rwa [← mul_add_one r, ← add_eq_zero_iff_eq]
+  ---- Bijectivity of `R → 𝔽₄`
   have h : (𝔽₄.cast r : 𝔽₄ → R).Bijective := by
-    refine ⟨?_, ?_⟩
-    /-
-    ⟨𝔽₄.castRingHom_injective λ h ↦ sorry,
-    λ x ↦ (hR x).elim (λ h ↦ ⟨𝔽₂.O, h.symm⟩) (λ h ↦ ⟨𝔽₂.I, h.symm⟩)⟩
-    -/
-  have h0 : ∀ x, f (𝔽₄.cast r x) = ℤφ.cast (f r) (𝔽₄Map x)
-    | 𝔽₄.O => by
-        change f 0 = ℤφ.cast (f r) (-1)
-        rw [hf.map_zero, ℤ.cast_neg, Int.cast_one]
-    | 𝔽₄.I => (hf.map_one).trans RingHom.map_zero.symm
-  let ρ := RingEquiv.ofBijective 𝔽₂.castRingHom h
-  ⟨ρ.symm, λ x ↦ h0 _ ▸ congrArg f (Equiv.apply_symm_apply ρ.toEquiv _).symm⟩
-  `-/
-  sorry
+    refine ⟨𝔽₄.castRingHom_injective hr' X, λ x ↦ ?_⟩
+    have h0 {x} (h0 : x * x = 0) : x = 0 := R_elts_claim2 hS hf h0 hr
+    rcases R_elts_cases hS hf x with (h1 | h1) | h1
+    · exact ⟨1, (add_eq_zero_iff_eq.mp (h0 h1)).symm⟩
+    · exact ⟨0, (h0 h1).symm⟩
+    rcases R_elts_cases hS hf (x + r) with (h2 | h2) | h2
+    · exact ⟨𝔽₄.Y, (add_eq_zero_iff_eq.mp <| (add_assoc x r 1).symm.trans (h0 h2)).symm⟩
+    · exact ⟨𝔽₄.X, (add_eq_zero_iff_eq.mp (h0 h2)).symm⟩
+    save
+    rw [_root_.add_comm x r, add_assoc, mul_add, add_mul, add_mul, add_assoc, add_assoc,
+      add_assoc, h1, add_zero, mul_add_one r, ← add_assoc (x * r), add_left_comm, hr'] at h2
+    rcases R_elts_cases hS hf (x * r) with (h3 | h3) | h3
+    · apply h0 at h3
+      rw [add_right_comm, h3, zero_add] at h2
+      apply congrArg (r * ·) at h3
+      rw [mul_zero, mul_add_one r, ← mul_assoc, h2, zero_mul, zero_add] at h3
+      rw [h3, zero_mul, zero_add] at hr
+      exact absurd hr X
+    · apply h0 at h3
+      rw [h3, zero_add, add_eq_zero_iff_eq] at h2
+      have h4 : r = 0 := by rw [← one_mul r, ← h2, mul_assoc, h3, mul_zero]
+      rw [h4, zero_mul, zero_add] at hr
+      exact absurd hr X
+    · rw [add_right_comm, add_eq_zero_iff_eq] at h2
+      rw [mul_add_one x, add_assoc, add_eq_zero_iff_eq] at h1
+      rw [h2, ← mul_assoc, mul_assoc x, add_eq_iff_eq_add'.mp hr', mul_add_one x, add_mul,
+        h1, add_assoc, add_add_cancel_right, ← add_one_mul _ x, h2, mul_assoc, h1] at h3
+      apply congrArg (· * x) at h3
+      rw [zero_mul, mul_assoc, add_one_mul x, h1, add_add_cancel_middle₂, mul_one] at h3
+      rw [h3, zero_mul, zero_add] at hr
+      exact absurd hr X
+  save
+  ---- Value check
+  rw [← eq_sub_iff_add_eq'] at hr0
+  rw [hr0, ← neg_sub, mul_neg, neg_inj, mul_sub_one, sub_eq_iff_eq_add'] at hr1
+  let ι := ℤφ.castRingHom hr1
+  have h0 : ∀ x, f (𝔽₄.cast r x) = ι (𝔽₄Map x)
+    | 𝔽₄.O => by change f 0 = ι (-1)
+                 rw [hf.map_zero, ι.map_neg, ι.map_one]
+    | 𝔽₄.I => (hf.map_one).trans ι.map_zero.symm
+    | 𝔽₄.X => (ℤφ.cast_φ _).symm
+    | 𝔽₄.Y => by change f (r + 1) = ((1 : ℤ) : S) + (-1 : ℤ) • f r
+                 rw [Int.cast_one, neg_one_zsmul, hr0, sub_eq_add_neg]
+  ---- Summary
+  let ρ := RingEquiv.ofBijective (𝔽₄.castRingHom hr') h
+  exact ⟨ρ.symm, ι, λ x ↦ h0 _ ▸ congrArg f (Equiv.apply_symm_apply ρ.toEquiv _).symm⟩
 
 theorem solution :
     (∃ φ : R →+* 𝔽₂ε, ∀ x, f x = 𝔽₂εMap (φ x)) ∨
@@ -458,7 +491,7 @@ theorem solution :
   λ h0 ↦ 𝔽₂_solution hS hf λ r ↦
     ((R_elts_cases hS hf r).resolve_right λ h1 ↦ h0 ⟨r, h1⟩).symm.imp
       (λ h1 ↦ by_contra λ h2 ↦ h ⟨r, h2, h1⟩)
-      (λ h1 ↦ CharTwo.add_eq_zero_iff_eq.mp <| by_contra λ h2 ↦ h ⟨r + 1, h2, h1⟩)
+      (λ h1 ↦ add_eq_zero_iff_eq.mp <| by_contra λ h2 ↦ h ⟨r + 1, h2, h1⟩)
 
 end SCharNeTwo
 
@@ -474,6 +507,6 @@ theorem solution {f : R → S} (hf : ReducedGood f) :
     (∃ (φ : R →+* 𝔽₄) (ι : ℤφ →+* S), ∀ x, f x = ι (𝔽₄Map (φ x))) ∨
     (∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x)) :=
   (em ((2 : S) = 0)).imp
-    (λ h ↦ haveI : CharTwo S := CharTwo.Semiring_of_two_eq_zero h
+    (λ h ↦ haveI : CharTwo S := Semiring_of_two_eq_zero h
            SCharTwo.solution hf.toNontrivialGood)
     (λ h ↦ SCharNeTwo.solution h hf)

@@ -152,6 +152,9 @@ theorem cast_zero [AddGroupWithOne R] (r : R) : cast r 0 = 0 := by
 theorem cast_one [AddGroupWithOne R] (r : R) : cast r 1 = 1 := by
   change ((1 : ℤ) : R) + 0 • r = 1; rw [Int.cast_one, zero_zsmul, add_zero]
 
+theorem cast_φ [AddGroupWithOne R] (r : R) : cast r φ = r := by
+  change ((0 : ℤ) : R) + 1 • r = r; rw [Int.cast_zero, zero_add, one_zsmul]
+
 theorem cast_add [AddCommGroupWithOne R] (r : R) :
     ∀ x y : ℤφ, cast r (x + y) = cast r x + cast r y
   | ⟨a, b⟩, ⟨a', b'⟩ => by
