@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2012.A5.A5Defs
-import IMOSLLean4.IMO2012.A5.Extra.BundledRingFun
 import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.Z4
 import Mathlib.Algebra.Ring.Int
 

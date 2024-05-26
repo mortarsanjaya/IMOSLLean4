@@ -32,3 +32,7 @@ theorem good_Nontrivial_or_eq_zero [IsCancelAdd S] [NoZeroDivisors S]
   ---- Elimination
   (zero_eq_mul.mp (h1 0)).symm.imp (λ h1 ↦ ⟨h, h0, h1⟩)
     (λ h2 ↦ funext λ x ↦ by specialize h1 x; rwa [h2, zero_add, mul_one, eq_comm] at h1)
+
+theorem good_iff_Nontrivial_or_eq_zero [IsCancelAdd S] [NoZeroDivisors S] {f : R → S} :
+    good f ↔ NontrivialGood f ∨ f = (λ _ ↦ 0) :=
+  ⟨good_Nontrivial_or_eq_zero, λ h ↦ h.elim NontrivialGood.is_good λ h ↦ h ▸ zero_is_good⟩

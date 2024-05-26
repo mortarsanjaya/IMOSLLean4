@@ -41,7 +41,7 @@ def ofFun [hR : NonAssocSemiring R] [hS : NonAssocSemiring S] : (R → S) → Bu
 structure Hom (X Y : BundledRingFun) where
   sourceHom : Y.source →+* X.source
   targetHom : X.target →+* Y.target
-  spec : ∀ r, targetHom (X.f (sourceHom r)) = Y.f r
+  spec : ∀ r, Y.f r = targetHom (X.f (sourceHom r))
 
 namespace Hom
 
@@ -50,4 +50,17 @@ def id (X : BundledRingFun) : Hom X X :=
 
 def trans (φ : Hom Y Z) (ρ : Hom X Y) : Hom X Z :=
   ⟨ρ.sourceHom.comp φ.sourceHom, φ.targetHom.comp ρ.targetHom,
-    λ _ ↦ (φ.targetHom.congr_arg (ρ.spec _)).trans (φ.spec _)⟩
+    λ _ ↦ (φ.spec _).trans (φ.targetHom.congr_arg (ρ.spec _))⟩
+
+
+section
+
+variable (X : BundledRingFun) [NonAssocSemiring R]
+
+def ofRingHom_left (φ : X.target →+* R) : Hom X (ofFun (φ ∘ X.f)) :=
+  ⟨RingHom.id _, φ, λ _ ↦ rfl⟩
+
+def ofRingHom_right (φ : R →+* X.source) : Hom X (ofFun (X.f ∘ φ)) :=
+  ⟨φ, RingHom.id _, λ _ ↦ rfl⟩
+
+end
