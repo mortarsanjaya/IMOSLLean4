@@ -9,7 +9,7 @@ import IMOSLLean4.IMO2012.A5.A5Answers.F3Map2
 import IMOSLLean4.IMO2012.A5.A5Answers.Z4Map
 import IMOSLLean4.IMO2012.A5.A5General.A5CommLift
 import IMOSLLean4.IMO2012.A5.A5General.A5QuasiPeriodic
-import Mathlib.Algebra.Ring.Equiv
+import IMOSLLean4.Extra.SquareLike
 
 /-!
 # IMO 2012 A5 (Case 2: `f(-1) = 0`, `char(R) ∤ 2`)
@@ -564,7 +564,8 @@ end
 
 section
 
-variable [Ring R] [Ring S] [NoZeroDivisors S] {g : R → S} (hg : RShiftGood23 g)
+variable {R : Type u} [Ring R] [Ring S] [NoZeroDivisors S]
+  {g : R → S} (hg : RShiftGood23 g)
 
 /-- (2.3.6) -/
 lemma Eq6 {x} (h : g x = 0) : x = 0 := by
@@ -672,10 +673,69 @@ lemma Eq7 : ∀ x y, g (x * y) = g x * g y := by
   rw [h0, hg.toShiftGood23.map_zero, h3]
 
 /-- (2.3.8) -/
-lemma Eq8 (x y) : g (x + y) + g (x - y) = 2 * (g x + g y) := by
-  rw [← sub_eq_zero, ← hg.Eq4, hg.Eq7, sub_self, mul_zero]
+lemma Eq8 (x y) : g (x + y) + g (x - y) = 2 • (g x + g y) := by
+  rw [two_nsmul, ← two_mul, ← sub_eq_zero, ← hg.Eq4, hg.Eq7, sub_self, mul_zero]
 
-/- ... -/
+
+open Extra.SquareLike
+
+theorem solution :
+    ∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R') (ι : SqSubring R' →+* S),
+      ∀ x, g x = ι (RestrictedSq (φ x)) := by
+  refine ⟨R, CommRing.mk hg.Rcomm, RingHom.id R, ?_⟩
+  let hR := CommRing.mk hg.Rcomm
+  have hS (x y : S) (h : 2 • x = 2 • y) : x = y := by
+    rwa [two_nsmul, ← two_mul, two_nsmul, ← two_mul, ← sub_eq_zero, ← mul_sub,
+      mul_eq_zero, or_iff_right hg.Schar_ne_two, sub_eq_zero] at h
+  let φ := BilinMap hS hg.Eq8
+  let ρ := φ 1
+  ---- Collect basic properties of `φ`
+  have h : ∀ x, φ x x = 2 • g x := BilinMap_eq_two_nsmul _ _
+  have h0 (x y) : φ x y = ρ (x * y) :=
+    hS _ _ <| by rw [two_nsmul_BilinMap_eq, two_nsmul_BilinMap_eq,
+      ← hg.Eq2, add_comm, ← neg_sub (x * y), hg.toShiftGood23.map_even]
+  save
+  ---- Construct `ι` as an additive hom
+  let R₂ := AddSubgroup.closure (Set.range λ x : R ↦ x ^ 2)
+  obtain ⟨ι, h1⟩ : ∃ ι : SqSubring R →+ S, ∀ a : SqSubring R, ρ a = 2 • ι a :=
+    suffices ∃ ι : SqSubring R → S, ∀ a : SqSubring R, ρ a = 2 • ι a by
+      rcases this with ⟨ι, h1⟩
+      have h3 (x y) : ι (x + y) = ι x + ι y := hS _ _ <| by
+        rw [← h1, Subring.coe_add, ρ.map_add, h1, h1, nsmul_add]
+      exact ⟨AddMonoidHom.mk' ι h3, h1⟩
+    suffices ∀ r ∈ R₂, ∃ s, ρ r = 2 • s
+      from Classical.axiomOfChoice λ a ↦ this a.1 a.2
+    λ r h2 ↦ AddSubgroup.closure_induction h2
+      (λ y ⟨x, h3⟩ ↦ ⟨g x, by rw [← h, h0 x, ← sq, ← h3]⟩)
+      ⟨0, by rw [ρ.map_zero, nsmul_zero]⟩
+      (λ x y ⟨s, hs⟩ ⟨t, ht⟩ ↦ ⟨s + t, by rw [ρ.map_add, hs, ht, nsmul_add]⟩)
+      (λ x ⟨s, hs⟩ ↦ ⟨-s, by rw [ρ.map_neg, hs, nsmul_eq_mul, ← mul_neg, nsmul_eq_mul]⟩)
+  save
+  ---- Reduce to multiplicativity of `ι`, then prove it
+  suffices ∀ x y, ι (x * y) = ι x * ι y by
+    have h2 : ι 1 = 1 := hS _ _ <| by
+      rw [← h1, Subring.coe_one, h, hg.toShiftGood23.map_one]
+    refine ⟨⟨⟨⟨ι, h2⟩, this⟩, ι.map_zero, ι.map_add⟩, λ x ↦ hS _ _ ?_⟩
+    change 2 • g x = 2 • ι (RestrictedSq x)
+    rw [← h, ← h1, RestrictedSq_coe, sq, h0]
+  save
+  ---- Prove that `ι` is multiplicative
+  have X (x y : S) : (2 • x) * (2 • y) = 2 • 2 • (x * y) := by
+    rw [two_nsmul, two_nsmul, add_mul, mul_add, ← two_nsmul, ← two_nsmul]
+  suffices ∀ a b, a ∈ R₂ → b ∈ R₂ → 2 • ρ (a * b) = ρ a * ρ b
+    from λ x y ↦ hS _ _ <| hS _ _ <| by
+      rw [← h1, Subring.coe_mul, this _ _ x.2 y.2, h1, h1, X]
+  replace h (x) : ρ (x ^ 2) = 2 • g x := by rw [← h, sq, ← h0]
+  intro a b ha hb; refine AddSubgroup.closure_induction₂ ha hb ?_ ?_ ?_ ?_ ?_ ?_ ?_
+  · rintro _ ⟨c, rfl⟩ _ ⟨d, rfl⟩; rw [← mul_pow, h, h, h, X, hg.Eq7]
+  · intro x; rw [zero_mul, ρ.map_zero, zero_mul, nsmul_zero]
+  · intro x; rw [mul_zero, ρ.map_zero, mul_zero, nsmul_zero]
+  · intro x₁ x₂ y hx₁ hx₂
+    rw [add_mul, ρ.map_add, nsmul_add, hx₁, hx₂, ρ.map_add, add_mul]
+  · intro x y₁ y₂ hy₁ hy₂
+    rw [mul_add, ρ.map_add, nsmul_add, hy₁, hy₂, ρ.map_add, mul_add]
+  · intro x y h2; rw [neg_mul, ρ.map_neg, ρ.map_neg, neg_mul, smul_neg, h2]
+  · intro x y h2; rw [mul_neg, ρ.map_neg, ρ.map_neg, mul_neg, smul_neg, h2]
 
 end
 
@@ -692,17 +752,16 @@ section
 variable {R : Type u} [Ring R] [Ring S] [NoZeroDivisors S] {f : R → S}
 
 theorem RGoodSubcase23.solution (hf : RGoodCase2 f) (h : f 2 = 3) :
-    ∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R')
-      (ι : Subring.closure (Set.range λ x : R' ↦ x ^ 2) →+* S),
-      ∀ x, f x = ι (RestrictedSqSubOne (φ x)) :=
-  have hf := hf
-  have h := h
-  sorry
+    ∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R') (ι : SqSubring R' →+* S),
+      ∀ x, f x = ι (RestrictedSq (φ x) - 1) := by
+  rcases (RShiftGood23.shift_mk_iff.mpr ⟨hf, h⟩).solution with ⟨R', _, φ, ι, h0⟩
+  refine ⟨R', _, φ, ι, λ x ↦ ?_⟩
+  rw [ι.map_sub, ← h0, ι.map_one]
+  exact (add_sub_cancel_right _ _).symm
 
 theorem RGoodCase2.solution (hf : RGoodCase2 f) :
-    (∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R')
-      (ι : Subring.closure (Set.range λ x : R' ↦ x ^ 2) →+* S),
-      ∀ x, f x = ι (RestrictedSqSubOne (φ x))) ∨
+    (∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R') (ι : SqSubring R' →+* S),
+      ∀ x, f x = ι (RestrictedSq (φ x) - 1)) ∨
     (∃ φ : R →+* ℤ₄, ∀ x, f x = ℤ₄Map (φ x)) ∨
     (∃ φ : R →+* 𝔽₃, ∀ x, f x = 𝔽₃Map2 (φ x)) :=
   (em (f 2 = 3)).imp (RGoodSubcase23.solution hf) λ h ↦
@@ -722,9 +781,8 @@ theorem CharTwo'_of_map_two (hf : ReducedGood f)
   · apply hρ; rw [← h1, map_ofNat, h0, ρ.map_neg, ρ.map_one]
 
 theorem solution (hf : ReducedGood f) (h : f (-1) = 0) (h0 : f 2 ≠ -1) :
-    (∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R')
-      (ι : Subring.closure (Set.range λ x : R' ↦ x ^ 2) →+* S),
-      ∀ x, f x = ι (RestrictedSqSubOne (φ x))) ∨
+    (∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R') (ι : SqSubring R' →+* S),
+      ∀ x, f x = ι (RestrictedSq (φ x) - 1)) ∨
     (∃ φ : R →+* ℤ₄, ∀ x, f x = ℤ₄Map (φ x)) ∨
     (∃ φ : R →+* 𝔽₃, ∀ x, f x = 𝔽₃Map2 (φ x)) :=
   RGoodCase2.solution ⟨hf, map_even_of_map_one hf.is_good h, h0⟩

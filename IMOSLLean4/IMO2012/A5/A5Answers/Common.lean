@@ -29,7 +29,7 @@ open BundledRingFun
 
 inductive isPolyGoodMap : BundledRingFun → Prop
   | SubOne (R) [Ring R] : isPolyGoodMap (ofFun λ (x : R) ↦ x - 1)
-  | SqSubOne (R) [CommRing R] : isPolyGoodMap (ofFun (RestrictedSqSubOne (R := R)))
+  | SqSubOne (R) [CommRing R] : isPolyGoodMap (ofFun (RestrictedSq (R := R) - 1))
 
 inductive isFinGoodMap : BundledRingFun → Prop
   | 𝔽₂Map  : isFinGoodMap (ofFun 𝔽₂Map)
@@ -46,7 +46,7 @@ def isNontrivialAnswer.{u} (X : BundledRingFun.{u}) : Prop :=
 
 theorem isPolyGoodMap.NontrivialGood {X} (hX : isPolyGoodMap X) : NontrivialGood X.f :=
   hX.rec (λ R ↦ sub_one_is_NontrivialGood (R := R))
-    (λ R ↦ RestrictedSqSubOne_is_NontrivialGood (R := R))
+    (λ R ↦ RestrictedSq_sub_one_is_NontrivialGood (R := R))
 
 theorem isFinGoodMap.NontrivialGood {X} (hX : isFinGoodMap X) : NontrivialGood X.f :=
   hX.rec 𝔽₂Map_is_NontrivialGood 𝔽₃Map1_is_NontrivialGood 𝔽₃Map2_is_NontrivialGood

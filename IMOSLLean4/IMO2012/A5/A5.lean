@@ -67,6 +67,7 @@ theorem NontrivialGood.isNontrivialAnswer (hf : NontrivialGood f) :
 
 /-! ### Summary -/
 
+/-- Final solution for non-trivial good -/
 theorem NontrivialGood_iff_isNontrivialAnswer :
     NontrivialGood f ↔ isNontrivialAnswer (ofFun f) :=
   ⟨NontrivialGood.isNontrivialAnswer, isNontrivialAnswer.NontrivialGood⟩
