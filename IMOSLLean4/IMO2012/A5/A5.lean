@@ -38,8 +38,8 @@ theorem ReducedGood.isNontrivialAnswer (hf : ReducedGood f) :
     (λ h0 ↦ (Case2.solution hf h h0).imp
       (λ ⟨R', _, φ, ι, h1⟩ ↦ ⟨_, isPolyGoodMap.SqSubOne R', φ, ι, h1⟩)
     λ h1 ↦ h1.elim
-      (λ ⟨φ, h1⟩ ↦ ⟨_, isFinGoodMap.𝔽₃Map2, φ, Int.castRingHom S, h1⟩)
-      (λ ⟨φ, h1⟩ ↦ ⟨_, isFinGoodMap.ℤ₄Map, φ, Int.castRingHom S, h1⟩))
+      (λ ⟨φ, h1⟩ ↦ ⟨_, isFinGoodMap.ℤ₄Map, φ, Int.castRingHom S, h1⟩)
+      (λ ⟨φ, h1⟩ ↦ ⟨_, isFinGoodMap.𝔽₃Map2, φ, Int.castRingHom S, h1⟩))
     ---- Case 3: `f(2) = -1`
     (λ h0 ↦ have : Extra.CharTwo R :=
       Extra.CharTwo.Semiring_of_two_eq_zero (Case2.CharTwo'_of_map_two hf h h0)

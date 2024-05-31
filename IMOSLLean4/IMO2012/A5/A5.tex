@@ -304,40 +304,54 @@ We now split cases based on the value of $f(-1)$.
 Plugging $y = -1$ into~\eqref{2012a5-eq0} immediately implies that $f$ is even.
 In particular, by replacing $y$ with $-y$ in~\eqref{2012a5-eq0} yields
 \[ f(xy - 1) = f(x) f(y) + f(x - y). \tag{2.1}\label{2012a5-eq2-1} \]
-Applying~\eqref{2012a5-eq0} and the above equation to $f(2x + 1) = f(2(x + 1) - 1)$ yields
-\[ f(x) f(2) + f(x + 2) = f(x + 1) f(2) + f(x - 1). \tag{2.2}\label{2012a5-eq2-2} \]
-Since $x(x + 1) - 1 = (x - 1)(x + 2) + 1$, we get
-\[ f(x) f(x + 1) = f(x - 1) f(x + 2) + f(2x + 1) = f(x - 1) f(x + 2) + f(x + 1) f(2) + f(x - 1). \]
-By applying~\eqref{2012a5-eq2-2} and rearranging, we get
-\[ f(x) (f(x - 1) f(2) + f(x + 1)) = (f(x - 1) + 1) (f(x + 1) f(2) + f(x - 1)). \tag{2.3}\label{2012a5-eq2-3} \]
+By applying~\eqref{2012a5-eq0} with $(x - 1, 2)$, for any $x \in R$,
+\[ f(2x - 1) = f(x - 1) f(2) + f(x + 1). \tag{2.2}\label{2012a5-eq2-2} \]
+If we replace $x$ with $-x$ and use the fact that $f$ is even, we get
+\[ f(2x + 1) = f(x + 1) f(2) + f(x - 1). \tag{2.3}\label{2012a5-eq2-3} \]
+For the next equality, we use the identity $x(x + 1) - 1 = (x + 2)(x - 1) + 1$.
+Thus, for any $x \in R$,
+\[ f(x) f(x + 1) = f(x + 2) f(x - 1) + f(2x + 1). \]
+Adding $f(x) f(2) f(x - 1)$ on both sides and using~\eqref{2012a5-eq0} and~\eqref{2012a5-eq2-2} gives
+\[ f(x) f(2x - 1) = (f(x - 1) + 1) f(2x + 1). \tag{2.4}\label{2012a5-eq2-4} \]
 
-If $f(2) = -1$, then this yields either $f(x) + f(x - 1) = -1$ or $f(x + 1) = f(x - 1)$.
-By~\eqref{2012a5-eq2-2}, if $f(x + 2) = f(x)$, then $f(x + 1) = f(x - 1)$.
-If $f(x) + f(x - 1) = f(x + 1) + f(x) = -1$, then clearly we still get $f(x + 1) = f(x - 1)$.
-In all cases, $f$ is $2$-periodic, so $\rchar(R) \mid 2$; a contradiction.
-Thus, we have $f(2) \neq -1$.
-
-Replacing $x$ with $-x$ and applying the fact that $f$ is even yields
-\[ f(x) (f(x + 1) f(2) + f(x - 1)) = (f(x + 1) + 1) (f(x - 1) f(2) + f(x + 1)). \]
-Subtracting the two equations and rearranging gives that for any $x \in R$,
-\[ f(x + 1) + f(x - 1) = (f(2) - 1)(f(x) + 1) \vee f(x + 1) = f(x - 1). \]
-We reduce this to the former; that is, we claim that for any $x \in R$,
-\[ f(x + 1) + f(x - 1) = (f(2) - 1)(f(x) + 1). \tag{2.4}\label{2012a5-eq2-4} \]
-
-Note that the equality $f(x + 2) + f(x) = (f(2) - 1)(f(x + 1) + 1)$ is equivalent to this equality by~\eqref{2012a5-eq2-2}.
-Thus, either~\eqref{2012a5-eq2-4} holds, or $f(x + 1) = f(x - 1)$ and $f(x + 2) = f(x)$.
-Then~\eqref{2012a5-eq2-2} yields that all four are equal since $f(2) + 1 \neq 0$.
-Next,~\eqref{2012a5-eq2-3} yields that $f(x + 1) = f(x) = f(x - 1) = 0$.
-To show that this is a contradiction, we show that
+Next, we show that
 \[ f(x) = f(x + 1) = 0 \implies 2x + 1 = 0. \tag{2.5}\label{2012a5-eq2-5} \]
-Indeed, this would imply $2x + 1 = 2x - 1 = 0$ and thus $\rchar(R) \mid 2$, a contradiction!
-
-\begin{proof}[Proof of~\eqref{2012a5-eq2-5}]
-For any $y \in R$, breaking down $f(x(x + 1)y + 1)$ in two ways using~\eqref{2012a5-eq0} yields
+The main idea is to break down $f(x(x + 1)y + 1)$ in two ways using~\eqref{2012a5-eq0}.
+This gives us
 \[ f((x + 1)(y + 1) - 1) = f((x + 1) y + x) = f(xy + x + 1) = f(x(y + 1) + 1) \implies f(y - x) = f(x + y + 1). \]
 Replacing $y$ with $x + y$, we get $f(y + 2x + 1) = f(y)$ for any $y \in R$.
 Thus $2x + 1 = 0$, proving~\eqref{2012a5-eq2-5}.
-\end{proof}
+
+We now use~\eqref{2012a5-eq2-5} to derive important equalities.
+First, if $f(2) = -1$, then~\eqref{2012a5-eq2-2} and~\eqref{2012a5-eq2-3} yields $f(2x + 1) = -f(2x - 1)$.
+As a result,~\eqref{2012a5-eq2-4} yields that for any $x \in R$, either $f(x) + f(x - 1) = -1$ or $f(2x - 1) = 0$.
+If $f(x) + f(x - 1) = f(x + 1) + f(x) = -1$, then clearly $f(x + 1) = f(x - 1)$.
+Otherwise, we have $f(2x - 1) = 0$ or $f(2x + 1) = 0$.
+By~\eqref{2012a5-eq2-2} and~\eqref{2012a5-eq2-3}, respectively, they yield $f(x + 1) = f(x - 1)$.
+As this holfs for all $x$, we get $\rchar(R) \mid 2$; a contradiction.
+From now on, we have $f(2) \neq -1$.
+
+Consider~\eqref{2012a5-eq2-4} with $x$ replaced by $-x$:
+\[ f(x) f(2x + 1) = f(2x - 1) (f(x + 1) + 1). \]
+Subtract with~\eqref{2012a5-eq2-4}, then apply~\eqref{2012a5-eq2-2} and~\eqref{2012a5-eq2-3}.
+Rearranging after that gives us
+\[ f(x + 1) + f(x - 1) = (f(2) - 1)(f(x) + 1) \vee f(x + 1) = f(x - 1). \]
+By comparing~\eqref{2012a5-eq2-3} and~\eqref{2012a5-eq0}, we have $f(x) f(2) + f(x + 2) = f(x + 1) f(2) + f(x - 1)$.
+Thus, the former equality also follows if $f(x + 2) + f(x) = (f(2) - 1)(f(x + 1) + 1)$ holds.
+Otherwise, we would have $f(x + 1) = f(x - 1)$ and $f(x) = f(x + 2)$.
+But then we get $f(2x + 1) = (f(2) + 1) f(x - 1) = (f(2) + 1) f(x)$.
+Since $f(2) \neq -1$, we get $f(x + 1) = f(x) = f(x - 1) = 0$.
+By~\eqref{2012a5-eq2-5}, we get $2x + 1 = 2x - 1 = 0$, so $2 = 0$ in $R$; a contradiction.
+This shows that for any $x \in R$,
+\[ f(x + 1) + f(x - 1) = (f(2) - 1)(f(x) + 1). \tag{2.6}\label{2012a5-eq2-6} \]
+
+For the next equality, instead of subtracting, we multiply the two equations (almost).
+The two equations give us
+\[ (f(x + 1) + 1)(f(x - 1) + 1) f(2x - 1) = (f(x - 1) + 1) f(x) f(2x + 1) = f(x)^2 f(2x - 1). \]
+If $f(2) \neq 1$ and $f(2x - 1) = f(2x + 1) = 0$, then $f(x + 1) = f(x - 1) = 0$.
+By~\eqref{2012a5-eq2-6}, we get $f(x) = -1$.
+So, if $f(2) \neq 1$, in all cases, we have
+\[ (f(x + 1) + 1)(f(x - 1) + 1) = f(x)^2. \tag{2.7}\label{2012a5-eq2-7} \]
 
 \begin{claim}
 We have $f(2) \in \{0, 1, 3\}$.
@@ -345,8 +359,8 @@ We have $f(2) \in \{0, 1, 3\}$.
 \begin{proof}
 For convenience, let $f(2) = C$.
 By~\eqref{2012a5-eq2-1}, we have $f(5) = C f(3)$.
-By~\eqref{2012a5-eq2-4}, we have $f(5) = (C - 1)(f(4) + 1) - f(3)$ and
-\[ f(4) = (C - 1)(f(3) + 1) + C \implies f(4) + 1 = (C - 1) f(3). \]
+By~\eqref{2012a5-eq2-6}, we have $f(5) = (C - 1)(f(4) + 1) - f(3)$ and
+\[ f(4) = (C - 1)(f(3) + 1) - C \implies f(4) + 1 = (C - 1) f(3). \]
 Thus we get
 \[ C f(3) = f(5) = (C - 1)^2 f(3) - f(3) = (C^2 - 2C) f(3) \implies f(3) = 0 \vee C = 0 \vee C = 3. \]
 But~\eqref{2012a5-eq2-1} gives $f(3) = C^2 - 1$, so $f(3) = 0$ implies $C = \pm 1$.
@@ -360,18 +374,19 @@ We now split cases based on the possible values of $f(2)$.
     \item 
     $f(2) = 1$ and $\rchar(S) \nmid 2$.
 
-    Then~\eqref{2012a5-eq2-4} yields $f(x + 2) = -f(x)$ for any $x \in R$.
+    Then~\eqref{2012a5-eq2-6} yields $f(x + 2) = -f(x)$ for any $x \in R$.
     Then $f$ is $4$-periodic, and $2$ is quasi-periodic!
     By Lemma~\ref{2012a5-quasi-periodic-non-zero}, we get $R \cong \Z/4\Z$.
     The isomorphism then induces the fourth map ($\Z/4\Z \to \Z$) on the table.
 
+
     \item
     $f(2) = 0$ and $\rchar(S) \nmid 3$.
 
-    In this case,~\eqref{2012a5-eq2-4} simplifies as
-    \[ f(x) + f(x + 1) + f(x - 1) = -1. \tag{2.2.1}\label{2012a5-eq2-2-1} \]
+    In this case,~\eqref{2012a5-eq2-6} simplifies as
+    \[ f(x + 1) + f(x - 1) + f(x) = -1. \tag{2.2.1}\label{2012a5-eq2-2-1} \]
     In particular, $f$ is $3$-periodic, so $\rchar(R) \mid 3$.
-    Also,~\eqref{2012a5-eq2-3} simplifies as
+    Also,~\eqref{2012a5-eq2-7} simplifies as
     \[ f(x + 1) f(x - 1) = f(x)^2 + f(x). \tag{2.2.2}\label{2012a5-eq2-2-2} \]
     Now notice that, by either~\eqref{2012a5-eq0} or~\eqref{2012a5-eq2-1},
     \[ f(x^2 + 1) = f(x)^2 + f(x), \quad f(x^2 - 1) = f(x)^2 - 1, \quad f(x^2) = f(x + 1) f(x - 1) + f(2x) = f(x)^2 + 2 f(x). \]
@@ -381,91 +396,83 @@ We now split cases based on the possible values of $f(2)$.
     Since $\rchar(R) \mid 3$,~\eqref{2012a5-eq2-5} yields $x = 0$.
     Thus $R \cong \F_3$, and the isomorphism then induces the third map ($\F_3 \to \Z$) on the table.
 
+
     \item
     $f(2) = 3$ and $\rchar(S) \nmid 2$.
 
     For convenience, denote $g(x) = f(x) + 1$.
-    This time,~\eqref{2012a5-eq2-4} simplifies as
+    This time,~\eqref{2012a5-eq2-6} simplifies as
     \[ g(x + 1) + g(x - 1) = 2 g(x) + 2, \tag{2.3.1}\label{2012a5-eq2-3-1} \]
     Subtracting~\eqref{2012a5-eq2-1} from~\eqref{2012a5-eq0} yields that for any $x, y \in R$,
-    \[ g(xy + 1) - g(xy - 1) = g(x + y) - g(x - y). \tag{2.3.2}\label{2012a5-eq2-3-2}. \]
-    Next,~\eqref{2012a5-eq2-3} simplifies as
+    \[ g(xy + 1) - g(xy - 1) = g(x + y) - g(x - y). \tag{2.3.2}\label{2012a5-eq2-3-2} \]
+    Next,~\eqref{2012a5-eq2-7} simplifies as
     \[ g(x + 1) g(x - 1) = (g(x) - 1)^2. \]
     Note that $(g(x + 1) - g(x - 1))^2 = (g(x + 1) + g(x - 1))^2 - 4 g(x + 1) g(x - 1)$.
     Thus, using the above equation and~\eqref{2012a5-eq2-3-1} yields
     \[ (g(x + 1) - g(x - 1))^2 = 16 g(x). \]
     More generally, due to~\eqref{2012a5-eq2-3-2}, for any $x, y \in R$,
-    \[ (g(x + y) - g(x - y))^2 = 16 g(xy). \tag{2.3.3}\label{2012a5-eq2-3-3}. \]
+    \[ (g(x + y) - g(x - y))^2 = 16 g(xy). \tag{2.3.3}\label{2012a5-eq2-3-3} \]
     Adding~\eqref{2012a5-eq0} with~\eqref{2012a5-eq2-1} and then using~\eqref{2012a5-eq2-3-1} yields
     \[ 2 f(xy) + 2 = 2 f(x) f(y) + f(x + y) + f(x - y), \]
         which rearranges in terms of $g$ to
     \[ 2(g(xy) - g(x) g(y)) = g(x + y) + g(x - y) - 2(g(x) + g(y)). \tag{2.3.4}\label{2012a5-eq2-3-4} \]
-    
-    The next step is to show that both sides are zero.
-    That is, we show that for any $x, y \in R$,
-    \[ g(xy) = g(x) g(y), \tag{2.3.5}\label{2012a5-eq2-3-5} \]
-    \[ g(x + y) + g(x - y) = 2(g(x) + g(y)). \tag{2.3.6}\label{2012a5-eq2-3-6} \]
-    We also show that $R$ is commutative, and for any $r \in R$,
-    \[ g(r) = 0 \implies r = 0. \tag{2.3.7}\label{2012a5-eq2-3-7} \]
-    Unfortunately, we need to split into two subsubcases.
-    But first, we show that~\eqref{2012a5-eq2-3-7} implies that $R$ is commutative.
+    Another useful equality follows by adding~\eqref{2012a5-eq2-2} and~\eqref{2012a5-eq2-3}, and applying~\eqref{2012a5-eq2-3-1}:
+    \[ g(2x) = 4 g(x). \tag{2.3.5}\label{2012a5-eq2-3-5} \]
+    Next, we show that for any $x \in R$,
+    \[ g(x) = 0 \implies x = 0. \tag{2.3.6}\label{2012a5-eq2-3-6} \]
 
     \begin{proof}
-    From~\eqref{2012a5-eq2-3-3}, we get that $g(xy) = g(yx)$ for any $x, y \in R$.
-    In particular, $g((x + y)(x - y)) = g((x - y)(x + y))$, and thus~\eqref{2012a5-eq2-3-3} again yields $g((x^2 - y^2)(xy - yx)) = 0$.
-    Then~\eqref{2012a5-eq2-3-7} implies $(x^2 - y^2)(xy - yx) = 0$ for all $x, y \in R$.
-
-    Now consider the same equation with $x + 1$ replacing $x$.
-    Note that $(x + 1) y - y (x + 1) = xy - yx$, so subtracting with the above equation yields $(2x + 1)(xy - yx) = 0$.
-    Repeating the method yields $2(xy - yx) = 0$, and plugging into the previous equation yields $xy - yx = 0$ for all $x, y \in R$.
-    This shows that $R$ is commutative.
+    First of all,~\eqref{2012a5-eq2-3-3} yields $g(x + 1) = g(x - 1)$.
+    Then~\eqref{2012a5-eq2-3-1} yields $g(x + 1) = g(x - 1) = 1$, or $f(x + 1) = f(x - 1) = 0$.
+    Now, for any $y \in R$, consider writing $f(x(x + 1)y + 1)$ in two ways using~\eqref{2012a5-eq0} and~\eqref{2012a5-eq2-1}:
+    \[ f(x(x + 1)y + 1) = f((x + 1)y + x) - f((x + 1)y) = f((x + 1)(y + 1) - 1) - f((x + 1)y) = f(y - x) - f((x + 1)y), \]
+    \[ f(x(x + 1)y + 1) = f(xy + x + 1) = f(x + y + 1) - f(y + 1). \]
+    Now write both sides in terms of $g$ again:
+    \[ g(y - x) - g((x + 1)y) = g(x + y + 1) - g(y + 1). \]
+    Multiply both sides by $2$, then apply~\eqref{2012a5-eq2-3-4}:
+    \[ 2 g(y - x) - (g(y + 1 + x) + g(y - 1 - x) - 2) = 2 g(y + 1 + x) - 2 g(y + 1), \]
+        which rearranges to
+    \[ 2 (g(y - x) + 1) - g(y - 1 + x) = 3 g(y + 1 + x) - 2 g(y + 1). \]
+    By~\eqref{2012a5-eq2-3-1} and replacing $y$ with $y - 1$, we get
+    \[ g(y - x) = 3 g(y + x) - 2 g(y) \iff g(y - x) + 2 g(y) = 3 g(y + x). \]
+    By replacing $y$ with $-y$ and using the fact that $g$ is even, we get $g(y + x) + 2 g(y) = 3 g(y - x)$.
+    Solving these yields $g(y - x) = g(y + x) = g(y)$ for any $y \in R$, since $\rchar(S) \neq 2$.
+    This shows that $x = 0$.
     \end{proof}
 
-    \begin{itemize}
+    Now we show that $R$ is commutative, using~\eqref{2012a5-eq2-3-6}.
+    By~\eqref{2012a5-eq2-3-3}, we have $g(xy) = g(yx)$ for all $x, y \in R$.
+    Thus, $g((x + y)(x - y)) = g((x - y)(x + y))$, and~\eqref{2012a5-eq2-3-3} yields
+    \[ g((x^2 - y^2)(xy - yx)) = 0 \implies (x^2 - y^2)(xy - yx) = 0. \]
+    Now we take differences.
+    First, $((x + 1)^2 - y^2)(xy - yx) = (x^2 - y^2)(xy - yx) = 0$, so $(2x - 1)(xy - yx) = 0$.
+    Taking another difference yields $2(xy - yx) = 0$.
+    Substituting back into $(2x - 1)(xy - yx) = 0$ yields $xy - yx = 0$ for all $x, y \in R$.
+    This shows that $R$ is commutative.
 
-        \item
-        $\rchar(S) \nmid 3$.
-    
-        Replacing $x$ with $2x$ in~\eqref{2012a5-eq2-3-1} and using~\eqref{2012a5-eq0} or~\eqref{2012a5-eq2-1} gives us $g(2x) = 4 g(x)$ for all $x \in R$.
-        Now replace both $x$ and $y$ with $2x$ and $2y$ in~\eqref{2012a5-eq2-3-4}; we get
-        \[ 2^5 (g(xy) - g(x) g(y)) = 2^2 (g(x + y) + g(x - y) - 2(g(x) + g(y))) = 2^3 (g(xy) - g(x) g(y)). \]
-        But $2^5 - 2^3 = 2^3 \cdot 3 \neq 0$ in $S$, so indeed both~\eqref{2012a5-eq2-3-5} and~\eqref{2012a5-eq2-3-6} holds.
+    Now we are ready to show that both sides of~\eqref{2012a5-eq2-3-4} are zero.
+    That is, we have
+    \[ g(xy) = g(x) g(y), \tag{2.3.7}\label{2012a5-eq2-3-7} \]
+    \[ g(x + y) + g(x - y) = 2(g(x) + g(y)). \tag{2.3.8}\label{2012a5-eq2-3-8} \]
 
-        Next, we show~\eqref{2012a5-eq2-3-7}.
-        Indeed, fix $g(xr) = g(x) g(r) = 0$, so~\eqref{2012a5-eq2-3-3} shows that $g(x + r) = g(x - r)$ for any $x \in R$.
-        That is, $f$ is $2r$-periodic, so $2r = 0$.
-        Next, plug $y = r$ into~\eqref{2012a5-eq2-3-6}; we get $2 g(x + r) = 2 g(x)$ for any $x \in R$.
-        Since $\rchar(S) \nmid 2$, $f$ is $r$-periodic, so $r = 0$.
-        The previous claim then yields that $R$ is commutative.
+    \begin{proof}
+    Consider~\eqref{2012a5-eq2-3-4} but with $x$ replaced by $x + 1$ and $x - 1$.
+    Using linear combination of $(x + 1, y) + (x - 1, y) - 2 \cdot (x, y)$, it yields
+    \[ 2 (g((x + 1) y) + g((x - 1) y) - 2 g(xy) - 2 g(y)) = 0 \implies g((x + 1) y) + g((x - 1) y) - 2 g(xy) = 2 g(y). \]
+    In particular, plugging back into~\eqref{2012a5-eq2-3-4} yields $g(xy^2) = g(xy) g(y)$ for all $x, y \in R$.
+    Since $R$ is commutative,
+    \[ g(x^2 y^2) = g((xy)^2) \implies g(xy) g(x) g(y) = g(xy)^2 \implies g(xy) = 0 \vee g(xy) = g(x) g(y). \]
+    By~\eqref{2012a5-eq2-3-6}, the former yields $xy = 0$.
+    It remains to show that $xy = 0$ actually yields either $x = 0$ or $y = 0$.
 
-        \item 
-        $\rchar(S) \mid 3$.
+    If $xy = 0$ and $(x + 1) y = 0$ or $(x - 1) y = 0$, then clearly we are done.
+    Otherwise, we have $xy = 0$, $g(y) = g((x + 1) y) = g(x + 1) g(y)$, and $g(y) = g((x - 1) y) = g(x - 1) g(y)$.
+    Then adding them and applying~\eqref{2012a5-eq2-3-1} yields $2 g(y) = 2 (g(x) + 1) g(y)$, which implies either $g(x) = 0$ or $g(y) = 0$.
+    By~\eqref{2012a5-eq2-3-6} again, we are done.
+    \end{proof}
 
-        This time, we can use~\eqref{2012a5-eq2-5}.
-        First, as in the second subcase, we get $\rchar(R) \mid 3$.
-        If $g(r) = 0$, then~\eqref{2012a5-eq2-3-3} and~\eqref{2012a5-eq2-3-1} yields $g(r + 1) = g(r - 1) = 1$.
-        Then~\eqref{2012a5-eq2-5} yields $2r = 0$ since $-1 = 2$ in $R$.
-        Now we have~\eqref{2012a5-eq2-3-7} and $R$ is commutative.
-        We now show~\eqref{2012a5-eq2-3-5} and~\eqref{2012a5-eq2-3-6}.
-
-        Consider~\eqref{2012a5-eq2-3-4} but with $x$ replaced by $x + 1$ and $x - 1$.
-        Using linear combination of $(x + 1, y) + (x - 1, y) - 2 \cdot (x, y)$, it yields
-        \[ 2 (g((x + 1) y) + g((x - 1) y) - 2 g(xy) - 2 g(y)) = 0 \implies g((x + 1) y) + g((x - 1) y) - 2 g(xy) = 2 g(y). \]
-        In particular, plugging back into~\eqref{2012a5-eq2-3-4} yields $g(xy^2) = g(xy) g(y)$ for all $x, y \in R$.
-        Since $R$ is commutative,
-        \[ g(x^2 y^2) = g((xy)^2) \implies g(xy) g(x) g(y) = g(xy)^2 \implies g(xy) = 0 \vee g(xy) = g(x) g(y). \]
-        By~\eqref{2012a5-eq2-3-7}, the former yields $xy = 0$.
-        It remains to show that $xy = 0$ actually yields either $x = 0$ or $y = 0$.
-
-        If $xy = 0$ and $(x + 1) y = 0$ or $(x - 1) y = 0$, then clearly we are done.
-        Otherwise, we have $xy = 0$, $g(y) = g((x + 1) y) = g(x + 1) g(y)$, and $g(y) = g((x - 1) y) = g(x - 1) g(y)$.
-        Then adding them and applying~\eqref{2012a5-eq2-3-1} yields $2 g(y) = 2 (g(x) + 1) g(y)$, which implies either $g(x) = 0$ or $g(y) = 0$.
-        By~\eqref{2012a5-eq2-3-7} again, we are done.
-
-    \end{itemize}
-
-    So now, we have all of~\eqref{2012a5-eq2-3-5},~\eqref{2012a5-eq2-3-6}, and~\eqref{2012a5-eq2-3-7}, and also $R$ is commutative.
-    There is a general theory of functions satisfying~\eqref{2012a5-eq2-3-6}; we are going to describe them here now.
+    So now, we have all of~\eqref{2012a5-eq2-3-3},~\eqref{2012a5-eq2-3-7}, and~\eqref{2012a5-eq2-3-8}, and also $R$ is commutative.
+    There is a general theory of functions satisfying~\eqref{2012a5-eq2-3-8}; we are going to describe them here now.
     
     \begin{claim}
     There exists a symmetric $\Z$-bilinear map $T : R \times R \to S$ such that $2 g(x) = T(x, x)$ for any $x \in R$.
@@ -490,7 +497,7 @@ We now split cases based on the possible values of $f(2)$.
     Use axiom of choice and define $h : R_2 \to S$ to be the function that sends each $r$ to one such $s$.
     As $\rchar(S) \nmid 2$ and $\rho$ is a group homomorphism, then $h$ is also a group homomorphism.
     Furthermore, $2 h(x^2) = \rho(x^2) = 2 g(x)$, so $g(x) = h(x^2)$ for any $x \in R$.
-    By~\eqref{2012a5-eq2-3-5}, we have $h((xy)^2) = h(x^2) h(y^2)$ for any $x, y \in R$.
+    By~\eqref{2012a5-eq2-3-7}, we have $h((xy)^2) = h(x^2) h(y^2)$ for any $x, y \in R$.
     By structural induction, this extends to $h(xy) = h(x) h(y)$ for any $x, y \in R_2$.
     Also, $h(1) = g(1) = 1$; this implies that $h : R_2 \to S$ is a ring homomorphism.
     Finally, we recover $f$ by $f(x) = g(x) - 1 = h(x^2) - 1$ for any $x \in R$.
