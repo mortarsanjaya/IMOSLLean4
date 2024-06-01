@@ -51,12 +51,12 @@ theorem iter_apply_ne_of_mem_rangeCompl_iter_ne (h0 : m ≠ n)
   wlog h3 : m < n
   exact (this h h0.symm h2 h1 <| (le_of_not_lt h3).lt_of_ne h0.symm).symm
   -- Solve assuming `m < n`
-  rcases exists_pos_add_of_lt h3 with ⟨k, h4, rfl⟩
-  intros h3
-  rw [f.iterate_add_apply m k b, (h.injective.iterate m).eq_iff] at h3
-  rw [h3, mem_rangeCompl_iff, Set.mem_range] at h1
+  rcases Nat.exists_eq_add_of_le h3.le with ⟨k, rfl⟩
+  rw [Nat.lt_add_right_iff_pos] at h3
+  rw [f.iterate_add_apply m k b, (h.injective.iterate m).ne_iff]
+  rintro rfl; rw [mem_rangeCompl_iff, Set.mem_range] at h1
   refine h1 ⟨f^[k.pred] b, ?_⟩
-  rw [← f.iterate_succ_apply', Nat.succ_pred_eq_of_pos h4]
+  rw [← f.iterate_succ_apply', Nat.succ_pred_eq_of_pos h3]
 
 theorem iter_injective (h0 : a ∈ h.rangeCompl) (h1 : b ∈ h.rangeCompl)
     (h2 : f^[m] a = f^[n] b) : m = n ∧ a = b :=
@@ -166,7 +166,7 @@ theorem iterRangeCompl_card :
       have h0 := card_union_of_disjoint
         (h.iterRangeCompl_disjoint_exactIterRange n.le_refl)
       rw [h.iterRangeCompl_succ, h0, h.exactIterRange_card,
-        iterRangeCompl_card n, add_one_mul (α := ℕ), add_comm]
+        iterRangeCompl_card n, Nat.succ_mul, add_comm]
 
 theorem iter_range_of_rangeCompl_singleton (h0 : h.rangeCompl = {a}) :
     ∀ n, h.iterRangeCompl n = (range n).image (λ k ↦ f^[k] a)

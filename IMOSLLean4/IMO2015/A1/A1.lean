@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.Field.Basic
 
 /-!
@@ -61,5 +61,5 @@ theorem final_solution [LinearOrderedField F]
     rw [Nat.one_le_cast]; exact one_le_two.trans h1
     clear h1 h2 h3; induction' n with n n_ih
     rw [Nat.cast_zero, sum_range_zero, zero_div]
-    rw [sum_range_succ, add_comm]
-    exact (h0 n).trans (add_le_add_left n_ih (a n))
+    rw [sum_range_succ, add_comm _ (a n)]
+    refine (h0 n).trans (add_le_add_left n_ih (a n))

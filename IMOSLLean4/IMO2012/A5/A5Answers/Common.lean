@@ -1,0 +1,63 @@
+/-
+Copyright (c) 2024 Gian Cordana Sanjaya. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gian Cordana Sanjaya
+-/
+
+import IMOSLLean4.IMO2012.A5.A5Answers.F2Map
+import IMOSLLean4.IMO2012.A5.A5Answers.F2eMap
+import IMOSLLean4.IMO2012.A5.A5Answers.F3Map1
+import IMOSLLean4.IMO2012.A5.A5Answers.F3Map2
+import IMOSLLean4.IMO2012.A5.A5Answers.F4Map
+import IMOSLLean4.IMO2012.A5.A5Answers.Z4Map
+import IMOSLLean4.IMO2012.A5.A5Answers.SqSubOneMap
+import IMOSLLean4.IMO2012.A5.A5Answers.SubOneMap
+import IMOSLLean4.IMO2012.A5.A5General.A5Hom
+import IMOSLLean4.IMO2012.A5.Extra.BundledRingFun
+
+/-!
+# IMO 2012 A5 (Description of answers)
+
+We describe all non-trivial good maps and prove that they are non-trivial good.
+The proof that they are the only ones is the main content of the problem.
+-/
+
+namespace IMOSL
+namespace IMO2012A5
+
+open BundledRingFun
+
+inductive isPolyGoodMap : BundledRingFun → Prop
+  | SubOne (R) [Ring R] : isPolyGoodMap (ofFun λ (x : R) ↦ x - 1)
+  | SqSubOne (R) [CommRing R] : isPolyGoodMap (ofFun (RestrictedSq (R := R) - 1))
+
+inductive isFinGoodMap : BundledRingFun → Prop
+  | 𝔽₂Map  : isFinGoodMap (ofFun 𝔽₂Map)
+  | 𝔽₃Map1 : isFinGoodMap (ofFun 𝔽₃Map1)
+  | 𝔽₃Map2 : isFinGoodMap (ofFun 𝔽₃Map2)
+  | ℤ₄Map  : isFinGoodMap (ofFun ℤ₄Map)
+  | 𝔽₂εMap : isFinGoodMap (ofFun 𝔽₂εMap)
+  | 𝔽₄Map  : isFinGoodMap (ofFun 𝔽₄Map)
+
+/-- Claimed set of non-trivial good functions -/
+def isNontrivialAnswer.{u} (X : BundledRingFun.{u}) : Prop :=
+  (∃ A : BundledRingFun.{u}, isPolyGoodMap A ∧ Nonempty (A.Hom X)) ∨
+    (∃ A : BundledRingFun, isFinGoodMap A ∧ Nonempty (A.Hom X))
+
+theorem isPolyGoodMap.NontrivialGood {X} (hX : isPolyGoodMap X) : NontrivialGood X.f :=
+  hX.rec (λ R ↦ sub_one_is_NontrivialGood (R := R))
+    (λ R ↦ RestrictedSq_sub_one_is_NontrivialGood (R := R))
+
+theorem isFinGoodMap.NontrivialGood {X} (hX : isFinGoodMap X) : NontrivialGood X.f :=
+  hX.rec 𝔽₂Map_is_NontrivialGood 𝔽₃Map1_is_NontrivialGood 𝔽₃Map2_is_NontrivialGood
+    ℤ₄Map_is_NontrivialGood 𝔽₂εMap_is_NontrivialGood 𝔽₄Map_is_NontrivialGood
+
+theorem BundledRingFun.Hom.NontrivialGood_trans {A X : BundledRingFun}
+    (hA : NontrivialGood A.f) (F : A.Hom X) : NontrivialGood X.f :=
+  have h : X.f = F.targetHom ∘ A.f ∘ F.sourceHom := funext F.spec
+  h ▸ (hA.hom_comp _).comp_hom _
+
+theorem isNontrivialAnswer.NontrivialGood {X} (hX : isNontrivialAnswer X) :
+    NontrivialGood X.f :=
+  hX.elim (λ ⟨_, h, h0⟩ ↦ h0.elim λ φ ↦ φ.NontrivialGood_trans h.NontrivialGood)
+    (λ ⟨_, h, h0⟩ ↦ h0.elim λ φ ↦ φ.NontrivialGood_trans h.NontrivialGood)

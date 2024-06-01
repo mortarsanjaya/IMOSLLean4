@@ -139,7 +139,7 @@ theorem ValidMove_Colex {X Y : GameState n} (h : X.ValidMove Y) :
     Colex.toColex Y.board < Colex.toColex X.board := by
   rcases h with ⟨i, h⟩
   refine Colex.toColex_lt_toColex.mpr ⟨?_, λ j h0 h1 ↦ ?_⟩
-  · rw [Ne.def, symmDiff_eq_left]
+  · rw [Ne, symmDiff_eq_left]
     exact ne_empty_of_mem (left_mem_Icc.mpr le_self_add)
   · refine ⟨i + n, h, λ h2 ↦ ?_, ?_⟩
     · rw [mem_symmDiff, mem_Icc] at h2

@@ -57,7 +57,7 @@ theorem final_solution {f g : ℕ → ℕ} :
       rw [← h, Nat.lt_succ_iff]
       exact Nat.le_add_right _ _
     refine ⟨rfl, funext λ n ↦ ?_⟩
-    simp_rw [iterate_id, id_def, Nat.succ_inj',
+    simp_rw [iterate_id, Function.id_def, Nat.succ_inj',
       add_right_eq_self, add_eq_zero_iff] at h
     rcases n with _ | n
     exacts [(h 0).1, (h n).2]

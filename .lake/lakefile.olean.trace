@@ -1,4 +1,4 @@
-{"platform": "x86_64-apple-darwin21.6.0",
- "options": {"env": "dev"},
- "leanHash": "6fce8f7d5cd18a4419bca7fd51780c71c9b1cc5a",
- "configHash": "3287198758646152189"}
+{"platform": "aarch64-apple-darwin",
+ "options": {},
+ "leanHash": "873ef2d894af80d8fc672e35f7e28bae314a1f6f",
+ "configHash": "2982186859362722976"}

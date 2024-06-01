@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Regular
+import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Data.Nat.Prime
 
 /-!

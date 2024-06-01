@@ -51,7 +51,8 @@ theorem exists_lt_iterate_eq (f : S → S) : ∃ a b, a < b ∧ f^[a] = f^[b] :=
 theorem exists_iterate_idempotent (f : S → S) :
     ∃ n, 0 < n ∧ f^[2 * n] = f^[n] := by
   obtain ⟨a, b, h, h0⟩ := exists_lt_iterate_eq f
-  rw [lt_iff_exists_add] at h; rcases h with ⟨c, h, rfl⟩
+  rcases Nat.exists_eq_add_of_le h.le with ⟨c, rfl⟩
+  rw [Nat.lt_add_right_iff_pos] at h
   refine ⟨c * a.succ, Nat.mul_pos h a.succ_pos, ?_⟩
   rw [Nat.two_mul]; refine iterate_add_mul_eq ?_ _
   obtain ⟨k, h1⟩ := Nat.exists_eq_add_of_le

@@ -87,4 +87,4 @@ theorem final_solution {I : Finset ι}
   rw [disjiUnion_weight_eq, Function.comp, h0.1, h0.2, add_zero] at h1
   apply exists_lt_of_sum_lt
   rw [sum_const_zero, ← h1]
-  exact zero_lt_one
+  exact Int.zero_lt_one

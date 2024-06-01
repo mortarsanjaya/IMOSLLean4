@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.List.Perm
 import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.Nat.Size
 import Mathlib.Order.Bounds.Basic
-import Mathlib.Algebra.BigOperators.List.Basic
+import Mathlib.Algebra.BigOperators.Group.List
 
 /-!
 # IMO 2021 A3
@@ -96,7 +95,6 @@ theorem lowerBoundMk_perm_iota : ∀ n : ℕ, lowerBoundMk n ~ iota n :=
           rw [lowerBoundMk_bit1, Nat.bit_true, Nat.bit1_val]
           refine perm_middle.trans (((h.append_left _).trans ?_).cons _)
           rw [iota_map_add_append_iota_eq_iota, ← two_mul]
-          exact Perm.refl _
 
 lemma lowerBoundMk_length (n : ℕ) : (lowerBoundMk n).length = n :=
   (lowerBoundMk_perm_iota n).length_eq.trans (length_iota n)
@@ -135,6 +133,8 @@ theorem lowerBoundMk_targetSum :
             n.size.succ_eq_add_one, add_comm, Nat.add_right_inj]
           exact Nat.div_eq_of_lt_le
             ((one_mul _).trans_le <| Nat.succ_le_succ (X0 _)) (Nat.le_refl _)
+
+
 
 
 

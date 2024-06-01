@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.GroupPower.Ring
+import Mathlib.Order.Basic
 import Mathlib.Algebra.Ring.Nat
 
 /-!
