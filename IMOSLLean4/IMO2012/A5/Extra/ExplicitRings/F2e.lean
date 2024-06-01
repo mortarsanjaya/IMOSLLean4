@@ -230,7 +230,7 @@ protected theorem add_mul (x y z : 𝔽₂ε) : (x + y) * z = x * z + y * z :=
   by rw [𝔽₂ε.mul_comm, 𝔽₂ε.mul_add, z.mul_comm, z.mul_comm]
 
 instance : CommRing 𝔽₂ε :=
-  { 𝔽₂ε.instAddCommGroup𝔽₂ε with
+  { 𝔽₂ε.instAddCommGroup with
     zero_mul := 𝔽₂ε.zero_mul
     mul_zero := 𝔽₂ε.mul_zero
     mul_assoc := 𝔽₂ε.mul_assoc

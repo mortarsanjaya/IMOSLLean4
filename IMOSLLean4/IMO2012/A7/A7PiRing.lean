@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2012.A7.A7Group
 import Mathlib.Algebra.Ring.Pi
-import Mathlib.RingTheory.Subring.Basic
+import Mathlib.Algebra.Ring.Subring.Basic
 
 /-!
 # IMO 2012 A7, Pi-type Ring Version

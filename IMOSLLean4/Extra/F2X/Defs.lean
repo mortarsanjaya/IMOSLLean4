@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.CharTwo.Finset
+import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # Explicit construction of `𝔽₂[X]`
@@ -231,7 +232,7 @@ theorem square_zero : square 0 = 0 := rfl
 theorem square_one : square 1 = 1 := rfl
 
 theorem square_add (P Q : 𝔽₂X) : square (P + Q) = square P + square Q :=
-  𝔽₂X.ext _ _ (Finset.image_symmDiff _ _ (mul_right_injective₀ two_ne_zero))
+  𝔽₂X.ext _ _ (Finset.image_symmDiff _ _ λ _ _ ↦ (Nat.mul_right_inj (Nat.succ_ne_zero 1)).mp)
 
 theorem square_add_one (P : 𝔽₂X) : square (P + 1) = square P + 1 :=
   P.square_add 1
@@ -311,7 +312,7 @@ decreasing_by apply Nat.bitwise_rec_lemma
 /-! ### `CommRing` instance -/
 
 instance : CommRing 𝔽₂X :=
-  { 𝔽₂X.instAddCommGroup𝔽₂X with
+  { 𝔽₂X.instAddCommGroup with
     zero_mul := 𝔽₂X.zero_mul
     mul_zero := 𝔽₂X.mul_zero
     one_mul := 𝔽₂X.one_mul

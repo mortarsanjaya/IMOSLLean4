@@ -96,7 +96,7 @@ theorem exists_rangeCompl_eq_singleton :
     (card_union_le _ _).trans <| Nat.add_le_add
       (card_pair (f 0).succ_ne_zero.symm).le card_image_le
   rw [(finChainFnOfgood h).iterRangeCompl_card, Nat.succ_mul,
-    add_le_add_iff_right, mul_le_iff_le_one_right (Nat.succ_pos 1)] at h0
+    Nat.add_le_add_iff_right, mul_comm, ← Nat.le_div_iff_mul_le (Nat.succ_pos 1)] at h0
   refine h0.eq_or_lt.elim card_eq_one.mp (λ h0 ↦ ?_)
   rw [Nat.lt_one_iff, card_eq_zero, ← (finChainFnOfgood h).surjective_iff] at h0
   obtain ⟨a, h0⟩ := h0.iterate 3 0
@@ -108,9 +108,10 @@ theorem iter_four_zero_eq_four : f^[4] 0 = 4 := by
     rw [← card_range (f^[4] 0), ← this,
       (finChainFnOfgood h).iterRangeCompl_card, h0, card_singleton]
   -- It remains to check that `f^[4](ℕ) = {4, 5, 6, …}`
-  ext n; rw [(finChainFnOfgood h).mem_iterRangeCompl_iff,
-    mem_range, not_iff_comm, not_lt, le_iff_exists_add]
-  exact exists_congr λ a ↦ iter_four_eq h a ▸ eq_comm
+  ext n; rw [(finChainFnOfgood h).mem_iterRangeCompl_iff, mem_range, not_iff_comm, not_lt]
+  refine ⟨λ h1 ↦ ⟨n - f^[4] 0, ?_⟩, λ ⟨k, h1⟩ ↦ ?_⟩
+  · rw [iter_four_eq h, Nat.add_sub_of_le h1]
+  · rw [← h1, iter_four_eq h k]; exact Nat.le_add_right _ k
 
 theorem iter_four_eq_add_four (n : ℕ) : f^[4] n = n + 4 := by
   rw [iter_four_eq h, add_comm, iter_four_zero_eq_four h]

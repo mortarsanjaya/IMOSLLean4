@@ -120,7 +120,7 @@ protected theorem add_mul : ∀ x y z : 𝔽₂, (x + y) * z = x * z + y * z
   | I, I, I => rfl
 
 instance : CommRing 𝔽₂ :=
-  { 𝔽₂.instAddCommGroup𝔽₂ with
+  { 𝔽₂.instAddCommGroup with
     zero_mul := 𝔽₂.zero_mul
     mul_zero := 𝔽₂.mul_zero
     mul_assoc := 𝔽₂.mul_assoc

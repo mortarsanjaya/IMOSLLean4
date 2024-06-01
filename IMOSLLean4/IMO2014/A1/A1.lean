@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.Ring.Int
+import Mathlib.Algebra.Order.Group.Int
 
 /-!
 # IMO 2014 A1 (P1)
@@ -25,12 +27,12 @@ open Finset
 def d (z : ℕ → ℤ) (n : ℕ) := (range (n + 1)).sum z - n * z n
 
 theorem d_zero (z : ℕ → ℤ) : d z 0 = z 0 := by
-  rw [d, sum_range_one, Nat.cast_zero, zero_mul, sub_zero]
+  rw [d, sum_range_one, Int.Nat.cast_ofNat_Int, Int.zero_mul, sub_zero]
 
 theorem d_succ (z : ℕ → ℤ) (n : ℕ) :
     d z (n + 1) = (range (n + 1)).sum z - n * z (n + 1) := by
-  rw [d, sum_range_succ, Nat.cast_succ, add_one_mul (α := ℤ),
-    add_sub_add_right_eq_sub]
+  rw [d, sum_range_succ, Int.natCast_add, Int.natCast_one,
+    add_one_mul (α := ℤ), add_sub_add_right_eq_sub]
 
 theorem d_one (z : ℕ → ℤ) : d z 1 = z 0 := by
   rw [d_succ, sum_range_one, Nat.cast_zero, zero_mul, sub_zero]
@@ -39,16 +41,16 @@ variable {z : ℕ → ℤ} (h : StrictMono z)
 
 theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
   rw [d_succ, d, sub_sub, ← mul_add_one (α := ℤ)]
-  refine sub_le_sub_left (mul_le_mul_of_nonneg_left ?_ ?_) _
-  · rw [Int.add_one_le_iff]; exact h n.lt_succ_self
-  · exact Int.ofNat_zero_le n
+  exact Int.sub_le_sub_left
+    (Int.mul_le_mul_of_nonneg_left (h n.lt_succ_self) (Int.ofNat_zero_le n)) _
 
 theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
   | 0 => ((d_zero z).trans (sub_zero _).symm).le
   | n + 1 => by
       rw [Nat.choose, Nat.choose_one_right, Nat.cast_add,
-        ← sub_sub, sub_right_comm, le_sub_iff_add_le]
-      exact (Int.add_le_of_le_sub_right (main_lemma h n)).trans (binom_bound n)
+        ← sub_sub, sub_right_comm]
+      exact Int.le_sub_right_of_add_le <|
+        (Int.add_le_of_le_sub_right (main_lemma h n)).trans (binom_bound n)
 
 theorem d_nonpos_of_big (h0 : (z 0).natAbs ≤ n.choose 2) : d z n ≤ 0 :=
   (binom_bound h n).trans <| Int.sub_nonpos_of_le <| (le_abs_self _).trans <|
@@ -76,7 +78,7 @@ theorem greatestDPos_succ_not_d_pos : d z (greatestDPos h + 1) ≤ 0 :=
     (Nat.findGreatest_le _).lt_or_eq.resolve_right λ h1 ↦
       (greatestDPos_is_d_pos h h0).not_le <| d_nonpos_of_big h <|
         (congr_arg₂ Nat.choose h1.symm rfl).le.trans' <|
-          le_add_right (z 0).natAbs.choose_one_right.ge
+          (z 0).natAbs.choose_one_right.ge.trans (Nat.le_add_right _ _)
 
 theorem eq_greatestDPos_iff :
     N = greatestDPos h ↔ 0 < d z N ∧ d z (N + 1) ≤ 0 :=
@@ -101,7 +103,8 @@ theorem final_solution_part1 : 0 < greatestDPos h :=
 theorem final_solution_part2 {N : ℕ} :
     N = greatestDPos h ↔ ↑N * z N < (range (N + 1)).sum z ∧
       (range (N + 1)).sum z ≤ N * z (N + 1) := by
-  rw [eq_greatestDPos_iff h h0, d_succ]; exact and_congr sub_pos sub_nonpos
+  rw [eq_greatestDPos_iff h h0, d_succ]
+  exact and_congr sub_pos sub_nonpos
 
 /-- Final solution, extra: `C(N, 2) < z_0`,
   implemented as `C(N, 2) < (z 0).nat_abs`. -/

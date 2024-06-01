@@ -45,6 +45,27 @@ end
 
 
 
+/-! ### Associative semiring -/
+
+section
+
+variable [Semiring R] [CharTwo R]
+
+lemma add_sq_of_Commute {x y : R} (h : x * y = y * x) : (x + y) ^ 2 = x ^ 2 + y ^ 2 := by
+  rw [sq, sq, sq, add_mul_self_of_Commute h]
+
+lemma add_one_sq (x : R) : (x + 1) ^ 2 = x ^ 2 + 1 := by
+  rw [sq, sq, add_one_mul_self]
+
+lemma sq_eq_one_iff [NoZeroDivisors R] {x : R} : x ^ 2 = 1 ↔ x = 1 := by
+  rw [sq, mul_self_eq_one_iff]
+
+end
+
+
+
+
+
 /-! ### Commutative semiring -/
 
 section
@@ -54,7 +75,13 @@ variable [CommSemiring R] [CharTwo R]
 lemma add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y :=
   add_mul_self_of_Commute (mul_comm x y)
 
+lemma add_sq (x y : R) : (x + y) ^ 2 = x ^ 2 + y ^ 2 :=
+  add_sq_of_Commute (mul_comm x y)
+
 lemma mul_self_eq_iff [NoZeroDivisors R] {x y : R} : x * x = y * y ↔ x = y := by
   rw [← add_eq_zero_iff_eq, ← add_mul_self, mul_self_eq_zero, add_eq_zero_iff_eq]
+
+lemma sq_eq_iff [NoZeroDivisors R] {x y : R} : x ^ 2 = y ^ 2 ↔ x = y := by
+  rw [sq, sq, mul_self_eq_iff]
 
 end

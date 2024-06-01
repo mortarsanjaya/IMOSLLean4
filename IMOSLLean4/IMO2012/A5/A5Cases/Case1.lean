@@ -199,5 +199,5 @@ theorem solution {f : R → S} (hf : ReducedGood f) (h : f (-1) ≠ 0) :
     (Subcase11_solution hf' h)
     (λ h0 ↦ GoodSubcase12.solution <|
       have h1 := (map_neg_one_cases hf' h).resolve_left h0
-      ⟨hf, h1, by rwa [← two_add_one_eq_three, Ne.def,
+      ⟨hf, h1, by rwa [← two_add_one_eq_three, Ne,
         ← neg_eq_iff_add_eq_zero, ← h1, eq_comm]⟩)

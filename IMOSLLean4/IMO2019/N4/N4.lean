@@ -106,7 +106,7 @@ theorem good_is_linear {f : ℕ → ℕ} (h : good C f) : ∃ k, f = (k * ·) :=
       clear h6; rcases h with ⟨_ | _ | t, h⟩
       · exact h.not_gt.elim (Nat.lt_add_right _ h2.pos)
       · rwa [Nat.mul_one, add_right_inj, eq_comm, mul_comm] at h
-      · rw [Nat.succ_eq_add_one, add_assoc, mul_add, add_mul _ _ 2] at h
+      · rw [add_assoc, mul_add, add_mul _ _ 2] at h
         refine h.not_lt.elim (Nat.lt_add_left _ (Nat.lt_add_right _ ?_))
         rw [mul_two, add_lt_add_iff_left]
         exact hp3.trans_le' (Nat.mul_le_mul_left x h3)

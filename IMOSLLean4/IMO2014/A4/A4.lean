@@ -124,8 +124,11 @@ theorem final_solution_case1 (h1 : ¬b - 1 ∣ c) : ¬good b c f :=
 /-- Final solution, Case 2: `b - 1 ∣ c` -/
 theorem final_solution_case2 (h1 : b - 1 ∣ c) :
     good b c f ↔ f = ((b - 1) * · + c / (b - 1)) :=
-  ⟨λ h2 ↦ suffices c / (b - 1) = f 0
-    from this.symm ▸ funext (map_is_linear h2 h h0)
-    Int.ediv_eq_of_eq_mul_right (ne_zero_of_dvd_ne_zero h0 h1)
-      (c_eq_b_sub_one_mul_map_zero h2 h h0),
+  ⟨λ h2 ↦ by
+    rcases h1 with ⟨k, rfl⟩
+    have h1 := c_eq_b_sub_one_mul_map_zero h2 h h0
+    have h3 := (mul_ne_zero_iff.mp h0).1
+    rw [Int.mul_ediv_cancel_left _ h3]
+    rw [mul_eq_mul_left_iff, or_iff_left h3] at h1
+    rw [h1]; exact funext (map_is_linear h2 h h0),
   λ h2 ↦ h2.symm ▸ linear_good h1⟩

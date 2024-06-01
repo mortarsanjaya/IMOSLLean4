@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import Mathlib.Algebra.Ring.Regular
 import Mathlib.Algebra.Order.Floor
 import Mathlib.Algebra.Ring.Equiv
 
@@ -65,7 +66,7 @@ theorem exists_equiv_Int_or_zero_one_dense :
   (em (∀ x : R, x < 1 → x ≤ 0)).imp
     (λ h ↦ ⟨IntEquiv_of_zero_one_discrete h⟩)
     (λ h ↦ (not_forall.mp h).elim λ x h ↦
-      ⟨x, (not_imp.mp h).symm.imp_left lt_of_not_le⟩)
+      ⟨x, (_root_.not_imp.mp h).symm.imp_left lt_of_not_le⟩)
 
 theorem FloorRing_zero_one_dense [h : IsEmpty (ℤ ≃+* R)] :
     ∃ x : R, 0 < x ∧ x < 1 :=
