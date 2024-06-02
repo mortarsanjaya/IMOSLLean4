@@ -23,33 +23,21 @@ If this works, then we have a complete solution even when $F$ is just a division
 namespace IMOSL
 namespace IMO2017A6
 
-open Function
+section
 
-def good [NonAssocRing R] (f : R → R) :=
-  ∀ x y : R, f (f x * f y) + f (x + y) = f (x * y)
+variable [NonAssocRing R]
 
+/-- The problem. -/
+def good (f : R → R) := ∀ x y : R, f (f x * f y) + f (x + y) = f (x * y)
 
-
-
-
-/-! ## Answer checking -/
-
-theorem good_zero [NonAssocRing R] : good (0 : R → R) :=
+theorem good_zero : good (0 : R → R) :=
   λ _ _ ↦ add_zero 0
 
-theorem good_one_sub [NonAssocRing R] : good ((1 : R) - ·) :=
+theorem good_one_sub : good ((1 : R) - ·) :=
   λ x y ↦ by rw [sub_add_sub_comm, mul_one_sub, one_sub_mul, sub_sub, sub_add,
     add_sub_sub_cancel, add_sub_add_left_eq_sub, sub_sub_cancel_left, ← sub_eq_add_neg]
 
-
-
-
-
-/-! ## The solution -/
-
-section Ring
-
-variable [Ring R] {f : R → R} (h : good f)
+variable {f : R → R} (h : good f)
 
 theorem good_neg : good (λ x ↦ -f x) :=
   λ x y ↦ by rw [neg_mul_neg, ← neg_add, h]
@@ -59,12 +47,20 @@ theorem good_special_equality {x y : R} (h0 : x * y = 1) :
     f (f (x + 1) * f (y + 1)) = 0 := by
   rw [← add_left_eq_self, h, add_one_mul x, mul_add_one x, h0, add_comm 1 x]
 
+end
+
+
+
+section Ring
+
+variable [Ring R] {f : R → R} (h : good f)
+
 theorem good_map_map_zero_sq : f (f 0 ^ 2) = 0 := by
   have h1 : (-1 : R) * (-1) = 1 := by rw [neg_mul_neg, mul_one]
   have h2 := good_special_equality h h1
   rwa [neg_add_self, ← sq] at h2
 
-theorem good_eq_of_inj (h0 : f 0 = 1) (h1 : Injective f) : f = (1 - ·) :=
+theorem good_eq_of_inj (h0 : f 0 = 1) (h1 : f.Injective) : f = (1 - ·) :=
   have h2 : ∀ x : R, f (f x) + f x = 1 := λ x ↦ by
     rw [← h0, ← mul_zero x, ← h, add_zero, h0, mul_one]
   funext λ x ↦ by
@@ -121,7 +117,7 @@ theorem good_map_add_one_eq_zero_iff (h0 : f 0 = 1) (x : D) :
 
 /-- The general framework; reducing to injectivity. -/
 theorem solution_of_map_zero_eq_one_imp_injective
-    (h : ∀ f : D → D, good f → f 0 = 1 → Injective f) {f : D → D} :
+    (h : ∀ f : D → D, good f → f 0 = 1 → f.Injective) {f : D → D} :
     good f ↔ f = 0 ∨ f = (1 - ·) ∨ f = -(1 - ·) := by
   constructor
   · rw [or_iff_not_imp_left]
@@ -137,7 +133,7 @@ theorem solution_of_map_zero_eq_one_imp_injective
 
 /-- Injectivity for `char(D) ≠ 2`, `D` a division ring -/
 theorem case1_injective (h : (2 : D) ≠ 0)
-    {f : D → D} (h0 : good f) (h1 : f 0 = 1) : Injective f := by
+    {f : D → D} (h0 : good f) (h1 : f 0 = 1) : f.Injective := by
   have h2 := good_shift2 h0 h1
   -- `f(2 f(y)) + f(y) + 1 = f(-y)`
   have h3 : ∀ y, f (2 * f y) + 1 + f y = f (-y) := λ y ↦ by
@@ -169,7 +165,7 @@ end DivisionRing
 
 /-- Injectivity for `char(F) = 2` -/
 theorem case2_injective [Field F] (h : (2 : F) = 0)
-    {f : F → F} (h0 : good f) (h1 : f 0 = 1) : Injective f := by
+    {f : F → F} (h0 : good f) (h1 : f 0 = 1) : f.Injective := by
   have h2 := good_shift h0 h1
   have h3 : ∀ c d : F, d ≠ 0 → f (c + 1) = f (d + 1) →
       f ((c + 1) * (d⁻¹ + 1) - 1) = f (c + d⁻¹ + 1) := λ c d h3 h4 ↦ by
@@ -208,7 +204,7 @@ theorem case2_injective [Field F] (h : (2 : F) = 0)
 
 /-- Injectivity -/
 theorem map_zero_eq_one_imp_injective [Field F] :
-    ∀ f : F → F, good f → f 0 = 1 → Injective f :=
+    ∀ f : F → F, good f → f 0 = 1 → f.Injective :=
   (ne_or_eq (2 : F) 0).elim case1_injective case2_injective
 
 
