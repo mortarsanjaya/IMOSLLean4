@@ -1,106 +1,92 @@
 A \emph{floor function} $\lfloor \cdot \rfloor : R \to \Z$ on a totally ordered ring $R$ is a function such that, for any $r \in R$ and $n \in \Z$, $n \leq \lfloor r \rfloor$ if and only if $n \leq r$ in $R$.
 
 Let $R$ and $S$ be totally ordered rings with floor.
-Find all functions $f : F \to R$ such that, for any $x, y \in R$,
-\[ f(\lfloor x \rfloor y) = \lfloor f(y) \rfloor f(x). \tag{*}\label{2010a1-eq0} \]
+Find all functions $f : R \to S$ such that, for any $x, y \in R$,
+\[ f(\lfloor x \rfloor y) = f(x) \lfloor f(y) \rfloor. \tag{*}\label{2010a1-eq0} \]
 
 
 
 \subsection*{Answer}
 
-If $R \not\cong \Z$, then either $f \equiv 0$ or $f \equiv C$ for some $C \in S$ with $\lfloor C \rfloor = 1$.
+One can show that an ordered ring $R$ with floor is either dense or isomorphic to $\Z$.
+By dense, we mean that for any $x < y$ in $R$, there exists $z \in R$ such that $x < z < y$.
 
-If $R = \Z$, then either $f \equiv 0$ or one of the following:
+If $R$ is dense, then the only functions satisfying~\eqref{2010a1-eq0} are $f \equiv 0$ or $f \equiv C$ for some $C \in S$ with $\lfloor C \rfloor = 1$.
+
+If $R = \Z$, then one of the following holds:
 \begin{itemize}
-    
+
     \item
     $f$ is induced from a monoid homomorphism $g : \Z \to \Z$.
-
-    \item
-    There exists a divisor-closed, product-closed subset $M \subseteq \Z$ and $C \in S$ with $\lfloor C \rfloor = 1$ such that, for any $x \in R$,
-    \[ f(x) = \begin{cases} C, & x \in M, \\ 0, & x \notin M. \end{cases} \]
-    By divisor-closed, we mean that for any $n \in M$ and integer $k \mid n$, we have $k \in M$, even if $n = 0$.
-    In particular, if $0 \in M$, then $M = \Z$.
     
     \item
-    There exists a monoid homomorphism $\phi : \Z \to \N$ and an infinitesimal element $\epsilon \in R$ such that $f(x) = \phi(x)(1 + \epsilon)$.
-    Here infinitesimal means that $0 \leq \epsilon$ and $k \epsilon < 1$ for all $k \in \N$.
+    There exists a monoid homomorphism $\phi : \Z \to \N$ and an infinitesimal element $\epsilon \in R$ such that $f(n) = (1 + \epsilon) \phi(n)$ for all $n \in \Z$.
+    Here, infinitesimal means that $0 < \epsilon$ and $k \epsilon < 1$ for all $k \in \N$.
+
+    \item
+    There exists a set $A \subseteq \Z$ with the property:
+    (1). for any $m, n \in \Z$, we have $mn \in A \iff m \in A \wedge n \in A$;
+    (2). for any $n \in \Z$, we have $f(n) = C$ if $n \in A$ and $f(n) = 0$ otherwise.
 
 \end{itemize}
 
 
 
-\subsection*{Solution}
 
-Plugging $(x, y) = (0, 0)$ into~\eqref{2010a1-eq0} yields $f(0) = \lfloor f(0) \rfloor f(0)$.
+
+\subsection*{Solution ($R$ is densely ordered)}
+
+Plugging $(x, y) = (0, 0)$ into~\eqref{2010a1-eq0} yields $f(0) = f(0) \lfloor f(0) \rfloor$.
 Thus either $\lfloor f(0) \rfloor = 1$ or $f(0) = 0$.
 In the former case, plugging $y = 0$ into~\eqref{2010a1-eq0} yields that $f$ is constant.
 Clearly the underlying constant $C$ is equal to $f(0)$ and we have obtained $\lfloor C \rfloor = 1$.
+We now assume that $f(0) = 0$ and show that $f \equiv 0$.
 
-Plugging $(x, y) = (1, 1)$ into~\eqref{2010a1-eq0} yields $f(1) = \lfloor f(1) \rfloor f(1)$.
-Thus either $\lfloor f(1) \rfloor = 1$ or $f(1) = 0$.
-In the latter case, plugging $x = 1$ into~\eqref{2010a1-eq0} yields that $f \equiv 0$.
-It now remains to solve for the case where $f(0) = 0$ and $\lfloor f(1) \rfloor = 1$.
+Since $R$ is densely ordered, there exists $c \in R$ such that $0 < c < 1$.
+Plugging $x = y = c$ into~\eqref{2010a1-eq0} yields $f(c) \lfloor f(c) \rfloor = f(0) = 0$, and thus $\lfloor f(c) \rfloor = 0$.
+Plugging $x = -1$ and $y = c$ then yields $f(-c) = 0$.
+Finally, since $\lfloor -c \rfloor = -1$, plugging $x = -c$ and replacing $y$ with $-y$ yields $f \equiv 0$.
 
-We first show that there are no other possible functions $f$ when $R$ is not (isomorphic to) $\Z$.
-In this case, we can show that there exists $c \in R$ such that $0 < c < 1$.
-In particular, $\lfloor c \rfloor = 0$ and $\lfloor -c \rfloor = -1$.
-Plugging $(x, y) = (c, 1)$ into~\eqref{2010a1-eq0} yields $f(c) = f(0) = 0$.
-Plugging $x = -1$ into~\eqref{2010a1-eq0} yields $f(-y) = \lfloor f(y) \rfloor f(-1)$ for any $y \in R$.
-In particular, since $f(c) = 0$, we get $f(-c) = 0$.
-Plugging $(x, y) = (-c, 1)$ into~\eqref{2010a1-eq0} yields $f(-1) = 0$.
-Thus $f(-y) = 0$ for all $y \in R$, and thus $f \equiv 0$.
 
-It remains to consider the case where $R = \Z$.
-The functional equation reduces to $f(xy) = \lfloor f(y) \rfloor f(x)$ for all $x, y \in \Z$.
-Again, we can assume that $f(0) = 0$ and $\lfloor f(1) \rfloor = 1$.
-For convenience, denote $g(x) = \lfloor f(x) \rfloor$ for any $x \in R$.
-Plugging $x = 1$ into~\eqref{2010a1-eq0} yields
-\[ f(x) = \lfloor f(x) \rfloor f(1) = g(x) f(1) \quad \forall x \in R. \tag{1}\label{2010a1-eq1} \]
-Thus~\eqref{2010a1-eq0} becomes $g(xy) f(1) = g(x) g(y) f(1)$.
-Since $\lfloor f(1) \rfloor = 1$, we have $f(1) \neq 0$, so $g(xy) = g(x) g(y)$ for all $x, y \in R$.
-In other words, $g : \Z \to \Z$ is a homomorphism of multiplicative monoids.
-We divide into several cases:
 
-\begin{enumerate}
 
-    \item 
-    $g$ attains a negative value.
 
-    Choose some $n \in \Z$ such that $\lfloor f(n) \rfloor < 0$.
-    Since $f(1) \geq \lfloor f(1) \rfloor = 1$, we have
-    \[ f(n) = \lfloor f(n) \rfloor f(1) \leq \lfloor f(n) \rfloor \leq f(n). \]
-    The inequalities are all equalities, which forces $f(1) = 1$.
-    Thus $f : \Z \to R$ is just a lift from a monoid homomorphism $g : \Z \to \Z$.
+\subsection*{Solution ($R = \Z$)}
 
-    \item
-    $g$ only attains positive values and is bounded.
+Here,~\eqref{2010a1-eq0} simplifies as $f(xy) = f(x) \lfloor f(y) \rfloor$.
+Plugging $y = 1$ yields either $f \equiv 0$ or $\lfloor f(1) \rfloor = 1$.
+From now on, we assume that $\lfloor f(1) \rfloor = 1$.
 
-    Then one can easily show that $g$ only attains $0$ and $1$.
-    Namely, if $g(n) > 1$ for some $n \in \Z$, the sequence $(g(n^k))_{k \geq 1} = (g(n)^k)_{k \geq 1}$ is unbounded.
-    Then $g$ is an indicator function for the subset $M = g^{-1}(1) \subseteq \Z$.
-    Note that $M$ is divisor-closed and product-closed, since $g$ is a monoid homomorphism.
-    Finally, we can check that any value $C$ for $f(1)$ works as long as $\lfloor C \rfloor = 1$.
+Let $\varepsilon = f(1) - 1$ and $g(n) = \lfloor f(n) \rfloor$ for any $n \in \Z$.
+Plugging $x = 1$ yields
+\[ f(y) = f(1) g(y) \quad \forall y \in \Z. \tag{1}\label{2010a1-eq1} \]
+In particular, we get
+\[ 0 \leq \varepsilon g(y) < 1 \quad \forall y \in \Z. \tag{2}\label{2010a1-eq2} \]
+Next,~\eqref{2010a1-eq0} yields
+\[ f(1) g(xy) = f(1) g(x) g(y) \implies g(xy) = g(x) g(y) \quad \forall x, y \in \Z, \]
+    since $g(1) = \lfloor f(1) \rfloor = 1$ implies $f(1) \neq 0$.
+Thus, $g$ is a multiplicative function.
 
-    \item
-    $g$ only attains positive values and is unbounded.
+If $g(0) \neq 0$, it is easy to see that $g \equiv 1$, so $f$ is constant.
+So now, we assume that $g(0) = 0$.
+Since $g(1) = 1$,~\eqref{2010a1-eq2} yields $0 \leq \varepsilon < 1$.
+If $\varepsilon = 0$, then $f$ maps integers to integers and is a multiplicative function.
+From now on, we assume that $0 < \varepsilon < 1$.
 
-    For any $k \in \N$, we can choose some $n \in \Z$ such that $\lfloor f(x) \rfloor \geq k$.
-    Then we get
-    \[ \lfloor f(x) \rfloor + 1 > f(x) = \lfloor f(x) \rfloor f(1) \iff \lfloor f(x) \rfloor (f(1) - 1) < 1. \]
-    For convenience, denote $\epsilon = f(1) - 1$.
-    Since $\epsilon \geq 0$, this implies $k \epsilon < 1$ for any $k \in \N$.
-    That is, $\epsilon$ is either zero or an "infinitesimal" element.
-    In summary, we get $f(x) = g(x) (1 + \epsilon)$ for all $x \in \Z$, with $g : \Z \to \N$ being a monoid homomorphism.
+If $\varepsilon > 0$, then~\eqref{2010a1-eq2} means that $g$ only attains non-negative values.
+If $g$ attains a value greater than $1$, then $g$ is unbounded from above.
+Thus~\eqref{2010a1-eq2} yields $0 < k \varepsilon < 1$ for any positive integer $k$.
+This implies that $\varepsilon$ is infinitesimal.
 
-\end{enumerate}
+Finally, suppose that $g(0) = 0$, $g(1) = 1$, and $g(n) \in \{0, 1\}$ for any $n \in \Z$.
+Then we take $A = g^{-1}(1)$; it remains to show that $mn \in A \iff m \in A \wedge n \in A$.
+This is easy since $g(mn) = g(m) g(n)$ for all $m, n \in \Z$.
+
+
 
 
 
 \subsection*{Extra notes}
-
-The right hand side in the original problem is $f(x) \lfloor f(y) \rfloor$, not $\lfloor f(y) \rfloor f(x)$.
-However, despite $R$ being not necessarily commutative, both expressions are equal since integers commute with every element of $R$.
 
 The result for the case $R = \Z$ is indeed the best we can do.
 Each of the three non-trivial cases has at least one non-trivial example.
