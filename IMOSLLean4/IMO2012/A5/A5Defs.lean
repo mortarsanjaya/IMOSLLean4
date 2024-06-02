@@ -23,17 +23,24 @@ We also define some notions; we say that $f$ is
 namespace IMOSL
 namespace IMO2012A5
 
-variable [NonAssocSemiring R] [NonAssocSemiring S]
+variable [NonAssocSemiring R] [Add S] [Mul S]
 
 /-- The main problem. -/
 def good (f : R → S) := ∀ x y : R, f (x * y + 1) = f x * f y + f (x + y)
+
+theorem map_commute_of_commute [IsCancelAdd S]
+    {f : R → S} (h : good f) (h0 : x * y = y * x) : f x * f y = f y * f x :=
+  add_right_cancel (b := f (x + y)) (by rw [← h, h0, h, add_comm x])
+
+
+variable [One S] [Zero S]
 
 structure NontrivialGood (f : R → S) : Prop where
   is_good : good f
   map_one : f 1 = 0
   map_zero_add_one : f 0 + 1 = 0
 
-lemma NontrivialGood.map_zero {S} [NonAssocRing S]
+lemma NontrivialGood.map_zero {S} [AddGroupWithOne S] [Mul S]
     {f : R → S} (hf : NontrivialGood f) : f 0 = -1 :=
   eq_neg_of_add_eq_zero_left hf.map_zero_add_one
 
@@ -43,7 +50,3 @@ structure ReducedGood (f : R → S) extends NontrivialGood f : Prop where
 lemma ReducedGood.period_imp_zero {f : R → S} (hf : ReducedGood f)
     (h : ∀ x, f (x + c) = f x) : c = 0 :=
   hf.period_imp_eq c 0 λ x ↦ by rw [h, add_zero]
-
-theorem map_commute_of_commute [IsCancelAdd S]
-    {f : R → S} (h : good f) (h0 : x * y = y * x) : f x * f y = f y * f x :=
-  add_right_cancel (b := f (x + y)) (by rw [← h, h0, h, add_comm x])
