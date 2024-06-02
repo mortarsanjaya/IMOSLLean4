@@ -5,23 +5,19 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NoncommRing
 
 /-!
 # IMO 2017 A6 (P2)
 
 Let $F$ be a field.
-Determine all functions $f : F \to F$ such that, for any $x, y \in F$,
+Determine all functions $f : F → F$ such that, for any $x, y ∈ F$,
 $$ f(f(x) f(y)) + f(x + y) = f(xy). $$
 
 ### Further directions
 
-We have solved the problem when $F$ is a
-  division ring with $\text{char}(F) ≠ 2$.
-We are still interested in lifting the commutativity
-  assumption on $F$ when $\text{char}(F) = 2$.
-If this works, then we have a complete solution
-  even when $F$ is just a division ring!
+We have solved the problem when $F$ is a division ring with $char(F) ≠ 2$.
+We are still interested in lifting the commutativity assumption on $F$ when $char(F) = 2$.
+If this works, then we have a complete solution even when $F$ is just a division ring!
 -/
 
 namespace IMOSL
@@ -29,7 +25,7 @@ namespace IMO2017A6
 
 open Function
 
-def good [Ring R] (f : R → R) :=
+def good [NonAssocRing R] (f : R → R) :=
   ∀ x y : R, f (f x * f y) + f (x + y) = f (x * y)
 
 
@@ -38,11 +34,12 @@ def good [Ring R] (f : R → R) :=
 
 /-! ## Answer checking -/
 
-theorem good_zero [Ring R] : good (0 : R → R) :=
+theorem good_zero [NonAssocRing R] : good (0 : R → R) :=
   λ _ _ ↦ add_zero 0
 
-theorem good_one_sub [Ring R] : good ((1 : R) - ·) :=
-  λ x y ↦ by noncomm_ring
+theorem good_one_sub [NonAssocRing R] : good ((1 : R) - ·) :=
+  λ x y ↦ by rw [sub_add_sub_comm, mul_one_sub, one_sub_mul, sub_sub, sub_add,
+    add_sub_sub_cancel, add_sub_add_left_eq_sub, sub_sub_cancel_left, ← sub_eq_add_neg]
 
 
 
@@ -54,9 +51,8 @@ section Ring
 
 variable [Ring R] {f : R → R} (h : good f)
 
-theorem good_neg : good (-f) := λ x y ↦ by
-  repeat rw [Pi.neg_apply]
-  rw [neg_mul_neg, ← neg_add, h]
+theorem good_neg : good (λ x ↦ -f x) :=
+  λ x y ↦ by rw [neg_mul_neg, ← neg_add, h]
 
 /-- (1) -/
 theorem good_special_equality {x y : R} (h0 : x * y = 1) :
