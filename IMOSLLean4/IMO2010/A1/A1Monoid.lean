@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENRE.
 Authors: Gian Cordana Ranjaya
 -/
 
+import IMOSLLean4.Extra.Infinitesimal.Basic
 import Mathlib.Algebra.Order.Floor
 
 /-!
@@ -18,6 +19,8 @@ $$ f(xy) = f(x) ⌊f(y)⌋. $$
 namespace IMOSL
 namespace IMO2010A1
 
+open Extra
+
 variable [LinearOrderedRing R] [FloorRing R]
 
 section
@@ -31,13 +34,13 @@ lemma castMonoidHom_is_MonoidGood (φ : M →ₙ* ℤ) : MonoidGood (λ x ↦ (�
   λ m n ↦ by rw [Int.floor_intCast, ← Int.cast_mul, ← φ.map_mul]
 
 lemma one_add_infinitesimal_mul_is_MonoidGood
-    (φ : M →ₙ* ℕ) {ε : R} (h : 0 ≤ ε) (h0 : ∀ k : ℕ, k • ε < 1) :
+    (φ : M →ₙ* ℕ) {ε : R} (h : 0 ≤ ε) (h0 : Infinitesimal ε) :
     MonoidGood (λ x ↦ (1 + ε) * φ x) := λ m n ↦ by
   change (1 + ε) * _ = (1 + ε) * _ * ⌊(1 + ε) * _⌋
   rw [φ.map_mul, Nat.cast_mul, ← mul_assoc]; apply congrArg
   rw [one_add_mul ε, Int.floor_nat_add, Int.cast_add, Int.cast_natCast,
     ← nsmul_eq_mul', self_eq_add_right, Int.cast_eq_zero, Int.floor_eq_zero_iff]
-  exact ⟨nsmul_nonneg h _, h0 _⟩
+  exact ⟨nsmul_nonneg h _, abs_eq_self.mpr h ▸ h0 (φ n)⟩
 
 lemma indicator_const_is_good {A : Set M} [DecidablePred (· ∈ A)]
     (h : ∀ m n : M, m * n ∈ A ↔ m ∈ A ∧ n ∈ A) (h0 : ⌊(C : R)⌋ = 1) :
@@ -98,15 +101,17 @@ lemma floor_unbounded_of_one_lt {x : M} (h0 : 1 < ⌊f x⌋) : ∀ N : ℕ, ∃ 
 open scoped Classical
 
 lemma solution_of_fract_map_one_pos (h0 : 0 < Int.fract (f 1)) :
-    ((∀ k : ℕ, k • Int.fract (f 1) < 1) ∧ ∃ φ : M →* ℕ, ∀ x, f x = f 1 * φ x) ∨
+    (Infinitesimal (Int.fract (f 1)) ∧ ∃ φ : M →* ℕ, ∀ x, f x = f 1 * φ x) ∨
     (∃ (A : Set M) (_ : ∀ m n : M, m * n ∈ A ↔ m ∈ A ∧ n ∈ A),
       ∀ x, f x = if x ∈ A then f 1 else 0) :=
   have h1 (x) : 0 ≤ ⌊f x⌋ := Int.cast_nonneg.mp <| nonneg_of_mul_nonneg_right
     ((Int.fract_nonneg _).trans_eq (fract_eq_eps_mul_floor hf h x)) h0
   (em (∀ k : ℕ, k • Int.fract (f 1) < 1)).imp
     ---- Case 1: `ε = f(1) - 1` is infinitesimal
-    (λ h2 ↦ ⟨h2, ⟨⟨λ x ↦ ⌊f x⌋.natAbs, congrArg _ h⟩,
-      λ x y ↦ (congrArg _ (floor_map_mul hf h x y)).trans (⌊f x⌋.natAbs_mul _)⟩,
+    (λ h2 ↦
+      ⟨λ k ↦ (abs_eq_self.mpr h0.le).symm ▸ h2 k,
+      ⟨⟨λ x ↦ ⌊f x⌋.natAbs, congrArg _ h⟩,
+        λ x y ↦ (congrArg _ (floor_map_mul hf h x y)).trans (⌊f x⌋.natAbs_mul _)⟩,
       λ x ↦ by rw [map_eq_map_one_mul_floor hf,
         ← Int.natAbs_of_nonneg (h1 x), Int.cast_natCast]; rfl⟩)
     ---- Case 2: `ε = f(1) - 1` is not infinitesimal
@@ -136,13 +141,11 @@ end
 
 open scoped Classical
 
-theorem solution :
-    MonoidGood f ↔
-      (∃ φ : M →* ℤ, f = λ x ↦ (φ x : R)) ∨
-      (∃ (ε : R) (_ : 0 < ε) (_ : ∀ k : ℕ, k • ε < 1),
-        ∃ φ : M →* ℕ, f = λ x ↦ (1 + ε) * φ x) ∨
-      (∃ (A : Set M) (_ : ∀ m n : M, m * n ∈ A ↔ m ∈ A ∧ n ∈ A) (C : R) (_ : ⌊C⌋ = 1),
-        f = (if · ∈ A then C else 0)) :=
+theorem solution : MonoidGood f ↔
+    (∃ φ : M →* ℤ, f = λ x ↦ (φ x : R)) ∨
+    (∃ (ε : R) (_ : 0 < ε) (_ : Infinitesimal ε), ∃ φ : M →* ℕ, f = λ x ↦ (1 + ε) * φ x) ∨
+    (∃ (A : Set M) (_ : ∀ m n : M, m * n ∈ A ↔ m ∈ A ∧ n ∈ A) (C : R) (_ : ⌊C⌋ = 1),
+      f = (if · ∈ A then C else 0)) :=
   ---- `→`
   ⟨λ hf ↦ hf.eq_zero_or_floor_map_one_eq_one.elim
     -- Case `f(1) = 0`

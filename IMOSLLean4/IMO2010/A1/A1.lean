@@ -57,7 +57,7 @@ open scoped Classical
 theorem final_solution_Int [LinearOrderedRing R] [FloorRing R] {f : ℤ → R} :
     good f ↔
       (∃ φ : ℤ →* ℤ, f = λ x ↦ (φ x : R)) ∨
-      (∃ (ε : R) (_ : 0 < ε) (_ : ∀ k : ℕ, k • ε < 1),
+      (∃ (ε : R) (_ : 0 < ε) (_ : Extra.Infinitesimal ε),
         ∃ φ : ℤ →* ℕ, f = λ x ↦ (1 + ε) * φ x) ∨
       (∃ (A : Set ℤ) (_ : ∀ m n : ℤ, m * n ∈ A ↔ m ∈ A ∧ n ∈ A) (C : R) (_ : ⌊C⌋ = 1),
         f = (if · ∈ A then C else 0)) :=
