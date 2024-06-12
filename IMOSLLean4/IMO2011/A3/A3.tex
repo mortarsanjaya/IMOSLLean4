@@ -1,0 +1,49 @@
+Let $R$ be a commutative ring such that multiplication by $2$ is injective.
+Determine all pairs of functions $(f, g) : R \to R$ such that for any $x, y \in R$,
+\[ g(f(x + y)) = f(x) + (2x + y) g(y). \tag{*}\label{2011a3-eq0} \]
+
+
+
+\subsection*{Answer}
+
+
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2011SL.pdf}
+
+We mix the official solution with a part of the comment section in the official solution.
+This is used to avoid the assumption that $2$ is invertible in $R$.
+
+First, for any $x, y \in R$,~\eqref{2011a3-eq0} gives
+\[ f(x) + (2x + y) g(y) = f(y) + (2y + x) g(x), \]
+\[ (f(x) - x g(x)) - (f(y) - y g(y)) = 2 (y g(x) - x g(y)). \tag{1}\label{2011a3-eq1} \]
+From substitutions $(1, 0), (t, 1), (t, 0)$ on~\eqref{2011a3-eq1}, we get
+\[ 2 t g(0) = 2 g(0) + 2 (t g(1) - g(t)). \]
+Cancelling out $2$ from both sides and rearranging gives
+\[ g(t) = t (g(1) - g(0)) + g(0) \quad \forall t \in R. \tag{2}\label{2011a3-eq2} \]
+Now denote $A = g(1) - g(0)$ and $B = g(0)$ for convenience.
+Substituting back to~\eqref{2011a3-eq1} with $y = 0$ and rearrange.
+Letting $f(0) = C$, we get
+\[ f(x) = x^2 A - xB + C \quad \forall x \in R. \tag{3}\label{2011a3-eq3} \]
+
+Next, we substitute back to~\eqref{2011a3-eq0} to find properties for $A$, $B$, and $C$.
+Plugging $y = -2x$ gives $g(f(-x)) = f(x)$ for all $x \in R$, which gives:
+\begin{align*}
+    x = 1 &\implies (A + B + C)A + B = A - B + C \\
+    x = -1 &\implies (A - B + C)A + B = A + B + C \\
+    x = 0 &\implies CA + B = C
+\end{align*}
+The first two equality yields $BA = -B$ and $A^2 + CA + B = A + C$.
+The latter becomes $A^2 = A$ by the third equality.
+Then \[ CA = (CA + B)A = CA + BA = CA - B \implies B = 0. \]
+Thus, we have $f(x) = x^2 A + C$ and $g(x) = xA$ where $A^2 = A$ and $CA = C$.
+Since $R$ is commutative, one can check that this $(f, g)$ always works.
+
+Since $A^2 = A$ and clearly $\langle A - 1, A \rangle = 1$, by Chinese Remainder Theorem,
+\[ R \cong R/\langle A \rangle \times R/\langle A - 1 \rangle. \]
+That is, there is an isomorphism $\phi : R \cong R_1 \times R_2$ sending $A$ to $(1, 0)$.
+Since $CA = C$, $\phi(C) = (c, 0)$ for some $c \in R_1$.
+Then one can check that $f(x, y) = (x^2 + c, 0)$ and $g(x, y) = (x, 0)$ for any $x \in R_1$ and $y \in R_2$.
