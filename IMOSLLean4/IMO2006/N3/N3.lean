@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.NumberTheory.Divisors
-import IMOSLLean4.Extra.SeqMax
+import IMOSLLean4.Extra.NatSequence.SeqMax
 
 /-!
 # IMO 2006 N3
