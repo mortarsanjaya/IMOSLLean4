@@ -31,11 +31,10 @@ inductive QuasiPeriodic [Add R] [Neg S] [Mul S] (f : R → S) (c : R) : Prop
 
 namespace QuasiPeriodic
 
-variable [Ring R] [NonAssocRing S] [NoZeroDivisors S] {f : R → S}
-
 section
 
-variable (hf : NontrivialGood f) {c} (h : QuasiPeriodic f c)
+variable [NonAssocRing R] [NonAssocRing S] [NoZeroDivisors S]
+  {f : R → S} (hf : NontrivialGood f) {c} (h : QuasiPeriodic f c)
 
 theorem map_neg : f (-c) = f c := by
   have h0 : f (c + 1) = 0 := by cases h with
@@ -45,12 +44,15 @@ theorem map_neg : f (-c) = f c := by
   rwa [h0, zero_mul, zero_add, add_neg_cancel_right,
     mul_neg_one, neg_add_rev, neg_add_cancel_comm] at h1
 
-theorem map_eq_one_or_neg_one : f c = 1 ∨ f c = -1 :=
+theorem map_mul_self_eq_one : f c * f c = 1 :=
   have h0 : f (-c) = f c := map_neg hf h
   have h1 : f 0 = -(f c * f c) := by cases h with
   | Left h => specialize h (-c); rwa [add_neg_self, h0, neg_mul] at h
   | Right h => specialize h (-c); rwa [neg_add_self, h0, mul_neg] at h
-  by rwa [hf.map_zero, neg_inj, eq_comm, mul_self_eq_one_iff] at h1
+  by rwa [hf.map_zero, neg_inj, eq_comm] at h1
+
+theorem map_eq_one_or_neg_one : f c = 1 ∨ f c = -1 :=
+  mul_self_eq_one_iff.mp (map_mul_self_eq_one hf h)
 
 private theorem map_commute (x : R) : Commute (-f c) (f x) := by
   cases map_eq_one_or_neg_one hf h with
@@ -77,6 +79,15 @@ theorem iff_right2 : QuasiPeriodic f c ↔ ∀ x, f (x * c + 1) = 0 :=
   (iff_right hf).trans <| forall_congr' λ x ↦ by
     rw [mul_neg, hf.is_good, eq_neg_iff_add_eq_zero, add_comm]
 
+end
+
+
+
+section
+
+variable [Ring R] [NonAssocRing S] [NoZeroDivisors S]
+  {f : R → S} (hf : NontrivialGood f) {c} (h : QuasiPeriodic f c)
+
 theorem mul_left (d : R) : QuasiPeriodic f (d * c) := by
   rw [iff_right2 hf] at h ⊢
   intro x; rw [← mul_assoc]; exact h (x * d)
@@ -89,11 +100,14 @@ end
 
 
 
+
+
 /-! ### Extra structure given a non-zero quasi-periodic element -/
 
 section
 
-variable (hf : ReducedGood f) {c} (h : QuasiPeriodic f c) (h0 : c ≠ 0)
+variable [NonAssocRing R] [NonAssocRing S] [NoZeroDivisors S]
+  {f : R → S} (hf : ReducedGood f) {c} (h : QuasiPeriodic f c) (h0 : c ≠ 0)
 
 theorem reduced_eq_zero_iff : c = 0 ↔ f c = -1 :=
   ⟨λ h0 ↦ h0 ▸ hf.map_zero, λ h0 ↦ hf.period_imp_eq c 0 λ x ↦ by
@@ -122,6 +136,14 @@ theorem reduced_mul_left_eq_zero_imp {d} (h1 : d * c = 0) : QuasiPeriodic f d :=
   rw [mul_add, h1, zero_add, eq_neg_iff_add_eq_zero, ← two_mul, mul_eq_zero] at h3
   refine h3.resolve_left λ h3 ↦ h0 ?_
   rw [reduced_eq_zero_iff hf h, h2, eq_neg_iff_add_eq_zero, one_add_one_eq_two, h3]
+
+end
+
+
+section
+
+variable [Ring R] [NonAssocRing S] [NoZeroDivisors S]
+  {f : R → S} (hf : ReducedGood f) {c} (h : QuasiPeriodic f c) (h0 : c ≠ 0)
 
 theorem reduced_QuasiPeriod_equiv_cases (d) :
     QuasiPeriodic f d ∨ QuasiPeriodic f (d - 1) :=

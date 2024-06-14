@@ -17,6 +17,10 @@ import IMOSLLean4.IMO2012.A5.A5General.A5Periodic
 Let $R$ be a ring and $S$ be a domain.
 Find all functions $f : R → S$ such that, for any $x, y ∈ R$,
 $$ f(xy + 1) = f(x) f(y) + f(x + y). $$
+
+### Further direction
+
+Remove the domain assumption, if possible at all.
 -/
 
 namespace IMOSL

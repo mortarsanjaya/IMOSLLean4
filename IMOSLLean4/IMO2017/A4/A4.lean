@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.SeqMax
+import IMOSLLean4.Extra.NatSequence.SeqMax
 import Mathlib.Algebra.Order.Group.Abs
 import Mathlib.Algebra.Order.Group.Nat
 

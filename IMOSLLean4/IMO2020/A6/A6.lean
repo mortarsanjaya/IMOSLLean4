@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import IMOSLLean4.Extra.NatSequence.SeqMax
 import Mathlib.RingTheory.Int.Basic
 import Mathlib.Dynamics.PeriodicPts
-import IMOSLLean4.Extra.SeqMax
 
 /-!
 # IMO 2020 A6

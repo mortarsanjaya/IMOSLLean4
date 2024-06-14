@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.CharTwo.Finset
-import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # Explicit construction of `𝔽₂[X]`
@@ -51,31 +50,6 @@ def X : 𝔽₂X := ⟨{1}⟩
 instance : DecidableEq 𝔽₂X := λ P Q ↦ match decEq P.toFinset Q.toFinset with
   | isTrue h => isTrue (𝔽₂X.ext _ _ h)
   | isFalse h => isFalse λ h0 ↦ h (congrArg toFinset h0)
-
-
-
-
-
-/-! ### Multiplication by powers of `X` -/
-
-/-- Given `n` and `P(X)`, compute `X^n P(X)` -/
-def XpowMul (n : ℕ) (P : 𝔽₂X) : 𝔽₂X :=
-  ⟨P.toFinset.image λ k ↦ k + n⟩
-
-lemma XpowMul_nat_zero (P : 𝔽₂X) : P.XpowMul 0 = P :=
-  𝔽₂X.ext _ _ Finset.image_id
-
-lemma XpowMul_𝔽₂X_zero (n : ℕ) : XpowMul n 0 = 0 :=
-  𝔽₂X.ext _ _ (Finset.image_empty _)
-
-lemma XpowMul_𝔽₂X_one (n : ℕ) : XpowMul n 1 = Xpow n :=
-  𝔽₂X.ext _ _ ((Finset.image_singleton _ _).trans (congrArg _ n.zero_add))
-
-lemma XpowMul_Xpow (m n : ℕ) : (Xpow m).XpowMul n = Xpow (m + n) := rfl
-
-lemma XpowMul_nat_add (m n : ℕ) (P : 𝔽₂X) :
-    P.XpowMul (m + n) = (P.XpowMul m).XpowMul n := by
-  unfold XpowMul; rw [𝔽₂X.ext_iff, eq_comm, Finset.image_image, comp_add_right]
 
 
 
@@ -137,7 +111,26 @@ protected theorem Xpow_add_induction {p : 𝔽₂X → Prop}
 
 
 
-/-! ### More properties of `XpowMul` -/
+/-! ### Multiplication by powers of `X` -/
+
+/-- Given `n` and `P(X)`, compute `X^n P(X)` -/
+def XpowMul (n : ℕ) (P : 𝔽₂X) : 𝔽₂X :=
+  ⟨P.toFinset.image λ k ↦ k + n⟩
+
+lemma XpowMul_nat_zero (P : 𝔽₂X) : P.XpowMul 0 = P :=
+  𝔽₂X.ext _ _ Finset.image_id
+
+lemma XpowMul_𝔽₂X_zero (n : ℕ) : XpowMul n 0 = 0 :=
+  𝔽₂X.ext _ _ (Finset.image_empty _)
+
+lemma XpowMul_𝔽₂X_one (n : ℕ) : XpowMul n 1 = Xpow n :=
+  𝔽₂X.ext _ _ ((Finset.image_singleton _ _).trans (congrArg _ n.zero_add))
+
+lemma XpowMul_Xpow (m n : ℕ) : (Xpow m).XpowMul n = Xpow (m + n) := rfl
+
+lemma XpowMul_nat_add (m n : ℕ) (P : 𝔽₂X) :
+    P.XpowMul (m + n) = (P.XpowMul m).XpowMul n := by
+  unfold XpowMul; rw [𝔽₂X.ext_iff, eq_comm, Finset.image_image, comp_add_right]
 
 lemma XpowMul_𝔽₂X_add (n : ℕ) (P Q : 𝔽₂X) :
     (P + Q).XpowMul n = P.XpowMul n + Q.XpowMul n :=
@@ -304,72 +297,3 @@ protected lemma natPow_succ (P : 𝔽₂X) (n : ℕ) : P.natPow n.succ = P.natPo
 termination_by n
 decreasing_by apply Nat.bitwise_rec_lemma
               rintro rfl; exact absurd h0.symm Nat.one_ne_zero
-
-
-
-
-
-/-! ### `CommRing` instance -/
-
-instance : CommRing 𝔽₂X :=
-  { 𝔽₂X.instAddCommGroup with
-    zero_mul := 𝔽₂X.zero_mul
-    mul_zero := 𝔽₂X.mul_zero
-    one_mul := 𝔽₂X.one_mul
-    mul_one := 𝔽₂X.mul_one
-    mul_comm := 𝔽₂X.mul_comm
-    mul_assoc := 𝔽₂X.mul_assoc
-    left_distrib := 𝔽₂X.mul_add
-    right_distrib := 𝔽₂X.add_mul
-    npow := λ n P ↦ P.natPow n
-    npow_zero := 𝔽₂X.natPow_zero
-    npow_succ := λ n P ↦ P.natPow_succ n }
-
-
-
-
-
-/-! ### Ring homomorphism from `𝔽₂[X]` -/
-
-variable [Semiring R] [CharTwo R] (r : R)
-
-def cast (P : 𝔽₂X) : R := P.toFinset.sum λ n ↦ r ^ n
-
-theorem cast_def (P : 𝔽₂X) : cast r P = P.toFinset.sum λ n ↦ r ^ n := rfl
-
-theorem cast_Xpow (n : ℕ) : cast r (𝔽₂X.Xpow n) = r ^ n :=
-  Finset.sum_singleton _ _
-
-theorem cast_X : cast r X = r :=
-  (cast_Xpow r 1).trans (pow_one r)
-
-theorem cast_one : cast r 1 = 1 :=
-  (cast_Xpow r 0).trans (pow_zero r)
-
-theorem cast_zero : cast r 0 = 0 := rfl
-
-theorem cast_add (P Q : 𝔽₂X) : cast r (P + Q) = cast r P + cast r Q :=
-  CharTwo.symmDiff_sum_eq _ _ _
-
-theorem cast_XpowMul_right (n : ℕ) : ∀ P, cast r (P.XpowMul n) = cast r P * r ^ n :=
-  𝔽₂X.Xpow_add_induction
-    (λ k ↦ by rw [XpowMul_Xpow, cast_Xpow, cast_Xpow, pow_add])
-    (λ h h0 ↦ by rw [XpowMul_𝔽₂X_add, cast_add, h, h0, cast_add, add_mul])
-
-theorem cast_mul (P : 𝔽₂X) : ∀ Q, cast r (P * Q) = cast r P * cast r Q :=
-  𝔽₂X.Xpow_add_induction
-    (λ n ↦ by rw [← XpowMul_eq_mul_Xpow, cast_XpowMul_right, cast_Xpow])
-    (λ h h0 ↦ by rw [𝔽₂X.mul_add, cast_add, cast_add, h, h0, mul_add])
-
-theorem cast_square (P : 𝔽₂X) : cast r P.square = cast r P ^ 2 := by
-  rw [P.square_eq_mul_self, cast_mul, ← sq]
-
-theorem cast_add_one (P : 𝔽₂X) : cast r (P + 1) = cast r P + 1 := by
-  rw [cast_add, cast_one]
-
-def castRingHom : 𝔽₂X →+* R :=
-  { toFun := cast r
-    map_one' := cast_one r
-    map_mul' := cast_mul r
-    map_zero' := cast_zero r
-    map_add' := cast_add r }

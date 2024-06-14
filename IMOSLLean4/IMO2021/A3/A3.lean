@@ -15,6 +15,8 @@ import Mathlib.Algebra.BigOperators.Group.List
 Find the smallest possible value of
 $$ \sum_{j = 1}^n \left\lfloor \frac{a_j}{j} \right\rfloor $$
   across all permutations $(a_1, a_2, \ldots, a_n)$ of $(1, 2, \ldots, n)$.
+
+TODO: Remove occurrence of `Nat.size` and use `Nat.log2` instead.
 -/
 
 namespace IMOSL

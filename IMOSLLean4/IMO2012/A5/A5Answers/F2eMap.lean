@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2012.A5.A5Defs
 import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.F2e
-import Mathlib.Algebra.Ring.Int
 
 /-!
 # IMO 2012 A5 (𝔽₂εMap)

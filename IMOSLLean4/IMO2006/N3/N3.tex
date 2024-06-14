@@ -1,0 +1,38 @@
+For each $n \in \N^+$, denote
+\[ f(n) = \frac{1}{n} \sum_{k = 1}^n \left\lfloor \frac{n}{k} \right\rfloor. \]
+\begin{enumerate}
+    \item Prove that there exists infinitely many $n \in \N^+$ such that $f(n + 1) > f(n)$.
+    \item Prove that there exists infinitely many $n \in \N^+$ such that $f(n + 1) < f(n)$.
+\end{enumerate}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2006SL.pdf}
+
+The solution presented below is a copy of the official solution with some parts of the solution being cut off.
+
+For each positive integer $n$, let $d(n)$ denote the number of divisors of $n$, and denote $g(n) = n f(n)$.
+Also, let $g(n) = n f(n)$.
+First of all, it can be shown by induction on $n$ that
+\[ g(n) = \sum_{k = 1}^n \left\lfloor \frac{n}{k} \right\rfloor = \sum_{k = 1}^n d(k). \]
+In particular, we have $g(n + 1) = g(n) + d(n + 1)$ for any $n \geq 1$.
+
+\begin{enumerate}
+
+\item
+Notice that $f(n + 1) > f(n) \iff d(n + 1) > f(n) \iff n d(n + 1) > g(n)$.
+This immediately follows if $d(n + 1) > d(k)$ for all $k \leq n$.
+Thus, to solve part 1, it suffices to show that there exists infinitely many $n \geq 1$ with such property.
+This follows since the divisor function $d$ is unbounded.
+
+\item
+This time, $f(n + 1) < f(n) \iff d(n + 1) < f(n) \iff n d(n + 1) < g(n)$.
+The inequality follows if $n + 1$ is prime and $g(n) > 2n$.
+Clearly, there exists infinitely many primes.
+So, it suffices to prove that $g(n) > 2n$ for $n$ big enough.
+As $d(n) \geq 2$ for all $n \geq 2$, it suffices to check that $g(6) > 12$.
+Indeed, $g(6) = 14$.
+
+\end{enumerate}
