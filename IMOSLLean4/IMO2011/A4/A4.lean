@@ -74,18 +74,17 @@ theorem PNat_to_Nat_prop {P : ℕ+ → Prop} : (∀ n, P n) ↔ ∀ n : ℕ, P n
 theorem PNat_exists_Nat_conj (f : ℕ+ → ℕ+) :
     ∃ g : ℕ → ℕ, f = λ n ↦ (g n.natPred).succPNat :=
   ⟨λ n ↦ (f n.succPNat).natPred,
-  funext (λ n ↦ by simp_rw [PNat.succPNat_natPred])⟩
+  funext λ n ↦ by rw [PNat.succPNat_natPred, PNat.succPNat_natPred]⟩
 
 theorem PNat_eq_Nat_conj_iff {f : ℕ+ → ℕ+} {g : ℕ → ℕ} :
     (f = λ n ↦ (g n.natPred).succPNat) ↔ g = λ n ↦ (f n.succPNat).natPred :=
-  ⟨λ h ↦ funext (λ n ↦ h.symm ▸ rfl),
-  λ h ↦ funext (λ n ↦ by rw [h, PNat.succPNat_natPred, PNat.succPNat_natPred])⟩
+  ⟨λ h ↦ funext λ n ↦ h.symm ▸ rfl,
+  λ h ↦ funext λ n ↦ by rw [h, PNat.succPNat_natPred, PNat.succPNat_natPred]⟩
 
 theorem PNat_Nat_conj_iterate (f : ℕ → ℕ) (m : ℕ+) :
     ∀ k, (λ n ↦ (f n.natPred).succPNat)^[k] m = (f^[k] m.natPred).succPNat
   | 0 => m.succPNat_natPred.symm
-  | k + 1 => by rw [iterate_succ_apply', iterate_succ_apply',
-                  PNat_Nat_conj_iterate f m k]; rfl
+  | k + 1 => by rw [iterate_succ_apply', iterate_succ_apply', PNat_Nat_conj_iterate f m k]; rfl
 
 /-- Final solution, `ℕ+` version -/
 theorem final_solution_PNat {f g : ℕ+ → ℕ+} :
@@ -95,7 +94,7 @@ theorem final_solution_PNat {f g : ℕ+ → ℕ+} :
   obtain ⟨g, rfl⟩ := PNat_exists_Nat_conj g
   rw [eq_comm, PNat_eq_Nat_conj_iff, eq_comm (b := λ _ ↦ 1),
     PNat_eq_Nat_conj_iff, PNat_to_Nat_prop, Iff.comm]
-  refine final_solution.symm.trans <| forall_congr' (λ n ↦ ?_)
+  refine final_solution.symm.trans (forall_congr' λ n ↦ ?_)
   rw [← PNat.coe_inj, PNat_Nat_conj_iterate, PNat_Nat_conj_iterate]
-  simp_rw [Nat.natPred_succPNat, PNat.add_coe, Nat.succPNat_coe, Nat.succ_add]
+  simp only [Nat.natPred_succPNat, PNat.add_coe, Nat.succPNat_coe, Nat.succ_add]
   rw [← add_left_inj 2]; rfl
