@@ -1,0 +1,75 @@
+A function $f : \N \to \N$ is called \textit{good} if, for any $m, n \in \N$,
+\[ f(m + n + 1) \geq f(m) + f(f(n)). \tag{*}\label{2007a2-eq0} \]
+For any $N \in \N$, determine all $k \in \N$ for which there exists a good function $f$ such that $f(N) = k$.
+
+
+
+\subsection*{Answer}
+
+If $N = 0$, then only $k = 0$ works.
+If $N > 0$, then any $k \leq N + 1$ works.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+We follow the official solution, with modifications to work with the $\N$ version of the problem.
+One exception is the final step of obtaining $f(n) \leq n + 1$.
+
+We start with the following lemma on good functions.
+
+\begin{lemma}\label{2007a2-1}
+Any good function is non-decreasing.
+\end{lemma}
+\begin{proof}
+Indeed,~\eqref{2007a2-eq0} yields $f(m + 1) \geq f(m)$ for all $m \in \N$.
+Alternatively, for any $k > m$, we have $n := k - m - 1 \geq 0$ and so $f(k) = f(m + n + 1) \geq f(m)$.
+\end{proof}
+
+Now, we divide into two cases.
+
+\begin{itemize}
+
+    \item
+    \textit{\underline{Case 1.}}
+    $N = 0$.
+
+    Clearly, the zero map $n \mapsto 0$ is good, so it remains to show that $f(0) = 0$ for any $f : \N \to \N$ good.
+    Fix $f$, and suppose for the sake of contradiction that $f(0) > 0$.
+    This also means $f(0) \geq 1$, so~\eqref{2007a2-eq0} yields $f(1) \geq f(0) + f(f(0)) > f(f(0))$.
+    But Lemma~\ref{2007a2-1} yields $f(f(0)) \geq f(1)$; a contradiction.
+
+    \item
+    \textit{\underline{Case 2.}}
+    $N > 0$.
+
+    For any $C \in \N$, the function $f(n) = \max\{0, n - C\}$ is good.
+    Also, for any $K \neq 1$, the following function $f$ is good:
+    \[ f(n) = \begin{cases} n + 1, & K \mid n + 1, \\ n, & K \nmid n + 1. \end{cases} \]
+    The proof for both cases can be bashed out directly.
+    Thus, for any $k \leq N$, setting $C = N - k$ gives a good function $f$ with $f(N) = k$.
+    Meanwhile, for $k = N + 1$, we set $K = N + 1$ on the second good function.
+    It remains to show that $f(N) \leq N + 1$ for any good function $f : \N \to \N$.
+
+    Set $K = N + 1$, and suppose for the sake of contradiction that $f(N) > K$.
+    In particular, Lemma~\ref{2007a2-1} yields $f(f(N)) \geq f(K)$.
+    Then~\eqref{2007a2-eq0} yields $f(m + K) = f(m + N + 1) \geq f(m) + f(K)$ for all $m \in \N$.
+    By small induction, we get $f(mK) \geq m f(K)$ for all $m \in \N$.
+
+    By Lemma~\ref{2007a2-1} again, we have $f(K) \geq f(N) > K$, so $f(K^2) \geq K f(K) \geq K (K + 1)$.
+    Thus we can write $f(K^2) = K^2 + d + 1$ with $d \geq K - 1 = N$.
+    Plugging $m = d$ and $n = K^2$ into~\eqref{2007a2-eq0} yields
+    \[ f(K^2 + d + 1) \geq f(d) + f(f(K^2)) = f(d) + f(K^2 + d + 1) \implies f(d) \leq 0. \]
+    A contradiction, since Lemma~\ref{2007a2-1} gives us $f(d) \geq f(N) > K \geq 0$.
+    Thus, $f(N) \leq K = N + 1$, as desired.
+
+\end{itemize}
+
+
+
+\subsection*{Extra notes}
+
+The above version of the problem is the $\N$-version of the original problem.
+We also implement the solution for the original problem.
