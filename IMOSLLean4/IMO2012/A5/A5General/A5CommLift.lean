@@ -38,8 +38,7 @@ lemma codomainLift_is_good {f : R → S} (hf : good f) : good (codomainLift f) :
 
 lemma codomainLift_is_NontrivialGood {f : R → S} (hf : NontrivialGood f) :
     NontrivialGood (codomainLift f) :=
-  ⟨codomainLift_is_good hf.is_good, Subtype.ext hf.map_one,
-    Subtype.ext hf.map_zero_add_one⟩
+  ⟨codomainLift_is_good hf.is_good, Subtype.ext hf.map_zero_add_one⟩
 
 end
 
@@ -60,7 +59,7 @@ lemma oneVarDomainLift_is_good {f : R → S} (hf : good f) :
 
 lemma oneVarDomainLift_is_NontrivialGood {f : R → S} (hf : NontrivialGood f) :
     NontrivialGood (oneVarDomainLift c f) :=
-  ⟨oneVarDomainLift_is_good c hf.is_good, hf.map_one, hf.map_zero_add_one⟩
+  ⟨oneVarDomainLift_is_good c hf.is_good, hf.map_zero_add_one⟩
 
 abbrev OneVarRange (f : R → S) : Type* :=
   Subring.closure (Set.range (oneVarDomainLift c f))

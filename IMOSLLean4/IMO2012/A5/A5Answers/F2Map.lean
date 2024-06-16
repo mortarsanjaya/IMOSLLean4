@@ -31,4 +31,4 @@ theorem 𝔽₂Map_is_good : good 𝔽₂Map
 
 /-- The map `𝔽₂Map` is non-trivial good. -/
 theorem 𝔽₂Map_is_NontrivialGood : NontrivialGood 𝔽₂Map :=
-  ⟨𝔽₂Map_is_good, rfl, rfl⟩
+  ⟨𝔽₂Map_is_good, rfl⟩

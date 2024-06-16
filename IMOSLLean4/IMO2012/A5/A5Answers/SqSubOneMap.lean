@@ -55,5 +55,4 @@ theorem RestrictedSq_sub_one_is_good : good (RestrictedSq (R := R) - 1) :=
 
 theorem RestrictedSq_sub_one_is_NontrivialGood :
     NontrivialGood (RestrictedSq (R := R) - 1) :=
-  ⟨RestrictedSq_sub_one_is_good, sub_eq_zero_of_eq (one_pow 2),
-    (sub_add_cancel _ _).trans RestrictedSq_apply_zero⟩
+  ⟨RestrictedSq_sub_one_is_good, (sub_add_cancel _ _).trans RestrictedSq_apply_zero⟩

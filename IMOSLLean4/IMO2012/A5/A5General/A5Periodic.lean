@@ -126,7 +126,7 @@ lemma toQuotientMap_good : good (toQuotientMap hf) :=
   Quotient.ind₂ hf.is_good
 
 lemma toQuotientMap_NonTrivialGood : NontrivialGood (toQuotientMap hf) :=
-  ⟨toQuotientMap_good hf, hf.map_one, hf.map_zero_add_one⟩
+  ⟨toQuotientMap_good hf, hf.map_zero_add_one⟩
 
 /-- The induced map `R/I → S` is a reduced good map. -/
 lemma toQuotientMap_ReducedGood : ReducedGood (toQuotientMap hf) :=

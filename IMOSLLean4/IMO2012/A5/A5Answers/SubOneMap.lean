@@ -24,7 +24,7 @@ theorem sub_one_is_good : good (λ (x : R) ↦ x - 1) := λ x y ↦ by
   exact add_sub_cancel_right _ _
 
 theorem sub_one_is_NontrivialGood : NontrivialGood (λ (x : R) ↦ x - 1) :=
-  ⟨sub_one_is_good, sub_self 1, sub_add_cancel 0 1⟩
+  ⟨sub_one_is_good, sub_add_cancel 0 1⟩
 
 theorem sub_one_solver [NonAssocRing S] {f : R → S} (hf : NontrivialGood f)
     (h : ∀ x, f (x + 1) = f x + 1) : ∃ φ : R →+* S, ∀ x, f x = φ (x - 1) := by

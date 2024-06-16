@@ -30,7 +30,7 @@ theorem good_Nontrivial_or_eq_zero [IsCancelAdd S] [NoZeroDivisors S]
   have h1 (x : R) : 0 = f x * (f 0 + 1) := by
     have h1 := h x 0; rwa [mul_zero, zero_add, h0, add_zero, ← mul_add_one (f x)] at h1
   ---- Elimination
-  (zero_eq_mul.mp (h1 0)).symm.imp (λ h1 ↦ ⟨h, h0, h1⟩)
+  (zero_eq_mul.mp (h1 0)).symm.imp (λ h1 ↦ ⟨h, h1⟩)
     (λ h2 ↦ funext λ x ↦ by specialize h1 x; rwa [h2, zero_add, mul_one, eq_comm] at h1)
 
 theorem good_iff_Nontrivial_or_eq_zero [IsCancelAdd S] [NoZeroDivisors S] {f : R → S} :

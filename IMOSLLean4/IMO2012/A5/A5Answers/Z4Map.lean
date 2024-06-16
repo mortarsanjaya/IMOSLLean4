@@ -45,4 +45,4 @@ theorem ℤ₄Map_is_good : good ℤ₄Map
 
 /-- The map `ℤ₄Map` is non-trivial good. -/
 theorem ℤ₄Map_is_NontrivialGood : NontrivialGood ℤ₄Map :=
-  ⟨ℤ₄Map_is_good, rfl, rfl⟩
+  ⟨ℤ₄Map_is_good, rfl⟩

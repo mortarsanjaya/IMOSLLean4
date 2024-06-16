@@ -35,4 +35,4 @@ theorem 𝔽₃Map1_is_good : good 𝔽₃Map1
 
 /-- The map `𝔽₃Map1` is non-trivial good. -/
 theorem 𝔽₃Map1_is_NontrivialGood : NontrivialGood 𝔽₃Map1 :=
-  ⟨𝔽₃Map1_is_good, rfl, rfl⟩
+  ⟨𝔽₃Map1_is_good, rfl⟩
