@@ -47,8 +47,7 @@ theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
 theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
   | 0 => ((d_zero z).trans (sub_zero _).symm).le
   | n + 1 => by
-      rw [Nat.choose, Nat.choose_one_right, Nat.cast_add,
-        ← sub_sub, sub_right_comm]
+      rw [Nat.choose, Nat.choose_one_right, Nat.cast_add, ← sub_sub, sub_right_comm]
       exact Int.le_sub_right_of_add_le <|
         (Int.add_le_of_le_sub_right (main_lemma h n)).trans (binom_bound n)
 

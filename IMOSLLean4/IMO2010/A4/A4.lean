@@ -130,8 +130,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
     · rw [← add_neg_self (1 : ℤ)]
       exact add_le_add h ((x k).rec (neg_le_self zero_le_one) (-1).le_refl)
   ---- Now show that `x_k = ff` whenever `S_k = 0`, using strong induction
-  intro k h
-  induction' k using Nat.strong_induction_on with k k_ih
+  intro k h; induction' k using Nat.strong_induction_on with k k_ih
   obtain ⟨q, r, h0, rfl⟩ : ∃ q r : ℕ, r < 4 ∧ 4 * q + r = k :=
     ⟨k / 4, k % 4, Nat.mod_lt k four_pos, Nat.div_add_mod k 4⟩
   rw [S_four_mul_add_eq_zero_iff q h0, or_comm] at h
@@ -165,4 +164,4 @@ theorem final_solution_extra (k : ℕ) :
     k_ih q (Nat.lt_add_right _ <| lt_mul_left h0 <| Nat.succ_lt_succ <| Nat.succ_pos 2)
   rw [k_ih, add_comm,
     Nat.digits_add 4 (Nat.succ_lt_succ <| Nat.succ_pos 2) r q h <| Or.inr h0.ne.symm]
-  simp_rw [List.mem_cons]; rw [forall_eq_or_imp, and_comm]
+  simp only [List.mem_cons]; rw [forall_eq_or_imp, and_comm]

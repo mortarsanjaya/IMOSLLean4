@@ -32,15 +32,13 @@ lemma main_step {f g : ℕ → ℕ} (h : ∀ k, f^[g k + 2] k < f (k + 1)) : f =
     refine Nat.rec (λ k _ ↦ (f k).zero_le) (λ k h0 n h1 ↦ ?_)
     rcases n with _ | n
     · exact absurd k.succ_pos h1.not_lt
-    · refine (h n).trans_le' ?_
+    · apply (h n).trans_le'
       generalize g n + 2 = t
       exact t.rec (Nat.succ_le_succ_iff.mp h1)
         (λ t h2 ↦ (h0 _ h2).trans_eq (f.iterate_succ_apply' _ _).symm)
   ---- Do the remaining work
-  have h1 : ∀ t n, n ≤ f^[t] n :=
-    Nat.rec Nat.le_refl λ t h1 n ↦ (h0 n).trans (h1 _)
-  have h2 : StrictMono f :=
-    strictMono_nat_of_lt_succ λ n ↦ (h1 _ (f n)).trans_lt (h n)
+  have h1 : ∀ t n, n ≤ f^[t] n := Nat.rec Nat.le_refl λ t h1 n ↦ (h0 n).trans (h1 _)
+  have h2 : StrictMono f := strictMono_nat_of_lt_succ λ n ↦ (h1 _ (f n)).trans_lt (h n)
   refine funext λ n ↦ (h0 n).antisymm' ?_
   rw [← Nat.lt_succ_iff, ← h2.lt_iff_lt]
   exact (h1 _ _).trans_lt (h n)
@@ -73,8 +71,7 @@ theorem PNat_to_Nat_prop {P : ℕ+ → Prop} : (∀ n, P n) ↔ ∀ n : ℕ, P n
 
 theorem PNat_exists_Nat_conj (f : ℕ+ → ℕ+) :
     ∃ g : ℕ → ℕ, f = λ n ↦ (g n.natPred).succPNat :=
-  ⟨λ n ↦ (f n.succPNat).natPred,
-  funext λ n ↦ by rw [PNat.succPNat_natPred, PNat.succPNat_natPred]⟩
+  ⟨λ n ↦ (f n.succPNat).natPred, funext λ n ↦ by simp only [PNat.succPNat_natPred]⟩
 
 theorem PNat_eq_Nat_conj_iff {f : ℕ+ → ℕ+} {g : ℕ → ℕ} :
     (f = λ n ↦ (g n.natPred).succPNat) ↔ g = λ n ↦ (f n.succPNat).natPred :=

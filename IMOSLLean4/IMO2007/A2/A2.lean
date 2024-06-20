@@ -122,8 +122,7 @@ theorem succPNat_add_succPNat (m n : ℕ) :
 theorem goodPNat_iff_good {f : ℕ+ → ℕ+} :
     goodPNat f ↔ good λ x ↦ (f x.succPNat).natPred := by
   obtain ⟨g, rfl⟩ : ∃ g : ℕ → ℕ, f = λ x ↦ (g x.natPred).succPNat :=
-    ⟨λ x ↦ (f x.succPNat).natPred,
-    funext λ x ↦ by rw [PNat.succPNat_natPred, PNat.succPNat_natPred]⟩
+    ⟨λ x ↦ (f x.succPNat).natPred, funext λ x ↦ by simp only [PNat.succPNat_natPred]⟩
   rw [goodPNat, PNat_to_Nat_Prop2]
   refine forall₂_congr λ m n ↦ ?_
   rw [Nat.natPred_succPNat, succPNat_add_succPNat, succPNat_add_succPNat,
@@ -131,13 +130,9 @@ theorem goodPNat_iff_good {f : ℕ+ → ℕ+} :
 
 theorem good_correspondence {N k : ℕ+} :
     (∃ f : ℕ+ → ℕ+, goodPNat f ∧ f N = k) ↔ ∃ f : ℕ → ℕ, good f ∧ f N.natPred = k.natPred :=
-  ⟨λ h ↦ by
-    rcases h with ⟨f, h, rfl⟩
-    exact ⟨_, goodPNat_iff_good.mp h, N.succPNat_natPred ▸ rfl⟩,
-  λ h ↦ by
-    rcases h with ⟨f, h, h0⟩
-    exact ⟨λ x ↦ (f x.natPred).succPNat, goodPNat_iff_good.mpr h,
-      (congrArg _ h0).trans k.succPNat_natPred⟩⟩
+  ⟨λ ⟨f, h, h0⟩ ↦ ⟨_, goodPNat_iff_good.mp h, by rw [PNat.succPNat_natPred, h0]⟩,
+  λ ⟨f, h, h0⟩ ↦ ⟨λ x ↦ (f x.natPred).succPNat, goodPNat_iff_good.mpr h,
+    (congrArg _ h0).trans k.succPNat_natPred⟩⟩
 
 /-- Final solution, `ℕ+` version -/
 theorem final_solution_PNat {N k : ℕ+} :

@@ -69,8 +69,7 @@ theorem good2_bdd_below {a : ℕ → G} (h : good2 D a) (h0 : D ≤ n) :
     (Extra.le_seqMax_of_le a (j.le_add_left i))
 
 theorem good2_seqMax {D : ℕ} {a : ℕ → G} (h : good2 D a) {n : ℕ} (h0 : D ≤ n) :
-    Extra.seqMax (-a) (n + 1) ≤
-      max (Extra.seqMax (-a) n) (2 • Extra.seqMax a n) :=
+    Extra.seqMax (-a) (n + 1) ≤ max (Extra.seqMax (-a) n) (2 • Extra.seqMax a n) :=
   max_le_max (le_refl _) (good2_bdd_below h h0)
 
 
@@ -86,8 +85,7 @@ variable {b c : ℕ → G} (h : ∀ n, D ≤ n → b (n + 1) ≤ max (b n) (c n 
 
 theorem c_bdd (h2 : D ≤ K) (h3 : c K ≤ 2 • b K) :
     b (K + 1) = b K ∧ c (K + 1) ≤ 2 • b (K + 1) := by
-  suffices b K = b (K + 1) from
-    ⟨this.symm, (h0 K h2).trans_eq (this ▸ max_eq_right h3)⟩
+  suffices b K = b (K + 1) from ⟨this.symm, (h0 K h2).trans_eq (this ▸ max_eq_right h3)⟩
   rw [two_nsmul, ← sub_le_iff_le_add] at h3
   exact (h1 K.le_succ).antisymm ((h K h2).trans_eq (max_eq_left h3))
 
@@ -129,8 +127,7 @@ end SeqMax
 
 /-- Final solution -/
 theorem final_solution {a : ℕ → G} (h : good1 D a) (h0 : good2 D a) (n : ℕ) :
-    |a n| ≤ max (2 • Extra.seqMax a D)
-      (2 • (Extra.seqMax (-a) D - Extra.seqMax a D)) :=
+    |a n| ≤ max (2 • Extra.seqMax a D) (2 • (Extra.seqMax (-a) D - Extra.seqMax a D)) :=
   (abs_le_max_seqMax a n).trans <|
     max_two_nsmul_b_and_c_bdd (λ _ ↦ good1_seqMax h) (λ _ ↦ good2_seqMax h0)
       (Extra.seqMax_mono a) (Extra.seqMax_mono (-a)) n

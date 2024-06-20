@@ -54,12 +54,12 @@ theorem final_solution [LinearOrderedField F]
     · exact add_le_add h2 h3
     ---- The hard cases
     refine le_trans ?_ (add_le_add_right (?_ : (n : F) / a n ≤ _) _)
-    rw [div_add' _ _ _ (h n).ne.symm, le_div_iff (h n), add_one_mul (α := F),
-      ← sub_le_iff_le_add, add_sub_assoc, ← mul_one_sub,
-      ← le_sub_iff_add_le', ← mul_one_sub, ← sub_nonneg, ← sub_mul]
-    refine mul_nonneg (sub_nonneg.mpr (h3.trans ?_)) (sub_nonneg.mpr h3)
-    rw [Nat.one_le_cast]; exact one_le_two.trans h1
-    clear h1 h2 h3; induction' n with n n_ih
-    rw [Nat.cast_zero, sum_range_zero, zero_div]
-    rw [sum_range_succ, add_comm _ (a n)]
-    refine (h0 n).trans (add_le_add_left n_ih (a n))
+    · rw [div_add' _ _ _ (h n).ne.symm, le_div_iff (h n), add_one_mul (α := F),
+        ← sub_le_iff_le_add, add_sub_assoc, ← mul_one_sub,
+        ← le_sub_iff_add_le', ← mul_one_sub, ← sub_nonneg, ← sub_mul]
+      refine mul_nonneg (sub_nonneg.mpr (h3.trans ?_)) (sub_nonneg.mpr h3)
+      exact Nat.one_le_cast.mpr (one_le_two.trans h1)
+    · clear h1 h2 h3; induction' n with n n_ih
+      · rw [Nat.cast_zero, sum_range_zero, zero_div]
+      · rw [sum_range_succ, add_comm _ (a n)]
+        refine (h0 n).trans (add_le_add_left n_ih (a n))

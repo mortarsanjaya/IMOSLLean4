@@ -39,8 +39,7 @@ lemma const_of_infinite_map_eq_map_zero (h0 : ∀ k, ∃ n, k ≤ n ∧ f n = f 
     have h2 := Nat.eq_zero_of_dvd_of_lt h (Nat.lt_add_of_pos_right h0)
     rwa [Int.natAbs_eq_zero, sub_eq_zero, eq_comm] at h2⟩
 
-lemma const_of_finite_prime_divisor
-    (h0 : ∀ p : ℕ, p.Prime → (∃ c, (p : ℤ) ∣ f c) → p < K) :
+lemma const_of_finite_prime_divisor (h0 : ∀ p : ℕ, p.Prime → (∃ c, (p : ℤ) ∣ f c) → p < K) :
     ∃ C, f = λ _ ↦ C := by
   have h1 : f 0 ≠ 0 := λ h1 ↦ by
     obtain ⟨p, h2, h3⟩ := K.exists_infinite_primes
@@ -80,6 +79,7 @@ theorem final_solution (h0 : ∀ C : ℤ, ∃ b : ℕ, f b ≠ C) (K : ℕ) :
     ∃ p : ℕ, K ≤ p ∧ p.Prime ∧ ∃ c, (p : ℤ) ∣ f c := by
   refine by_contra λ h1 ↦ absurd h0 (not_forall.mpr ⟨f 0, ?_⟩)
   rw [← not_forall, not_not]
-  suffices ∃ C, f = λ _ ↦ C from this.elim λ C this ↦ this ▸ λ x ↦ rfl
-  exact const_of_finite_prime_divisor h (K := K)
-    λ p h2 h3 ↦ lt_of_not_le λ h4 ↦ not_exists.mp h1 p ⟨h4, h2, h3⟩
+  obtain ⟨C, rfl⟩ : ∃ C, f = λ _ ↦ C :=
+    const_of_finite_prime_divisor h (K := K) λ p h2 h3 ↦
+      lt_of_not_le λ h4 ↦ not_exists.mp h1 p ⟨h4, h2, h3⟩
+  exact λ _ ↦ rfl

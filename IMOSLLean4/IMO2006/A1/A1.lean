@@ -52,13 +52,12 @@ theorem floor_f_iter_natAbs_le (r : R) : ∀ k, ⌊f^[k] r⌋.natAbs ≤ ⌊r⌋
   | k + 1 => (floor_f_iter_natAbs_le _ k).trans (floor_f_natAbs_le r)
 
 theorem floor_f_iter_natAbs_eventually_const (r : R) :
-    ∃ C, EventuallyEqual (⌊f^[·] r⌋.natAbs) (λ _ ↦ C) := by
+    ∃ C, EventuallyEqual (⌊f^[·] r⌋.natAbs) (λ _ ↦ C) :=
   have ha : Antitone (λ k ↦ ⌊f^[k] r⌋.natAbs) := λ k m h0 ↦ by
-    rcases Nat.exists_eq_add_of_le h0 with ⟨c, rfl⟩; simp only
-    rw [Nat.add_comm, f.iterate_add_apply]
+    rcases Nat.exists_eq_add_of_le h0 with ⟨c, rfl⟩
+    simp only; rw [Nat.add_comm, f.iterate_add_apply]
     exact floor_f_iter_natAbs_le _ c
-  rcases NatSeq_antitone_imp_const ha with ⟨C, N, ha⟩
-  exact ⟨C, N, 0, ha⟩
+  (NatSeq_antitone_imp_const ha).elim λ C ⟨N, ha⟩ ↦ ⟨C, N, 0, ha⟩
 
 theorem floor_f_lt_of_floor_pos {r : R} (h : 0 < ⌊r⌋) : ⌊f r⌋ < ⌊r⌋ :=
   Int.floor_lt.mpr <| mul_lt_of_lt_one_right (Int.cast_pos.mpr h) (Int.fract_lt_one r)
@@ -137,7 +136,7 @@ theorem case_floor_eventually_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C)
     apply (abs_sub _ _).trans_lt
     rw [Nat.abs_cast, Nat.cast_add, add_lt_add_iff_right, ← Nat.cast_succ,
       abs_mul, Nat.abs_cast, abs_eq_self.mpr (Int.fract_nonneg s)]
-    refine mul_lt_of_lt_one_right (Nat.cast_pos.mpr C.succ_pos) (Int.fract_lt_one _)
+    exact mul_lt_of_lt_one_right (Nat.cast_pos.mpr C.succ_pos) (Int.fract_lt_one _)
   exact Infinitesimal.iff_nsmul_Nat_bdd.mpr ⟨C + 1 + C, λ k ↦
     (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC k).le).trans_lt <|
       (h0 _).symm.trans_lt (h (f^[k + N] r))⟩
@@ -154,22 +153,18 @@ theorem final_solution_general (r : R) :
     (∃ C : ℕ, 1 < C ∧ ∃ ε : R, Infinitesimal ε ∧
       EventuallyEqual ((C + 1) * f^[·] r) (-C ^ 2 + (-C) ^ · * ε)) := by
   rcases floor_f_iter_eventually_const r with ⟨C, h⟩
-  refine C.eq_zero_or_pos.imp ?_ (λ h0 ↦ (h0 : 1 ≤ C).eq_or_lt.imp ?_ ?_)
-  ---- Case 1: `C = 0`
+  refine C.eq_zero_or_pos.imp ?_ λ h0 ↦ (h0 : 1 ≤ C).eq_or_lt.imp ?_ ?_
+  ---- Three cases: `C = 0`, `C = 1`, and `C > 1`, respectively
   · rintro rfl; exact case_floor_eventually_zero h
-  ---- Case 2: `C = 1`
   · rintro rfl; exact case_floor_eventually_neg_one h
-  ---- Case 3: `C > 1`
   · intro h0; exact ⟨C, h0, case_floor_eventually_neg_of_one_lt h0 h⟩
 
 theorem Archimedean_f_iter_classification [Archimedean R] (r : R) :
     EventuallyEqual (f^[·] r) (λ _ ↦ 0) ∨
     (∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeq_ofList [-s, s - 1])) ∨
     (∃ C : ℕ, 1 < C ∧ EventuallyEqual ((C + 1) * f^[·] r) (λ _ ↦ -C ^ 2)) :=
-  (final_solution_general r).imp_right <| Or.imp_right <| by
-    rintro ⟨C, h, ε, h0, h1⟩
-    simp only [h0.zero_of_Archimedean, mul_zero, add_zero] at h1
-    exact ⟨C, h, h1⟩
+  (final_solution_general r).imp_right <| Or.imp_right λ ⟨C, h, ε, h0, h1⟩ ↦
+    ⟨C, h, by simpa only [h0.zero_of_Archimedean, mul_zero, add_zero] using h1⟩
 
 theorem final_solution [Archimedean R] (r : R) :
     ∃ N, ∀ k, N ≤ k → f^[k + 2] r = f^[k] r := by
@@ -178,12 +173,10 @@ theorem final_solution [Archimedean R] (r : R) :
   all_goals
     simp only at h; refine ⟨N, λ k h0 ↦ ?_⟩
     rcases Nat.exists_eq_add_of_le' h0 with ⟨k, rfl⟩
-  ---- Case 1: `C = 0`
+  ---- Three cases: `C = 0`, `C = 1`, and `C > 1`, respectively
   · rw [h, Nat.add_right_comm, h]
-  ---- Case 2: `C = 1`
   · rw [h, Nat.add_right_comm, h, Nat.add_right_comm]
     exact NatSeq_ofList_periodic [-s, s - 1] _
-  ---- Case 3: `C > 1`
   · replace h0 := (h (k + 2)).trans (h k).symm
     rw [Nat.add_right_comm, mul_eq_mul_left_iff] at h0
     exact h0.resolve_right (add_pos (Nat.cast_pos.mpr (pos_of_gt hC)) one_pos).ne.symm

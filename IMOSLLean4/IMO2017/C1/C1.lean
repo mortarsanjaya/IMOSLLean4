@@ -35,8 +35,7 @@ def latticeRect (q : (ℕ × ℕ) × ℕ × ℕ) : Finset (ℕ × ℕ) :=
 
 
 theorem sum_neg_one_pow_Ico (a : ℕ) :
-    ∀ n : ℕ, (Ico a (a + n)).sum ((-1 : ℤ) ^ ·)
-      = bif n.bodd then (-1 : ℤ) ^ a else 0
+    ∀ n : ℕ, (Ico a (a + n)).sum ((-1 : ℤ) ^ ·) = bif n.bodd then (-1 : ℤ) ^ a else 0
   | 0 => by rw [add_zero, Ico_self]; rfl
   | 1 => by rw [Nat.Ico_succ_singleton, sum_singleton]; rfl
   | n + 2 => by
@@ -53,8 +52,8 @@ theorem disjiUnion_weight_eq {I : Finset ι} (h : (I : Set ι).PairwiseDisjoint 
   sum_disjiUnion _ _ _
 
 theorem latticeRect_weight (q : (ℕ × ℕ) × ℕ × ℕ) :
-    weight (latticeRect q) = bif (q.2.1.bodd && q.2.2.bodd)
-      then ((-1 : ℤ) ^ (q.1.1 + q.1.2)) else 0 := by
+    weight (latticeRect q) =
+      bif (q.2.1.bodd && q.2.2.bodd) then ((-1 : ℤ) ^ (q.1.1 + q.1.2)) else 0 := by
   rw [weight, latticeRect, sum_product]; simp_rw [← mul_sum]
   rw [← sum_mul, sum_neg_one_pow_Ico, sum_neg_one_pow_Ico]
   cases q.2.1.bodd; exact zero_mul _
@@ -62,8 +61,7 @@ theorem latticeRect_weight (q : (ℕ × ℕ) × ℕ × ℕ) :
 
 theorem latticeRect_weight_pos_imp :
     (h : 0 < weight (latticeRect q)) →
-      (q.2.1.bodd = true ∧ q.2.2.bodd = true) ∧
-        (q.1.1 + q.1.2).bodd = false := by
+      (q.2.1.bodd = true ∧ q.2.2.bodd = true) ∧ (q.1.1 + q.1.2).bodd = false := by
   rw [latticeRect_weight, ← Bool.and_eq_true]
   cases q.2.1.bodd && q.2.2.bodd
   · exact λ h ↦ absurd h (le_refl 0).not_lt
@@ -83,8 +81,7 @@ theorem final_solution {I : Finset ι}
   suffices ∃ i ∈ I, 0 < weight (latticeRect (Q i))
     from this.elim λ i h3 ↦ ⟨i, h3.1, latticeRect_weight_pos_imp h3.2⟩
   apply_fun weight at h1
-  rw [latticeRect_weight] at h1; simp only at h1
-  rw [disjiUnion_weight_eq, Function.comp, h0.1, h0.2, add_zero] at h1
+  rw [latticeRect_weight, disjiUnion_weight_eq, Function.comp, h0.1, h0.2, add_zero] at h1
   apply exists_lt_of_sum_lt
   rw [sum_const_zero, ← h1]
   exact Int.zero_lt_one

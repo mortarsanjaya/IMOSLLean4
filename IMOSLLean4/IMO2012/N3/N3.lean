@@ -43,8 +43,7 @@ theorem final_solution (h : 1 < m) :
   · rcases h1 with ⟨k, rfl⟩
     specialize h0 k (2 * k).le_refl
     rw [Nat.sub_self, k.choose_zero_right, Nat.dvd_one] at h0
-    rw [h0, mul_one]
-    exact Nat.prime_two
+    rw [h0]; exact Nat.prime_two
   ---- If `m` is odd and composite, then `m` is not "good"
   · obtain ⟨p, h2, k, rfl⟩ : ∃ p : ℕ, p.Prime ∧ p ∣ m :=
       ⟨m.minFac, Nat.minFac_prime h.ne.symm, m.minFac_dvd⟩
@@ -56,10 +55,8 @@ theorem final_solution (h : 1 < m) :
     rw [mul_add_one (α := ℕ), mul_left_comm, Nat.add_sub_cancel_left] at h0
     exact h0 (Nat.le_add_right (p * (2 * k)) p)
   ---- If `m` is prime, then `m` is "good"
-  · rw [le_iff_exists_add] at h1
-    rcases h1 with ⟨c, rfl⟩
-    rw [Nat.add_sub_cancel_left]
-    rcases c with _ | c
+  · rw [le_iff_exists_add] at h1; rcases h1 with ⟨c, rfl⟩
+    rw [Nat.add_sub_cancel_left]; rcases c with _ | c
     -- `c = 0`
     · rw [Nat.add_zero, Nat.prime_mul_iff] at h0
       rcases h0 with ⟨-, rfl⟩ | ⟨-, h1⟩
@@ -68,10 +65,8 @@ theorem final_solution (h : 1 < m) :
     -- `n = 0`
     · exact Nat.dvd_refl 0
     -- `c, n > 0`
-    · refine (Nat.Coprime.dvd_mul_right ?_).mp
-        ⟨_, (n.succ_mul_choose_eq c).symm⟩
+    · refine (Nat.Coprime.dvd_mul_right ?_).mp ⟨_, (n.succ_mul_choose_eq c).symm⟩
       rw [two_mul, add_assoc] at h0
       rw [← Nat.coprime_self_add_right, ← Nat.coprime_self_add_right,
         Nat.coprime_comm, h0.coprime_iff_not_dvd]
-      exact Nat.not_dvd_of_pos_of_lt n.succ_pos <|
-        lt_add_of_pos_right _ (n.succ + c).succ_pos
+      exact Nat.not_dvd_of_pos_of_lt n.succ_pos (lt_add_of_pos_right _ (n.succ + c).succ_pos)

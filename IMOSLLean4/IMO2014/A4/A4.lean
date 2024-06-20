@@ -70,8 +70,7 @@ theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) :
   | k + 1 => by
       rw [pow_succ', mul_assoc, mul_assoc]
       have h1 := h (b ^ k * y) 0
-      rwa [← map_b_pow_mul_eq_of_map_eq h0 k,
-        h, add_left_inj, sub_left_inj] at h1
+      rwa [← map_b_pow_mul_eq_of_map_eq h0 k, h, add_left_inj, sub_left_inj] at h1
 
 variable (h0 : 1 < b.natAbs) (h1 : c ≠ 0)
 

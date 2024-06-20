@@ -19,14 +19,9 @@ namespace IMO2015A2
 /-- Final solution -/
 theorem final_solution {f : ℤ → ℤ} :
     (∀ x y : ℤ, f (x - f y) = f (f x) - f y - 1)
-      ↔ (f = λ _ ↦ (-1 : ℤ)) ∨ f = (· + 1) := by
-  refine Iff.symm ⟨λ h x y ↦ ?_, λ h ↦ ?_⟩
-  ---- `←` direction
-  · rcases h with rfl | rfl
-    · rw [sub_sub, neg_add_self, sub_zero]
-    · rw [sub_sub, add_sub_add_right_eq_sub, add_sub_right_comm]
-  ---- `→` direction
-  · -- First obtain `f(x + 1) = f(f(x))`
+      ↔ (f = λ _ ↦ (-1 : ℤ)) ∨ f = (· + 1) :=
+  ---- `→`
+  ⟨λ h ↦ by
     have h0 := h 0 (f 0)
     rw [sub_self, zero_sub 1] at h0
     replace h0 x : f (x + 1) = f (f x) := by
@@ -40,12 +35,14 @@ theorem final_solution {f : ℤ → ℤ} :
         sub_add_cancel, sub_self, zero_sub, sub_eq_iff_eq_add] at h1
       exact eq_add_of_sub_eq h1
     -- Finishing in two cases
-    refine (eq_or_ne (f (-1) + 1) 0).imp
-      (λ h2 ↦ funext λ x ↦ ?_) (λ h2 ↦ funext λ x ↦ ?_)
+    refine (eq_or_ne (f (-1) + 1) 0).imp (λ h2 ↦ funext λ x ↦ ?_) (λ h2 ↦ funext λ x ↦ ?_)
     · rw [h1, h2, Int.zero_mul, zero_add, ← eq_neg_of_add_eq_zero_left h2]
       specialize h1 (-1)
-      rw [h2, Int.zero_mul, zero_add] at h1
-      exact h1.symm
+      rwa [h2, Int.zero_mul, zero_add, eq_comm] at h1
     · specialize h0 x
-      rw [h1, h1 (f x), add_left_inj, Int.mul_eq_mul_left_iff h2] at h0
-      exact h0.symm
+      rwa [h1, h1 (f x), add_left_inj, Int.mul_eq_mul_left_iff h2, eq_comm] at h0,
+  ---- `←`
+  λ h x y ↦ by
+    rcases h with rfl | rfl
+    · rw [sub_sub, neg_add_self, sub_zero]
+    · rw [sub_sub, add_sub_add_right_eq_sub, add_sub_right_comm]⟩

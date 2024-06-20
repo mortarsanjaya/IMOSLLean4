@@ -53,17 +53,15 @@ theorem final_solution_part1 (N : ℕ) :
 
 /-! ### Part 2 -/
 
-lemma eventually_const_of_map_succ_eq {f : ℕ → α}
-    (h : ∀ k, a ≤ k → f k = f k.succ) :
+lemma eventually_const_of_map_succ_eq {f : ℕ → α} (h : ∀ k, a ≤ k → f k = f k.succ) :
     ∀ k m, a ≤ k → a ≤ m → f k = f m :=
   suffices ∀ k, a ≤ k → f k = f a
     from λ k m hk hm ↦ (this k hk).trans (this m hm).symm
   Nat.le_induction rfl λ k h0 ↦ (h k h0).symm.trans
 
-lemma exists_lt_omega_bodd_ne_succ (a : ℕ) :
-    ∃ b, a ≤ b ∧ (Ω b).bodd ≠ (Ω b.succ).bodd := by
+lemma exists_lt_omega_bodd_ne_succ (a : ℕ) : ∃ b, a ≤ b ∧ (Ω b).bodd ≠ (Ω b.succ).bodd := by
   by_contra h; rw [not_exists] at h
-  simp_rw [not_and, not_not] at h
+  simp only [not_and, not_not] at h
   rcases a.exists_infinite_primes with ⟨p, h0, h1⟩
   apply absurd (eventually_const_of_map_succ_eq h
     p (p * p) h0 (h0.trans (Nat.le_mul_self p)))
@@ -71,8 +69,7 @@ lemma exists_lt_omega_bodd_ne_succ (a : ℕ) :
   trivial
 
 /-- Final solution, part 2 -/
-theorem final_solution_part2 (h : ∀ k : ℕ, Even (Ω ((a + k) * (b + k)))) :
-    a = b := by
+theorem final_solution_part2 (h : ∀ k : ℕ, Even (Ω ((a + k) * (b + k)))) : a = b := by
   wlog h0 : a ≤ b
   · exact (this (λ k ↦ Nat.mul_comm _ _ ▸ h k) (Nat.le_of_not_ge h0)).symm
   rw [le_iff_exists_add] at h0; rcases h0 with ⟨_ | c, rfl⟩; rfl

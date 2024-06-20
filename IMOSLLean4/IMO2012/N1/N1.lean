@@ -23,8 +23,7 @@ namespace IMO2012N1
 def admissible [Semiring R] (A : Set R) :=
   ∀ x y : R, x ∈ A → y ∈ A → ∀ r : R, x ^ 2 + r * x * y + y ^ 2 ∈ A
 
-theorem admissible_ideal [CommSemiring R] (I : Ideal R) :
-    admissible I.carrier :=
+theorem admissible_ideal [CommSemiring R] (I : Ideal R) : admissible I.carrier :=
   λ u v h h0 r ↦ I.add_mem
     (I.add_mem (sq u ▸ I.mul_mem_left u h) (I.mul_mem_left (r * u) h0))
     (sq v ▸ I.mul_mem_left v h0)
@@ -54,5 +53,5 @@ theorem final_solution [CommRing R] (x y : R) :
       one_pow (M := R) 2 ▸ admissible_mem_sq_mul h0 this z
     obtain ⟨a, b, h⟩ : IsCoprime (x ^ 2) (y ^ 2) := IsCoprime.pow h
     rw [← one_pow 2, ← h]
-    refine admissible_add_sq h0 (admissible_mem_sq_mul h0 h1 a)
+    exact admissible_add_sq h0 (admissible_mem_sq_mul h0 h1 a)
       (admissible_mem_sq_mul h0 h2 b)⟩

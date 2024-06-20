@@ -31,8 +31,7 @@ theorem good_cond1 (h : n ≤ a) (h0 : a < b) (h1 : b < c) (h2 : c ≤ 2 * n)
   · exact ⟨b, c, h.trans h0.le, h1, h2, h7.symm, m, h5⟩
   · exact ⟨a, c, h, h0.trans h1, h2, h6.trans h7.symm, l, h4⟩
 
-theorem good_cond2 (h : n ≤ 2 * k ^ 2 + 4 * k) (h0 : k ^ 2 + 6 * k + 8 ≤ n) :
-    good n := by
+theorem good_cond2 (h : n ≤ 2 * k ^ 2 + 4 * k) (h0 : k ^ 2 + 6 * k + 8 ≤ n) : good n := by
   refine good_cond1 (b := 2 * k ^ 2 + 8 * k + 9) (k := 2 * k + 3)
     (l := 2 * k + 4) (m := 2 * k + 5) h ?_ ?_
     (Nat.mul_le_mul_left 2 h0) ?_ ?_ ?_

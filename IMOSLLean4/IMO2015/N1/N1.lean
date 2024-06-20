@@ -27,8 +27,8 @@ abbrev f (n : ℤ) := n * (n / 2)
 
 theorem main_claim (h : 2 * c ∣ m - 3) (h0 : 2 * c ∣ f m - 3) :
     2 * (2 * c) ∣ m - 3 := by
-  by_cases h1 : c = 0
-  · rwa [h1, mul_zero, ← h1]
+  rcases eq_or_ne c 0 with rfl | h1
+  · exact h
   · rcases h with ⟨d, h⟩
     rw [h, mul_comm]
     apply mul_dvd_mul_left
@@ -46,7 +46,7 @@ theorem final_solution : (∃ k : ℕ, 2 ∣ f^[k] M) ↔ M ≠ 3 := by
   refine ⟨λ h n ↦ ?_, λ h ↦ ?_⟩
   ---- `f(3) = 3`, so `2 ∤ f^[n] 3` for any `n : ℕ`
   · have h0 : f 3 = 3 := rfl
-    rw [h, Function.iterate_fixed h0, ← two_add_one_eq_three]
+    rw [h, Function.iterate_fixed h0]
     exact Int.two_not_dvd_two_mul_add_one 1
   ---- If `2^(n + 1) ∣ f^[k] M - 3` for any `k n : ℕ`, then `M = 3`
   suffices h0 : ∀ n k, 2 ^ (n + 1) ∣ f^[k] M - 3 by

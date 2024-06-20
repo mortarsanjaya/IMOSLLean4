@@ -31,15 +31,13 @@ lemma dvd_iff_of_dvd_add {c : ℕ} (h : c ∣ a + b) : c ∣ a ↔ c ∣ b :=
   ⟨λ h0 ↦ (Nat.dvd_add_right h0).mp h, λ h0 ↦ (Nat.dvd_add_left h0).mp h⟩
 
 theorem dvd_sq_iff_dvd_sq_of_dvd_add {c : ℕ} (h : c ∣ a + b) :
-    c ∣ a ^ 2 ↔ c ∣ b ^ 2 := by
-  have h0 {u v w : ℕ} (h0 : u ∣ v + w) : u ∣ v ^ 2 ↔ u ∣ v * w := by
-    apply dvd_iff_of_dvd_add
-    rw [sq, ← Nat.mul_add]
-    exact h0.mul_left v
-  rw [h0 h, mul_comm, ← h0 (a.add_comm b ▸ h)]
+    c ∣ a ^ 2 ↔ c ∣ b ^ 2 :=
+  have h0 {u v w : ℕ} (h0 : u ∣ v + w) : u ∣ v ^ 2 ↔ u ∣ v * w :=
+    dvd_iff_of_dvd_add (by rw [sq, ← Nat.mul_add]; exact h0.mul_left v)
+  by rw [h0 h, mul_comm, ← h0 (a.add_comm b ▸ h)]
 
-theorem eq_zero_of_prime_add_dvd_sq
-    (h : p.Prime) (h0 : a < p) (h1 : p + a ∣ p ^ 2) : a = 0 := by
+theorem eq_zero_of_prime_add_dvd_sq (h : p.Prime) (h0 : a < p) (h1 : p + a ∣ p ^ 2) :
+    a = 0 := by
   rw [Nat.dvd_prime_pow h] at h1
   rcases h1 with ⟨k, h1, h2⟩
   rw [Nat.le_add_one_iff, Nat.le_add_one_iff, zero_add, le_zero_iff] at h1
@@ -74,17 +72,14 @@ theorem good_is_linear {f : ℕ → ℕ} (h : good C f) : ∃ k, f = (k * ·) :=
       exact ⟨k, Nat.le_of_mul_le_mul_left (h3.ge.trans (h0 h1)) h2.pos,
         h3.trans (p.mul_comm k)⟩
     rcases exists_gt (C + f p) with ⟨n, h3⟩
-    replace h3 := Nat.exists_eq_add_of_le <|
-      h3.le.trans (Nat.le_mul_of_pos_right _ h2.pos)
+    replace h3 := Nat.exists_eq_add_of_le (h3.le.trans (Nat.le_mul_of_pos_right _ h2.pos))
     rcases h3 with ⟨a, h3⟩; rw [add_right_comm] at h3
-    specialize h (C + a) p <|
-      (C.le_add_right a).trans_lt (Nat.lt_add_of_pos_right h2.pos)
+    specialize h (C + a) p ((C.le_add_right a).trans_lt (Nat.lt_add_of_pos_right h2.pos))
     replace h3 : p ∣ C + a + f p := ⟨n, h3.symm.trans (n.mul_comm p)⟩
     rw [← dvd_sq_iff_dvd_sq_of_dvd_add h3, dvd_iff_of_dvd_add (h3.trans h)]
     exact p.dvd_mul_right _
   ---- The main claim
-  have h2 (x) : ∃ B, ∀ p, p.Prime → B < p →
-      ∃ k, f p = k * p ∧ f x = k * x := by
+  have h2 (x) : ∃ B, ∀ p, p.Prime → B < p → ∃ k, f p = k * p ∧ f x = k * x := by
     refine ⟨max C (max (f x) (max (x * f 1) (x ^ 2))), λ p h2 h3 ↦ ?_⟩
     rw [max_lt_iff, max_lt_iff, max_lt_iff] at h3
     rcases h3 with ⟨hp1, hp2, hp3, hp4⟩
