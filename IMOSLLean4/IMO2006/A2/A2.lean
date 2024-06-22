@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Rat
+import Mathlib.Algebra.BigOperators.Ring
 import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Algebra.Order.Field.Rat
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # IMO 2006 A2
