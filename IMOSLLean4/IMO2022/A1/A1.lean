@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.GroupPower.Order
+import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # IMO 2022 A1
@@ -41,12 +41,12 @@ theorem final_solution {a : ℕ → R} (h : ∀ i, 0 ≤ a i)
     (N : ℕ) (h1 : 2 ≤ N) : a N ≤ 1 := by
   -- First get that `a_{i + 1} > 1 → ¬a_{i + 2} > 1`
   have h2 (i : ℕ) (h1 : 1 < a (i + 1)) (h2 : 1 < a (i + 2)) : False :=
-    (main_ineq h1.le h2 (h _) (h0 _)).asymm <| main_ineq2 (h i) h1 h2.le (h0 _)
+    (main_ineq h1.le h2 (h _) (h0 _)).asymm (main_ineq2 (h i) h1 h2.le (h0 _))
   -- Now use the above to finish
   rcases Nat.exists_eq_add_of_le' h1 with ⟨n, rfl⟩
   refine le_of_not_lt λ h1 ↦ (h0 (n + 1)).not_lt ?_
   rw [← sub_lt_iff_lt_add, add_sub_assoc, ← one_sub_mul]
   exact (one_lt_pow h1 <| Nat.succ_ne_zero 1).trans_le' <|
     add_le_of_le_sub_left <| mul_le_of_le_one_right
-      (sub_nonneg_of_le <| le_of_not_lt <| λ h3 ↦ h2 _ h3 h1)
-      (le_of_not_lt <| h2 _ h1)
+      (sub_nonneg_of_le <| le_of_not_lt λ h3 ↦ h2 _ h3 h1)
+      (le_of_not_lt (h2 _ h1))

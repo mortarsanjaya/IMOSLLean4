@@ -80,7 +80,9 @@ theorem good_cond2_k_witness :
         rw [add_sq, Nat.mul_add, Nat.mul_add, Nat.mul_one, ← Nat.mul_assoc]; rfl
       rw [← Nat.add_le_add_iff_right (n := 2), h1, Nat.succ_le_iff, Nat.mul_comm,
         ← Nat.div_lt_iff_lt_mul (Nat.succ_pos 1), ← Nat.sqrt_lt'] at h
-      change 8 ≤ k + 1 at h -- This is a bit slow, but it seems unavoidable
+      replace h : 8 ≤ k + 1 := by
+        have h0 : ((99 + 1) / Nat.succ 1).sqrt = 7 := by rfl
+        rwa [h0] at h
       rw [← Nat.add_le_add_iff_right (n := 1), h1, Nat.two_mul,
         Nat.add_assoc, Nat.add_assoc, Nat.add_le_add_iff_left, sq]
       apply (Nat.mul_le_mul_right _ h).trans'

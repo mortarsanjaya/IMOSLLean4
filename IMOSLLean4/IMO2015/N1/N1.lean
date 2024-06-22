@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.Parity
+import Mathlib.Algebra.CharZero.Lemmas
+import Mathlib.Data.Int.Order.Lemmas
 
 /-!
 # IMO 2015 N1
@@ -30,7 +31,7 @@ theorem main_claim (h : 2 * c ∣ m - 3) (h0 : 2 * c ∣ f m - 3) :
   rcases eq_or_ne c 0 with rfl | h1
   · exact h
   · rcases h with ⟨d, h⟩
-    rw [h, mul_comm]
+    rw [h, Int.mul_comm]
     apply mul_dvd_mul_left
     have X : (2 : ℤ) ≠ 0 := two_ne_zero
     have X0 : (3 / 2 : ℤ) = 1 := rfl

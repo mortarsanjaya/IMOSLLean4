@@ -615,7 +615,7 @@ lemma Rcomm : ∀ x y : R, x * y = y * x := by
     rw [add_comm, ← neg_sub y, hg.toShiftGood23.map_even, hg.Eq3,
       ← sub_eq_zero, ← mul_sub, mul_eq_zero, or_iff_right X] at h
     exact (eq_of_sub_eq_zero h).symm
-  replace h (x y) : (x * x - y * y) * (x * y - y * x) = 0 := hg.Eq6 <| by
+  replace h (x y : R) : (x * x - y * y) * (x * y - y * x) = 0 := hg.Eq6 <| by
     have h0 := hg.Eq3 (x * x - y * y) (x * y - y * x)
     rwa [sub_add_sub_comm, ← mul_add, ← mul_add, add_comm y, ← sub_mul, h,
       sub_sub_sub_comm, ← mul_sub, ← mul_sub, ← neg_sub x, mul_neg, sub_neg_eq_add,

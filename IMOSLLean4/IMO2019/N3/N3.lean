@@ -20,9 +20,6 @@ Find all rootiful sets containing $C(N^a - N^b)$ for all $a, b ∈ ℕ$.
 namespace IMOSL
 namespace IMO2019N3
 
-set_option trace.profiler true
-set_option trace.profiler.threshold 100
-
 open List
 
 /-- Given `b k : ℤ` with `k ≠ 0`, there exists `m ≠ n` such that `b^m ≡ b^n (mod k)`. -/

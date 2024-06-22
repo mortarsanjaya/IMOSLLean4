@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2012.A5.A5General.A5QuasiPeriodic
-import Mathlib.RingTheory.Congruence
+import Mathlib.RingTheory.Congruence.Basic
 
 /-!
 # IMO 2012 A5 (Periodic elements)

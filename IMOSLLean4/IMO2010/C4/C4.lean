@@ -77,17 +77,17 @@ theorem P_iter_le_iff : P seed n ≤ P seed m ↔ n ≤ m :=
 
 theorem log2_lt_iff₂ {n} (hk : 0 < k) : n.log2 < k ↔ n < 2 ^ k :=
   match n with
-  | 0 => ⟨λ _ ↦ k.two_pow_pos, λ _ ↦ hk⟩
+  | 0 => ⟨λ _ ↦ k.two_pow_pos, λ _ ↦ by rwa [Nat.log2_zero]⟩
   | n + 1 => Nat.log2_lt n.succ_ne_zero
 
 theorem log2_monotone {m n : Nat} (h : m ≤ n) : m.log2 ≤ n.log2 :=
   match m with
-  | 0 => n.log2.zero_le
+  | 0 => by rw [Nat.log2_zero]; exact n.log2.zero_le
   | m + 1 => (Nat.le_log2 (Nat.pos_iff_ne_zero.mp (Nat.zero_lt_of_lt h))).mpr
       (Nat.le_trans (Nat.log2_self_le m.succ_ne_zero) h)
 
 theorem log2_two_pow : ∀ n : Nat, (2 ^ n).log2 = n
-  | 0 => rfl
+  | 0 => by simp [Nat.pow_zero, Nat.log2]
   | n + 1 => by rw [Nat.pow_succ, Nat.log2, Nat.mul_div_left _ Nat.two_pos,
       log2_two_pow, if_pos (Nat.le_mul_of_pos_left 2 n.two_pow_pos)]
 

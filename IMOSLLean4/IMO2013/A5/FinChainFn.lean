@@ -137,7 +137,7 @@ theorem mem_iterRangeCompl_iff : a ∈ h.iterRangeCompl n ↔ a ∉ Set.range f^
   Set.ext_iff.mp (h.iterRangeCompl_spec n) a
 
 theorem iterRangeCompl_subset_succ (n : ℕ) : h.iterRangeCompl n ⊆ h.iterRangeCompl (n + 1) :=
-  h.iterRangeCompl_succ n ▸ subset_union_right _ _
+  h.iterRangeCompl_succ n ▸ subset_union_right
 
 theorem iterRangeCompl_subset_of_le (h0 : m ≤ n) : h.iterRangeCompl m ⊆ h.iterRangeCompl n :=
   Nat.le_induction Subset.rfl (λ n _ h0 ↦ h0.trans (h.iterRangeCompl_subset_succ n)) n h0

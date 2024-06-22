@@ -26,10 +26,10 @@ def a : ℕ → ℚ
   | 0 => -1
   | n + 1 => -(univ : Finset (Fin (n + 1))).sum λ i ↦ a i / (n + 2 - i : ℕ)
 
-lemma a_zero : a 0 = -1 := rfl
+lemma a_zero : a 0 = -1 := by rfl
 
-lemma a_succ (n) : a (n + 1) = -(range (n + 1)).sum λ i ↦ a i / (n + 2 - i : ℕ) :=
-  congrArg (- ·) (Fin.sum_univ_eq_sum_range (λ i ↦ a i / (n + 2 - i : ℕ)) (n + 1))
+lemma a_succ (n) : a (n + 1) = -(range (n + 1)).sum λ i ↦ a i / (n + 2 - i : ℕ) := by
+  rw [a, ← Fin.sum_univ_eq_sum_range]
 
 lemma a_one : a 1 = mkRat 1 2 := by rfl
 

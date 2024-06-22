@@ -434,7 +434,7 @@ theorem 𝔽₄_solution {r : R} (hr : r * (r + 1) + 1 = 0) :
   ---- Bijectivity of `R → 𝔽₄`
   have h : (𝔽₄.cast r : 𝔽₄ → R).Bijective := by
     refine ⟨𝔽₄.castRingHom_injective hr' X, λ x ↦ ?_⟩
-    have h0 {x} (h0 : x * x = 0) : x = 0 := R_elts_claim2 hS hf h0 hr
+    have h0 {x : R} (h0 : x * x = 0) : x = 0 := R_elts_claim2 hS hf h0 hr
     rcases R_elts_cases hS hf x with (h1 | h1) | h1
     · exact ⟨1, (add_eq_zero_iff_eq.mp (h0 h1)).symm⟩
     · exact ⟨0, (h0 h1).symm⟩
