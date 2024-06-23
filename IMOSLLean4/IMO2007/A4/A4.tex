@@ -1,0 +1,34 @@
+Let $G$ be a totally ordered abelian group and $G_{>0} = \{x \in G : x > 0\}$.
+Find all functions $f : G_{>0} \to G_{>0}$ such that for any $x, y \in G_{>0}$,
+\[ f(x + f(y)) = f(x + y) + f(y). \tag{*}\label{2007a4-eq0} \]
+
+
+
+\subsection*{Answer}
+
+$f(x) = 2x$ for all $x \in G_{>0}$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+The following solution is essentially a copy of the official solution, shortened.
+
+We start by showing that $f(t) > t$ for any $t > 0$.
+Indeed, if $f(t) = t$, plugging $x = y = t$ into~\eqref{2007a4-eq0} gives $t = 0$; a contradiction.
+If $f(t) < t$, plugging $x = t - f(t)$ and $y = t$ gives $f(t - f(t) + t) = 0$; another contradiction.
+
+Now write $g(x) = f(x) - x$; then after some rearrangement,~\eqref{2007a4-eq0} changes to
+\[ g(t + g(y)) = g(t) + y \quad \forall t > y > 0. \tag{1}\label{2007a4-eq1} \]
+Picking $t$ large enough shows that $g$ is injective.
+Next, for any $x, y \in G_{>0}$, picking $t$ large enough gives
+\[ g(t + g(x + y)) = g(t) + x + y = g(t + g(x)) + y = g(t + g(x) + g(y)), \]
+    and thus $g(x + y) = g(x) + g(y)$ for all $x, y \in G_{>0}$.
+In particular, this also implies that $g$ is strictly increasing.
+
+Finally,~\eqref{2007a4-eq1} simplifies to $g(g(y)) = y$ for all $y \in G_{>0}$.
+If $g(y) < y$ then we would get $g(g(y)) < g(y) < y$; a contradiction.
+Similarly, $g(y) > y$ yields $g(g(y)) > g(y) > y$; a contradiction.
+This shows that $g(y) = y$ and thus $f(y) = 2y$ for all $y \in G_{>0}$.
