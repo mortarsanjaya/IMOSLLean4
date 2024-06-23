@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.Modeq
+import Mathlib.Data.Int.ModEq
 import Mathlib.Algebra.BigOperators.Group.Finset
 
 /-!
