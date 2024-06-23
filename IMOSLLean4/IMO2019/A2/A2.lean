@@ -11,7 +11,7 @@ import Mathlib.Algebra.BigOperators.Ring.Multiset
 /-!
 # IMO 2019 A2
 
-Let $R$ be a totally ordered semiring and $x_1, x_2, …, x_n ∈ R$ be elements with sum zero.
+Let $R$ be a totally ordered ring and $x_1, x_2, …, x_n ∈ R$ be elements with sum zero.
 Let $a, b ∈ R$ such that $b ≤ x_i ≤ a$ for all $i ≤ n$.
 Show that $$ nab + \sum_{i = 1}^n x_i^2 ≤ 0. $$
 -/
