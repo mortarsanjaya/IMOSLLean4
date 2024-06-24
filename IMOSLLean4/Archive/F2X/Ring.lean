@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.F2X.Defs
+import IMOSLLean4.Archive.F2X.Defs
 import Mathlib.Algebra.Ring.Defs
 
 /-! # `𝔽₂[X]` is a ring -/

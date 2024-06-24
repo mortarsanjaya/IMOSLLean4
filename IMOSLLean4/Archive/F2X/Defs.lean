@@ -261,7 +261,8 @@ protected def natPow (P : 𝔽₂X) (n : ℕ) : 𝔽₂X :=
 termination_by n
 decreasing_by apply Nat.bitwise_rec_lemma; assumption
 
-protected lemma natPow_zero (P : 𝔽₂X) : P.natPow 0 = 1 := rfl
+protected lemma natPow_zero (P : 𝔽₂X) : P.natPow 0 = 1 := by
+  rw [𝔽₂X.natPow, if_pos rfl]
 
 protected lemma natPow_of_ne_zero (P : 𝔽₂X) (h : n ≠ 0) :
     P.natPow n = if n % 2 = 0 then 𝔽₂X.natPow (square P) (n / 2)
@@ -282,11 +283,12 @@ protected lemma natPow_two_mul_add_one (P : 𝔽₂X) (n : ℕ) :
     Nat.mul_add_div Nat.two_pos, if_neg Nat.one_ne_zero,
     Nat.div_eq_of_lt Nat.one_lt_two, Nat.add_zero]
 
-protected lemma natPow_one (P : 𝔽₂X) : P.natPow 1 = P :=
-  P.one_mul
+protected lemma natPow_one (P : 𝔽₂X) : P.natPow 1 = P := by
+  rw [𝔽₂X.natPow, if_neg Nat.one_ne_zero, 𝔽₂X.natPow_zero,
+    if_neg Nat.one_ne_zero, 𝔽₂X.one_mul]
 
-protected lemma natPow_two (P : 𝔽₂X) : P.natPow 2 = square P :=
-  (square P).one_mul
+protected lemma natPow_two (P : 𝔽₂X) : P.natPow 2 = square P := by
+  rw [𝔽₂X.natPow, if_neg (Nat.succ_ne_zero 1), 𝔽₂X.natPow_one, if_pos rfl]
 
 protected lemma natPow_succ (P : 𝔽₂X) (n : ℕ) : P.natPow n.succ = P.natPow n * P := by
   rw [← n.div_add_mod 2]; rcases n.mod_two_eq_zero_or_one with h0 | h0
