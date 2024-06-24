@@ -20,7 +20,7 @@ Then $na \geq 0 \geqq nb$ and thus $a \geq 0 \geq b$.
 We now immediately jump for the inequality:
 \begin{align*}
     nab + \sum_{i = 1}^n x_i^2
-    &= #\{i : x_i \leq 0\} \cdot ab + \sum_{i : x_i > 0} x_i^2 + #\{i : x_i > 0\} \cdot ab + \sum_{i : x_i \leq 0} x_i^2 \\
+    &= \#\{i : x_i \leq 0\} \cdot ab + \sum_{i : x_i > 0} x_i^2 + \#\{i : x_i > 0\} \cdot ab + \sum_{i : x_i \leq 0} x_i^2 \\
     &\leq a \sum_{i : x_i \leq 0} x_i + a \sum_{i : x_i > 0} x_i + \sum_{i : x_i > 0} x_i b + \sum_{i : x_i \leq 0} x_i b \\
     &\leq a \sum_{i = 1}^n x_i + \sum_{i = 1}^n x_i b \\
     &= 0.

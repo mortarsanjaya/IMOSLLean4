@@ -9,7 +9,7 @@ import Mathlib.Algebra.Periodic
 /-!
 # IMO 2010 A3
 
-Fix a positive integer $N$, a totally ordered ring $R$, and an element $c ≥ 0$.
+Fix a positive integer $N$, a totally ordered commutative ring $R$, and an element $c ≥ 0$.
 Consider all $2N$-periodic sequences $(x_n)_{n ≥ 0}$ such that for any $n$,
 $$ x_n + x_{n + 1} + x_{n + 2} ≤ 2c. $$
 Determine the maximum possible value of
