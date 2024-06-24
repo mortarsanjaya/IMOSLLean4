@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Ring.Hom.Defs
-import IMOSLLean4.Extra.CharTwo.Ring.Basic
+import IMOSLLean4.Extra.CharTwo.Ring
 
 /-!
 # Explicit construction of `𝔽₂`

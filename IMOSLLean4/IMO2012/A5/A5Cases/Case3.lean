@@ -10,7 +10,7 @@ import IMOSLLean4.IMO2012.A5.A5Answers.F2eMap
 import IMOSLLean4.IMO2012.A5.A5Answers.F4Map
 import IMOSLLean4.IMO2012.A5.A5General.A5CommLift
 import IMOSLLean4.IMO2012.A5.A5General.A5QuasiPeriodic
-import IMOSLLean4.Extra.CharTwo.Ring.Basic
+import IMOSLLean4.Extra.CharTwo.Ring
 import IMOSLLean4.Extra.CharTwo.Hom
 import Mathlib.Algebra.Ring.Equiv
 
