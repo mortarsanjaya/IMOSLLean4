@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.NatSequence.AntitoneConst
 import IMOSLLean4.Extra.NatSequence.EventuallyEqual
-import IMOSLLean4.Extra.NatSequence.OfList
+import IMOSLLean4.Extra.NatSequence.OfList.Basic
 import IMOSLLean4.Extra.Infinitesimal.Archimedean
 
 /-!
@@ -79,7 +79,7 @@ theorem case_floor_eventually_zero {r : R} (h : EventuallyEqual (⌊f^[·] r⌋)
   rw [← Nat.add_assoc, f.iterate_succ_apply', f, h, Int.cast_zero, zero_mul]
 
 theorem case_floor_eventually_neg_one {r : R} (h : EventuallyEqual (⌊f^[·] r⌋) (λ _ ↦ -1)) :
-    ∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeq_ofList [-s, s - 1]) := by
+    ∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeqOfList [-s, s - 1]) := by
   rw [EventuallyEqual.const_right_iff] at h; rcases h with ⟨N, h⟩
   refine ⟨-f^[N] r, ?_, ?_⟩
   ---- `0 < -f^N(r) < 1`; it suffices to check that `f^N(r) ≠ 1`
@@ -149,7 +149,7 @@ theorem case_floor_eventually_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C)
 
 theorem final_solution_general (r : R) :
     EventuallyEqual (f^[·] r) (λ _ ↦ 0) ∨
-    (∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeq_ofList [-s, s - 1])) ∨
+    (∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeqOfList [-s, s - 1])) ∨
     (∃ C : ℕ, 1 < C ∧ ∃ ε : R, Infinitesimal ε ∧
       EventuallyEqual ((C + 1) * f^[·] r) (-C ^ 2 + (-C) ^ · * ε)) := by
   rcases floor_f_iter_eventually_const r with ⟨C, h⟩
@@ -161,7 +161,7 @@ theorem final_solution_general (r : R) :
 
 theorem Archimedean_f_iter_classification [Archimedean R] (r : R) :
     EventuallyEqual (f^[·] r) (λ _ ↦ 0) ∨
-    (∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeq_ofList [-s, s - 1])) ∨
+    (∃ s : R, (0 < s ∧ s < 1) ∧ EventuallyEqual (f^[·] r) (NatSeqOfList [-s, s - 1])) ∨
     (∃ C : ℕ, 1 < C ∧ EventuallyEqual ((C + 1) * f^[·] r) (λ _ ↦ -C ^ 2)) :=
   (final_solution_general r).imp_right <| Or.imp_right λ ⟨C, h, ε, h0, h1⟩ ↦
     ⟨C, h, by simpa only [h0.zero_of_Archimedean, mul_zero, add_zero] using h1⟩
@@ -176,7 +176,7 @@ theorem final_solution [Archimedean R] (r : R) :
   ---- Three cases: `C = 0`, `C = 1`, and `C > 1`, respectively
   · rw [h, Nat.add_right_comm, h]
   · rw [h, Nat.add_right_comm, h, Nat.add_right_comm]
-    exact NatSeq_ofList_periodic [-s, s - 1] _
+    exact NatSeqOfList.periodic [-s, s - 1] _
   · replace h0 := (h (k + 2)).trans (h k).symm
     rw [Nat.add_right_comm, mul_eq_mul_left_iff] at h0
     exact h0.resolve_right (add_pos (Nat.cast_pos.mpr (pos_of_gt hC)) one_pos).ne.symm
