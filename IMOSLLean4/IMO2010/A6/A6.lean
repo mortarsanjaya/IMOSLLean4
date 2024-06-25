@@ -77,7 +77,6 @@ theorem final_solution {f g : ℕ → ℕ} (h : good f g) (h0 : good g f) : f = 
   obtain ⟨a, h1, h2⟩ := lem6 h h0
   suffices h3 : ∀ n, a ≤ n → f n = n.succ ∧ g n = n.succ by
     ext x; rw [← Nat.succ_inj', ← h, (h3 _ <| (h2 _).mp ⟨x, rfl⟩).1]
-  refine Nat.le_induction ⟨lem7 h h0 h1 h2, lem7 h0 h h2 h1⟩
-    (λ n _ h3 ↦ ⟨?_, ?_⟩)
+  refine Nat.le_induction ⟨lem7 h h0 h1 h2, lem7 h0 h h2 h1⟩ (λ n _ h3 ↦ ⟨?_, ?_⟩)
   · rw [← Nat.succ_eq_add_one, ← h3.2, h, h3.1, h3.2]
   · rw [← Nat.succ_eq_add_one, ← h3.1, h0, h3.1, h3.2]
