@@ -30,8 +30,7 @@ open BundledRingFun
 
 variable [Ring R] [Ring S] [NoZeroDivisors S] {f : R → S}
 
-theorem ReducedGood.isNontrivialAnswer (hf : ReducedGood f) :
-    isNontrivialAnswer (ofFun f) :=
+theorem ReducedGood.isNontrivialAnswer (hf : ReducedGood f) : isNontrivialAnswer (ofFun f) :=
   (em' <| f (-1) = 0).elim
     ---- Case 1: `f(-1) ≠ 0`
     (λ h ↦ (Case1.solution hf h).imp
