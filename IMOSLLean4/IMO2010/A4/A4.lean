@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Digits
-import Mathlib.Algebra.CharZero.Lemmas
 
 /-!
 # IMO 2010 A4
