@@ -8,7 +8,6 @@ import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.Nat.Size
 import Mathlib.Order.Bounds.Basic
 import Mathlib.Algebra.BigOperators.Group.List
-import Mathlib.Tactic.Common
 
 /-!
 # IMO 2021 A3
@@ -137,8 +136,7 @@ theorem lowerBoundMk_targetSum : ∀ n : ℕ, targetSum (lowerBoundMk n) = n.siz
 
 /-! ## Final solution -/
 
-/-- Final solution.
-  Note: the answer `Nat.size n` is equal to $⌈\log_2 (n + 1)⌉$. -/
+/-- Final solution. Note: the answer `Nat.size n` is equal to $⌈\log_2 (n + 1)⌉$. -/
 theorem final_solution :
     IsLeast (targetSum '' {l : List ℕ | l ~ iota n}) n.size :=
   ⟨⟨lowerBoundMk n, lowerBoundMk_perm_iota n, lowerBoundMk_targetSum n⟩,

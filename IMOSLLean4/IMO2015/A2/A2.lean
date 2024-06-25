@@ -18,8 +18,7 @@ namespace IMO2015A2
 
 /-- Final solution -/
 theorem final_solution {f : ℤ → ℤ} :
-    (∀ x y : ℤ, f (x - f y) = f (f x) - f y - 1)
-      ↔ (f = λ _ ↦ (-1 : ℤ)) ∨ f = (· + 1) :=
+    (∀ x y : ℤ, f (x - f y) = f (f x) - f y - 1) ↔ (f = λ _ ↦ (-1 : ℤ)) ∨ f = (· + 1) :=
   ---- `→`
   ⟨λ h ↦ by
     have h0 := h 0 (f 0)

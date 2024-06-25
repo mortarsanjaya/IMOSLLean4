@@ -99,13 +99,12 @@ theorem final_solution_part1 : 0 < greatestDPos h :=
     h1 Nat.one_pos (Nat.succ_pos _) (d_one_pos h0)
 
 /-- Final solution, part 2: `N` is indeed the index we are looking for. -/
-theorem final_solution_part2 {N : ℕ} :
+theorem final_solution_part2 :
     N = greatestDPos h ↔ ↑N * z N < (range (N + 1)).sum z ∧
       (range (N + 1)).sum z ≤ N * z (N + 1) := by
   rw [eq_greatestDPos_iff h h0, d_succ]
   exact and_congr sub_pos sub_nonpos
 
-/-- Final solution, extra: `C(N, 2) < z_0`,
-  implemented as `C(N, 2) < (z 0).nat_abs`. -/
+/-- Final solution, extra: `C(N, 2) < z_0`, implemented as `C(N, 2) < (z 0).nat_abs`. -/
 theorem final_solution_extra : (greatestDPos h).choose 2 < (z 0).natAbs :=
   lt_of_not_le λ h1 ↦ (d_nonpos_of_big h h1).not_lt (greatestDPos_is_d_pos h h0)

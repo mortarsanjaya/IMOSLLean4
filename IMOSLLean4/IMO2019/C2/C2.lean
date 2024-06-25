@@ -4,10 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Group.Defs
-import Mathlib.Algebra.BigOperators.Group.Multiset
 import Mathlib.Algebra.Order.BigOperators.Group.Multiset
-import Mathlib.Data.Multiset.Fold
 
 /-!
 # IMO 2019 C2
@@ -27,7 +24,7 @@ namespace IMO2019C2
 
 open Multiset
 
-variable {α : Type*} [LinearOrder α]
+variable [LinearOrder α]
 
 theorem multiset_max_mem_cons (a : α) (S : Multiset α) : S.fold max a ∈ a ::ₘ S :=
   Multiset.induction_on S (mem_cons_self a 0) λ b T h ↦ by
@@ -51,8 +48,8 @@ theorem exists_max_add_rest {S : Multiset α} (h : S ≠ 0) :
   refine ⟨T.fold max b, U, h1, λ x h2 ↦ multiset_le_max_of_mem _ _ _ ?_⟩
   rw [h1]; exact mem_cons_of_mem h2
 
-theorem LinearOrder_induction {P : Multiset α → Prop} (h : P 0)
-    (h0 : ∀ a S, P S → (∀ x ∈ S, x ≤ a) → P (a ::ₘ S)) (S) : P S := by
+theorem LinearOrder_induction {P : Multiset α → Prop}
+    (h : P 0) (h0 : ∀ a S, P S → (∀ x ∈ S, x ≤ a) → P (a ::ₘ S)) (S) : P S := by
   generalize hS : card S = n
   induction' n with n h1 generalizing S
   · exact card_eq_zero.mp hS ▸ h

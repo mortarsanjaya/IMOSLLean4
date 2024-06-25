@@ -19,8 +19,7 @@ $$ f(y + f(x)) - f(y) = f(bx) - f(x) + c. $$
 namespace IMOSL
 namespace IMO2014A4
 
-/-- Given `b k : ℤ` with `k ≠ 0`, there exists
-  `m < n` such that `b^m ≡ b^n (mod k)`. -/
+/-- Given `b k : ℤ` with `k ≠ 0`, there exists `m < n` such that `b^m ≡ b^n (mod k)`. -/
 theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) :
     ∃ m n : ℕ, m ≠ n ∧ b ^ m % k = b ^ n % k := by
   have h0 : Set.MapsTo (b ^ · % k) Set.univ (Finset.Ico 0 (|k|)) := λ x _ ↦ by
@@ -39,15 +38,10 @@ theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) :
 def good (b c : ℤ) (f : ℤ → ℤ) :=
   ∀ x y : ℤ, f (y + f x) - f y = f (b * x) - f x + c
 
-
-
-theorem linear_good' (k m : ℤ) : good (k + 1) (k * m) (k * · + m) := λ x y ↦ by
+theorem linear_good (k m : ℤ) : good (k + 1) (k * m) (k * · + m) := λ x y ↦ by
   rw [add_sub_add_right_eq_sub, mul_add, add_sub_cancel_left, add_one_mul (α := ℤ),
     add_sub_add_right_eq_sub, ← mul_sub, add_sub_cancel_right, ← mul_add]
 
-theorem linear_good (h : b - 1 ∣ c) : good b c ((b - 1) * · + c / (b - 1)) := by
-  nth_rw 1 [← sub_add_cancel b 1, ← Int.mul_ediv_cancel' h]
-  exact linear_good' (b - 1) (c / (b - 1))
 
 
 
@@ -75,9 +69,8 @@ theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) :
 variable (h0 : 1 < b.natAbs) (h1 : c ≠ 0)
 
 theorem map_is_linear : ∀ n : ℤ, f n = (b - 1) * n + f 0 := by
-  suffices f.Injective by
   ---- Solve the problem assuming `f` is injective
-    intro n
+  suffices f.Injective from λ n ↦ by
     have h2 := eq_add_of_sub_eq' (h 0 (b * n))
     rw [mul_zero, sub_self, zero_add, ← sub_left_inj (a := f n),
       add_sub_right_comm, ← h n n, sub_left_inj] at h2
@@ -114,6 +107,26 @@ end good_lemmas
 
 /-! ## Final solution -/
 
+/-- Final solution -/
+
+theorem final_solution {b c : ℤ} (h : 1 < b.natAbs) (h0 : c ≠ 0) :
+    good b c f ↔ b - 1 ∣ c ∧ f = ((b - 1) * · + c / (b - 1)) :=
+  ---- `←` direction
+  ⟨λ hf ↦ by
+    have h1 := c_eq_b_sub_one_mul_map_zero hf h h0
+    refine ⟨⟨f 0, h1⟩, funext λ n ↦ ?_⟩
+    rw [map_is_linear hf h h0, h1, add_right_inj]
+    refine (Int.mul_ediv_cancel_left _ ?_).symm
+    rw [h1, mul_ne_zero_iff] at h0; exact h0.1,
+  ---- `→` direction
+  λ hf ↦ by
+    rw [← sub_add_cancel b 1]
+    rcases hf with ⟨⟨m, rfl⟩, rfl⟩
+    rw [Int.mul_ediv_cancel_left _ (mul_ne_zero_iff.mp h0).1]
+    exact linear_good (b - 1) m⟩
+
+
+/-
 variable {b c : ℤ} (h : 1 < b.natAbs) (h0 : c ≠ 0)
 
 /-- Final solution, Case 1: `b - 1 ∤ c` -/
@@ -131,3 +144,4 @@ theorem final_solution_case2 (h1 : b - 1 ∣ c) :
     rw [mul_eq_mul_left_iff, or_iff_left h3] at h1
     rw [h1]; exact funext (map_is_linear h2 h h0),
   λ h2 ↦ h2.symm ▸ linear_good h1⟩
+-/

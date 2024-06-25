@@ -21,8 +21,8 @@ namespace IMO2019A2
 
 open Multiset
 
-theorem final_solution [LinearOrderedSemiring R] [ExistsAddOfLE R] {M : Multiset R}
-    {a b : R} (hM : M.sum = 0) (ha : ∀ x ∈ M, x ≤ a) (hb : ∀ x ∈ M, b ≤ x) :
+theorem final_solution [LinearOrderedSemiring R] [ExistsAddOfLE R]
+    {M : Multiset R} (hM : M.sum = 0) (ha : ∀ x ∈ M, x ≤ a) (hb : ∀ x ∈ M, b ≤ x) :
     card M • (a * b) + (M.map λ x ↦ x ^ 2).sum ≤ 0 := by
   obtain h | h : card M = 0 ∨ card M ≠ 0 := Decidable.eq_or_ne (card M) 0
   · rw [h, zero_nsmul, zero_add, card_eq_zero.mp h, Multiset.map_zero, sum_zero]

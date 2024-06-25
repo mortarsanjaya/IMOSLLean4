@@ -29,7 +29,7 @@ theorem add_modeq_mul_add_one (h : a ≡ 1 [ZMOD n]) (h0 : b ≡ 1 [ZMOD n]) :
   rw [Int.modEq_iff_dvd, sq, add_comm, ← sub_sub_sub_eq, ← one_sub_mul, ← mul_one_sub]
   exact mul_dvd_mul h.dvd h0.dvd
 
-variable {ι : Type*} [DecidableEq ι] {S : Finset ι}
+variable [DecidableEq ι] {S : Finset ι}
 
 
 
