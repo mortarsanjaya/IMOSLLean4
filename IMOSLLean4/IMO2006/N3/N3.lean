@@ -83,6 +83,18 @@ theorem f_self_lt_f_succ_of_divisors_card {n : ℕ} (h : n ≠ 0)
        _ = n.succ.divisors.card * n := by
         rw [sum_const, card_range, smul_eq_mul, mul_comm]
 
+theorem f_succ_lt_self_of_succ_prime_large (h : 6 ≤ n) (h0 : n.succ.Prime) :
+    f n.succ < f n := by
+  apply f_lt_f_of_g
+  rw [g_succ, card_divisors_prime h0, add_mul, Nat.mul_succ, add_lt_add_iff_left]
+  exact two_mul_lt_g n h
+
+
+
+
+
+/-! ### Final solution -/
+
 /-- Final solution, part 1 -/
 theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite :=
   Set.infinite_of_forall_exists_gt λ N ↦ by
@@ -96,12 +108,6 @@ theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite :=
         (Nat.lt_find_iff h1 _).mpr λ k h2 ↦ (h0 k h2).not_lt,
         λ k h2 ↦ (le_of_not_lt (Nat.find_min h1 h2)).trans_lt (Nat.find_spec h1)⟩
     exact ⟨n, f_self_lt_f_succ_of_divisors_card (Nat.not_eq_zero_of_lt h0) h1, h0⟩
-
-theorem f_succ_lt_self_of_succ_prime_large (h : 6 ≤ n) (h0 : n.succ.Prime) :
-    f n.succ < f n := by
-  apply f_lt_f_of_g
-  rw [g_succ, card_divisors_prime h0, add_mul, Nat.mul_succ, add_lt_add_iff_left]
-  exact two_mul_lt_g n h
 
 /-- Final solution, part 2 -/
 theorem final_solution_part2 : {n : ℕ | f n.succ < f n}.Infinite :=
