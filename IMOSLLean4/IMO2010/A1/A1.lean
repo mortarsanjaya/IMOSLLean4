@@ -20,27 +20,59 @@ $$ f(⌊x⌋ y) = f(x) ⌊f(y)⌋. $$
 namespace IMOSL
 namespace IMO2010A1
 
-section
+variable [LinearOrderedRing R] [FloorRing R] [LinearOrderedRing S] [FloorRing S]
 
-variable [LinearOrderedRing R] [FloorRing R]
+namespace FloorRing
 
-theorem FloorRing_dense_or_equiv_Int : DenselyOrdered R ∨ Nonempty (ℤ ≃+* R) :=
+theorem DenselyOrdered_of_Ioo01 {x : R} (h : 0 < x) (h0 : x < 1) : DenselyOrdered R :=
+  ⟨λ a b h1 ↦ ⟨a + x * (b - a), lt_add_of_pos_right a (mul_pos h (sub_pos_of_lt h1)),
+    add_lt_of_lt_sub_left (mul_lt_of_lt_one_left (sub_pos_of_lt h1) h0)⟩⟩
+
+def IntEquiv_of_Ioo01 (h : ¬∃ x : R, 0 < x ∧ x < 1) : ℤ ≃+* R :=
+  { Int.castRingHom R with
+    invFun := Int.floor
+    left_inv := Int.floor_intCast
+    right_inv := λ y ↦ by
+      rw [eq_comm, ← sub_eq_zero]
+      refine (Int.fract_nonneg y).eq_or_gt.resolve_right λ h0 ↦ ?_
+      exact h ⟨_, h0, Int.fract_lt_one y⟩ }
+
+theorem IntEquiv_apply (φ : R ≃+* ℤ) : ⇑φ = Int.floor := by
+  refine (φ.eq_comp_symm id Int.floor).mp (funext λ x ↦ (?_ : x = ⌊φ.symm x⌋))
+  rw [eq_intCast, Int.floor_intCast]
+
+theorem dense_or_equiv_Int : DenselyOrdered R ∨ Nonempty (ℤ ≃+* R) :=
   (em (∃ x : R, 0 < x ∧ x < 1)).imp
-    ---- Case 1: There exists `x : R` such that `0 < x < 1`
-    (λ ⟨x, h, h0⟩ ↦ ⟨λ a b h1 ↦ ⟨a + x * (b - a),
-      lt_add_of_pos_right a (mul_pos h (sub_pos_of_lt h1)),
-      add_lt_of_lt_sub_left (mul_lt_of_lt_one_left (sub_pos_of_lt h1) h0)⟩⟩)
-    ---- Case 2: There does not exist `x : R` such that `0 < x < 1`
-    (λ h ↦ ⟨{ Int.castRingHom R with
-      invFun := Int.floor
-      left_inv := Int.floor_intCast
-      right_inv := λ y ↦ Eq.symm <| eq_of_sub_eq_zero <| (Int.fract_nonneg y).eq_or_lt.elim
-        Eq.symm λ h0 ↦ h.elim ⟨_, h0, Int.fract_lt_one y⟩ }⟩)
+    (λ ⟨_, h, h0⟩ ↦ DenselyOrdered_of_Ioo01 h h0) (λ h ↦ ⟨IntEquiv_of_Ioo01 h⟩)
+
+end FloorRing
+
+
+
+
+
+/-! ### `good`, `MonoidGood`, and homomorphisms -/
+
+theorem MonoidGood.ofMulHom [Mul M] [Mul N] (φ : N →ₙ* M) {f : M → R} (hf : MonoidGood f) :
+    MonoidGood (f ∘ φ) :=
+  λ x y ↦ (congrArg f (φ.map_mul x y)).trans (hf (φ x) (φ y))
+
+theorem MonoidGood.ofMonoidEquiv [MulOneClass M] [MulOneClass N] (φ : N ≃* M) {f : M → R} :
+    MonoidGood f ↔ MonoidGood (f ∘ φ) :=
+  ⟨ofMulHom φ.toMulHom, λ hf ↦ by
+    replace hf : MonoidGood (f ∘ φ ∘ φ.symm) := ofMulHom φ.symm.toMulHom hf
+    rwa [MulEquiv.self_comp_symm, Function.comp_id] at hf⟩
 
 theorem Int_good_iff_MonoidGood {f : ℤ → R} : good f ↔ MonoidGood f :=
   forall₂_congr λ m n ↦ by rw [Int.floor_int, smul_eq_mul, id_def]
 
-end
+theorem good_iff_MonoidGood_equiv_Int (φ : ℤ ≃+* R) {f : R → S} : good f ↔ MonoidGood f := by
+  rw [MonoidGood.ofMonoidEquiv φ.toMulEquiv, ← Int_good_iff_MonoidGood]
+  refine ⟨λ hf m n ↦ Eq.trans (by simp) (hf _ _), λ hf x y ↦ ?_⟩
+  specialize hf (φ.symm x) (φ.symm y); change f (φ _) = f (φ _) * ⌊f (φ _)⌋ at hf
+  rw [zsmul_eq_mul, φ.map_mul, φ.apply_symm_apply, φ.apply_symm_apply] at hf
+  rw [← hf, FloorRing.IntEquiv_apply, eq_intCast,
+    Int.floor_int, id_eq, Int.cast_id, zsmul_eq_mul]
 
 
 
@@ -51,14 +83,18 @@ end
 /-- Final solution, densely ordered version -/
 alias final_solution_DenselyOrdered := good_iff_of_DenselyOrdered
 
+/-- Final solution, `≃+* ℤ` version -/
+theorem final_solution_equiv_Int (φ : ℤ ≃+* R) {f : R → S} :
+    good f ↔ MonoidGood.IsAnswer f :=
+  (good_iff_MonoidGood_equiv_Int φ).trans MonoidGood.solution
+
 open scoped Classical
 
-/-- Final solution, `ℤ` version -/
-theorem final_solution_Int [LinearOrderedRing R] [FloorRing R] {f : ℤ → R} :
-    good f ↔
-      (∃ φ : ℤ →* ℤ, f = λ x ↦ (φ x : R)) ∨
-      (∃ (ε : R) (_ : 0 < ε) (_ : Extra.Infinitesimal ε),
-        ∃ φ : ℤ →* ℕ, f = λ x ↦ (1 + ε) * φ x) ∨
-      (∃ (A : Set ℤ) (_ : ∀ m n : ℤ, m * n ∈ A ↔ m ∈ A ∧ n ∈ A) (C : R) (_ : ⌊C⌋ = 1),
-        f = (if · ∈ A then C else 0)) :=
-  Int_good_iff_MonoidGood.trans MonoidGood.solution
+/-- Final solution -/
+theorem final_solution [LinearOrderedRing S] [FloorRing S] {f : R → S} :
+    good f ↔ if DenselyOrdered R then (∃ C, ⌊C⌋ = 1 ∧ f = λ _ ↦ C) ∨ f = 0
+      else MonoidGood.IsAnswer f := by
+  by_cases h : DenselyOrdered R
+  · rw [if_pos h, final_solution_DenselyOrdered]
+  · obtain ⟨φ⟩ : Nonempty (ℤ ≃+* R) := FloorRing.dense_or_equiv_Int.resolve_left h
+    rw [if_neg h, final_solution_equiv_Int φ]
