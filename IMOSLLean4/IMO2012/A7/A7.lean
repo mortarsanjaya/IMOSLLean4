@@ -36,8 +36,7 @@ abbrev MvPolynomial_evalCurry [CommRing R] : MvPolynomial σ R →+* ((σ → R)
 abbrev MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → R) :=
   (MvPolynomial_evalCurry (R := R) (σ := σ)).range
 
-theorem final_solution (σ R : Type*) [LinearOrderedCommRing R] :
+theorem final_solution (σ R) [LinearOrderedCommRing R] :
     ∃ T : Subring ((σ → R) → R), T.carrier =
-      setOf (BinOpClosure Sup.sup <| BinOpClosure Inf.inf
-        λ x ↦ x ∈ MvPolynomial_image σ R) :=
-  SupInfClosure_exists_Subring _
+      setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ MvPolynomial_image σ R))) :=
+  ⟨_, MetaClosure.PiSubring_mk_carrier _⟩

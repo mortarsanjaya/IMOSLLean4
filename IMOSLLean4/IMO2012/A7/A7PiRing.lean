@@ -82,41 +82,46 @@ variable {R : I → Type*} [(i : I) → LinearOrderedRing (R i)]
 instance : CovariantClass ((i : I) → R i) ((i : I) → R i) (· + ·) (· ≤ ·) :=
   ⟨λ f _ _ h i ↦ add_le_add_left (h i) (f i)⟩
 
-instance : CovariantClass ((i : I) → R i) ((i : I) → R i)
-    (Function.swap (· + ·)) (· ≤ ·) :=
+instance : CovariantClass ((i : I) → R i) ((i : I) → R i) (Function.swap (· + ·)) (· ≤ ·) :=
   ⟨λ f _ _ h i ↦ add_le_add_right (h i) (f i)⟩
 
-lemma Pi_mul_inf_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
-    f * (a ⊓ b) = f * a ⊓ f * b :=
+section
+
+variable {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i)
+
+lemma Pi_mul_inf_of_nonneg : f * (a ⊓ b) = f * a ⊓ f * b :=
   funext λ i ↦ mul_min_of_nonneg (a i) (b i) (hf i)
 
-lemma Pi_pos_part_mul_inf (f : (i : I) → R i) (a b : (i : I) → R i) :
-    f⁺ * (a ⊓ b) = f⁺ * a ⊓ f⁺ * b :=
-  Pi_mul_inf_of_nonneg (posPart_nonneg f) a b
-
-lemma Pi_mul_sup_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
-    f * (a ⊔ b) = f * a ⊔ f * b :=
+lemma Pi_mul_sup_of_nonneg : f * (a ⊔ b) = f * a ⊔ f * b :=
   funext λ i ↦ mul_max_of_nonneg (a i) (b i) (hf i)
 
-lemma Pi_pos_part_mul_sup (f : (i : I) → R i) (a b : (i : I) → R i) :
-    f⁺ * (a ⊔ b) = f⁺ * a ⊔ f⁺ * b :=
-  Pi_mul_sup_of_nonneg (posPart_nonneg f) a b
-
-lemma Pi_inf_mul_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
-    (a ⊓ b) * f = a * f ⊓ b * f :=
+lemma Pi_inf_mul_of_nonneg : (a ⊓ b) * f = a * f ⊓ b * f :=
   funext λ i ↦ min_mul_of_nonneg (a i) (b i) (hf i)
 
-lemma Pi_inf_mul_pos_part (f : (i : I) → R i) (a b : (i : I) → R i) :
-    (a ⊓ b) * f⁺ = a * f⁺ ⊓ b * f⁺ :=
-  Pi_inf_mul_of_nonneg (posPart_nonneg f) a b
-
-lemma Pi_sup_mul_of_nonneg {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i) :
-    (a ⊔ b) * f = a * f ⊔ b * f :=
+lemma Pi_sup_mul_of_nonneg : (a ⊔ b) * f = a * f ⊔ b * f :=
   funext λ i ↦ max_mul_of_nonneg (a i) (b i) (hf i)
 
-lemma Pi_sup_mul_pos_part (f a b : (i : I) → R i) :
-    (a ⊔ b) * f⁺ = a * f⁺ ⊔ b * f⁺ :=
+end
+
+
+section
+
+variable (f a b : (i : I) → R i)
+
+lemma Pi_pos_part_mul_inf : f⁺ * (a ⊓ b) = f⁺ * a ⊓ f⁺ * b :=
+  Pi_mul_inf_of_nonneg (posPart_nonneg f) a b
+
+lemma Pi_pos_part_mul_sup : f⁺ * (a ⊔ b) = f⁺ * a ⊔ f⁺ * b :=
+  Pi_mul_sup_of_nonneg (posPart_nonneg f) a b
+
+lemma Pi_inf_mul_pos_part : (a ⊓ b) * f⁺ = a * f⁺ ⊓ b * f⁺ :=
+  Pi_inf_mul_of_nonneg (posPart_nonneg f) a b
+
+lemma Pi_sup_mul_pos_part : (a ⊔ b) * f⁺ = a * f⁺ ⊔ b * f⁺ :=
   Pi_sup_mul_of_nonneg (posPart_nonneg f) a b
+
+end
+
 
 lemma Pi_pos_part_mul_pos_part_main_formula (f g : (i : I) → R i) :
     f⁺ * g⁺ = ((f * g) ⊓ ((f ⊔ f * g ^ 2) ⊓ (g ⊔ f ^ 2 * g)))⁺ :=
@@ -132,18 +137,18 @@ namespace MetaClosure
 
 variable (S : Subring ((i : I) → R i))
 
-lemma Pi_one_mem : MetaClosure (λ x ↦ x ∈ S) 1 := ofMem S.one_mem
+lemma Pi_one_mem : MetaClosure (· ∈ S) 1 := ofMem S.one_mem
 
 theorem Pi_pos_part_mul_pos_part_mem (hf : f ∈ S) (hg : g ∈ S) :
-    MetaClosure (λ x ↦ x ∈ S) (f⁺ * g⁺) :=
+    MetaClosure (· ∈ S) (f⁺ * g⁺) :=
   (Pi_pos_part_mul_pos_part_main_formula f g).symm ▸
     pos_part_mem S.toAddSubgroup <| ofInf (ofMem <| S.mul_mem hf hg) <| ofInf
       (ofSup (ofMem hf) (ofMem <| S.mul_mem hf (S.pow_mem hg 2)))
       (ofSup (ofMem hg) (ofMem <| S.mul_mem (S.pow_mem hf 2) hg))
 
 theorem Pi_closure_pos_part_mul_closure_pos_part_mem
-    (hf : MetaClosure (λ x ↦ x ∈ S) f) (hg : MetaClosure (λ x ↦ x ∈ S) g) :
-    MetaClosure (λ x ↦ x ∈ S) (f⁺ * g⁺) :=
+    (hf : MetaClosure (· ∈ S) f) (hg : MetaClosure (· ∈ S) g) :
+    MetaClosure (· ∈ S) (f⁺ * g⁺) :=
   hg.recOn
     (λ hg ↦ hf.recOn
       (λ hf ↦ Pi_pos_part_mul_pos_part_mem S hf hg)
@@ -152,14 +157,13 @@ theorem Pi_closure_pos_part_mul_closure_pos_part_mem
     (λ _ _ ↦ by rw [inf_pos_part, Pi_pos_part_mul_inf]; exact ofInf)
     (λ _ _ ↦ by rw [sup_pos_part, Pi_pos_part_mul_sup]; exact ofSup)
 
-theorem Pi_mul_mem
-    (hf : MetaClosure (λ x ↦ x ∈ S) f) (hg : MetaClosure (λ x ↦ x ∈ S) g) :
-    MetaClosure (λ x ↦ x ∈ S) (f * g) := by
+theorem Pi_mul_mem (hf : MetaClosure (· ∈ S) f) (hg : MetaClosure (· ∈ S) g) :
+    MetaClosure (· ∈ S) (f * g) := by
   rw [← posPart_sub_negPart f, sub_mul,
     ← posPart_sub_negPart g, mul_sub, mul_sub]
   let T := S.toAddSubgroup
-  have hf₀ : MetaClosure (λ x ↦ x ∈ S) (-f) := neg_mem T hf
-  have hg₀ : MetaClosure (λ x ↦ x ∈ S) (-g) := neg_mem T hg
+  have hf₀ : MetaClosure (· ∈ S) (-f) := neg_mem T hf
+  have hg₀ : MetaClosure (· ∈ S) (-g) := neg_mem T hg
   apply sub_mem T <;> apply sub_mem T <;>
     apply Pi_closure_pos_part_mul_closure_pos_part_mem <;> assumption
 
@@ -169,15 +173,8 @@ def PiSubring_mk : Subring ((i : I) → R i) :=
     mul_mem' := Pi_mul_mem S
     one_mem' := Pi_one_mem S }
 
+theorem PiSubring_mk_carrier :
+    (PiSubring_mk S).carrier = setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ S))) :=
+  AddGroup_mk_carrrier S.toAddSubgroup
+
 end MetaClosure
-
-
-
-
-
-/-! ### Subring structure via `BinOpClosure` -/
-
-theorem SupInfClosure_exists_Subring (S : Subring ((i : I) → R i)) :
-    ∃ T : Subring ((i : I) → R i), T.carrier =
-      setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (λ x ↦ x ∈ S))) :=
-  SupInfClosure_eq_MetaClosure (λ x ↦ x ∈ S) ▸ ⟨MetaClosure.PiSubring_mk S, rfl⟩
