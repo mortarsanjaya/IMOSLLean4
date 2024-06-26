@@ -1,0 +1,37 @@
+Let $(b_n)_{n \geq 0}$ be a sequence of positive integers.
+Let $(a_n)_{n \geq 0}$ be a sequence of integers defined by
+\[ a_0 = 0, \quad a_1 = 1, \quad a_{n + 2} = \begin{cases} a_{n + 1} b_{n + 1} + a_n, & \text{if } b_n = 1, \\ a_{n + 1} b_{n + 1} - a_n, & \text{if } b_n > 1. \end{cases} \]
+Prove that $\max\{a_n, a_{n + 1}\} \geq n$ for any $n \geq 0$.
+
+
+
+\section*{Solution}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h1671327p10702063}
+
+The reference links to an AoPS solution by the user \textbf{GaryTam} (post \#3).
+There is a slight typo in proving $a_{n + 2} \geq n + 1$ for the case $b_n = 1$.
+We just rewrite the referred solution here with a slight change.
+For each $n \geq 0$, we let
+\[ S_n = \sum_{k = 0}^{n - 1} a_k |b_k - 2|. \]
+
+The main equality to be proved is $a_{n + 1} = a_n (b_n - 1) + S_n + 1$.
+We proceed by induction on $n$.
+The base case $n = 0$ is trivial.
+For the induction step, set $c = 1$ if $b_n = 1$ and $c = -1$ if $b_n > 1$.
+Then $a_{n + 1} = a_n (b_n - 1) + S_n + 1$ implies
+\[ a_{n + 2} = a_{n + 1} b_{n + 1} + a_n c_n = a_{n + 1} (b_{n + 1} - 1) + a_n (b_n + c - 1) + S_n + 1. \]
+But $b_n + c - 1 = |b_n - 2|$ by direct checking.
+So indeed $a_{n + 2} = a_{n + 1} (b_{n + 1} - 1) + S_{n + 1} + 1$.
+Induction step is complete.
+
+Now, by induction on $n$, one can simultaneously prove that $a_n, S_n \geq 0$ for all $n \geq 0$.
+From this, for any $n \geq 0$, we have
+\[ a_{n + 1} + S_{n + 1} = a_n (b_n - 1 + |b_n - 2|) + 2 S_n + 1 \geq a_n + S_n + 1. \]
+Since $a_0 + S_0 = 0$, we get $a_n + S_n \geq n$ for all $n$ by induction.
+Finally, we show that $\max\{a_n, a_{n + 1}\} \geq n$ for any $n \geq 0$.
+The case $n = 0$ is clear, so now replace $n$ with $n + 1$.
+That is, we prove that for any $n \geq 0$, either $a_{n + 1} \geq n + 1$ or $a_{n + 2} \geq n + 1$ holds.
+The former holds if $b_n > 1$ and the latter holds if $b_n = 1$:
+\[ b_n > 1 \implies a_{n + 1} = a_n (b_n - 1) + S_n + 1 \geq a_n + S_n + 1 \geq n + 1; \]
+\[ b_n = 1 \implies a_{n + 2} \geq S_{n + 1} + 1 = a_n + S_n + 1 \geq n + 1. \]
