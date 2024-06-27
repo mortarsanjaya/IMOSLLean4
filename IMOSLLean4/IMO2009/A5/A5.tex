@@ -1,0 +1,38 @@
+Let $R$ be a totally ordered ring.
+Prove that there does not exist a function $f : R \to R$ such that
+\[ f(x - f(y)) \leq y f(x) + x \quad \forall x, y \in R. \tag{*}\label{2009a5-eq0} \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We follow the official solution, but some estimates need to be weakened.
+
+First of all, plugging $(x, y) = (t + f(0), 0)$ gives
+\[ f(t) \leq t + f(0) \quad \forall t \in R. \tag{1}\label{2009a5-eq1} \]
+Next, for any $y > 0$, plugging $x = f(y)$ gives
+\[ f(0) \leq y f(f(y)) + f(y) \leq y (f(y) + f(0)) + y + f(0) \implies 0 \leq y (f(y) + f(0) + 1), \]
+    and thus we get
+\[ f(y) \geq -f(0) - 1 \quad \forall y > 0. \tag{2}\label{2009a5-eq2} \]
+Next we show that for any $x \in R$ and $z \geq 0$,
+\[ z f(x) \leq 1. \tag{3}\label{2009a5-eq3} \]
+
+\begin{proof}
+We are done if $f(x) \leq 0$, so suppose that $f(x) > 0$.
+Take $C$ very large such that $x - f(-C) \geq x - (-C + f(0)) > 0$.
+Then by~\eqref{2009a5-eq0} and~\eqref{2009a5-eq2}, we have
+\[ -C f(x) + x \geq -f(0) - 1 \iff x + f(0) + 1 \geq C f(x). \]
+Note that this holds for any $C$ large enough.
+Since $f(x) > 0$, this implies $x + f(0) + 1 \geq z f(x)$ for any $z \in R$.
+In particular, $x + f(0) + 1 \geq f(x) > 0$.
+Replacing $z$ with $(x + f(0) + 1) z$ and then reducing gives~\eqref{2009a5-eq3}.
+\end{proof}
+
+Now for any $y > 0$, plugging $x = f(y) - 1$ into~\eqref{2009a5-eq0} and using~\eqref{2009a5-eq1} yields
+\[ f(-1) \leq y f(f(y) - 1) + (f(y) - 1) \leq y (f(y) - 1 + f(0)) + (f(y) - 1). \]
+We use the estimates $3 f(t) < 1$ coming from~\eqref{2009a5-eq3}.
+Multiplying both sides by $3$, we get
+\[ 3 f(-1) \leq y (3f(y) - 3 + 3 f(0)) + (3f(y) - 3) \leq -y - 2 \iff y \leq -3 f(-1) - 2. \]
+Thus, taking any $y > \max\{0, -3 f(-1) - 2\}$ gives a contradiction.
