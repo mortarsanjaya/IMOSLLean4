@@ -19,7 +19,7 @@ $$ 36 ≤ 4(a^3 + b^3 + c^3 + d^3) - (a^4 + b^4 + c^4 + d^4) ≤ 48. $$
 namespace IMOSL
 namespace IMO2010A2
 
-open Multiset Extra
+open Multiset Extra.Multiset
 
 /-! ### Identities over commutative rings -/
 

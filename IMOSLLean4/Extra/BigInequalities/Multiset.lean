@@ -19,6 +19,8 @@ namespace Extra
 
 open Multiset
 
+namespace Multiset
+
 variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
 
 /-- `x_1^2 + x_2^2 + … + x_n^2 ≤ (x_1 + x_2 + … + x_n)^2` -/
