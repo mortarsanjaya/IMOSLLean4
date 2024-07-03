@@ -119,7 +119,7 @@ theorem field_ineq2 :
     ((2 * a + b + c) ^ 2)⁻¹ + ((2 * b + c + a) ^ 2)⁻¹ + ((2 * c + a + b) ^ 2)⁻¹
       ≤ (a + b + c) / (2 * ((a + b) * (b + c) * (c + a))) := by
   have X {a b c : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) := field_ineq1 ha hb hc
-  apply (add_le_add (add_le_add (X ha hb hc) (X hb hc ha)) (X hc ha hb)).trans_eq
+  apply (add_le_add_three (X ha hb hc) (X hb hc ha) (X hc ha hb)).trans_eq
   have hab : a + b ≠ 0 := (add_pos ha hb).ne.symm
   have hbc : b + c ≠ 0 := (add_pos hb hc).ne.symm
   have hca : c + a ≠ 0 := (add_pos hc ha).ne.symm
