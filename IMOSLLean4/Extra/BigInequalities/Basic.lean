@@ -13,12 +13,12 @@ namespace Extra
 
 variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
 
+/-- This should eventually get into `mathlib4` -/
 theorem two_sq_AM_GM (x y : R) : 2 ^ 2 * (x * y) ≤ (x + y) ^ 2 := by
   rw [sq, mul_assoc, two_mul, ← mul_assoc, add_sq', add_le_add_iff_right]
   exact two_mul_le_add_sq x y
 
-theorem AM_GM_two {a x y : R} (h : 0 ≤ x + y) (ha : a ^ 2 ≤ x * y) :
-    2 * a ≤ x + y := by
+theorem AM_GM_two {a x y : R} (h : 0 ≤ x + y) (ha : a ^ 2 ≤ x * y) : 2 * a ≤ x + y := by
   refine le_of_pow_le_pow_left (Nat.succ_ne_zero 1) h ((two_sq_AM_GM x y).trans' ?_)
   rw [mul_pow]; exact mul_le_mul_of_nonneg_left ha (sq_nonneg _)
 
