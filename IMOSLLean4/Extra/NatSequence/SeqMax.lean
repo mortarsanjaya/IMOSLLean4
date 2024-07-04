@@ -29,15 +29,15 @@ theorem le_seqMax_self : ∀ n, f n ≤ seqMax f n
   | n + 1 => le_max_right (seqMax f n) (f n.succ)
 
 theorem seqMax_mono : Monotone (seqMax f) :=
-  monotone_nat_of_le_succ λ n ↦ le_max_left (seqMax f n) (f n.succ)
+  λ _ ↦ Nat.le_induction (le_refl _) λ _ _ h ↦ h.trans (le_max_left _ _)
 
-theorem le_seqMax_of_le {m n : ℕ} (h : m ≤ n) : f m ≤ seqMax f n :=
+theorem le_seqMax_of_le (h : m ≤ n) : f m ≤ seqMax f n :=
   (le_seqMax_self f m).trans (seqMax_mono f h)
 
-theorem map_zero_le_seqMax (n : ℕ) : f 0 ≤ seqMax f n :=
+theorem map_zero_le_seqMax (n) : f 0 ≤ seqMax f n :=
   le_seqMax_of_le f n.zero_le
 
-theorem exists_map_eq_seqMax : ∀ n : ℕ, ∃ k : ℕ, k ≤ n ∧ f k = seqMax f n
+theorem exists_map_eq_seqMax : ∀ n, ∃ k, k ≤ n ∧ f k = seqMax f n
   | 0 => ⟨0, le_refl 0, rfl⟩
   | n + 1 => by
       rcases le_total (seqMax f n) (f n.succ) with h | h

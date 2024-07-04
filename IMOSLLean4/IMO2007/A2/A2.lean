@@ -26,22 +26,23 @@ def good (f : ℕ → ℕ) := ∀ m n : ℕ, f m + f (f n) ≤ f (m + n + 1)
 
 theorem sub_right_is_good (C : ℕ) : good (· - C) := λ m n ↦ by
   dsimp only; rcases le_total n C with h | h
-  · rw [Nat.sub_eq_zero_of_le h, Nat.zero_sub, add_zero, add_assoc]
+  · rw [Nat.sub_eq_zero_of_le h, Nat.zero_sub, Nat.add_zero, Nat.add_assoc]
     exact Nat.sub_le_sub_right le_self_add _
   · rw [le_iff_exists_add] at h; rcases h with ⟨d, rfl⟩
     rw [Nat.add_sub_cancel_left, add_right_comm, C.add_comm, ← add_assoc, Nat.add_sub_cancel]
-    exact add_le_add ((Nat.sub_le m C).trans m.le_succ) (Nat.sub_le d C)
+    exact Nat.add_le_add ((Nat.sub_le m C).trans m.le_succ) (Nat.sub_le d C)
 
 theorem add_cond_modeq_zero_is_good (h : K ≠ 1) :
     good (λ n ↦ n + cond ((n.succ % K).beq 0) 1 0) := λ m n ↦ by
   dsimp only; cases h0 : (n.succ % K).beq 0 with
   | false =>
       rw [cond_false, n.add_zero, h0, cond_false, n.add_zero, Nat.add_right_comm]
-      apply le_add_right; cases (m.succ % K).beq 0 with
+      apply (Nat.le_add_right _ _).trans'
+      cases (m.succ % K).beq 0 with
         | true => exact (m + n + 1).le_refl
         | false => exact (m + n).le_succ
   | true =>
-      have h1 : n.succ % K = 0 := by rwa [← Nat.beq_eq]
+      have h1 : n.succ % K = 0 := Nat.beq_eq ▸ h0
       rw [cond_true, n.succ.succ_eq_add_one, n.succ.add_mod, h1, Nat.zero_add, Nat.mod_mod,
         Nat.one_mod_of_ne_one h, add_add_add_comm, m.add_assoc n, Nat.add_le_add_iff_left]
       refine (congrFun₂ (congrArg cond ?_) 1 0).le
@@ -64,7 +65,7 @@ theorem good_map_zero : f 0 = 0 :=
 theorem good_val_bound (N : ℕ) : f N ≤ N + 1 := by
   rw [← not_lt, ← Nat.add_one_le_iff]; intro h0
   -- `f(m(N + 1)) ≥ mf(N + 1)` for all `m : ℕ`.
-  have h1 : ∀ m : ℕ, f (N + 1) * m ≤ f ((N + 1) * m) :=
+  have h1 : ∀ m, f (N + 1) * m ≤ f ((N + 1) * m) :=
     Nat.rec (f 0).zero_le λ n h1 ↦ (h _ _).trans'
       (Nat.add_le_add h1 (good_monotone h (le_of_lt h0)))
   -- For the case `m = N + 1`, get some `d ≥ N` such that `f((N + 1)^2) = (N + 1)^2 + d + 1`
@@ -77,7 +78,8 @@ theorem good_val_bound (N : ℕ) : f N ≤ N + 1 := by
   rcases h1 with ⟨d, h1, h2⟩
   apply ((N + 1).succ_pos.trans_le (h0.trans (good_monotone h h1))).ne.symm
   specialize h d ((N + 1) * (N + 1))
-  rwa [add_comm d, h2, add_le_iff_nonpos_left, nonpos_iff_eq_zero] at h
+  rw [← (f (d + _ + 1)).zero_add, d.add_comm, h2, Nat.add_le_add_iff_right] at h
+  exact Nat.eq_zero_of_le_zero h
 
 end
 
@@ -93,7 +95,7 @@ theorem final_solution :
         λ h ↦ ⟨id, sub_right_is_good 0, h.symm⟩⟩
   | false =>
       refine ⟨λ ⟨f, h, h0⟩ ↦ h0.symm.trans_le (good_val_bound h N), λ h0 ↦ ?_⟩
-      rw [cond_false, le_iff_lt_or_eq, Nat.lt_succ_iff] at h0
+      rw [cond_false, Nat.le_iff_lt_or_eq, Nat.lt_succ_iff] at h0
       rcases h0 with h0 | rfl
       · exact ⟨_, sub_right_is_good (N - k), Nat.sub_sub_self h0⟩
       · refine ⟨_, add_cond_modeq_zero_is_good (Nat.ne_of_beq_eq_false h : N + 1 ≠ 1), ?_⟩
@@ -105,14 +107,14 @@ theorem final_solution :
 
 /-! ## `ℕ+` (original) version -/
 
-def goodPNat (f : ℕ+ → ℕ+) := ∀ m n : ℕ+, f m + f (f n) ≤ f (m + n) + 1
+def goodPNat (f : ℕ+ → ℕ+) := ∀ m n, f m + f (f n) ≤ f (m + n) + 1
 
 theorem PNat_to_Nat_Prop {P : ℕ+ → Prop} : (∀ n : ℕ+, P n) ↔ ∀ n : ℕ, P n.succPNat :=
   ⟨λ h n ↦ h n.succPNat, λ h n ↦ n.succPNat_natPred ▸ h _⟩
 
 theorem PNat_to_Nat_Prop2 {P : ℕ+ → ℕ+ → Prop} :
-    (∀ m n : ℕ+, P m n) ↔ ∀ m n : ℕ, P m.succPNat n.succPNat := by
-  simp only [PNat_to_Nat_Prop]
+    (∀ m n : ℕ+, P m n) ↔ ∀ m n : ℕ, P m.succPNat n.succPNat :=
+  PNat_to_Nat_Prop.trans (forall_congr' λ _ ↦ PNat_to_Nat_Prop)
 
 theorem succPNat_add_succPNat (m n : ℕ) :
     m.succPNat + n.succPNat = (m + n).succPNat + 1 := by
