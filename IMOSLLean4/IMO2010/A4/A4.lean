@@ -28,8 +28,6 @@ namespace IMO2010A4
 
 open Finset
 
-/-- Somehow this is needed -/
-instance : LeftDistribClass ℕ := Distrib.leftDistribClass ℕ
 
 /-! ### The sequence `(x_n)_{n ≥ 0}` -/
 
@@ -55,12 +53,12 @@ theorem x_mul4_add1 (k : ℕ) : x (4 * k + 1) = !x (4 * k) := by
 
 theorem x_mul4_add2 (k : ℕ) : x (4 * k + 2) = x k := by
   change x (2 * 2 * k + 2) = x k
-  rw [mul_assoc, ← mul_add_one, x_mul2, x_mul2_add1,
-    ← Nat.bit1_val, Nat.bodd_bit1, Bool.true_xor, Bool.not_not]
+  rw [mul_assoc, ← Nat.mul_succ, x_mul2, x_mul2_add1, Nat.bodd_succ, Nat.bodd_mul,
+    Nat.bodd_two, Bool.false_and, Bool.not_false, Bool.true_xor, Bool.not_not]
 
 theorem x_mul4_add3 (k : ℕ) : x (4 * k + 3) = x k := by
   change x (2 * 2 * k + 2 + 1) = x k
-  rw [mul_assoc, ← mul_add_one, x_mul2_add1, x_mul2_add1, Bool.not_not]
+  rw [mul_assoc, ← Nat.mul_succ, x_mul2_add1, x_mul2_add1, Bool.not_not]
 
 
 
@@ -120,7 +118,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
 /-- Final solution for the main problem -/
 theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   ---- Reduce to showing that `x_k = ff` whenever `S_k = 0`
-  suffices ∀ k : ℕ, S k = 0 → x k = false by
+  suffices ∀ k, S k = 0 → x k = false by
     refine Nat.rec (Int.le_refl 0) (λ k h ↦ ?_)
     rw [le_iff_lt_or_eq, Int.lt_iff_add_one_le, zero_add, or_comm] at h
     rw [S_succ]; rcases h with h | h
@@ -144,7 +142,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
 
 /-- Final solution for the extra part -/
 theorem final_solution_extra (k : ℕ) :
-    S k = 0 ↔ ∀ c : ℕ, c ∈ Nat.digits 4 k → c = 0 ∨ c = 2 := by
+    S k = 0 ↔ ∀ c ∈ Nat.digits 4 k, c = 0 ∨ c = 2 := by
   induction' k using Nat.strong_induction_on with k k_ih
   obtain ⟨q, r, h, rfl⟩ : ∃ q r : ℕ, r < 4 ∧ 4 * q + r = k :=
     ⟨k / 4, k % 4, Nat.mod_lt k four_pos, Nat.div_add_mod k 4⟩
