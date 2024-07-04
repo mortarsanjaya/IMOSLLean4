@@ -94,7 +94,7 @@ open scoped Classical
 theorem final_solution [LinearOrderedRing S] [FloorRing S] {f : R → S} :
     good f ↔ if DenselyOrdered R then (∃ C, ⌊C⌋ = 1 ∧ f = λ _ ↦ C) ∨ f = 0
       else MonoidGood.IsAnswer f := by
-  by_cases h : DenselyOrdered R
-  · rw [if_pos h, final_solution_DenselyOrdered]
+  split_ifs with h
+  · exact final_solution_DenselyOrdered
   · obtain ⟨φ⟩ : Nonempty (ℤ ≃+* R) := FloorRing.dense_or_equiv_Int.resolve_left h
-    rw [if_neg h, final_solution_equiv_Int φ]
+    exact final_solution_equiv_Int φ
