@@ -1,0 +1,61 @@
+Let $R$ be a totally ordered commutative ring and $n \geq 5$.
+Prove that, for any $a_1, a_2, \ldots, a_n \in R$,
+\[ \left(3 \sum_{i = 1}^n a_i^2 a_{i + 1}\right)^2 \leq 2 \left(\sum_{i = 1}^n a_i^2\right)^3. \tag{*}\label{2007a6-eq0} \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+We mostly follow the official solution.
+However, the following estimate does not follow trivially in general:
+\[ 4 \sum_{k = 1}^n x_k x_{k + 1} \leq \left(\sum_{k = 1}^n x_k\right)^2. \tag{1}\label{2007a6-eq1} \]
+This estimate holds for all $n \geq 4$ and $x_1, x_2, \ldots, x_n \in R$ non-negative, where we denote $x_{n + 1} = x_1$.
+The method from the official solution proves the above inequality when $n$ is even, but it doesn't work when $n$ is odd.
+We first prove~\eqref{2007a6-eq1}, and then use it to prove~\eqref{2007a6-eq0}.
+
+\begin{proof}[Proof of~\eqref{2007a6-eq1}]
+Induction on $n$; the base case $n = 4$ reads as
+\[ 4 (x_1 + x_3)(x_2 + x_4) = (x_1 + x_2 + x_3 + x_4)^2, \]
+    which follows immediately by AM-GM.
+Now suppose that~\eqref{2007a6-eq1} holds and consider $n + 1$ non-negative variables.
+WLOG let $x_{n + 1} \leq x_k$ for all $k \leq n$.
+For convenience, write $x_{n + 1} = c$ and $y_k = x_k - c \geq 0$ for all $k \leq n$.
+Using induction hypothesis, we get
+\begin{align*}
+    4 \sum_{k = 1}^{n + 1} x_k x_{k + 1}
+    &= 4 \sum_{k = 1}^{n - 1} (y_k + c)(y_{k + 1} + c) + 4 (y_n + y_1 + 2c) c \\
+    &= 4 \sum_{k = 1}^{n - 1} y_k y_{k + 1} + 8 \sum_{k = 1}^n y_k c + 4 (n + 1) c^2 \\
+    &\leq \left(\sum_{k = 1}^n y_k\right)^2 + 8c \sum_{k = 1}^n y_k + 4 (n + 1) c^2.
+\end{align*}
+On the other hand,
+\[ \left(\sum_{k = 1}^{n + 1} x_k\right)^2 = \left(\sum_{k = 1}^n y_k + (n + 1) c\right)^2
+    = \left(\sum_{k = 1}^n y_k\right)^2 + 2 (n + 1) c \sum_{k = 1}^n y_k + (n + 1)^2 c^2. \]
+Since $n \geq 4$, clearly $2(n + 1) \geq 8$ and $(n + 1)^2 \geq 4(n + 1)$.
+We are done.
+\end{proof}
+
+Now we prove~\eqref{2007a6-eq0}.
+For convenience, let $D$ denote the right hand side.
+First see that by Cauchy-Schwarz and AM-GM inequality,
+\begin{align*}
+    \left(3 \sum_{i = 1}^n a_i^2 a_{i + 1}\right)^2
+    &= \left(\sum_{i = 1}^n a_{i + 1} (a_i^2 + 2 a_{i + 1} a_{i + 2})\right)^2 \\
+    &\leq D \sum_{i = 1}^n (a_i^2 + 2 a_{i + 1} a_{i + 2})^2 \\
+    &= D \sum_{i = 1}^n (a_i^4 + 4 a_i^2 a_{i + 1} a_{i + 2} + 4 a_{i + 1}^2 a_{i + 2}^2) \\
+    &= D \sum_{i = 1}^n (a_i^4 + 2 a_i^2 a_{i + 1}^2 + 2 a_i^2 a_{i + 2}^2) + D \sum_{i = 1}^n 4 a_i^2 a_{i + 1}^2.
+\end{align*}
+By~\eqref{2007a6-eq1}, the second summand is bounded above by $D \cdot D^2 = D^3$.
+The first summand is bounded above by $D^3$ since
+\[ \sum_{i = 1}^n (a_i^4 + 2 a_i^2 a_{i + 1}^2 + 2 a_i^2 a_{i + 2}^2)
+    = \sum_{\substack{i, j \leq n \\ |i - j| \leq 2}} a_i^2 a_j^2 \leq \sum_{i, j \leq n} a_i^2 a_j^2 = D^2. \]
+This completes the proof of~\eqref{2007a6-eq0}.
+
+
+
+\subsection*{Extra notes}
+
+By the proof of~\eqref{2007a6-eq1}, equality cases can also be described.
+For $n = 4$, clearly equality holds iff $x_1 + x_3 = x_2 + x_4$.
+For $n \geq 5$, equality holds precisely when there exists an index $k \leq n$ such that $x_k = x_{k - 1} + x_{k + 1}$ and $x_i = 0$ for $i \notin \{k - 1, k, k + 1\}$.
