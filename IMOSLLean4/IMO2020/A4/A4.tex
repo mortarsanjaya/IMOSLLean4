@@ -1,0 +1,38 @@
+Let $a, b, c, d \in \R$ with $a \geq b \geq c \geq d > 0$ and $a + b + c + d = 1$.
+Prove that \[ (a + 2b + 3c + 4d) a^a b^b c^c d^d < 1. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2020SL.pdf}
+
+We follow the ideas of the official solution.
+More generally, we prove the following claim.
+
+\begin{claim}
+Let $n > 1$ be a positive integer and $a, x_1, x_2, \ldots, x_n \in \R^+$ with sum $1$.
+Suppose that $x_i \leq a$ for each $i \leq n$.
+Then \[ (3 - 2a) a^a x_1^{x_1} x_2^{x_2} \ldots x_n^{x_n} < 1. \]
+\end{claim}
+\begin{proof}
+Since $n > 0$, we have $a < 1$.
+If $a < 1/2$, then trivially bounding each $x_i$ gives
+\[ (3 - 2a) a^a \prod_i x_i^{x_i} \leq (3 - 2a) a^a \prod_i a^{x_i} = (3 - 2a) a < 1. \]
+If $1/2 \leq a < 1$, then weighted AM-GM gives
+\[ a^a \prod_i x_i^{x_i} \leq a^2 + \sum_i x_i^2 < a^2 + (1 - a)^2, \]
+    and $(3 - 2a)(a^2 + (1 - a)^2) \leq 1$.
+This proves the claim.  
+\end{proof}
+
+The original inequality follows since $a + 2b + 3c + 4d \leq a + 3(b + c + d) = 3 - 2a$.
+
+
+
+\subsection*{Extra notes}
+
+Clearly, the claim can be strengthened.
+More generally, for $n > 0$, we have
+\[ (3 - 2a) a^a x_1^{x_1} x_2^{x_2} \ldots x_n^{x_n} \geq 1 \iff n = 1 \wedge a = x_1 = 1/2. \]
+However, the claim has simpler implementation.
+So, we won't formalize this stronger result.
