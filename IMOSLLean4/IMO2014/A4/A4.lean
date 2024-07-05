@@ -21,7 +21,7 @@ namespace IMO2014A4
 
 /-- Given `b k : ℤ` with `k ≠ 0`, there exists `m < n` such that `b^m ≡ b^n (mod k)`. -/
 theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) :
-    ∃ m n : ℕ, m ≠ n ∧ b ^ m % k = b ^ n % k := by
+    ∃ m n, m ≠ n ∧ b ^ m % k = b ^ n % k := by
   have h0 : Set.MapsTo (b ^ · % k) Set.univ (Finset.Ico 0 (|k|)) := λ x _ ↦ by
     rw [Finset.coe_Ico, Set.mem_Ico]
     exact ⟨(b ^ x).emod_nonneg h, (b ^ x).emod_lt h⟩
@@ -55,11 +55,10 @@ theorem map_map_zero_add (y : ℤ) : f (y + f 0) = c + f y :=
 theorem map_mul_map_zero_add (y k : ℤ) : f (y + f 0 * k) = c * k + f y := by
   have h0 n : f (y + f 0 * (n + 1)) = c + f (y + f 0 * n) := by
     rw [mul_add_one (α := ℤ), ← add_assoc, map_map_zero_add h]
-  replace h0 := Extra.IntIntLinearSolverAlt (f := λ n ↦ f (y + f 0 * n)) h0 k
+  replace h0 := Extra.LinearSolver.IntInt (f := λ n ↦ f (y + f 0 * n)) h0 k
   rwa [mul_zero, add_zero] at h0
 
-theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) :
-    ∀ k : ℕ, f (b ^ k * x) = f (b ^ k * y)
+theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) : ∀ k, f (b ^ k * x) = f (b ^ k * y)
   | 0 => by rwa [pow_zero, one_mul, one_mul]
   | k + 1 => by
       rw [pow_succ', mul_assoc, mul_assoc]
@@ -105,10 +104,7 @@ end good_lemmas
 
 
 
-/-! ## Final solution -/
-
 /-- Final solution -/
-
 theorem final_solution {b c : ℤ} (h : 1 < b.natAbs) (h0 : c ≠ 0) :
     good b c f ↔ b - 1 ∣ c ∧ f = ((b - 1) * · + c / (b - 1)) :=
   ---- `←` direction
@@ -124,24 +120,3 @@ theorem final_solution {b c : ℤ} (h : 1 < b.natAbs) (h0 : c ≠ 0) :
     rcases hf with ⟨⟨m, rfl⟩, rfl⟩
     rw [Int.mul_ediv_cancel_left _ (mul_ne_zero_iff.mp h0).1]
     exact linear_good (b - 1) m⟩
-
-
-/-
-variable {b c : ℤ} (h : 1 < b.natAbs) (h0 : c ≠ 0)
-
-/-- Final solution, Case 1: `b - 1 ∤ c` -/
-theorem final_solution_case1 (h1 : ¬b - 1 ∣ c) : ¬good b c f :=
-  λ h2 ↦ h1 ⟨f 0, c_eq_b_sub_one_mul_map_zero h2 h h0⟩
-
-/-- Final solution, Case 2: `b - 1 ∣ c` -/
-theorem final_solution_case2 (h1 : b - 1 ∣ c) :
-    good b c f ↔ f = ((b - 1) * · + c / (b - 1)) :=
-  ⟨λ h2 ↦ by
-    rcases h1 with ⟨k, rfl⟩
-    have h1 := c_eq_b_sub_one_mul_map_zero h2 h h0
-    have h3 := (mul_ne_zero_iff.mp h0).1
-    rw [Int.mul_ediv_cancel_left _ h3]
-    rw [mul_eq_mul_left_iff, or_iff_left h3] at h1
-    rw [h1]; exact funext (map_is_linear h2 h h0),
-  λ h2 ↦ h2.symm ▸ linear_good h1⟩
--/

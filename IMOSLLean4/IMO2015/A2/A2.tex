@@ -17,12 +17,12 @@ We follow Solution 1 of the official solution, with some simplification in the f
 
 Plugging $x = 0$ and $y = f(0)$ into~\eqref{2015a2-eq0} gives $f(-f(f(0))) = -1$.
 Then plugging $y = -f(f(0))$ into~\eqref{2015a2-eq0} gives
-\[ f(x + 1) = f(f(x)) \quad \text{for all } x \in \Z. \tag{1}\label{2015a2-eq1} \]
+\[ f(x + 1) = f(f(x)) \quad \forall x \in \Z. \tag{1}\label{2015a2-eq1} \]
 
 We now prove that $f$ is linear.
 That is, there exists constants $A$ and $B$ such that $f(x) = Ax + B$ for all $x \in \Z$.
 For this purpose, it suffices to show that
-\[ f(x + 1) = f(x) + f(-1) + 1 \quad \text{for all } x \in \Z. \]
+\[ f(x + 1) = f(x) + f(-1) + 1 \quad \forall x \in \Z. \]
 Indeed, by~\eqref{2015a2-eq1} and~\eqref{2015a2-eq0}, for any $x \in \Z$, we have
 \[ f(x + 1) - f(x) - 1 = f(f(x)) - f(x) - 1 = f(x - f(x)) + 1 = f(f(x - 1 - f(x))) + 1. \]
 But by~\eqref{2015a2-eq0}, we have $f(x - 1 - f(x)) = f(x) - f(x) - 1 = -1$.
