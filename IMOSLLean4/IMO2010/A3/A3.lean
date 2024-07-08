@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Periodic
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Data.Nat.Cast.Basic
 
 /-!
 # IMO 2010 A3
@@ -48,14 +51,16 @@ theorem good_targetSum_le {x : ℕ → R} (h : ∀ i, 0 ≤ x i) {c : R} (h0 : g
       rw [targetSum, Nat.mul_succ, sum_range_succ, sum_range_succ, add_assoc, succ_nsmul]
       exact add_le_add (good_targetSum_le h h0 n) (special_ineq (h _) (h _) (h0 _) (h0 _))
 
-theorem targetSum_of_Fin2Map (c : R) : ∀ n, targetSum (λ n ↦ ![c, 0] n) (2 * n) = n • c ^ 2
+theorem targetSum_of_Fin2Map (c : R) :
+    ∀ n, targetSum (λ n ↦ ![c, 0] n) (2 * n) = n • c ^ 2
   | 0 => by rw [mul_zero, targetSum, sum_range_zero, zero_nsmul]
   | n + 1 => by
-      have h : ((2 : ℕ) : Fin 2) = 0 := rfl
-      rw [Nat.mul_succ, targetSum, sum_range_succ, sum_range_succ, ← targetSum,
-        targetSum_of_Fin2Map, succ_nsmul, add_assoc, add_right_inj, Nat.cast_add,
-        Nat.cast_add, Nat.cast_add, Nat.cast_add, Nat.cast_mul, h, zero_mul, sq]
-      exact add_right_eq_self.mpr (zero_mul 0)
+      have h (n) : ((2 * n : ℕ) : Fin 2) = 0 := Fin.val_injective (Nat.mul_mod_right 2 n)
+      have h0 (n) : ((2 * n + 1 : ℕ) : Fin 2) = 1 := Fin.val_injective (Nat.mul_add_mod 2 n 1)
+      rw [Nat.mul_succ, targetSum, sum_range_succ, sum_range_succ,
+        ← targetSum, targetSum_of_Fin2Map, succ_nsmul, add_assoc,
+        add_right_inj, h, add_right_comm, ← Nat.mul_succ, h, h0, h0]
+      change c * c + 0 * 0 = c ^ 2; rw [sq, mul_zero, add_zero]
 
 
 
@@ -67,20 +72,20 @@ structure goodPeriodicSeq (c n) where
   x : ℕ → R
   nonneg : ∀ i, 0 ≤ x i
   good : good c x
-  periodic : x.Periodic (2 * n)
+  periodic : ∀ k, x (k + 2 * n) = x k
 
 def Fin2Map_goodPeriodicSeq {c : R} (h : 0 ≤ c) (n) : goodPeriodicSeq c n :=
   { x := λ n ↦ ![c, 0] n
     nonneg := λ i ↦ by
       simp only; exact Fin.cases h (λ i ↦ Fin.fin_one_eq_zero i ▸ le_refl 0) i
     good := λ i ↦ by
-      simp only; rw [two_nsmul, Nat.cast_succ, Nat.cast_add]
+      have h0 : ((i + 1 : ℕ) : Fin 2) = i + 1 := Fin.val_injective (i.mod_add_mod 2 1).symm
+      have h1 : ((i + 2 : ℕ) : Fin 2) = i := Fin.val_injective (i.add_mod_right 2)
+      simp only; rw [h0, h1, two_nsmul]; clear h0 h1
       refine Fin.cases (congrArg₂ _ (add_zero c) rfl).le (λ i ↦ ?_) i
       rw [Fin.fin_one_eq_zero i]; change 0 + c + 0 ≤ c + c
       rw [zero_add, add_zero]; exact le_add_of_nonneg_left h
-    periodic := λ i ↦ by
-      have h : ((2 : ℕ) : Fin 2) = 0 := rfl
-      simp only; rw [Nat.cast_add, Nat.cast_mul, h, zero_mul, add_zero] }
+    periodic := λ i ↦  congrArg _ (Fin.val_injective (Nat.add_mul_mod_self_left i 2 n)) }
 
 /-- Final solution -/
 theorem final_solution {c : R} (h : 0 ≤ c) (n : ℕ) :

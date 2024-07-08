@@ -88,7 +88,7 @@ theorem Thm1 (x) : f x ^ 2 + f (x + 1) ^ 2 = 1 ∨ f x + f (x + 1) = 1 := by
   rw [← Eq3 hf, ← Eq3_v2 hf, mul_left_comm, sub_self, zero_eq_mul,
     mul_eq_zero, sub_eq_zero, sub_eq_zero, sub_eq_zero] at h
   cases h with | inl h => exact h | inr h => ?_
-  right; save
+  right
   ---- Step 2: Prove either `2 f(x) = 1` or `f(x)^2 - 1 = 0`, then assume the latter
   rw [← h, ← two_mul]
   have h0 : _ ^ 2 = _ ^ 2 := congrArg (λ x ↦ x ^ 2) (Eq3 hf x)
@@ -96,14 +96,12 @@ theorem Thm1 (x) : f x ^ 2 + f (x + 1) ^ 2 = 1 ∨ f x + f (x + 1) = 1 := by
     ← mul_add_one (x * x), Eq1 hf, Eq2 hf, Eq2_v2 hf, ← h,
     ← sub_eq_zero, ← sq, Thm1_ring_id2, mul_eq_zero] at h0
   cases h0 with | inl h0 => exact (eq_of_sub_eq_zero h0).symm | inr h0 => ?_
-  save
   ---- Step 3: Resolve the case `f(x)^2 - 1 = 0`
   have h1 : f (x * x) = 0 := by rw [Eq2_v2 hf, ← h, h0]
   replace h := Eq3_v2 hf (x * x)
   rw [h1, mul_zero, add_zero, sq, zero_mul, zero_sub,
     neg_mul_neg, one_mul, Eq2 hf, h0, zero_mul] at h
   rw [← mul_one (2 * f x), ← h, mul_zero]
-  save
 
 /-- Main theorem 1: We are (almost!) done if `char(S) ∣ 2` -/
 theorem SCharTwo_map_add_one [CharTwo S] (x) : f (x + 1) = f x + 1 := by
@@ -335,7 +333,6 @@ theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
       rw [zero_mul, add_mul, add_mul, mul_assoc, hr, add_zero, mul_zero, zero_add] at h1
       rw [h1, zero_add, add_eq_zero_iff_eq] at h
       rw [h, hr]
-  save
   ---- Now plug in back to the functional equation
   rw [reduced_𝔽₂ε_iff hS hf, hf.is_good] at h
   rw [reduced_𝔽₂ε_iff hS hf, map_add_one_eq_zero_iff_map_eq hS hf.toNontrivialGood,
@@ -358,7 +355,6 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
     · rw [add_assoc, self_eq_add_right] at h0
       rw [h0, mul_zero, zero_add] at hs
       rw [← mul_one r, hs, mul_zero]
-    save
   ---- Case 2: `(r + s)^2 = 0`
   · rcases R_elts_claim1 hS hf hr h with hr | h | h0
     · exact hr
@@ -368,7 +364,6 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
     · rw [self_eq_add_right] at h0
       rw [h0, zero_mul, zero_add] at hs
       rw [← mul_one r, hs, mul_zero]
-    save
   ---- Case 3: `(r + s)^2 = (r + s) + 1`
   · rw [add_assoc, mul_add, add_mul, hr, zero_add,
       add_mul, ← add_assoc, add_assoc, hs, add_zero] at h
@@ -441,7 +436,6 @@ theorem 𝔽₄_solution {r : R} (hr : r * (r + 1) + 1 = 0) :
     rcases R_elts_cases hS hf (x + r) with (h2 | h2) | h2
     · exact ⟨𝔽₄.Y, (add_eq_zero_iff_eq.mp <| (add_assoc x r 1).symm.trans (h0 h2)).symm⟩
     · exact ⟨𝔽₄.X, (add_eq_zero_iff_eq.mp (h0 h2)).symm⟩
-    save
     rw [_root_.add_comm x r, add_assoc, mul_add, add_mul, add_mul, add_assoc, add_assoc,
       add_assoc, h1, add_zero, mul_add_one r, ← add_assoc (x * r), add_left_comm, hr'] at h2
     rcases R_elts_cases hS hf (x * r) with (h3 | h3) | h3
@@ -464,7 +458,6 @@ theorem 𝔽₄_solution {r : R} (hr : r * (r + 1) + 1 = 0) :
       rw [zero_mul, mul_assoc, add_one_mul x, h1, add_add_cancel_middle₂, mul_one] at h3
       rw [h3, zero_mul, zero_add] at hr
       exact absurd hr X
-  save
   ---- Value check
   rw [← eq_sub_iff_add_eq'] at hr0
   rw [hr0, ← neg_sub, mul_neg, neg_inj, mul_sub_one, sub_eq_iff_eq_add'] at hr1

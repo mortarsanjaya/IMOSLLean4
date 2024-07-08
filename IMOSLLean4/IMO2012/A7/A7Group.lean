@@ -66,5 +66,3 @@ theorem AddGroup_mk_carrrier {G} [DistribLattice G]
     [CovariantClass G G (Function.swap (· + ·)) (· ≤ ·)](S : AddSubgroup G) :
     (AddGroup_mk S).carrier = setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ S))) :=
   congrArg setOf (SupInfClosure_eq_MetaClosure (· ∈ S)).symm
-
-end MetaClosure

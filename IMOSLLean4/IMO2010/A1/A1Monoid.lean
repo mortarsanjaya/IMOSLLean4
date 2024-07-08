@@ -57,13 +57,29 @@ end
 
 
 
-/-! ### Solution -/
-
 namespace MonoidGood
 
 section
 
 variable [MulOneClass M] {f : M → R} (hf : MonoidGood f)
+
+/-! ### Transfer via homomorphisms -/
+
+theorem ofMulHom [Mul M] [Mul N] (φ : N →ₙ* M) {f : M → R} (hf : MonoidGood f) :
+    MonoidGood (f ∘ φ) :=
+  λ x y ↦ (congrArg f (φ.map_mul x y)).trans (hf (φ x) (φ y))
+
+theorem ofMonoidEquiv [MulOneClass M] [MulOneClass N] (φ : N ≃* M) {f : M → R} :
+    MonoidGood f ↔ MonoidGood (f ∘ φ) :=
+  ⟨ofMulHom φ.toMulHom, λ hf ↦ by
+    replace hf : MonoidGood (f ∘ φ ∘ φ.symm) := ofMulHom φ.symm.toMulHom hf
+    rwa [MulEquiv.self_comp_symm, Function.comp_id] at hf⟩
+
+
+
+
+
+/-! ### Solution -/
 
 lemma map_eq_map_one_mul_floor (x) : f x = f 1 * ⌊f x⌋ := by
   rw [← hf, one_mul]

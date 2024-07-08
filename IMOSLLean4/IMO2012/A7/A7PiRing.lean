@@ -24,7 +24,7 @@ Can we generalize `S` to lattice ordered rings?
 namespace IMOSL
 namespace IMO2012A7
 
-/-! ###### Extra lemmas -/
+/-! ### Extra lemmas -/
 
 section LatticeOrderedGroup
 
@@ -75,7 +75,7 @@ end LinearOrderedRing
 
 
 
-/-! ##### Extra lemmas on products of totally ordered rings -/
+/-! ### Extra lemmas on products of totally ordered rings -/
 
 variable {R : I → Type*} [(i : I) → LinearOrderedRing (R i)]
 
@@ -176,5 +176,3 @@ def PiSubring_mk : Subring ((i : I) → R i) :=
 theorem PiSubring_mk_carrier :
     (PiSubring_mk S).carrier = setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ S))) :=
   AddGroup_mk_carrrier S.toAddSubgroup
-
-end MetaClosure

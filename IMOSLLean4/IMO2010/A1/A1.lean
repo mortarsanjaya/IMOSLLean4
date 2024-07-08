@@ -53,16 +53,6 @@ end FloorRing
 
 /-! ### `good`, `MonoidGood`, and homomorphisms -/
 
-theorem MonoidGood.ofMulHom [Mul M] [Mul N] (φ : N →ₙ* M) {f : M → R} (hf : MonoidGood f) :
-    MonoidGood (f ∘ φ) :=
-  λ x y ↦ (congrArg f (φ.map_mul x y)).trans (hf (φ x) (φ y))
-
-theorem MonoidGood.ofMonoidEquiv [MulOneClass M] [MulOneClass N] (φ : N ≃* M) {f : M → R} :
-    MonoidGood f ↔ MonoidGood (f ∘ φ) :=
-  ⟨ofMulHom φ.toMulHom, λ hf ↦ by
-    replace hf : MonoidGood (f ∘ φ ∘ φ.symm) := ofMulHom φ.symm.toMulHom hf
-    rwa [MulEquiv.self_comp_symm, Function.comp_id] at hf⟩
-
 theorem Int_good_iff_MonoidGood {f : ℤ → R} : good f ↔ MonoidGood f :=
   forall₂_congr λ m n ↦ by rw [Int.floor_int, smul_eq_mul, id_def]
 

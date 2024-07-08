@@ -117,7 +117,6 @@ theorem Eq6 (h0 : f 2 ≠ -1) : ∀ x, f (x + 1) + f (x - 1) = (f x + 1) * (f 2 
     have h1 : _ - _ = _ - _ := congrArg₂ (· - ·) (Eq4 hf h x) (Eq4_alt hf h x)
     rw [Eq2 hf, Eq3 hf h, ← sub_eq_zero, Eq6_ring_id, mul_eq_zero] at h1
     exact h1.imp eq_of_sub_eq_zero eq_of_sub_eq_zero
-  save
   ---- Continue
   intro x; refine (h1 x).elim id λ h2 ↦ ?_
   specialize h1 (x + 1)
@@ -128,7 +127,6 @@ theorem Eq6 (h0 : f 2 ≠ -1) : ∀ x, f (x + 1) + f (x - 1) = (f x + 1) * (f 2 
       add_one_mul (f _), add_assoc, ← one_add_mul (f x), mul_sub_one,
       ← add_sub_right_comm, add_sub_assoc, add_right_inj, add_comm] at h2
     exact (eq_add_of_sub_eq' h2).symm
-    save
   · have h0 : f 2 + 1 ≠ 0 := λ X ↦ h0 (eq_neg_of_add_eq_zero_left X)
     have h3 := Eq3 hf h x
     rw [← h2, hf.is_good, h1, ← mul_add_one (f x), ← mul_add_one (f _),
@@ -154,7 +152,6 @@ theorem Eq7 (h0 : f 2 ≠ -1) (h1 : f 2 ≠ 1) (x) :
   rw [← mul_assoc, ← sq, mul_left_comm, Eq4_alt hf h,
     ← mul_assoc, ← sub_eq_zero, ← sub_mul, mul_eq_zero] at h3
   rcases h3 with h3 | h3; rwa [sub_eq_zero, eq_comm, mul_comm] at h3
-  save
   ---- Solve the case where `f(2x + 1) = f(2x - 1) = 0`
   rw [Eq3 hf h] at h2
   replace h3 : _ + _ = _ + _ := congrArg₂ (· + ·) h2 h3
@@ -341,7 +338,6 @@ theorem map_eq_neg_one_imp (h0 : f x = -1) : x = 0 := by
       rw [← mul_eq_zero, Eq2 hf h, h0, neg_add_self, zero_mul]
     · rw [h2, zero_add] at h1; exact ⟨h2, h1⟩
     · rw [h2, add_zero] at h1; exact ⟨h1, h2⟩
-  save
   ---- Grind the rest
   rw [sub_eq_add_neg, ← Rchar' hf h, ← one_add_one_eq_two, ← add_assoc] at h1
   replace h1 := hf.toReducedGood.period_imp_zero
@@ -360,7 +356,6 @@ theorem map_eq_neg_one_or_zero (h0 : (3 : S) ≠ 0) (x) : f x = -1 ∨ f x = 0 :
     rw [Eq2 hf h, add_one_mul x, mul_sub_one, sub_add_sub_cancel, sub_add_cancel,
       add_add_sub_cancel, ← two_mul, Rchar', neg_one_mul, hf.map_even] at h2
     exact h2.trans (add_one_mul _ (f x)).symm
-  save
   ---- Add all three equations and grind
   have h4 := Eq1 hf h (x * x)
   rw [h1, h2, h3, ← add_sub_assoc, ← add_mul, ← add_sub_right_comm,
@@ -575,7 +570,7 @@ lemma Eq6 {x} (h : g x = 0) : x = 0 := by
   have h1 := hg.Eq1 x
   rw [h, zero_add, h0, ← two_mul, ← sub_eq_zero, ← mul_sub,
     mul_eq_zero, or_iff_right hg.Schar_ne_two, sub_eq_zero] at h1
-  rw [h1] at h0; save
+  rw [h1] at h0
   ---- Now prove the equality `g(y - x) + 2 g(y) = 3 g(y + x)`
   have h2 (y) : g (y - x) + 2 * g y = (2 + 1) * g (y + x) := by
     have h2 : g (x + (x + 1) * (y - 1)) = g (x + 1 - y) := by
@@ -593,7 +588,6 @@ lemma Eq6 {x} (h : g x = 0) : x = 0 := by
       add_left_inj, sub_sub, add_sub_add_right_eq_sub, ← neg_sub, mul_sub,
       hg.toShiftGood23.map_even, ← add_sub_assoc, sub_eq_iff_eq_add'] at h2
     rw [h2, add_one_mul (α := S), add_comm x]
-  save
   ---- Finish
   refine hg.period_imp_zero₀ λ y ↦ ?_
   have h3 := h2 (-y)
@@ -620,7 +614,6 @@ lemma Rcomm : ∀ x y : R, x * y = y * x := by
     rwa [sub_add_sub_comm, ← mul_add, ← mul_add, add_comm y, ← sub_mul, h,
       sub_sub_sub_comm, ← mul_sub, ← mul_sub, ← neg_sub x, mul_neg, sub_neg_eq_add,
       add_mul, sub_self, sq, zero_mul, zero_eq_mul, or_iff_right X] at h0
-  save
   ---- Now reduce repeatedly
   have h0 (x y : R) : (x + 1) * y - y * (x + 1) = x * y - y * x := by
     rw [add_one_mul x, mul_add_one y, add_sub_add_right_eq_sub]
@@ -649,14 +642,12 @@ lemma Eq7 : ∀ x y, g (x * y) = g x * g y := by
       mul_add_one (α := S), ← two_mul, add_right_comm (2 * g x), add_sub_add_right_eq_sub,
       ← mul_add, ← hg.Eq4, ← mul_add_one (α := S), mul_assoc, ← mul_add, add_one_mul (g x),
       add_comm _ (g y), sub_add_add_cancel, add_one_mul x, sub_one_mul] at h
-  save
   ---- Now get either `xy = 0` or `g(xy) = g(x) g(y)`
   replace h (x y) : x * y = 0 ∨ g (x * y) = g x * g y := by
     have h0 := h 1 (x * y)
     rw [one_mul, ← mul_assoc, hg.Rcomm _ x, ← mul_assoc, h, mul_assoc, hg.Rcomm x,
       hg.Rcomm x, h, mul_assoc, hg.Rcomm y, ← sub_eq_zero, ← mul_sub, mul_eq_zero] at h0
     exact h0.imp hg.Eq6 (λ h0 ↦ (eq_of_sub_eq_zero h0).symm)
-  save
   ---- Finally, bash again
   intro x y; refine (h x y).elim (λ h0 ↦ ?_) id
   refine (h (x + 1) y).elim (λ h1 ↦ ?_) (λ h1 ↦ ?_)
@@ -694,7 +685,6 @@ theorem solution :
   have h0 (x y) : φ x y = ρ (x * y) :=
     hS _ _ <| by rw [two_nsmul_BilinMap_eq, two_nsmul_BilinMap_eq,
       ← hg.Eq2, add_comm, ← neg_sub (x * y), hg.toShiftGood23.map_even]
-  save
   ---- Construct `ι` as an additive hom
   let R₂ := AddSubgroup.closure (Set.range λ x : R ↦ x ^ 2)
   obtain ⟨ι, h1⟩ : ∃ ι : SqSubring R →+ S, ∀ a : SqSubring R, ρ a = 2 • ι a :=
@@ -710,7 +700,6 @@ theorem solution :
       ⟨0, by rw [ρ.map_zero, nsmul_zero]⟩
       (λ x y ⟨s, hs⟩ ⟨t, ht⟩ ↦ ⟨s + t, by rw [ρ.map_add, hs, ht, nsmul_add]⟩)
       (λ x ⟨s, hs⟩ ↦ ⟨-s, by rw [ρ.map_neg, hs, nsmul_eq_mul, ← mul_neg, nsmul_eq_mul]⟩)
-  save
   ---- Reduce to multiplicativity of `ι`, then prove it
   suffices ∀ x y, ι (x * y) = ι x * ι y by
     have h2 : ι 1 = 1 := hS _ _ <| by
@@ -718,7 +707,6 @@ theorem solution :
     refine ⟨⟨⟨⟨ι, h2⟩, this⟩, ι.map_zero, ι.map_add⟩, λ x ↦ hS _ _ ?_⟩
     change 2 • g x = 2 • ι (RestrictedSq x)
     rw [← h, ← h1, RestrictedSq_coe, sq, h0]
-  save
   ---- Prove that `ι` is multiplicative
   have X (x y : S) : (2 • x) * (2 • y) = 2 • 2 • (x * y) := by
     rw [two_nsmul, two_nsmul, add_mul, mul_add, ← two_nsmul, ← two_nsmul]
