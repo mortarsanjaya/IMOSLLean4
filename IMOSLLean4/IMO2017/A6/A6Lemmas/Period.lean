@@ -79,7 +79,7 @@ def toPartialQuotientMap : hf.toRingCon.Quotient → R :=
 def toQuotientMap : hf.toRingCon.Quotient → hf.toRingCon.Quotient :=
   λ x ↦ hf.toPartialQuotientMap x
 
-lemma toQuotientMap_apply_mk (x : R) : hf.toQuotientMap ⟦x⟧ = ⟦f x⟧ := rfl
+lemma toQuotientMap_apply_mk (x : R) : hf.toQuotientMap x = f x := rfl
 
 lemma toQuotientMap_good : good hf.toQuotientMap :=
   Quotient.ind₂ λ a b ↦ congrArg (Quotient.mk _) (hf a b)

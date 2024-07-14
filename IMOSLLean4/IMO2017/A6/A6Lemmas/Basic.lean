@@ -23,14 +23,50 @@ namespace IMO2017A6
 theorem zero_is_good [NonUnitalNonAssocSemiring R] : good (λ _ : R ↦ 0) :=
   λ _ _ ↦ zero_add 0
 
-theorem one_sub_is_good [NonAssocRing R] : good (λ x : R ↦ 1 - x) := λ x y ↦ by
+
+section
+
+variable [NonAssocRing R]
+
+theorem one_sub_is_good : good (λ x : R ↦ 1 - x) := λ x y ↦ by
   simp only; rw [mul_one_sub, one_sub_mul, sub_sub,
     sub_sub_cancel, ← add_sub_assoc x, sub_add_sub_cancel']
 
-theorem mul_one_sub_is_good [Ring R] {a : R} (ha : ∀ x, x * a = a * x) (ha0 : a * a = 1) :
-    good (λ x : R ↦ a * (1 - x)) := λ x y ↦ by
-  rw [mul_assoc, ← mul_assoc _ a, ha, mul_assoc,
-    ← mul_assoc, ha0, one_mul, ← mul_add, one_sub_is_good]
+theorem one_sub_is_ReducedGood : ReducedGood (λ x : R ↦ 1 - x) :=
+  ⟨one_sub_is_good, λ _ _ h ↦ add_right_injective 0 (sub_right_injective (h 0))⟩
+
+theorem sub_one_is_good : good (λ x : R ↦ x - 1) := λ x y ↦ by
+  simp only; rw [sub_one_mul, mul_sub_one, sub_sub,
+    sub_add_cancel, sub_sub, sub_add_sub_cancel]
+
+theorem sub_one_is_ReducedGood : ReducedGood (λ x : R ↦ x - 1) :=
+  ⟨sub_one_is_good, λ _ _ h ↦ add_right_injective 0 (sub_left_injective (h 0))⟩
+
+end
+
+
+section
+
+variable [Ring R] {a : R} (ha : a * a = 1) (ha0 : ∀ x, a * x = x * a)
+
+theorem good_mul_central_involutive {f : R → R} (hf : good f) :
+    good (λ x : R ↦ a * f x) := λ x y ↦ by
+  rw [mul_assoc, ← mul_assoc _ a, ← ha0, mul_assoc, ← mul_assoc, ha, one_mul, ← mul_add, hf]
+
+theorem ReducedGood_mul_central_involutive {f : R → R} (hf : ReducedGood f) :
+    ReducedGood (λ x : R ↦ a * f x) :=
+  ⟨good_mul_central_involutive ha ha0 hf.is_good,
+  λ c d h ↦ hf.period_imp_eq c d λ x ↦ by
+    replace h : a * _ = a * _ := congrArg (a * ·) (h x)
+    rwa [← mul_assoc, ← mul_assoc, ha, one_mul, one_mul] at h⟩
+
+theorem mul_one_sub_is_good : good (λ x : R ↦ a * (1 - x)) :=
+  good_mul_central_involutive ha ha0 one_sub_is_good
+
+theorem mul_one_sub_is_ReducedGod : ReducedGood (λ x : R ↦ a * (1 - x)) :=
+  ReducedGood_mul_central_involutive ha ha0 one_sub_is_ReducedGood
+
+end
 
 
 

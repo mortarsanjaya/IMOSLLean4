@@ -4,14 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A6.A6Basic
-import Mathlib.Algebra.Field.Basic
+import IMOSLLean4.IMO2017.A6.A6Lemmas.Field
+import IMOSLLean4.IMO2017.A6.A6Lemmas.ReducedNZD2
 import IMOSLLean4.Extra.CharTwo.Ring
 
 /-!
-# IMO 2017 A6 (P2, Solution to Case 2: Fields of characteristic 2)
+# IMO 2017 A6 (P2, Solution to the case: `R` is a field)
 
-We find all good functions `f : F → F` when `F` is a field of characteristic `2`.
+We find all good functions `f : F → F` when `F` is a field.
+We solve more: if `char(F) ≠ 2`, then `F` can be a division ring.
 
 ### Extra notes
 
@@ -24,44 +25,6 @@ namespace IMOSL
 namespace IMO2017A6
 
 open Extra
-
-/-- `x ↦ x + 1` is an answer in characteristic 2 -/
-theorem CharTwo_add_one_is_good [NonAssocRing R] [CharTwo R] : good (· + (1 : R)) := by
-  simp only [add_comm _ (1 : R), ← Extra.CharTwo.sub_eq_add]; exact one_sub_is_good
-
-
-
-
-
-/-! ### Good functions on division rings -/
-
-namespace good
-
-variable [DivisionRing F] {f : F → F} (hf : good f)
-
-/-- Good functions on division rings: a formula -/
-theorem DivRing_inv_formula {c : F} (h : c ≠ 0) : f (f (c + 1) * f (c⁻¹ + 1)) = 0 := by
-  rw [eq_sub_of_add_eq (hf _ _), sub_eq_zero, add_one_mul c,
-    mul_add_one c, mul_inv_cancel h, add_comm 1]
-
-/-- Good functions on division rings: either `0` or reduced -/
-theorem DivRing_zero_or_reduced : f = 0 ∨ ReducedGood f := by
-  apply (em (∃ c, c ≠ 0 ∧ f (c + 1) = 0)).imp
-  -- Case 1: `f(c + 1) = 0` for some `c ≠ 0`
-  · rintro ⟨c, h, h0⟩
-    have h1 := hf.DivRing_inv_formula h
-    rw [h0, zero_mul] at h1
-    funext x; have h2 := hf.map_map_zero_mul_map x
-    rwa [h1, zero_mul, h1, zero_add] at h2
-  -- Case 2: `f(c + 1) = 0 ↔ c = 0`
-  · refine λ h ↦ ⟨hf, λ c d h0 ↦ eq_of_sub_eq_zero (by_contra λ h1 ↦ h ⟨_, h1, ?_⟩)⟩
-    rw [sub_add_comm, h0, sub_add_cancel, hf.map_one_eq_zero]
-
-end good
-
-
-
-
 
 /-! ### Reduced good functions on fields of characteristic 2 -/
 
@@ -142,10 +105,32 @@ end ReducedGood
 
 
 
-/-! ### Final solution for `char(F) = 2` -/
+/-! ### Final solution for field case -/
 
 /-- Final solution for fields of characteristic `2` -/
 theorem CharTwoField_good_iff [Field F] [CharTwo F] {f : F → F} :
     good f ↔ f = 0 ∨ f = (· + 1) :=
   ⟨λ hf ↦ hf.DivRing_zero_or_reduced.imp_right ReducedGood.CharTwoField_solution,
-  λ hf ↦ by rcases hf with rfl | rfl; exacts [zero_is_good, CharTwo_add_one_is_good]⟩
+  λ h ↦ h.elim (λ h ↦ h ▸ zero_is_good) λ h ↦ by
+    simp only [h, add_comm _ (1 : F), ← CharTwo.sub_eq_add]; exact one_sub_is_good⟩
+
+/-- Final solution for division rings with `2 ≠ 0` -/
+theorem CharNeTwoDivRing_good_iff [DivisionRing F] [hR : NeZero (2 : F)] {f : F → F} :
+    good f ↔ f = 0 ∨ f = (1 - ·) ∨ f = (· - 1) := by
+  refine good.DivRing_iff_zero_or_reduced.trans (or_congr_right ?_)
+  refine ⟨λ hf ↦ ?_, ?_⟩
+  · have h := hf.NZD2_solution (mem_nonZeroDivisors_of_ne_zero two_ne_zero)
+    refine (mul_self_eq_one_iff.mp (hf.map_zero_mul_self)).imp (λ h0 ↦ ?_) (λ h0 ↦ ?_)
+    · funext x; rw [h, h0, one_mul]
+    · funext x; rw [h, h0, neg_one_mul, neg_sub]
+  · rintro (rfl | rfl); exacts [one_sub_is_ReducedGood, sub_one_is_ReducedGood]
+
+/-- Final solution for arbitrary fields -/
+theorem Field_good_iff [Field F] {f : F → F} :
+    good f ↔ f = 0 ∨ f = (1 - ·) ∨ f = (· - 1) := by
+  by_cases h : (2 : F) = 0
+  · haveI : CharTwo F := CharTwo.Semiring_of_two_eq_zero h
+    simp only [CharTwo.sub_eq_add', add_comm (1 : F)]
+    rw [CharTwoField_good_iff, or_self]
+  · haveI : NeZero (2 : F) := ⟨h⟩
+    exact CharNeTwoDivRing_good_iff
