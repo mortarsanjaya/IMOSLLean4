@@ -28,13 +28,11 @@ namespace IMO2017A6
 
 open scoped nonZeroDivisors
 
-variable {R : Type u} [Ring R] [Invertible (2 : R)]
-
 /-! ### Results on the quotient map by period -/
 
 namespace good
 
-variable {f : R → R} (hf : good f)
+variable [Ring R] [Invertible (2 : R)] {f : R → R} (hf : good f)
 
 private local instance : Invertible (2 : hf.toRingCon.Quotient) :=
   ⟨(⅟2 : R), congrArg _ (invOf_mul_self _), congrArg _ (mul_invOf_self _)⟩
@@ -73,7 +71,7 @@ end good
 
 /-! ### Solution to the alternative functional equation -/
 
-theorem altFE_solution [AddCommGroup G]
+theorem altFE_solution [Ring R] [AddCommGroup G]
     (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y) (hG3 : ∀ x y : G, 3 • x = 3 • y → x = y)
     {f : R → G} (h : ∀ x y, f ((1 - x) * (1 - y)) + f (x + y) = f (x * y)) :
     ∃ φ : R →+ G, φ = λ x ↦ f (1 - x) := by
@@ -85,19 +83,67 @@ theorem altFE_solution [AddCommGroup G]
       add_sub_assoc, ← one_sub_mul, ← sub_sub, ← mul_one_sub]
   clear_value g; clear f
   ---- Now just prove more and more properties
-  have hG2 := hG2
-  have hG3 := hG3
-  /-
-  have h0 (x) : g (x + 1) = g x + g 1 := by
-    dsimp only [g]; rw [sub_add_cancel_right, sub_self, sub_eq_add_neg]
-    specialize h 1 (-x); rwa [sub_self, zero_mul, one_mul, add_comm, eq_comm] at h
+  have h0' (x) : g (x + 1) = g x + g 1 := by
+    specialize h (-x) 1; rwa [mul_one, sub_neg_eq_add, neg_add_cancel_comm,
+      sub_add_cancel_right, neg_neg, sub_neg_eq_add, add_comm, add_comm 1, eq_comm] at h
+  have h0 (x : R) : ∀ n : ℕ, g (x + n) = g x + n • g 1 :=
+    Nat.rec (by rw [Nat.cast_zero, add_zero, zero_nsmul, add_zero])
+      λ n hn ↦ by rw [Nat.cast_succ, ← add_assoc, h0', hn, add_assoc, succ_nsmul]
   have h1 (x) : g (-x) = -g x := by
-    specialize h 0 x; rw [sub_zero, one_mul, zero_add, zero_mul, ← sub_self 1] at h
-    change g x + f x = g 1 at h; rw [eq_sub_of_add_eq h, neg_sub, eq_sub_iff_add_eq, ← h0]
-    dsimp only [g]; rw [sub_add_cancel_right, neg_neg]
-  replace h (x y) : g (x * y - (x + y)) + g (x + y) = g (x * y)
-  -/
-  sorry
+    specialize h 0 x; rwa [zero_add, zero_mul, sub_zero, sub_zero, sub_eq_add_neg,
+      ← eq_neg_add_iff_add_eq, add_comm 1, h0', add_left_inj] at h
+  replace h (x y) : g (x * y + (x + y)) = g (x * y) + g (x + y) := by
+    specialize h (-x) (-y)
+    rwa [neg_mul_neg, ← neg_add, ← neg_add', h1, sub_neg_eq_add, add_comm 1,
+      h0', sub_eq_add_neg, add_comm 1, h0', ← add_assoc, add_left_inj,
+      h1, ← eq_sub_iff_add_eq, ← neg_add', neg_inj, add_comm] at h
+  have h₁ (x y) : g ((x + 1) * (y + 1)) = g (x * y) + g (x + y) + g 1 := by
+    rw [add_one_mul x, mul_add_one x, ← add_assoc, h0', add_assoc, h]
+  replace h : ∀ (n : ℕ) (x y : R),
+      g ((x + n) * (y + n)) = g (x * y) + n • g (x + y) + n ^ 2 • g 1 := by
+    refine Nat.rec (λ x y ↦ ?_) (λ n hn x y ↦ ?_)
+    · rw [Nat.cast_zero, add_zero, add_zero, zero_nsmul,
+        sq, add_zero, Nat.zero_mul, zero_nsmul, add_zero]
+    · rw [Nat.cast_succ, ← add_assoc, ← add_assoc, h₁, add_add_add_comm, ← Nat.cast_add,
+        h0, ← add_assoc, add_assoc, ← succ_nsmul, hn, add_right_comm _ _ (g _),
+        add_assoc _ (_ • g 1), ← add_nsmul, add_assoc (g _), ← succ_nsmul, sq,
+        n.add_assoc, ← (n * n).add_assoc, sq, ← n.succ_mul, ← n.succ.mul_succ]
+  replace h1 (n : ℕ) (x : R) : g (n * x) = n • g x := by
+    have h2 : g 0 = 0 := by rw [← add_left_inj, ← h0', zero_add, zero_add]
+    specialize h n 0 x; rwa [zero_add, mul_add, ← Nat.cast_mul,
+      h0, zero_mul, h2, zero_add, zero_add, sq, add_left_inj] at h
+  replace h₁ : ∀ x y, g ((x + 2) * (y + 2)) = g (x * y) + 2 • g (x + y) + 4 • g 1 := h 2
+  replace h0' (x y) : g ((x + 1) * (y + 2)) = g (x * y) + g (2 * x + y) + 2 • g 1 := by
+    specialize h₁ (2 * x) y
+    rw [← mul_add_one (2 : R), mul_assoc, mul_assoc, ← Nat.cast_two,
+      h1, h1, mul_nsmul _ 2 2, ← nsmul_add, ← nsmul_add] at h₁
+    exact hG2 _ _ h₁
+  replace h₁ (x y) : g ((x + 2) * (y + 1)) = g (x * y) + g (x + y * 2) + 2 • g 1 := by
+    have X (x : R) : 2 * x = x * 2 := by rw [two_mul, mul_two]
+    specialize h₁ x (y * 2)
+    rw [← add_one_mul y, ← mul_assoc, ← X, ← mul_assoc x, ← X, ← Nat.cast_two,
+      h1, h1, mul_nsmul _ 2 2, ← nsmul_add, ← nsmul_add] at h₁
+    exact hG2 _ _ h₁
+  replace h (x y) : g (2 * x + y) + g (x + y * 2) = 3 • g (x + y) := by
+    specialize h0' (x + 2) (y + 1)
+    rw [add_assoc, add_assoc, add_comm 1, two_add_one_eq_three] at h0'
+    have X : ((3 : ℕ) : R) = 3 := rfl
+    rw [← X, h, h₁, add_assoc, add_assoc, add_add_add_comm, add_assoc (g _),
+      add_assoc, add_right_inj, mul_add, ← add_nsmul, add_add_add_comm] at h0'
+    replace X : 2 * 2 + 1 = ((5 : ℕ) : R) := by
+      rw [Nat.cast_succ, Nat.cast_mul 2 2, Nat.cast_two]
+    rw [X, h0, add_assoc, add_assoc, ← add_nsmul, add_left_comm, ← add_assoc] at h0'
+    exact (add_left_injective _ h0').symm
+  clear h0' h0 h₁
+  ---- Now the finishing argument
+  intro a b
+  specialize h (a + (a - b)) (b - (a - b))
+  have X (x : R) : (3 : ℕ) * x = x + (x + x) := by
+    rw [Nat.cast_succ, Nat.cast_two, add_one_mul 2 x, two_mul, add_comm]
+  rw [two_mul, mul_two, add_left_comm (a + (a - b)) (b - _), add_assoc,
+    add_add_sub_cancel, add_assoc, sub_add_add_cancel, ← X, h1, sub_add, sub_sub,
+    add_left_comm b a, sub_add_cancel_left, sub_neg_eq_add, ← X, h1, ← nsmul_add] at h
+  exact (hG3 _ _ h).symm
 
 
 
@@ -107,8 +153,8 @@ theorem altFE_solution [AddCommGroup G]
 
 open Function
 
-theorem general_good_iff (hR : 3 ∈ R⁰) {f : R → R} :
-    good f ↔ ∃ (S : Type u) (_ : Ring S) (φ : R →+* S) (ι : S →+ R) (h : LeftInverse φ ι)
+theorem general_good_iff {R : Type u} [Ring R] [Invertible (2 : R)] (hR : 3 ∈ R⁰) {f : R → R} :
+    good f ↔ ∃ (S : Type u) (_ : Ring S) (φ : R →+* S) (ι : S →+ R) (_ : LeftInverse φ ι)
       (a : S) (_ : a * a = 1) (_ : ∀ x, a * x = x * a), f = λ x ↦ ι (a * (1 - φ x)) :=
   ⟨λ hf ↦ by
     obtain ⟨ι, h0⟩ : ∃ ι : hf.toRingCon.Quotient →+ R,
