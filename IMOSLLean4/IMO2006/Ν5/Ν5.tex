@@ -1,0 +1,43 @@
+Let $p > 3$ be a prime.
+Determine all pairs $(x, y)$ of integers such that
+\[ \sum_{k = 0}^{p - 1} x^k = y^{p - 2} - 1. \tag{*}\label{2006n5-eq0} \]
+
+
+
+\subsection*{Answer}
+
+None.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2006SL.pdf}
+
+We follow the official solution, with the whole idea being the following lemma.
+
+\begin{lemma}\label{2006n5-1}
+Let $p$, $q$ be primes and $x$ be an integer such that $q \mid \sum_{k = 0}^{p - 1} x^k$.
+Then either $q \equiv 1 \pmod{p}$ or $q = p$.
+\end{lemma}
+\begin{proof}
+First note that $q \nmid x$.
+If $x \equiv 1 \pmod{q}$ then we get $q \mid p$, which implies $q = p$.
+Otherwise, $q \mid x^p - 1$ but $q \nmid x - 1$, so the order of $x$ modulo $q$ is not $1$ but divides $p$.
+Since $p$ is prime, that order must be exactly $p$.
+Thus $p \mid q - 1$.
+\end{proof}
+
+More generally, this implies:
+
+\begin{lemma}\label{2006n5-2}
+Let $p$ be a prime, $x \in \Z$, and $d$ be a positive divisor of $\sum_{k = 0}^{p - 1} x^k$.
+Then $d \equiv 0, 1 \pmod{p}$.
+\end{lemma}
+
+Now suppose that~\eqref{2006n5-eq0} has a solution $(x, y)$.
+Since $y - 1$ divides both sides, the above lemma yields $y \equiv 1, 2 \pmod{p}$.
+If $y \equiv 2 \pmod{p}$, then $2(y^{p - 2} - 1) \equiv 1 \pmod{p}$.
+But then $y^{p - 2} - 1 \not\equiv 0, 1 \pmod{p}$; a contradiction.
+Otherwise, if $y \equiv 1 \pmod{p}$, then $1 + y + \ldots + y^{p - 3}$ is a divisor of both sides and it is congruent to $-2 \pmod{p}$.
+Again, a contradiction.
