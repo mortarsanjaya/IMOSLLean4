@@ -1,0 +1,29 @@
+Let $R$ be a commutative ring.
+Given $a_1, a_2, a_3, \ldots, a_n \in R$, we define $f(a_1, a_2, \ldots, a_n)$ as follows.
+Let $u_0 = u_1 = 1$, and define $u_{k + 2} = u_{k + 1} + a_k u_k$ for each $0 \leq k < n$.
+Then set $f(a_1, a_2, \ldots, a_n) = u_{n + 1}$.
+
+Prove that, for any $a_1, a_2, a_3, \ldots, a_n \in R$, we have
+\[ f(a_1, a_2, \ldots, a_n) = f(a_n, a_{n - 1}, \ldots, a_1). \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2013SL.pdf}
+
+Our solution is based on Solution 3 of the official solution, which uses matrices.
+
+For any $r \in R$, denote
+\[ M_r = \begin{pmatrix} 1 + r & -r \\ r & -r \end{pmatrix}. \]
+The main claim here is the following two matrix-based equalities:
+\[ f(a_1, a_2, \ldots, a_n) = \begin{pmatrix} 1 & 0 \end{pmatrix} M_{a_n} M_{a_{n - 1}} \ldots M_1 \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \]
+\[ f(a_1, a_2, \ldots, a_n) = \begin{pmatrix} 1 & 0 \end{pmatrix} M_1 M_2 \ldots M_{a_{n - 1}} \begin{pmatrix} 1 \\ 0 \end{pmatrix}, \]
+
+Fix some $a_1, a_2, a_3, \ldots, a_n \in R$.
+Again, let $u_0 = u_1 = 1$, and define $u_{k + 2} = u_{k + 1} + a_k u_k$ for each $0 \leq k < n$.
+Then, direct computation yields that for $0 \leq k \leq n$,
+\[ \begin{pmatrix} u_{k + 1} \\ u_{k + 1} - u_k \end{pmatrix} = M_{a_k} \begin{pmatrix} u_k \\ u_k - u_{k - 1} \end{pmatrix}, \]
+\[ \begin{pmatrix} u_{k + 1} & u_k - u_{k + 1} \end{pmatrix} = \begin{pmatrix} u_k & u_{k - 1} - u_k \end{pmatrix} M_{a_k}. \]
+The main claim follows by induction afterwards.
+The problem statement easily follows from the main claim.
