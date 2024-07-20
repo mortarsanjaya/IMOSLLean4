@@ -1,0 +1,39 @@
+Let $R$ be a totally ordered commutative ring and $R_{\geq 0} = \{x \in R : x \geq 0\}$.
+Let $a_1, a_2, \ldots, a_n, c \in R_{\geq 0}$ such that $a_i a_j \geq c$ whenever $i \neq j$.
+Let $r \in R_{\geq 0}$ such that $nr \geq a_1 + a_2 + \ldots + a_n$.
+Prove that
+\[ \prod_{i = 1}^n (a_i^2 + c) \leq (r^2 + c)^n. \tag{*}\label{2016a1-eq0} \]
+
+
+
+\subsection*{Solution}
+
+We heavily modify the claim in the official solution, and proceed differently afterwards.
+In particular, we do not use Cauchy's induction either.
+The main claim is instead:
+
+\begin{claim}
+Let $x, y, z, w, c \in R$ such that $x + y = z + w$ and $c \leq xy \leq zw$.
+Then \[ (x^2 + c)(y^2 + c) \leq (z^2 + c)(w^2 + c). \]
+\end{claim}
+\begin{proof}
+This follows from the formula $(x^2 + c)(y^2 + c) = (xy - c)^2 + c(x + y)^2$.
+\end{proof}
+
+Now proceed by induction on $n$; the base case $n = 1$ is clear.
+For $n = 2$, the claim implies the inequality since $2r \geq x + y$ implies $r^2 \geq xy$.
+Now fix $n$ and suppose that there are $n + 1$ elements $a_i$ to be considered.
+If $a_i \leq r$ for all $i$, then we are done.
+So now, suppose that $a_i > r$ for some $i$.
+Note that this cannot hold for all $i$, since $a_1 + \ldots + a_{n + 1} \leq (n + 1)r$.
+WLOG, we assume that $a_n \leq r \leq a_{n + 1}$.
+
+Now replace $a_n$ and $a_{n + 1}$ with $r$ and $s := a_n + a_{n + 1} - r$.
+Note that $a_n \leq r, s \leq a_{n + 1}$ and $a_n + a_{n + 1} = r + s$.
+This implies $a_n a_{n + 1} \leq rs$, and thus the claim yields $(a_n^2 + c)(a_{n + 1}^2 + c) \leq (r^2 + c)(s^2 + c)$.
+Furthermore,
+\[ a_1 + a_2 + \ldots + a_{n - 1} + s = a_1 + a_2 + \ldots + a_{n + 1} - r \leq nr, \]
+    and one can check manually that $r a_i, s a_i \geq a_n a_i \geq c$ for all $i < n$.
+Thus, by induction hypothesis,
+\[ (a_1^2 + c) \ldots (a_{n - 1}^2 + c) (s^2 + c) \leq (r^2 + c)^n. \]
+Combining all the inequalities yield~\eqref{2016a1-eq0}.
