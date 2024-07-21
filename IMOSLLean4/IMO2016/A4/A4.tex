@@ -1,0 +1,60 @@
+Let $R$ be a totally ordered commutative ring.
+Denote by $R^+$ the set of positive elements of $R$.
+Find all functions $f : R^+ \to R^+$ such that, for all $x, y \in R^+$,
+\[ x f(x^2) f(f(y)) + f(y f(x)) = f(xy) (f(f(y^2)) + f(f(x^2))). \tag{*}\label{2016a4-eq0} \]
+
+
+
+\subsection*{Answer}
+
+A function $f : R^+ \to R^+$ satisfies~\eqref{2016a4-eq0} if and only if $x f(x) = 1$ for all $x \in R^+$.
+In particular, such a function does not exist if $R$ is not a field, and $x \mapsto x^{-1}$ is the only such function if $R$ is a field.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2016SL.pdf}
+
+We follow Solution 1 of the official solution.
+We prove injectivity in a different way from the solution.
+
+First, we check that $f$ satisfies~\eqref{2016a4-eq0} if $x f(x) = 1$ for all $x \in R^+$.
+Start by verifying that $f(f(x)) = x$ for all $x \in R^+$.
+Indeed, this holds due to $x f(x) = f(x) f(f(x)) = 1$ for all $x \in R^+$.
+The equation to be proved reduces to $x f(x^2) y + f(y f(x)) = f(xy) (y^2 + x^2)$.
+In fact, it reduces to $x f(x^2) = f(xy) y$ and $f(y f(x)) = f(xy) x^2$.
+The first one can be verified by multiplying both sides with $x$.
+The second one is verified by multiplying both sides with $y f(x)$.
+
+Now, we go for the converse.
+Plugging $x = y = 1$ into~\eqref{2016a4-eq0} yields $f(1) = 1$.
+Plugging $x = 1$ into~\eqref{2016a4-eq0} gives us
+\[ f(y) f(f(y^2)) = f(f(y)) \quad \forall y \in R^+. \tag{1}\label{2016a4-eq1} \]
+Plugging $y = 1$ into~\eqref{2016a4-eq0} and then using~\eqref{2016a4-eq1} yields
+\[ x f(x^2) = f(x) \quad \forall x \in R^+. \tag{2}\label{2016a4-eq2} \]
+Combining~\eqref{2016a4-eq1} and~\eqref{2016a4-eq2} yields
+\[ f(f(x^2)) = f(f(x)^2) \quad \forall x \in R^+. \tag{3}\label{2016a4-eq3} \]
+If $f$ is injective, then we get $f(x^2) = f(x)^2$ from the above equality.
+Substituting to~\eqref{2016a4-eq2} yields $x f(x) = 1$ for all $x \in R^+$.
+Thus, it remains to show that $f$ is indeed injective.
+
+First, substituting~\eqref{2016a4-eq2} and~\eqref{2016a4-eq3} back into~\eqref{2016a4-eq0} yields
+\[ f(x) f(f(y)) + f(y f(x)) = f(xy) (f(f(y)^2) + f(f(x)^2)) \quad \forall x, y \in R^+. \tag{4}\label{2016a4-eq4} \]
+In particular, for any $a, b, y \in R^+$ such that $f(a) = f(b)$, the above yields $f(ay) = f(by)$.
+Thus we also get $f(a^2) = f(ab) = f(b^2)$, and~\eqref{2016a4-eq2} yields $a = b$.
+This shows that $f$ is injective.
+
+
+
+\subsection*{Implementation details}
+
+As one can see from the solution, a bunch of properties of $R^+$ are not important at all.
+We only need that:
+\begin{itemize}
+    \item   $(R^+, \cdot)$ is an integral (commutative, cancellative) monoid; and
+    \item   $(R^+, +)$ is a magma with injective addition on both sides;
+    \item   addition distributes over multiplication.
+\end{itemize}
+
+The addition does not even have to be commutative!
