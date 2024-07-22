@@ -1,0 +1,40 @@
+Fix $n > 1$, and let $a$ and $b$ be positive integers such that $nab - 1 \mid (na^2 - 1)^2$.
+Prove that $a = b$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+The official solution considers the case $n = 4$, but as commented there, any $n > 1$ works.
+The following solution is essentially the official solution, presented in a slightly different way.
+
+Fix $n > 1$, and call a pair $(a, b)$ of positive integers \emph{bad} if $nab - 1 \mid (na^2 - 1)^2$.
+The main results that we need for the descent argument are as follows.
+
+\begin{lemma}\label{2007n6-1}
+If $(a, b)$ is a bad pair, so is $(b, a)$.
+\end{lemma}
+\begin{proof}
+Indeed, $(a, b)$ is a bad pair iff
+\[ nab - 1 \mid (na^2 - nab)^2 = (na)^2 (a - b)^2 \iff (a - b)^2, \]
+    since $na$ and $nab - 1$ are coprime.
+The lemma follows by symmetry.
+\end{proof}
+
+\begin{lemma}\label{2007n6-2}
+Fix some $a > 0$, and suppose that there exist $b > a$ such that $(a, b)$ is a bad pair.
+Then there exists $0 < c < a$ such that $(a, c)$ is a bad pair.
+\end{lemma}
+\begin{proof}
+Write $(na^2 - 1)^2 = (nab - 1) r$ for some integer $r$.
+Working modulo $na$ gives $r \equiv -1 \pmod{na}$, so we can write $r = nac - 1$ for some integer $c$.
+Then $(a, c)$ is a bad pair, and the bound $0 < a < b$ implies that $0 < c < a$.
+\end{proof}
+
+Now we show that no bad pairs $(a, b)$ exist with $a < b$.
+Let $a$ be the minimal positive integer such that $(a, b)$ is bad for some $b > a$.
+By Lemma~\ref{2007n6-2}, there exists $0 < c < a$ such that $(a, c)$ is a bad pair.
+The properties of such $c$ contradicts the minimality of $a$.
+Thus, no bad pairs exist.
