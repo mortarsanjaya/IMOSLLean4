@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Squarefree
-import Mathlib.Data.Rat.Defs
 
 /-!
 # IMO 2023 N7
