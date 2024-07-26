@@ -1,0 +1,23 @@
+Let $n$ be a positive integer and $a_1, a_2, \ldots, a_k$ be distinct integers in $\{1, 2, \ldots, n\}$, with $k \geq 2$.
+Prove that there exists $i \leq k$ such that $n$ does not divide $a_i (a_{i + 1} - 1)$, where $a_{k + 1} = a_1$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We follow Solution 2 of the official solution.
+In fact, we can over-generalize: if no such $i$ exists, then $a_1 \equiv a_2 \equiv \ldots \equiv a_k \pmod{n}$.
+
+Consider an arbitrary $a, b, c \in \Z$ such that $n \mid ab - a$ and $n \mid bc - b$.
+Rearrange as $ab \equiv a \pmod{n}$ and $bc \equiv b \pmod{n}$.
+Then we get
+\[ ac \equiv abc \equiv ab \equiv a \pmod{n}. \]
+In particular, by easy induction on $m$, we get $n \mid a_i a_{i + m} - a_i$ for all $m \geq 1$.
+Then this also yields $n \mid a_i a_j - a_i$ for all $i, j \leq k$.
+This gives us $n \mid (a_i a_j - a_j) - (a_i a_j - a_i) = a_i - a_j$.
+
+Given integers $a_1, a_2, \ldots, a_k \in \{1, 2, \ldots, n\}$, two of them are congruent mod $n$ if and only if they are equal.
+Thus, if they are pairwise distinct, they cannot be congruent modulo $p$.
+For $k > 1$, this contradicts the previous paragraph, so inded $n \nmid a_i (a_{i + 1} - 1)$ for some $i \leq k$.
