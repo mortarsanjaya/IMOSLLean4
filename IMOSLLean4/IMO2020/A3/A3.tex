@@ -1,0 +1,28 @@
+Find the smallest possible value of $a/b + b/c + c/d + d/a$ across all positive real numbers $a$, $b$, $c$, and $d$ satisfying $(a + c)(b + d) = ac + bd$.
+
+
+
+\subsection*{Answer}
+
+$8$.
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2020SL.pdf}
+
+We follow Solution 1 of the official solution.
+However, we avoid using square root to prove lower bound results.
+In fact, our lower bound generalizes to totally ordered fields.
+
+The value $8$ is attained when $a = c = 2 + \sqrt{3}$ and $b = d = 1$.
+It remains to show that $8$ is a lower bound for $a/b + b/c + c/d + d/a$.
+
+First, by AM-GM, the equality $(a + c)(b + d) = ac + bd$ implies
+\[ (ac + bd)^2 = (a + c)^2 (b + d)^2 \geq 16 abcd \implies \frac{ac}{bd} + \frac{bd}{ac} + 2 \geq 16. \]
+Now, by AM-GM inequality,
+\[ \left(\frac{a}{b} + \frac{c}{d}\right)^2 \geq 4\frac{ac}{bd}, \quad \left(\frac{b}{c} + \frac{d}{a}\right)^2 \geq 4\frac{bd}{ac}. \]
+In particular, $(a/b + c/d)(b/c + d/a) \geq 4$.
+By the three inequalities, we get
+\[ \left(\frac{a}{b} + \frac{b}{c} + \frac{c}{d} + \frac{d}{a}\right)^2 \geq 4\left(\frac{ac}{bd} + \frac{bd}{ac} + 2\right) \geq 64. \]
+Taking square roots yield $a/b + b/c + c/d + d/a \geq 8$, as desired.
