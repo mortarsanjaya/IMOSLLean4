@@ -4,9 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Sort
-import Mathlib.Data.Fintype.Prod
 import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Fintype.Prod
 
 
 /-!
