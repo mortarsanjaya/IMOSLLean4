@@ -1,0 +1,44 @@
+Consider an arbitrary set $A = \{a_1, a_2, a_3, a_4\}$ of four distinct positive integers.
+Let $p_A$ be the number of pairs $(i, j)$ with $1 \leq i < j \leq 4$ such that $a_i + a_j \mid a_1 + a_2 + a_3 + a_4$.
+Determine all sets $A$ of size $4$ such that $p_A \geq p_B$ for all sets $B$ of size $4$.
+
+
+
+\subsection*{Answer}
+
+$\{d, 5d, 7d, 11d\}$ and $\{d, 11d, 19d, 29d\}$ for some $d \in \N^+$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2011SL.pdf}
+
+We follow the official solution.
+We prove that $p_A \leq 4$ for all $A$ and find the equality cases.
+
+Without loss of generality, assume that $a_1 < a_2 < a_3 < a_4$.
+Then $a_3 + a_4 \nmid a_1 + a_2 + a_3 + a_4$ since $a_3 + a_4 > a_1 + a_2$.
+Similarly, $a_2 + a_4 \nmid a_1 + a_2 + a_3 + a_4$.
+Thus $p_A \leq 4$, and equality forces $a_1 + a_2$, $a_1 + a_3$, $a_1 + a_4$, and $a_2 + a_3$ to divide $a_1 + a_2 + a_3 + a_4$.
+Now we find all $A = \{a_1, a_2, a_3, a_4\}$ satisfying such constraint.
+
+By $a_1 + a_4, a_2 + a_3 \mid a_1 + a_2 + a_3 + a_4$, we get that $a_1 + a_4$ and $a_2 + a_3$ divides each other, so
+\[ a_1 + a_4 = a_2 + a_3. \]
+Next, we have $a_1 + a_3 \mid 2(a_2 + a_3)$.
+Since $a_1 + a_3 < a_2 + a_3 < 2(a_1 + a_3)$, we necessarily have
+\[ 3(a_1 + a_3) = 2(a_2 + a_3) \iff 3 a_1 + a_3 = 2 a_2. \]
+Finally, we have $a_1 + a_2 \mid 2(a_2 + a_3)$.
+But also, we have $a_2 + a_3 < 3 (a_1 + a_2) < 2(a_2 + a_3)$ and so we have
+\[ a_2 + a_3 = 2(a_1 + a_2) \iff a_3 = 2 a_1 + a_2 \text{ or } 2(a_2 + a_3) = 5(a_1 + a_2) \iff 2 a_3 = 5 a_1 + 3 a_2. \]
+In the first case, solving the equations yield $(a_2, a_3, a_4) = (5 a_1, 7 a_1, 11 a_1)$.
+In the second case, we instead get $(a_2, a_3, a_4) = (11 a_1, 19 a_1, 29 a_1)$.
+
+
+
+
+
+\subsection*{Implementation details}
+
+For implementation convenience, the sets of size $4$ are instead implemented using strictly increasing positive function from \texttt{Fin 4} to $\N$.
+Here, we \textbf{do not} prove equivalence between this implementation and sets of size $4$.
