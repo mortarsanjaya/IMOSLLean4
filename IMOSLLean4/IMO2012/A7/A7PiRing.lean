@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2012.A7.A7Group
 import Mathlib.Algebra.Ring.Pi
+import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Algebra.Ring.Subring.Basic
 
 /-!

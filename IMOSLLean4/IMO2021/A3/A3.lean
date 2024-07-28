@@ -85,12 +85,12 @@ theorem lowerBoundMk_perm_iota : ∀ n : ℕ, lowerBoundMk n ~ iota n :=
   Nat.binaryRec (Perm.of_eq lowerBoundMk_zero) λ b n ↦ match b, n with
     | false, 0 => id
     | false, k + 1 => λ h ↦ by
-        rw [lowerBoundMk_bit0_succ, Nat.bit_false, Nat.bit0_val]
+        rw [lowerBoundMk_bit0_succ, Nat.bit_false]
         refine perm_middle.trans (((h.append_left _).trans ?_).cons _)
         rw [iota_map_add_append_iota_eq_iota, add_right_comm, ← two_mul]
         exact Perm.refl _
     | true, n => λ h ↦ by
-        rw [lowerBoundMk_bit1, Nat.bit_true, Nat.bit1_val]
+        rw [lowerBoundMk_bit1, Nat.bit_true]
         refine perm_middle.trans (((h.append_left _).trans ?_).cons _)
         rw [iota_map_add_append_iota_eq_iota, ← two_mul]
 
@@ -115,7 +115,8 @@ theorem lowerBoundMk_targetSum : ∀ n : ℕ, targetSum (lowerBoundMk n) = n.siz
     | false, k + 1 => λ h ↦ by
         have h0 : ((2 * k + 2) :: lowerBoundMk (k + 1)).length = (k + 1).succ :=
           congr_arg Nat.succ (lowerBoundMk_length (k + 1))
-        rw [lowerBoundMk_bit0_succ, Nat.bit_false, Nat.size_bit0 k.succ_ne_zero,
+        have X1 : 2 * k.succ ≠ 0 := Nat.mul_ne_zero (Nat.succ_ne_zero 1) k.succ_ne_zero
+        rw [lowerBoundMk_bit0_succ, Nat.size_bit (by exact X1),
           (k + 1).size.succ_eq_add_one, targetSum_map_add_iota_length_succ h0,
           targetSum, h0, h, add_comm, Nat.add_right_inj]
         exact Nat.div_eq_of_lt_le
@@ -124,7 +125,7 @@ theorem lowerBoundMk_targetSum : ∀ n : ℕ, targetSum (lowerBoundMk n) = n.siz
     | true, n => λ h ↦ by
         have h0 : ((2 * n + 1) :: lowerBoundMk n).length = n.succ :=
           congr_arg Nat.succ (lowerBoundMk_length n)
-        rw [lowerBoundMk_bit1, Nat.bit_true, Nat.size_bit1,
+        rw [lowerBoundMk_bit1, Nat.size_bit (by exact (2 * n).succ_ne_zero),
           targetSum_map_add_iota_length_succ h0, targetSum, h0, h,
           n.size.succ_eq_add_one, add_comm, Nat.add_right_inj]
         exact Nat.div_eq_of_lt_le

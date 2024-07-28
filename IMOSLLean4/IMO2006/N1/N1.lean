@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.RingTheory.Coprime.Lemmas
+import Mathlib.Algebra.Order.Ring.Abs
 
 /-!
 # IMO 2006 N1 (P4)

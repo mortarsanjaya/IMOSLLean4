@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.NatSequence.AntitoneConst
 import IMOSLLean4.Extra.Infinitesimal.Archimedean
-import Mathlib.Algebra.Group.Fin
+import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Fin.VecNotation
 
 /-!

@@ -55,7 +55,7 @@ theorem final_solution (h : 1 < m) :
     rw [mul_add_one (α := ℕ), mul_left_comm, Nat.add_sub_cancel_left] at h0
     exact h0 (Nat.le_add_right (p * (2 * k)) p)
   ---- If `m` is prime, then `m` is "good"
-  · rw [le_iff_exists_add] at h1; rcases h1 with ⟨c, rfl⟩
+  · rcases Nat.exists_eq_add_of_le h1 with ⟨c, rfl⟩
     rw [Nat.add_sub_cancel_left]; rcases c with _ | c
     -- `c = 0`
     · rw [Nat.add_zero, Nat.prime_mul_iff] at h0
@@ -69,4 +69,4 @@ theorem final_solution (h : 1 < m) :
       rw [two_mul, add_assoc] at h0
       rw [← Nat.coprime_self_add_right, ← Nat.coprime_self_add_right,
         Nat.coprime_comm, h0.coprime_iff_not_dvd]
-      exact Nat.not_dvd_of_pos_of_lt n.succ_pos (lt_add_of_pos_right _ (n.succ + c).succ_pos)
+      exact Nat.not_dvd_of_pos_of_lt n.succ_pos (Nat.lt_add_of_pos_right (n.succ + c).succ_pos)

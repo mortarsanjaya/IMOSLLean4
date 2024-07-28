@@ -56,7 +56,7 @@ theorem weakGood_iff {f : R → R} :
       revert h1; refine Or.imp (λ h1 ↦ ?_) (λ h1 ↦ ?_)
       · rwa [sub_eq_zero, sq_eq_sq hx.le h2.le, eq_comm] at h1
       · rw [sub_eq_zero, ← mul_pow, eq_comm, sq_eq_one_iff, mul_comm] at h1
-        exact h1.resolve_right (neg_one_lt_zero.trans (mul_pos hx h2)).ne.symm
+        exact h1.resolve_right ((neg_one_lt_zero (α := R)).trans (mul_pos hx h2)).ne.symm
     have h3 {x y} (hx : 0 < x) (hy : 0 < y) (hx' : x * f x ≠ 1) : f y = y := by
       specialize h1 hx hy
       have hx0 : f x = x := (h2 hx).resolve_right hx'

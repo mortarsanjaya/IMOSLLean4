@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Int.GCD
 import Mathlib.Data.Int.Interval
+import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Tactic.Ring
 
 /-!
@@ -98,7 +99,7 @@ theorem final_solution_part2 : ¬friendly 2 := by
     obtain ⟨s, rfl⟩ : 2 ∣ s := by
       replace h2 : 2 ∣ (2 * (m + n - 1) + s) * s :=
         ⟨4 * (m - n), h2.trans (Int.mul_assoc 2 4 _)⟩
-      rw [add_mul, mul_assoc, dvd_add_right ⟨_, rfl⟩, ← sq, Int.dvd_iff_emod_eq_zero,
+      rw [add_mul, mul_assoc, Int.dvd_add_right ⟨_, rfl⟩, ← sq, Int.dvd_iff_emod_eq_zero,
         ← Int.even_iff, Int.even_pow, Int.even_iff, ← Int.dvd_iff_emod_eq_zero] at h2
       exact h2.1
     -- Finally, get the desired `s`

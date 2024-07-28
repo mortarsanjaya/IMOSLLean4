@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.BigOperators.Ring
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Nat.Bits
 
 /-!
 # IMO 2017 C1

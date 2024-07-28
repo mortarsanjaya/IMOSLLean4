@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Digits
+import Mathlib.Data.Int.Bitwise
 
 /-!
 # IMO 2010 A4
@@ -37,28 +38,26 @@ theorem x_zero : x 0 = false :=
   Nat.binaryRec_zero false λ bit k ↦ xor (bit || k.bodd)
 
 theorem x_mul2 (k : ℕ) : x (2 * k) = xor k.bodd (x k) :=
-  k.bit0_val ▸ k.binaryRec_eq rfl false
+  k.binaryRec_eq rfl false
 
 theorem x_mul2_add1 (k : ℕ) : x (2 * k + 1) = !x k :=
-  k.bit1_val ▸ (x k).true_xor ▸ k.binaryRec_eq rfl true
+  (k.binaryRec_eq rfl true).trans (x k).true_xor
 
 theorem x_mul4 (k : ℕ) : x (4 * k) = xor k.bodd (x k) := by
-  change x (2 * 2 * k) = xor k.bodd (x k)
-  rw [mul_assoc, x_mul2, x_mul2, ← Nat.bit0_val, Nat.bodd_bit0, Bool.false_xor]
+  rw [Nat.mul_assoc 2 2, x_mul2, x_mul2, Nat.bodd_mul,
+    Nat.bodd_two, Bool.false_and, Bool.false_xor]
 
 theorem x_mul4_add1 (k : ℕ) : x (4 * k + 1) = !x (4 * k) := by
-  change x (2 * 2 * k + 1) = !x (2 * 2 * k)
-  rw [mul_assoc, x_mul2, x_mul2_add1,
-    ← Nat.bit0_val, Nat.bodd_bit0, Bool.false_xor]
+  rw [Nat.mul_assoc 2 2, x_mul2, x_mul2_add1, Nat.bodd_mul,
+    Nat.bodd_two, Bool.false_and, Bool.false_xor]
 
 theorem x_mul4_add2 (k : ℕ) : x (4 * k + 2) = x k := by
-  change x (2 * 2 * k + 2) = x k
-  rw [mul_assoc, ← Nat.mul_succ, x_mul2, x_mul2_add1, Nat.bodd_succ, Nat.bodd_mul,
+  rw [Nat.mul_assoc 2 2, ← Nat.mul_succ, x_mul2, x_mul2_add1, Nat.bodd_succ, Nat.bodd_mul,
     Nat.bodd_two, Bool.false_and, Bool.not_false, Bool.true_xor, Bool.not_not]
 
 theorem x_mul4_add3 (k : ℕ) : x (4 * k + 3) = x k := by
-  change x (2 * 2 * k + 2 + 1) = x k
-  rw [mul_assoc, ← Nat.mul_succ, x_mul2_add1, x_mul2_add1, Bool.not_not]
+  show x (2 * 2 * k + 2 + 1) = x k
+  rw [Nat.mul_assoc, ← Nat.mul_succ, x_mul2_add1, x_mul2_add1, Bool.not_not]
 
 
 
@@ -102,7 +101,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
   change xor (false && q.bodd) r.bodd = false at h0
   iterate 3 rw [Nat.lt_succ_iff_lt_or_eq] at h
   rw [Nat.lt_one_iff, or_assoc, or_or_or_comm] at h
-  revert h; refine' (or_iff_left _).mp
+  revert h; refine (or_iff_left ?_).mp
   rintro (rfl | rfl) <;> exact Bool.true_eq_false_eq_False h0
   ---- If `S_q = 0` and `r ∈ {0, 2}`, then `S_{4q + r} = 0`
   rcases h0 with ⟨h0, rfl | rfl⟩

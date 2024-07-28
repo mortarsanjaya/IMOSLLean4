@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.BigInequalities.Finset
 import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.Fin
+import Mathlib.Algebra.Group.Fin.Basic
 
 /-!
 # IMO 2007 A6

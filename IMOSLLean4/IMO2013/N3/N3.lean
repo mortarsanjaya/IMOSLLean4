@@ -5,6 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Factors
+import Mathlib.Order.MinMax
+import Mathlib.Order.Nat
 
 /-!
 # IMO 2013 N3
@@ -64,10 +66,10 @@ theorem special_formula (n : ℕ) :
 
 /-- Final solution -/
 theorem final_solution :
-    ∀ C, ∃ n, C ≤ n ∧ (n ^ 4 + n ^ 2 + 1).factors.foldr max ⊥
-      = ((n + 1) ^ 4 + (n + 1) ^ 2 + 1).factors.foldr max ⊥ := by
+    ∀ C, ∃ n, C ≤ n ∧ (n ^ 4 + n ^ 2 + 1).primeFactorsList.foldr max ⊥
+      = ((n + 1) ^ 4 + (n + 1) ^ 2 + 1).primeFactorsList.foldr max ⊥ := by
   simp only [Nat.pow_mul _ 2 2]
-  refine general_result (f := λ n ↦ (n ^ 2 + n + 1).factors.foldr max ⊥) λ n ↦ ?_
+  refine general_result (f := λ n ↦ (n ^ 2 + n + 1).primeFactorsList.foldr max ⊥) λ n ↦ ?_
   simp only; rw [special_formula, ← foldr_max_append]
   have h0 (n) : n ^ 2 + n + 1 ≠ 0 := Nat.succ_ne_zero _
-  exact (Nat.perm_factors_mul (h0 n) (h0 (n + 1))).foldr_eq max_left_commutative ⊥
+  exact (Nat.perm_primeFactorsList_mul (h0 n) (h0 (n + 1))).foldr_eq max_left_commutative ⊥

@@ -19,7 +19,8 @@ namespace IMO2009A5
 
 /-- Final solution -/
 theorem final_solution [LinearOrderedRing R] (f : R → R) :
-    ¬∀ x y, f (x - f y) ≤ y * f x + x := λ hf ↦ by
+    ¬∀ x y, f (x - f y) ≤ y * f x + x := by
+  intro hf
   have hf1 (t) : f t ≤ t + f 0 := by
     specialize hf (t + f 0) 0; rwa [zero_mul, zero_add, add_sub_cancel_right] at hf
   have hf2 (y) (hy : 0 < y) : -1 - f 0 ≤ f y := by
@@ -27,7 +28,6 @@ theorem final_solution [LinearOrderedRing R] (f : R → R) :
     rw [sub_self, ← add_assoc, le_add_iff_nonneg_left, ← mul_add_one y,
       mul_nonneg_iff_of_pos_left hy, ← neg_le_iff_add_nonneg] at hf
     exact sub_le_iff_le_add.mpr (hf.trans (hf1 _))
-  save
   ---- Prove that `f(x)` is "small", if it is positive
   replace hf2 (z) (hz : 0 ≤ z) (x) : z * f x ≤ 1 := by
     refine (lt_or_le 0 (f x)).elim (λ h ↦ ?_)
@@ -45,7 +45,6 @@ theorem final_solution [LinearOrderedRing R] (f : R → R) :
     replace hf1 := h.trans_le ((one_mul (f x)).symm.trans_le (hf 1))
     specialize hf ((1 + f 0 + x) * z)
     rwa [mul_assoc, mul_le_iff_le_one_right hf1] at hf
-  save
   ---- In reality, we only need `f(x) ≤ 1/3`
   specialize hf2 3 zero_le_three
   obtain ⟨C, hf3⟩ : ∃ C : R, ∀ y, 0 < y → y ≤ C := by

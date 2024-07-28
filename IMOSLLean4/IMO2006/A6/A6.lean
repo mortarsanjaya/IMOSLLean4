@@ -115,5 +115,5 @@ end
 
 /-- Final solution -/
 theorem final_solution [LinearOrderedField F] [HasSqrt2 F] {M : F} :
-    good M ↔ 9 * √2 / 32 ≤ M := by
-  rw [good_iff, div_le_iff' (by norm_num)]
+    good M ↔ 9 * √2 / 32 ≤ M :=
+  good_iff.trans (div_le_iff' (by norm_num)).symm

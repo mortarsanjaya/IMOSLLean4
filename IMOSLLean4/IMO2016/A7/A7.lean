@@ -31,7 +31,7 @@ lemma zero_is_good [LinearOrderedSemiring S] : good (λ _ : R ↦ (0 : S)) := λ
 lemma neg_one_is_good [LinearOrderedRing S] : good (λ _ : R ↦ (-1 : S)) := λ x y ↦ by
   rw [mul_assoc, ← sq, neg_one_sq, two_mul, add_assoc, self_eq_add_right,
     ← max_add_add_left, ← add_assoc, add_neg_self, zero_add, max_eq_right_iff]
-  exact neg_one_lt_zero.le
+  exact (neg_one_lt_zero (α := S)).le
 
 lemma hom_is_good [LinearOrderedCommSemiring S] (φ : R →+* S) : good φ := λ x y ↦ by
   rw [φ.map_add, φ.map_add, max_self, add_comm (_ * _), φ.map_pow, φ.map_pow, add_sq']
@@ -125,8 +125,9 @@ theorem good_case_one (hf : good f) (h : f 0 = 0) : f = 0 ∨ ∃ φ : R →+* S
 theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+* S, f = φ - 1 := by
   have h0 (x) : f (x ^ 2) = f x ^ 2 + 2 * f x := by
     specialize hf x 0
+    have X : (-1 : S) ≤ 0 := (neg_one_lt_zero (α := S)).le
     rw [add_zero, zero_pow (Nat.succ_ne_zero 1), h, mul_neg_one, eq_neg_add_iff_add_eq,
-      add_zero, add_comm, max_eq_right (add_le_of_nonpos_right neg_one_lt_zero.le)] at hf
+      add_zero, add_comm, max_eq_right (add_le_of_nonpos_right X)] at hf
     exact hf.symm
   suffices h1 : ∀ x y, f (x + y) + 1 = (f x + 1) + (f y + 1) by
     rw [eq_neg_iff_add_eq_zero]; simp only [eq_sub_iff_add_eq]
