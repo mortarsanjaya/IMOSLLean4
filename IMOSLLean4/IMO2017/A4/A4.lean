@@ -130,4 +130,4 @@ theorem final_solution {a : ℕ → G} (h : good1 D a) (h0 : good2 D a) (n : ℕ
     |a n| ≤ max (2 • Extra.seqMax a D) (2 • (Extra.seqMax (-a) D - Extra.seqMax a D)) :=
   (abs_le_max_seqMax a n).trans <|
     max_two_nsmul_b_and_c_bdd (λ _ ↦ good1_seqMax h) (λ _ ↦ good2_seqMax h0)
-      (Extra.seqMax_mono a) (Extra.seqMax_mono (-a)) n
+      (λ _ _ ↦ Extra.seqMax_mono a) (λ _ _ ↦ Extra.seqMax_mono (-a)) n
