@@ -1,0 +1,27 @@
+Let $F$ be a totally ordered field.
+Let $a, b, c \in F$ be positive elements such that $a^{-1} + b^{-1} + c^{-1} = a + b + c$.
+Prove that
+\[ \frac{1}{(2a + b + c)^2} + \frac{1}{(2b + c + a)^2} + \frac{1}{(2c + a + b)^2} \leq \frac{3}{16}. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We follow Solution 1 of the official solution.
+
+Start with the inequality $(2x + y + z)^2 \geq 4(x + y)(x + z)$ for any $x, y, z \in F$ positive.
+Then we get
+\[ \frac{1}{(2a + b + c)^2} + \frac{1}{(2b + c + a)^2} + \frac{1}{(2c + a + b)^2} \leq \frac{a + b + c}{2(a + b)(b + c)(c + a)}. \]
+Next, by AM-GM inequality,
+\[ ((a + b)(b + c)(c + a))^2 \geq (4ab)(4bc)(4ca) = (8abc)^2 \implies (a + b)(b + c)(c + a) \geq 8abc. \]
+Due to the identity $(a + b)(b + c)(c + a) + abc = (a + b + c)(ab + bc + ca)$, we get
+\[ (a + b)(b + c)(c + a) \geq \frac{8}{9} (a + b + c)(ab + bc + ca). \]
+In particular, this gives us
+\[ \frac{1}{(2a + b + c)^2} + \frac{1}{(2b + c + a)^2} + \frac{1}{(2c + a + b)^2} \leq \frac{9}{16(ab + bc + ca)}. \]
+
+It now remains to show that $ab + bc + ca \geq 3$.
+More generally, we can prove that $(ab + bc + ca)(a^{-1} + b^{-1} + c^{-1}) \geq 3(a + b + c)$.
+Indeed, this is equivalent to $(ab + bc + ca)^2 \geq 3 abc (a + b + c)$, or after some algebraic manipulation,
+\[ b^2 (a - c)^2 + c^2 (b - a)^2 + a^2 (c - b)^2 \geq 0. \]

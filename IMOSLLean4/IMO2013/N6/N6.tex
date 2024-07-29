@@ -1,0 +1,62 @@
+Determine all functions $f : \Q \to \Z$ such that for any $x \in \Q$, $a \in \Z$, and $b \in \N^+$,
+\[ f\left(\frac{f(x) + a}{b}\right) = f\left(\frac{x + a}{b}\right). \tag{*}\label{2013n6-eq0} \]
+
+
+
+\subsection*{Answer}
+
+Constants, $x \mapsto \lfloor x \rfloor$, and $x \mapsto \lceil x \rceil$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2013SL.pdf}
+
+Extra reference: \url{https://artofproblemsolving.com/community/c6h597248p29498925}
+
+We mostly follow Solution 1 of the official solution.
+However, we use the fact mentioned in Comment 2.
+Using the symmetry $f(x) \to -f(-x)$, we can WLOG assume that $f(1/2) = 0$.
+Our step 2 instead uses the extra reference linking to a solution in the AoPS thread by \textbf{IAmTheHazard} (post \#39).
+A different choice of $(x, a, b)$ is used to get $f((k - 1)/k) = 0$ in the induction step.
+
+Clearly the constant function satisfies~\eqref{2013n6-eq0}.
+The floor function satisfies~\eqref{2013n6-eq0} due to the well-known identity
+\[ \left\lfloor \dfrac{\lfloor x \rfloor}{b} \right\rfloor = \left\lfloor \dfrac{x}{b} \right\rfloor \quad \forall x \in \Q, b \in \N^+. \]
+The ceiling function satisfies~\eqref{2013n6-eq0} due to a similar identity.
+It remains to show that no other functions satisfy~\eqref{2013n6-eq0}.
+
+First suppose that $f(n) \neq n$ for some integer $n$.
+Plugging $(x, a, b) = (n, k|f(n) - n| - n, |f(n) - n|)$ into~\eqref{2013n6-eq0} yields
+\[ f\left(k + \frac{f(n) - n}{|f(n) - n|}\right) = f(k) \quad \forall k \in \Z. \]
+In particular, in any case for the sign of $f(n) - n$, we get $f(k + 1) = f(k)$ for all $k \in \Z$.
+By induction, it is easy to see that $f$ is constant on the integers, say $f \equiv C$.
+Plugging $a = 0$ and $b = 1$ into~\eqref{2013n6-eq0} then yields $f(x) = f(f(x)) = C$ for all $x \in \Q$ since $f(x) \in \Z$.
+
+Now suppose that $f(n) = n$ for all $n \in \N$.
+Plugging $b = 1$ yields
+\[ f(x + a) = f(x) + a \quad \forall x \in \Q, a \in \Z. \tag{1}\label{2013n6-eq1} \]
+One can check that the function $g(x) = -f(-x)$ satisfies~\eqref{2013n6-eq0}.
+If $f(1/2) \leq 0$, then~\eqref{2013n6-eq1} yields $g(1/2) \geq 1$.
+Thus, WLOG we can assume that $f(1/2) \leq 0$.
+
+Plugging $(x, a, b) = (1/2, -f(1/2), 1 - 2 f(1/2))$ into~\eqref{2013n6-eq0} yields $f(1/2) = 0$.
+Finally, by~\eqref{2013n6-eq1}, it remains to show the following.
+
+\begin{claim}
+Suppose that $f(1/2) \leq 0$.
+Then for any integers $0 \leq k < m$, we have $f(k/m) = 0$.
+\end{claim}
+\begin{proof}
+Induction on $m$.
+The base cases $m = 1$ and $m = 2$ follow from $f(0) = f(1/2) = 0$.
+
+Now fix $m \geq 2$ and suppose that $f(k/m) = 0$ for all $k \in \N$ such that $k < m$.
+Consider an arbitrary $k < m + 1$.
+If $k < m$, then~\eqref{2013n6-eq0} with $(x, a, b) = (k/m, k, m + 1)$ yields
+\[ f\left(\frac{k}{m + 1}\right) = f\left(\frac{0 + k}{m + 1}\right) = f\left(\frac{k/m + k}{m + 1}\right) = f\left(\frac{k}{m}\right) = 0. \]
+Otherwise, for $k = m$, plugging $(x, a, b) = (1 - 2/(m + 1), 1, 2)$ yields
+\[ f\left(\frac{m}{m + 1}\right) = f\left(\frac{2 - 2/(m + 1)}{2}\right) = f\left(\frac{1}{2}\right) = 0. \]
+This uses the fact that the previous case gives $f(1 - 2/(m + 1)) = 0$.
+\end{proof}

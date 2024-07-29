@@ -1,0 +1,40 @@
+\begin{enumerate}
+\item Prove that, for every $n \in \N$, there exists some $a, b \in \N$ such that $0 < b \leq \sqrt{n} + 1$ and $b^2 n \leq a^2 \leq b^2 (n + 1)$.
+\item Prove that there exists infinitely many $n \in \N$ for which there does not exist $a, b \in \N$ such that $0 < b \leq \sqrt{n}$ and $b^2 n \leq a^2 \leq b^2 (n + 1)$.
+\end{enumerate}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2016SL.pdf}
+
+We present the official solution for both parts.
+
+
+
+\subsubsection*{Part 1}
+
+If $n = 0$, then we can pick $b = 1$ and $a = 0$, so now assume that $n > 0$.
+Write $n = r^2 + s$, where $r = \lfloor \sqrt{n} \rfloor > 0$ and $0 \leq s \leq 2r$.
+
+If $s$ is even, we pick $b = r$ and $a = r^2 + s/2$.
+Clearly, $0 < b \leq \sqrt{n} + 1$, and we have
+\[ a^2 = r^2 (r^2 + s) + (s/2)^2 = r^2 n + (s/2)^2. \]
+Since $0 \leq s \leq r$, this implies $r^2 n \leq a^2 \leq r^2 (n + 1)$.
+
+On the other hand, if $s$ is odd, we pick $b = r + 1$ and $a = r^2 + r + \frac{s + 1}{2}$.
+Note that
+\[ a^2 = (r^2 + 2r + 1) (r^2 + s) + c^2 = b^2 n + c^2, \]
+    where $c = r - \frac{s - 1}{2}$.
+Clearly, $c < r < b$, so $b^2 n \leq a \leq b^2 (n + 1)$.
+
+
+
+\subsubsection*{Part 2}
+
+We choose $n$ to be of form $k^2 + 1$ for some positive integer $k$.
+Suppose for the sake of contradiction that there exists $a, b \in \N$ such that $0 < b \leq \sqrt{n}$ and $b^2 n \leq a^2 \leq b^2 (n + 1)$.
+Since $\lfloor n \rfloor = k$, we have $0 < b \leq k$.
+Then we have $b^2 (k^2 + 1) > (bk)^2$ and $b^2 (k^2 + 2) \leq (bk)^2 + 2bk < (bk + 1)^2$.
+Then $(bk)^2 \leq a^2 < (bk + 1)^2$; a contradiction.

@@ -1,0 +1,41 @@
+Let $n$ and $k$ be positive integers.
+Consider a $k \times k$ table, where each cell contains an integer congruent to $1$ modulo $n$.
+Suppose that the sum of all numbers in an arbitrary row or column is congruent to $k$ modulo $n^2$.
+For each $i \leq n$, let $R_i$ and $C_i$ be the product of numbers in the $i^{\text{th}}$ row and $i^{\text{th}}$th column, respectively.
+Prove that
+\[ \sum_{i = 1}^n R_i \equiv \sum_{i = 1}^n C_i \pmod{n^4}. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2018SL.pdf}
+
+The following solution is the Solution 1 of the official solution, slightly modified.
+The following lemma is the core of the solution.
+
+\begin{lemma}\label{2018n2-1}
+Let $n$ be an integer and $a_1, a_2, \ldots, a_k$ be integers congruent to $1$ modulo $n$.
+Then \[ \prod_{i = 1}^k a_i + k \equiv \sum_{i = 1}^k a_i + 1 \pmod{n^2}. \]
+\end{lemma}
+\begin{proof}
+In the case $k = 2$, the congruence rearranges to $n^2 \mid (a_1 - 1)(a_2 - 1)$, which follows since $a_1 \equiv a_2 \equiv 1 \pmod{n}$.
+The general case follows immediately by induction on $k$.
+\end{proof}
+
+It immediately implies the following lemma.
+
+\begin{lemma}\label{2018n2-2}
+Let $n$ be an integer and $a_1, a_2, \ldots, a_k$ be integers congruent to $1$ modulo $n$.
+Then \[ \sum_{i = 1}^k a_i \equiv k \pmod{n^2} \implies \prod_{i = 1}^k a_i \equiv 1 \pmod{n^2}. \]
+\end{lemma}
+
+Now, we model the table as a function $f : [k]^2 \to \Z$, where $[k] = \{1, 2, \ldots, k\}$.
+The problem hypothesis says that $f(i, j) \equiv 1 \pmod{n}$ for each $i, j \in [k]$.
+It also says that, for all $i \in [k]$,
+\[ \sum_{j = 1}^k f(i, j) \equiv k \pmod{n^2}. \]
+Lemma~\ref{2018n2-2} yields $R_i \equiv 1 \pmod{n^2}$ for each $i \in [k]$.
+Similarly, $C_i \equiv 1 \pmod{n^2}$ for each $i \in [k]$.
+Letting $L$ be the product of all integers in the table, Lemma~\ref{2018n2-1} yields
+\[ \sum_{i = 1}^n R_i + 1 \equiv L + k \equiv \sum_{i = 1}^n C_i + 1 \pmod{n^4}. \]
+Removing $1$ from both sides yield the desired congruence.

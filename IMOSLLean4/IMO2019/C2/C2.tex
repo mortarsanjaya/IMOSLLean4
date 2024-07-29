@@ -1,0 +1,34 @@
+Let $G$ be a totally ordered abelian group.
+Fix a non-negative element $g \in G$.
+For a multiset $S$ of elements of $G$, let $\sigma_S$ denote the sum of the elements of $S$, counting multiplicity.
+
+Let $S$ be a multiset of non-negative elements of $G$ with $\sigma_S \leq 2|S| g$.
+Suppose that each element of $S$ is greater than or equal to $g$.
+Prove that, for any $r \in G$ with $-2g \leq r \leq \sigma_S$, there exists a sub-multiset $S'$ of $S$ such that $r \leq \sigma_{S'} \leq r + 2g$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2019SL.pdf}
+
+The problem we present here is just the statement of the claim in Solution 1 of the official solution in an abstract setting.
+In this solution, we present the proof of this claim.
+
+We proceed by induction on $|S|$.
+The case where $|S| = 0$ is trivial, so now suppose that $|S| \geq 1$.
+Let $s_0$ be the largest element of $S$, and let $S_0 = S - \{s_0\}$.
+Then every element of $S_0$ is less than or equal to $s_0$, and so $\sigma_{S_0} \leq |S_0| s_0$.
+If $\sigma_{S_0} > 2 |S_0| g$, then we would get $s_0 > 2g$ and then $\sigma_S > 2|S| g$; a contradiction.
+Thus $\sigma_{S_0} \leq 2 |S_0| g$, and we can apply induction hypothesis on $S_0$.
+
+Now fix $r \in G$ with $-2g \leq r \leq \sigma_S$.
+If $-2g \leq r \leq \sigma_{S_0}$, then we can choose a sub-multiset $S'$ of $S_0$ such that $r \leq \sigma_{S'} \leq r + 2g$.
+Then $S'$ is also a sub-multiset of $S$, and we are done.
+If $s_0 - 2g \leq r \leq \sigma_S$, the inequality we need is instead $r - s_0 \leq \sigma_{S'} \leq r - s_0 + 2g$.
+The choice of sub-multiset this time is $S' + \{s_0\}$.
+
+It remains to show that these are the only cases, i.e., $\sigma_{S_0} \geq s_0 - 2g$.
+But every element of $S$ (and $S_0$ as well) is at least $g$, so $\sigma_{S_0} \geq |S_0| g = (|S| - 1) g$.
+On the other hand, \[ s_0 = \sigma_S - \sigma_{S_0} \leq 2|S| g - (|S| - 1) g = (|S| + 1) g. \]
+Thus $\sigma_{S_0} \geq s_0 - 2g$ follows.

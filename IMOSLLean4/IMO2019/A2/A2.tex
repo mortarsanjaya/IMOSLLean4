@@ -1,0 +1,27 @@
+Let $R$ be an totally ordered ring and $x_1, x_2, \ldots, x_n \in R$ be elements with
+\[ x_1 + x_2 + \ldots + x_n = 0. \]
+Let $a, b \in R$ such that $b \leq x_i \leq a$ for all $i \leq n$.
+Show that
+\[ nab + \sum_{i = 1}^n x_i^2 \leq 0. \]
+
+Note: \textit{One can see that in the case $R = \R$ and $n = 2019$ with $x_1^2 + \ldots + x_n^2 = 1$, this formulation is equivalent to the original formulation.
+The difference is that this formulation tries to avoid many stuffs, especially using minimum and maximum.}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2019SL.pdf}
+
+The following solution simplifies Solution 1 of the official solution.
+
+If $n = 0$ then we are vacuously done, so assume that $n > 1$.
+Then $na \geq 0 \geqq nb$ and thus $a \geq 0 \geq b$.
+We now immediately jump for the inequality:
+\begin{align*}
+    nab + \sum_{i = 1}^n x_i^2
+    &= \#\{i : x_i \leq 0\} \cdot ab + \sum_{i : x_i > 0} x_i^2 + \#\{i : x_i > 0\} \cdot ab + \sum_{i : x_i \leq 0} x_i^2 \\
+    &\leq a \sum_{i : x_i \leq 0} x_i + a \sum_{i : x_i > 0} x_i + \sum_{i : x_i > 0} x_i b + \sum_{i : x_i \leq 0} x_i b \\
+    &\leq a \sum_{i = 1}^n x_i + \sum_{i = 1}^n x_i b \\
+    &= 0.
+\end{align*}

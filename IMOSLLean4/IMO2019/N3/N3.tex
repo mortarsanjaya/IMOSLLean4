@@ -1,0 +1,67 @@
+A set $S \subseteq \Z$ is called \emph{rootiful} if, for any $a_0, a_1, \ldots, a_n \in S$, not all zero, any integer root of $\sum_{i = 0}^n a_i X^i$ belongs in $S$.
+
+Let $K$ be an integer with $|K| > 1$.
+Find all rootiful sets $S$ such that $K^{a + 1} - K^{b + 1} \in S$ for all $a, b \geq 0$.
+
+
+
+\subsection*{Answer}
+
+$\Z$ and nothing else.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2019SL.pdf}
+
+We follow Solution 1 of the official solution and proceed with more general observations.
+
+Let $S$ denote a rootiful set.
+The general observations needed for this problem are as follows.
+
+\begin{itemize}
+
+    \item
+    If $S$ contains a non-zero integer, then $S$ contains $-1$.
+    Indeed, for any $n \in S$, $-1$ is the root of $nX + n$.
+
+    \item
+    If $S$ contains a positive integer, then $S$ contains $1$.
+    Indeed, given $n \in S$ positive, $1$ is the root of $n - X - X^2 - \ldots - X^n$.
+    Note that the previous observation implies $-1 \in S$.
+
+    \item
+    If $S$ contains $1$, then $S$ is closed under negation.
+    Indeed, for any $n \in S$, $-n$ is the root of $X + n = 1 \cdot X + n$.
+
+    \item
+    Given a positive integer $n > 1$, if $0, 1, \ldots, n - 1 \in S$ and $S$ contains a non-zero multiple of $n$, then $n \in S$.
+
+    To prove this, let $N \in S$ be a non-zero multiple of $n$.
+    By the previous observation, we can WLOG assume that $N < 0$.
+    Now write $-N > 0$ in base-$n$ representation as $\sum_{i = 0}^k a_i n^i$, where $a_k > 0$ and $0 \leq a_i < n$ for all $i \leq k$.
+    Since $n \mid N$, we have $a_0 = 0$.
+    This means that $n$ is the root of $N + \sum_{i = 1}^k a_i X^i$.
+    For $1 \leq i \leq k$, we have $a_i \in S$ since $0 \leq a_i < n$.
+    Also, $1 \in S$ and $N \in S$ implies $-N \in S$ by the previous observation.
+    Since $S$ is rootiful, this implies $n \in S$.
+
+\end{itemize}
+
+Now let $S$ be a rootiful set containing $K^{a + 1} - K^{b + 1} \in S$ for all $a, b \geq 0$.
+Clearly, $0 = K - K \in S$, and $S$ contains $K^2 - K$, which is positive since $|K| > 1$.
+It remains to check that for any $N \geq 1$, $S$ contains a non-zero multiple of $N$.
+Indeed, by pigeonhole principle, we can find $a < b$ such that $N \mid K^{a + 1} - K^{b + 1}$.
+But $K^{a + 1} - K^{b + 1} \in S$, and it is non-zero since $|K| > 1$ and $a \neq b$.
+Thus, $S$ contains $0$, $1$, $-1$, and for each $n > 1$, $S$ contains a non-zero multiple of $n$.
+The above observations imply that $S = \Z$.
+
+
+
+\subsection*{Extra notes}
+
+It is interesting to find more necessary or sufficient properties for a subset of $\Z$ to be rootiful.
+One can check that the intersection of two rootiful sets are rootiful.
+The above observation in the solution section shows that a rootiful set is either closed under additive inverse or only contains non-positive integers.
+For sufficiency, divisor-closed sets are always rootiful, but this is not necessary due to an example: $\{-15, -1\}$.

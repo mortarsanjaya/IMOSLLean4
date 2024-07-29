@@ -59,7 +59,5 @@ theorem good_iff_of_DenselyOrdered [DenselyOrdered R]
       rwa [h0, zero_mul, h1, neg_one_zsmul, neg_neg] at h,
   ---- `←`
   λ h ↦ h.elim
-    -- Constant `C` is good if `⌊C⌋ = 1`
     (λ ⟨C, h, h0⟩ _ _ ↦ by rw [h0, h, Int.cast_one, mul_one])
-    -- Constant `0` is good
     (λ h _ _ ↦ h ▸ (zero_mul _).symm)⟩

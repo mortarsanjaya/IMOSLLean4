@@ -1,0 +1,34 @@
+Fix a positive integer $N$, a totally ordered commutative ring $R$, and an element $c \geq 0$.
+Determine the maximal possible value of
+\[ \sum_{i = 1}^{2n} x_i x_{i + 2} \tag{*}\label{2010a3-eq0} \]
+    over all $x_1, x_2, \ldots, x_{2n} \in R$ such that $x_i + x_{i + 1} + x_{i + 2} \leq 2c$ for all $i = 1, 2, \ldots, 2n$.
+Here, we denote $x_{2n + 1} = x_1$ and $x_{2n + 2} = x_2$.
+
+
+
+\subsection*{Answer}
+
+$n c^2$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2010SL.pdf}
+
+The official solution works in this more general setting.
+We present Solution 1.
+
+To show that $n c^2$ is attainable, we take $x_i = c$ if $i$ is even and $x_i = 0$ if $i$ is odd.
+The details are left to the reader as an exercise.
+The converse follows from the following claim, which implies
+\[ \sum_{i = 1}^{2n} x_i x_{i + 2} = \sum_{i = 1}^n (x_{2i} x_{2i + 2} + x_{2i + 1} x_{2i + 3}) \leq \sum_{i = 1}^n c^2 = n c^2. \]
+
+\begin{claim}
+Let $w, x, y, z \in R$ such that $x, y \geq 0$ and $w + x + y, x + y + z \leq 2c$.
+Then $wy + xz \leq c^2$.
+\end{claim}
+\begin{proof}
+Indeed, $wy + xz \leq (2c - (x + y)) y + x (2c - (x + y)) = (x + y)(2c - (x + y))$.
+Then AM-GM inequality yields the claim.
+\end{proof}

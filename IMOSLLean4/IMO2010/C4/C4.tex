@@ -1,0 +1,97 @@
+In the board, $N = 6$ stacks of coins are given, labelled $0, 1, 2, \ldots, N - 1$, with stack $k < N$ containing $n_k = 1$ coin.
+At any time, one of the following operations are done:
+
+\begin{itemize}
+    \item   Remove a coin from a stack $k + 1 < N$ and add two coins to stack $k$.
+    \item   Remove a coin from a stack $k + 2 < N$ and swap the content of the stacks $k$ and $k + 1$.
+\end{itemize}
+
+Is it possible that, after some operations, we are left with stack $0$ containing $A = 2010^{2010^{2010}}$ coins and all other stacks empty?
+
+
+
+\subsection*{Answer}
+
+Yes; in fact, any $A \leq 2010^{2010^{2010}}$ works as well.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2010SL.pdf}
+
+We present the official solution below.
+We generalize a bit so that a much larger range of values of $A$ work.
+More precisely, denote $P_0 = 1$ and $P_{n + 1} = 2^{P_n}$ for all $n \geq 1$.
+Then we claim that any $A < 4P_{16}$ works.
+
+Represent the stack using an $N$-tuple of non-negative integers.
+Given $\mathbf{n}, \mathbf{p} \in \N^N$, we denote $\mathbf{n} \to \mathbf{p}$ if there is a sequence of (possibly empty) operations that change $\mathbf{n}$ to $\mathbf{p}$.
+The main observations are as follows.
+
+\begin{lemma}
+$(b + k, c) \to (b, c + 2k)$ for any $b, c, k \in \N$.
+\end{lemma}
+\begin{proof}
+This follows by simple induction on $k$.
+\end{proof}
+
+\begin{lemma}
+$(k + a, n, n) \to (k, n + 2^a, n)$ for any $k, a, n \in \N$ with $a \geq 1$.
+\end{lemma}
+\begin{proof}
+The first step is to observe that
+\[ (k + 1, n + m, n) \to (k + 1, n, n + 2m) \to (k, n + 2m, n). \]
+Now by induction, we have $(k + a, n + m, n) \to (k, n + 2^a m, n)$ for any $k, a, m, n \in \N$.
+For $a \geq 1$, we get
+\[ (k + a, n, n) \to (k + a - 1, n + 2, n) \to (k, n + 2^a, n). \]
+\end{proof}
+
+\begin{lemma}
+$(a, n, n, n) \to (0, n + P_a, n, n)$ for any $a \geq 1$ and $n \in \N$.
+\end{lemma}
+\begin{proof}
+Start with $(a, n, n, n) \to (a - 1, n + 2, n, n)$, and note that $P_1 = 2$.
+Now for any $k, m, n \in \N$, the previous observation yields
+\[ (k + 1, n + m, n, n) \to (k + 1, n, n + 2^m, n) \to (k, n + 2^m, n, n). \]
+The rest is just induction on $a$.
+\end{proof}
+
+\begin{lemma}
+For any $N \geq 6$ and $A < 4N$ with $A \neq 1$, the following holds:
+\begin{itemize}
+    \item   If $A \not\equiv 3 \pmod{4}$, then $(N, 0, 0) \to (0, 0, A)$.
+    \item   If $A \equiv 3 \pmod{4}$, then $(N, 1, 1) \to (0, 0, A)$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+We can write $A = 4K + r$ for some $K < N$ and $r \in \{0, 1, 2, 3\}$.
+To prove the lemma, we bash one-by-one.
+For $A = 4K$ with $K < N$,
+\[ (N, 0, 0) \to (K, 0, 0) \to (0, 2K, 0) \to (0, 0, 4K). \]
+For $A = 4K + 1$ with $0 < K < N$,
+\[ (N, 0, 0) \to (K + 1, 0, 0) \to (K, 2, 0) \to (K, 1, 2) \to (K - 1, 2, 1) \to (K - 1, 0, 5) \to (0, 0, 4K + 1). \]
+For $A = 4K + 2$ with $K \leq N - 2$,
+\[ (N, 0, 0) \to (K + 2, 0, 0) \to (K + 1, 2, 0) \to (K, 0, 2) \to (0, 0, 4K + 2). \]
+For $A = 4(N - 1) + 2 = 4N - 2$, since $N \geq 6$, we get
+\[ (N, 0, 0) \to (N - 1, 0, 0) \to (N - 5, 16, 0) \to (N - 5, 14, 4) \to (N - 6, 4, 14) \to (N - 6, 0, 22) \to (0, 0, 4N - 2). \]
+For $A = 4K + 3$ with $K < N$,
+\[ (N, 1, 1) \to (K, 1, 1) \to (K, 0, 3) \to (0, 4K + 3). \]
+The proof is complete.
+\end{proof}
+
+Now notice that $(1, 1) \to (0, 3)$ and $(1, 0, 3) \to (0, 3, 0)$.
+By repeating this process, we get
+\[ (1, 1, 1, 1, 1, 1) \to (0, 3, 0, 0, 0, 0) \to (0, 0, P_3 = 16, 0, 0, 0) \to (0, 0, 0, P_{16}, 0, 0). \]
+We also have
+\[ (1, 1, 1, 1, 1, 1) \to (0, 3, 1, 1, 1, 1) \to (0, 0, 17, 1, 1, 1) \to (0, 0, 0, P_{17} + 1, 1, 1) \to (0, 0, 0, P_{16}, 1, 1). \]
+By the last lemma above, we get $(1, 1, 1, 1, 1, 1) \to (0, 0, 0, 0, 0, A)$ whenever $A < 4P_{16}$ and $A \neq 1$.
+Finally, for $A = 1$, just notice that
+\[ (1, 1, 1, 1, 1, 1) \to (1, 1, 1, 0, 3, 1) \to (0, 3, 0, 0, 0, 1) \to (0, 0, 0, 0, 0, 1). \]
+This is enough for the original problem, as $2010^{2010^{2010}} < P_6 < 4P_{16}$.
+
+
+
+\subsection*{Implementation details}
+
+Instead of actually using $N$-tuple to represent stack state, we use lists.

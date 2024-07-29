@@ -33,10 +33,8 @@ open Relation Finset
 
 /-! ###### Extra lemmas -/
 
-theorem and_and_or_not_iff (P Q R : Prop) :
-    (P ∧ Q) ∧ (R ∨ ¬Q) ↔ (P ∧ R) ∧ Q := by
-  rw [and_assoc, and_or_left, and_not_self_iff,
-    or_false_iff, and_assoc, and_comm (b := Q)]
+theorem and_and_or_not_iff (P Q R : Prop) : (P ∧ Q) ∧ (R ∨ ¬Q) ↔ (P ∧ R) ∧ Q := by
+  rw [and_assoc, and_or_left, and_not_self_iff, or_false_iff, and_assoc, and_comm (b := Q)]
 
 theorem Iic_filter_dvd_card (k n : ℕ) :
     ((Icc k (k + n)).filter λ i : ℕ ↦ n + 1 ∣ i + 1).card = 1 := by
@@ -98,7 +96,7 @@ def init (M n : ℕ) : GameState n where
 /-- The valid moves -/
 inductive ValidMove (X : GameState n) : GameState n → Prop
   | flip (i : ℕ) (h : i + n ∈ X.board) :
-    ValidMove X ⟨symmDiff X.board (Icc i (i + n)), X.numMoves.succ⟩
+      ValidMove X ⟨symmDiff X.board (Icc i (i + n)), X.numMoves.succ⟩
 
 /-- Can a state reach another state via a sequence of valid moves? -/
 def IsReachable : GameState n → GameState n → Prop := ReflTransGen ValidMove
@@ -128,8 +126,7 @@ theorem Ends_iff {X : GameState n} : X.Ends ↔ X.board ⊆ range n :=
     rw [mem_range, ← not_le]
     refine λ h1 ↦ h _ <| ValidMove.flip (i - n) ?_
     rwa [Nat.sub_add_cancel h1],
-  λ h Y h0 ↦ ValidMove.recOn h0 λ i h1 ↦
-    (mem_range.mp <| h h1).not_le le_add_self⟩
+  λ h Y h0 ↦ ValidMove.recOn h0 λ i h1 ↦ (mem_range.mp <| h h1).not_le le_add_self⟩
 
 
 
@@ -152,8 +149,7 @@ theorem ValidMove_sum_two_pow {X Y : GameState n} (h : X.ValidMove Y) :
   (geomSum_lt_geomSum_iff_toColex_lt_toColex <| Nat.le_refl 2).mpr
     (ValidMove_Colex h)
 
-theorem isReachable_sum_two_pow_add_numMoves
-    {X Y : GameState n} (h : X.IsReachable Y) :
+theorem isReachable_sum_two_pow_add_numMoves {X Y : GameState n} (h : X.IsReachable Y) :
     Y.board.sum (λ i ↦ 2 ^ i) + Y.numMoves
       ≤ X.board.sum (λ i ↦ 2 ^ i) + X.numMoves :=
   ReflTransGen.head_induction_on h (le_refl _) λ h0 _ h1 ↦ h1.trans <| by
@@ -175,8 +171,7 @@ theorem moves_lt_two_pow (h : (init M n).IsReachable X) : X.numMoves < 2 ^ M :=
 def centralCards (X : GameState n) : Finset ℕ :=
   X.board.filter λ i : ℕ ↦ n + 1 ∣ i + 1
 
-theorem ValidMove_central_card_mod_two
-    {X Y : GameState n} (h : X.ValidMove Y) :
+theorem ValidMove_central_card_mod_two {X Y : GameState n} (h : X.ValidMove Y) :
     Y.centralCards.card % 2 = (X.centralCards.card + 1) % 2 :=
   ValidMove.recOn h λ i _ ↦ by
     rw [centralCards, filter_symmDiff, ← centralCards,
@@ -212,7 +207,7 @@ theorem numMoves_mod_two_eq_div_of_ends
 /-- The first player wins iff `⌊M/(n + 1)⌋` is odd -/
 theorem P1Wins_iff (h : (init M n).IsReachable X) (h0 : X.Ends) :
     P1Wins h0 ↔ (M / n.succ) % 2 = 1 :=
-  iff_of_eq <| congr_arg₂ _ (numMoves_mod_two_eq_div_of_ends h h0) rfl
+  iff_of_eq <| congrArg₂ _ (numMoves_mod_two_eq_div_of_ends h h0) rfl
 
 end GameState
 

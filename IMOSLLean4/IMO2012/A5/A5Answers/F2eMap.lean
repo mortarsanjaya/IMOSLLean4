@@ -45,4 +45,4 @@ theorem 𝔽₂εMap_is_good : good 𝔽₂εMap
 
 /-- The map `𝔽₂εMap` is non-trivial good. -/
 theorem 𝔽₂εMap_is_NontrivialGood : NontrivialGood 𝔽₂εMap :=
-  ⟨𝔽₂εMap_is_good, rfl, rfl⟩
+  ⟨𝔽₂εMap_is_good, rfl⟩

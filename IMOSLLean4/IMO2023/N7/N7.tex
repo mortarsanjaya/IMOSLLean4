@@ -1,0 +1,36 @@
+Find all possible values of $a + b + c + d$ across all $a, b, c, d \in \N^+$ satisfying
+\[ \frac{ab}{a + b} + \frac{cd}{c + d} = \frac{(a + b)(c + d)}{a + b + c + d}. \tag{*}\label{2023n7-eq0} \]
+
+
+
+\subsection*{Answer}
+
+Non-squarefree numbers.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We present the official solution.
+
+Start by noticing that $(a, b, c, d) = (k, km, km, km^2)$ satisfies~\eqref{2023n7-eq0} for all $k, m \in \N^+$.
+Then $a + b + c + d$ attains the value $k(m + 1)^2$.
+Ranging across all $k$ and $m$, every non-squarefree value is attained by $a + b + c + d$.
+
+Now we prove that for any $a, b, c, d$ satisfying~\eqref{2023n7-eq0}, $a + b + c + d$ is not squarefree.
+The main claim is as follows:
+
+\begin{claim}
+For any prime $p \mid a + b + c + d$, we have $p \mid a + b$ and $p \mid c + d$.
+\end{claim}
+\begin{proof}
+Clearing denominators from~\eqref{2023n7-eq0} gives
+\[ (ab(c + d) + cd(a + b))(a + b + c + d) = (a + b)^2 (c + d)^2. \]
+Since $p \mid a + b + c + d$, this immediately implies $p \mid a + b$ or $p \mid c + d$.
+Clearly one implies the other, so we get both $p \mid a + b$ and $p \mid c + d$.
+\end{proof}
+
+If $a + b + c + d$ is squarefree, the claim would yield $a + b + c + d \mid a + b$.
+A contradition!

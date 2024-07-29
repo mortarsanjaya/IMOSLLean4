@@ -1,0 +1,39 @@
+Let $R$ be a totally ordered commutative ring.
+Denote by $R^+$ the set of positive elements of $R$.
+Find all functions $f : R^+ \to R^+$ such that, for any $p, q, r, s \in R^+$ with $pq = rs$,
+\[ (f(p)^2 + f(q)^2) (r^2 + s^2) = (p^2 + q^2) (f(r^2) + f(s^2)). \tag{*}\label{2008a1-eq0} \]
+
+
+
+\subsection*{Answer}
+
+$f$ satisfies~\eqref{2008a1-eq0} if and only if either $f(x) = x$ for all $x \in R^+$ or $x f(x) = 1$ for all $x \in R^+$.
+If $R$ is not a field, then $x \mapsto x$ is the only function satisfying~\eqref{2008a1-eq0}.
+If $R$ is a field, then there are two functions: $x \mapsto x$ and $x \mapsto x^{-1}$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2008SL.pdf}
+
+We present the official solution below, except that we avoid using fractions.
+We also cannot use square roots; instead, we prove $f(x^2) = f(x)^2$ in the beginning and use it at some parts of the proof.
+It is easy to check that $x \mapsto x$ satisfies~\eqref{2008a1-eq0}.
+It is also easy to check that, if $x f(x) = 1$ for all $x \in R^+$, then $f$ satisfies~\eqref{2008a1-eq0}.
+
+Start by substituting $p = q = r = s = x$ into~\eqref{2008a1-eq0} to get $f(x^2) = f(x)^2$ for all $x \in R^+$.
+In particular, $f(1) = f(1)^2$, so $f(1) = 1$.
+Substituting $(p, q, r, s) = (x^2, y^2, xy, xy)$ into~\eqref{2008a1-eq0} and using $f(x^2) = f(x)^2$ for all $x \in R^+$ gives us
+\[ (f(x)^4 + f(y)^4) (xy)^2 = (x^4 + y^4) f(xy)^2. \tag{1}\label{2008a1-eq1} \]
+In particular, plugging $y = 1$ into the above equality and manipulating gives us $(f(x)^2 - x^2) (x^2 f(x)^2 - 1) = 0$.
+So, for any $x \in R^+$, we have either $f(x) = x$ or $x f(x) = 1$.
+It remains to prove that one of the equality must hold simultaneously for all $x \in R^+$.
+
+Suppose not; that is, assume that $f(a) \neq a$ and $b f(b) \neq 1$ for some $a, b \in R^+$.
+Note that this means $a f(a) = 1$ and $f(b) = b$.
+If $f(ab) = ab$, then~\eqref{2008a1-eq1} gives us $f(a)^4 + b^4 = a^4 + b^4 \iff f(a) = a$; a contradiction.
+If $ab f(ab) = 1$, then after multiplying by $(ab)^2$,~\eqref{2008a1-eq1} gives us 
+\[ (f(a)^4 + b^4) (ab)^4 = a^4 + b^4 \iff b^4 + a^4 b^8 = a^4 + b^4 \iff b^8 = 1 \iff b = 1. \]
+A contradiction, since then $b f(b) = f(1) = 1$.
+We are done.

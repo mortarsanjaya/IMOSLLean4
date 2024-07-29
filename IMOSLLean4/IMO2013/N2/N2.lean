@@ -10,19 +10,17 @@ import Mathlib.Algebra.Field.Rat
 /-!
 # IMO 2013 N2 (P1)
 
-Prove that, for any $k, n \in ℕ^+$, there exist
-  positive integers $m_1, m_2, \ldots, m_k$ such that
+Prove that, for any $k, n ∈ ℕ^+$, there exist positive integers $m_1, m_2, …, m_k$ such that
 $$ 1 + \frac{2^k - 1}{n} = \prod_{i = 1}^k \left(1 + \frac{1}{m_i}\right). $$
 
 ### Further directions
 
-A possible generalization is as follows.
-Given $N \in ℕ^+$, find the smallest $k = k(N) \in ℕ^+$ such that
-  there exist positive integers $m_1, m_2, \ldots, m_k$ such that
-$$ 1 + \frac{N}{n} = \prod_{i = 1}^k \left(1 + \frac{1}{m_i}\right). $$
+A possible generalization is by replacing $2^k - 1$ with an arbitrary positive integer $N$.
+Then the question asks to find the smallest $k = k(N) ∈ ℕ^+$ such that there exist
+  positive integers $m_1, m_2, …, m_k$ for which the above desired equality hold.
 Some easy results are as follows:
 * The result `good_two_mul_add_one` given below implies that
-  $k(2N + 1) \leq k(N) + 1$ for any $N \in ℕ^+$.
+  $k(2N + 1) ≤ k(N) + 1$ for any $N ∈ ℕ^+$.
 * $k(6) = 4 > ⌈\log_2 (6 + 1)⌉$.
 -/
 
@@ -37,10 +35,9 @@ abbrev good (k c : ℕ) := ∀ n : ℕ, 0 < n →
     ((n + c : ℕ) : ℚ) / n = (S.map λ (m : ℕ) ↦ ((m + 1 : ℕ) : ℚ) / m).prod
 
 /-- General form of induction step -/
-theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := by
-  intro n h0
+theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := λ n h0 ↦ by
   rcases n.even_or_odd' with ⟨t, rfl | rfl⟩
-  -- Case 1: `n = 2t`
+  ---- Case 1: `n = 2t`
   · replace h0 := pos_of_mul_pos_right h0 (Nat.zero_le 2)
     rcases h t h0 with ⟨T, rfl, h1, h2⟩
     have X := t.add_pos_left h0 c
@@ -49,7 +46,7 @@ theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := by
     rw [map_cons, prod_cons, ← h2, ← add_assoc, ← mul_add,
       div_mul_div_comm, Nat.cast_mul, Nat.cast_mul, mul_right_comm]
     exact (mul_div_mul_right _ _ <| Nat.cast_ne_zero.mpr X.ne.symm).symm
-  -- Case 2: `n = 2t + 1`
+  ---- Case 2: `n = 2t + 1`
   · have X := t.succ_pos
     rcases h (t + 1) X with ⟨T, rfl, h1, h2⟩
     refine ⟨(2 * t + 1) ::ₘ T, card_cons _ T,

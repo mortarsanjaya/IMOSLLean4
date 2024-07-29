@@ -1,0 +1,36 @@
+For each positive integer $n$, let $P(n)$ denote the largest prime divisor of $n$.
+Prove that there exists infinitely many $n \in \N$ such that $P(n^4 + n^2 + 1) = P((n + 1)^4 + (n + 1)^2 + 1)$.
+
+
+
+\section*{Solution}
+
+We do not follow the official solution.
+After realizing the factorization of $X^4 + X^2 + 1$, we proceed via pure order theory.
+
+Set $T(n) = P(n^2 + n + 1)$ for any $n \in \N$.
+Then $T((n + 1)^2) = \max\{T(n), T(n + 1)\}$ for any $n \in \N$.
+The goal is to show that there exists infinitely many $n \in \N$ such that $T(n^2) = T((n + 1)^2)$.
+Equivalently, there exists infinitely many $n \in \N$ such that
+\[ \max\{T(n), T(n + 1)\} = \max\{T(n + 1), T(n + 2)\}. \]
+
+Suppose not; then there exists $C > 0$ such that for all $n \geq C$,
+\[ \max\{T(n), T(n + 1)\} \neq \max\{T(n + 1), T(n + 2)\}. \]
+In particular, if $n \geq C$ and $T(n) \leq T(n + 1)$, then $T(n + 1) < T(n + 2)$.
+This is enough to yield a contradiction as follows.
+
+First suppose that $T(n) \leq T(n + 1)$ for some $n \geq C$.
+Then $T(n + 1) < T(n + 2)$, and by induction hypothesis, $T(k) < T(k + 1)$ for all $k > n$.
+In particular, $T(n + 1) < T(k)$ for $k > n + 1$, and thus $T(n) \leq T(n + 1) < T((n + 1)^2)$ since $n \geq C \geq 1$.
+A contradiction.
+
+Thus, we have $T(n) > T(n + 1)$ for all $n \geq C$.
+Induction yields $T(n) > T(k)$ for all $k > n \geq C$.
+Again, we get a contradiction: $T(C + 1) > T((C + 1)^2) \geq T(C + 1)$.
+
+
+
+\subsection*{Extra notes}
+
+The result does not hold if $T$ only takes value in lattice with supremum, where $\max$ replaced by $\sup$.
+Indeed, $T(n)$ denotes the set of prime divisors of $n^2 + n + 1$, then one can show that $T(n^2) \neq T((n + 1)^2)$ for all $n \in \N$.

@@ -16,7 +16,7 @@ $$ f(xy + 1) = f(x) f(y) + f(x + y). $$
 This file defines the functional equation and prove some basic properties.
 We also define some notions; we say that $f$ is
 * *good* if it satisfies the above functional equation;
-* *non-trivial good* if $f$ is good, $f(1) = 0$, and $f(0) = -1$;
+* *non-trivial good* if $f$ is good and $f(0) = -1$ (which implies $f(1) = 0$);
 * *reduced good* if $f$ is non-trivial good and there is no non-zero $f$-periodic element.
 -/
 
@@ -37,12 +37,16 @@ variable [One S] [Zero S]
 
 structure NontrivialGood (f : R → S) : Prop where
   is_good : good f
-  map_one : f 1 = 0
   map_zero_add_one : f 0 + 1 = 0
 
 lemma NontrivialGood.map_zero {S} [AddGroupWithOne S] [Mul S]
     {f : R → S} (hf : NontrivialGood f) : f 0 = -1 :=
   eq_neg_of_add_eq_zero_left hf.map_zero_add_one
+
+lemma NontrivialGood.map_one {S} [NonAssocSemiring S]
+    {f : R → S} (hf : NontrivialGood f) : f 1 = 0 := by
+  rw [← zero_add 1, ← zero_mul 0, hf.is_good, zero_add,
+    ← add_one_mul (f 0), hf.map_zero_add_one, zero_mul]
 
 structure ReducedGood (f : R → S) extends NontrivialGood f : Prop where
   period_imp_eq (c d) (_ : ∀ x, f (x + c) = f (x + d)) : c = d

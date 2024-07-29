@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Digits
-import Mathlib.Algebra.CharZero.Lemmas
+import Mathlib.Data.Int.Bitwise
 
 /-!
 # IMO 2010 A4
@@ -29,8 +29,6 @@ namespace IMO2010A4
 
 open Finset
 
-/-- Somehow this is needed -/
-instance : LeftDistribClass ℕ := Distrib.leftDistribClass ℕ
 
 /-! ### The sequence `(x_n)_{n ≥ 0}` -/
 
@@ -40,28 +38,26 @@ theorem x_zero : x 0 = false :=
   Nat.binaryRec_zero false λ bit k ↦ xor (bit || k.bodd)
 
 theorem x_mul2 (k : ℕ) : x (2 * k) = xor k.bodd (x k) :=
-  k.bit0_val ▸ k.binaryRec_eq rfl false
+  k.binaryRec_eq rfl false
 
 theorem x_mul2_add1 (k : ℕ) : x (2 * k + 1) = !x k :=
-  k.bit1_val ▸ (x k).true_xor ▸ k.binaryRec_eq rfl true
+  (k.binaryRec_eq rfl true).trans (x k).true_xor
 
 theorem x_mul4 (k : ℕ) : x (4 * k) = xor k.bodd (x k) := by
-  change x (2 * 2 * k) = xor k.bodd (x k)
-  rw [mul_assoc, x_mul2, x_mul2, ← Nat.bit0_val, Nat.bodd_bit0, Bool.false_xor]
+  rw [Nat.mul_assoc 2 2, x_mul2, x_mul2, Nat.bodd_mul,
+    Nat.bodd_two, Bool.false_and, Bool.false_xor]
 
 theorem x_mul4_add1 (k : ℕ) : x (4 * k + 1) = !x (4 * k) := by
-  change x (2 * 2 * k + 1) = !x (2 * 2 * k)
-  rw [mul_assoc, x_mul2, x_mul2_add1,
-    ← Nat.bit0_val, Nat.bodd_bit0, Bool.false_xor]
+  rw [Nat.mul_assoc 2 2, x_mul2, x_mul2_add1, Nat.bodd_mul,
+    Nat.bodd_two, Bool.false_and, Bool.false_xor]
 
 theorem x_mul4_add2 (k : ℕ) : x (4 * k + 2) = x k := by
-  change x (2 * 2 * k + 2) = x k
-  rw [mul_assoc, ← mul_add_one, x_mul2, x_mul2_add1,
-    ← Nat.bit1_val, Nat.bodd_bit1, Bool.true_xor, Bool.not_not]
+  rw [Nat.mul_assoc 2 2, ← Nat.mul_succ, x_mul2, x_mul2_add1, Nat.bodd_succ, Nat.bodd_mul,
+    Nat.bodd_two, Bool.false_and, Bool.not_false, Bool.true_xor, Bool.not_not]
 
 theorem x_mul4_add3 (k : ℕ) : x (4 * k + 3) = x k := by
-  change x (2 * 2 * k + 2 + 1) = x k
-  rw [mul_assoc, ← mul_add_one, x_mul2_add1, x_mul2_add1, Bool.not_not]
+  show x (2 * 2 * k + 2 + 1) = x k
+  rw [Nat.mul_assoc, ← Nat.mul_succ, x_mul2_add1, x_mul2_add1, Bool.not_not]
 
 
 
@@ -105,7 +101,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
   change xor (false && q.bodd) r.bodd = false at h0
   iterate 3 rw [Nat.lt_succ_iff_lt_or_eq] at h
   rw [Nat.lt_one_iff, or_assoc, or_or_or_comm] at h
-  revert h; refine' (or_iff_left _).mp
+  revert h; refine (or_iff_left ?_).mp
   rintro (rfl | rfl) <;> exact Bool.true_eq_false_eq_False h0
   ---- If `S_q = 0` and `r ∈ {0, 2}`, then `S_{4q + r} = 0`
   rcases h0 with ⟨h0, rfl | rfl⟩
@@ -121,7 +117,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
 /-- Final solution for the main problem -/
 theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   ---- Reduce to showing that `x_k = ff` whenever `S_k = 0`
-  suffices ∀ k : ℕ, S k = 0 → x k = false by
+  suffices ∀ k, S k = 0 → x k = false by
     refine Nat.rec (Int.le_refl 0) (λ k h ↦ ?_)
     rw [le_iff_lt_or_eq, Int.lt_iff_add_one_le, zero_add, or_comm] at h
     rw [S_succ]; rcases h with h | h
@@ -130,8 +126,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
     · rw [← add_neg_self (1 : ℤ)]
       exact add_le_add h ((x k).rec (neg_le_self zero_le_one) (-1).le_refl)
   ---- Now show that `x_k = ff` whenever `S_k = 0`, using strong induction
-  intro k h
-  induction' k using Nat.strong_induction_on with k k_ih
+  intro k h; induction' k using Nat.strong_induction_on with k k_ih
   obtain ⟨q, r, h0, rfl⟩ : ∃ q r : ℕ, r < 4 ∧ 4 * q + r = k :=
     ⟨k / 4, k % 4, Nat.mod_lt k four_pos, Nat.div_add_mod k 4⟩
   rw [S_four_mul_add_eq_zero_iff q h0, or_comm] at h
@@ -146,7 +141,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
 
 /-- Final solution for the extra part -/
 theorem final_solution_extra (k : ℕ) :
-    S k = 0 ↔ ∀ c : ℕ, c ∈ Nat.digits 4 k → c = 0 ∨ c = 2 := by
+    S k = 0 ↔ ∀ c ∈ Nat.digits 4 k, c = 0 ∨ c = 2 := by
   induction' k using Nat.strong_induction_on with k k_ih
   obtain ⟨q, r, h, rfl⟩ : ∃ q r : ℕ, r < 4 ∧ 4 * q + r = k :=
     ⟨k / 4, k % 4, Nat.mod_lt k four_pos, Nat.div_add_mod k 4⟩
@@ -165,4 +160,4 @@ theorem final_solution_extra (k : ℕ) :
     k_ih q (Nat.lt_add_right _ <| lt_mul_left h0 <| Nat.succ_lt_succ <| Nat.succ_pos 2)
   rw [k_ih, add_comm,
     Nat.digits_add 4 (Nat.succ_lt_succ <| Nat.succ_pos 2) r q h <| Or.inr h0.ne.symm]
-  simp_rw [List.mem_cons]; rw [forall_eq_or_imp, and_comm]
+  simp only [List.mem_cons]; rw [forall_eq_or_imp, and_comm]

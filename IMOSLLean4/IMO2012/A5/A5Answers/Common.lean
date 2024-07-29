@@ -44,11 +44,11 @@ def isNontrivialAnswer.{u} (X : BundledRingFun.{u}) : Prop :=
   (∃ A : BundledRingFun.{u}, isPolyGoodMap A ∧ Nonempty (A.Hom X)) ∨
     (∃ A : BundledRingFun, isFinGoodMap A ∧ Nonempty (A.Hom X))
 
-theorem isPolyGoodMap.NontrivialGood {X} (hX : isPolyGoodMap X) : NontrivialGood X.f :=
+theorem isPolyGoodMap.NontrivialGood (hX : isPolyGoodMap X) : NontrivialGood X.f :=
   hX.rec (λ R ↦ sub_one_is_NontrivialGood (R := R))
     (λ R ↦ RestrictedSq_sub_one_is_NontrivialGood (R := R))
 
-theorem isFinGoodMap.NontrivialGood {X} (hX : isFinGoodMap X) : NontrivialGood X.f :=
+theorem isFinGoodMap.NontrivialGood (hX : isFinGoodMap X) : NontrivialGood X.f :=
   hX.rec 𝔽₂Map_is_NontrivialGood 𝔽₃Map1_is_NontrivialGood 𝔽₃Map2_is_NontrivialGood
     ℤ₄Map_is_NontrivialGood 𝔽₂εMap_is_NontrivialGood 𝔽₄Map_is_NontrivialGood
 
@@ -57,7 +57,6 @@ theorem BundledRingFun.Hom.NontrivialGood_trans {A X : BundledRingFun}
   have h : X.f = F.targetHom ∘ A.f ∘ F.sourceHom := funext F.spec
   h ▸ (hA.hom_comp _).comp_hom _
 
-theorem isNontrivialAnswer.NontrivialGood {X} (hX : isNontrivialAnswer X) :
-    NontrivialGood X.f :=
+theorem isNontrivialAnswer.NontrivialGood (hX : isNontrivialAnswer X) : NontrivialGood X.f :=
   hX.elim (λ ⟨_, h, h0⟩ ↦ h0.elim λ φ ↦ φ.NontrivialGood_trans h.NontrivialGood)
     (λ ⟨_, h, h0⟩ ↦ h0.elim λ φ ↦ φ.NontrivialGood_trans h.NontrivialGood)

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Defs
 import Mathlib.Order.Basic
+import Mathlib.Data.Nat.Find
 import Mathlib.Tactic.WLOG
 
 /-!
@@ -29,12 +29,11 @@ variable {f g : ℕ → ℕ} (h : good f g)
 
 lemma lem1 : ∃ a, ∀ k, (∃ x, f x = k) ↔ a ≤ k := by
   have h0 : ∃ n, ∃ x, f x = n := ⟨f 0, 0, rfl⟩
-  refine ⟨Nat.find h0, λ k ↦
-    ⟨Nat.find_min' h0, Nat.le_induction (Nat.find_spec h0) ?_ k⟩⟩
+  refine ⟨Nat.find h0, λ k ↦ ⟨Nat.find_min' h0, Nat.le_induction (Nat.find_spec h0) ?_ k⟩⟩
   rintro n h1 ⟨x, rfl⟩; exact ⟨g x, h x⟩
 
-lemma lem2 (h0 : g x = g y) : f x = f y :=
-  Nat.succ_injective (h x ▸ h y ▸ congr_arg f h0)
+lemma lem2 (h0 : g x = g y) : f x = f y := by
+  rw [← Nat.succ_inj, ← h, ← h, h0]
 
 lemma lem3 (h0 : ∀ k, (∃ x, g x = k) ↔ a ≤ k) : a < g a :=
   (lt_or_eq_of_le <| (h0 (g a)).mp ⟨a, rfl⟩).resolve_right
@@ -59,10 +58,8 @@ lemma lem5 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
   exact ⟨d, lem4 h h0 ((h1 _).mpr <| h3.trans <| (h2 _).mp ⟨d, rfl⟩)
     ((h1 a).mpr a.le_refl) h4⟩
 
-lemma lem6 :
-    ∃ a, (∀ k, (∃ x, f x = k) ↔ a ≤ k) ∧ (∀ k, (∃ x, g x = k) ↔ a ≤ k) :=
-  (lem1 h).elim λ a h1 ↦ ⟨a, h1, (lem1 h0).elim
-    λ _ h2 ↦ (lem5 h h0 h1 h2).symm ▸ h2⟩
+lemma lem6 : ∃ a, (∀ k, (∃ x, f x = k) ↔ a ≤ k) ∧ (∀ k, (∃ x, g x = k) ↔ a ≤ k) :=
+  (lem1 h).elim λ a h1 ↦ ⟨a, h1, (lem1 h0).elim λ _ h2 ↦ (lem5 h h0 h1 h2).symm ▸ h2⟩
 
 lemma lem7 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
     (h2 : ∀ k : ℕ, (∃ x, g x = k) ↔ a ≤ k) : f a = a.succ := by
@@ -71,8 +68,7 @@ lemma lem7 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
   obtain ⟨x, h4⟩ := (h1 (a + t)).mpr (a.le_add_right t)
   obtain ⟨y, h5⟩ := (h1 (g x)).mpr <| (h2 _).mp ⟨x, rfl⟩
   rw [Nat.succ_add, ← h4, ← h, ← Nat.succ_eq_add_one, ← h, ← h5] at h3
-  refine (lem4 h h0 ((h1 a).mpr a.le_refl)
-    ((h1 _).mpr <| (h2 _).mp ⟨f y, rfl⟩) h3).not_lt ?_
+  refine (lem4 h h0 ((h1 a).mpr a.le_refl) ((h1 _).mpr <| (h2 _).mp ⟨f y, rfl⟩) h3).not_lt ?_
   rw [h0, Nat.lt_succ_iff, ← h2]
   exact ⟨y, rfl⟩
 
@@ -81,7 +77,6 @@ theorem final_solution {f g : ℕ → ℕ} (h : good f g) (h0 : good g f) : f = 
   obtain ⟨a, h1, h2⟩ := lem6 h h0
   suffices h3 : ∀ n, a ≤ n → f n = n.succ ∧ g n = n.succ by
     ext x; rw [← Nat.succ_inj', ← h, (h3 _ <| (h2 _).mp ⟨x, rfl⟩).1]
-  refine Nat.le_induction ⟨lem7 h h0 h1 h2, lem7 h0 h h2 h1⟩
-    (λ n _ h3 ↦ ⟨?_, ?_⟩)
+  refine Nat.le_induction ⟨lem7 h h0 h1 h2, lem7 h0 h h2 h1⟩ (λ n _ h3 ↦ ⟨?_, ?_⟩)
   · rw [← Nat.succ_eq_add_one, ← h3.2, h, h3.1, h3.2]
   · rw [← Nat.succ_eq_add_one, ← h3.1, h0, h3.1, h3.2]

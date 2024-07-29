@@ -1,0 +1,118 @@
+Let $R$ be a ring, and let $S$ be a totally ordered commutative ring.
+Find all functions $f : R \to S$ such that, for any $x, y \in R$,
+\[ f(x + y)^2 = 2 f(x) f(y) + \max\{f(x^2) + f(y^2), f(x^2 + y^2)\}. \tag{*}\label{2016a7-eq0} \]
+
+
+
+
+
+\subsection*{Answer}
+
+$f = 0$, $f = \phi$, $f = -1$, and $f = x \mapsto \phi(x) - 1$ for some ring homomorphism $\phi : R \to S$.
+
+
+
+
+
+\subsection*{Solution}
+
+It is easy to see that the above functions work.
+We now show the converse.
+The following lemma is integral in our solution.
+
+\begin{lemma}\label{2016a7-1}
+Let $R$ be a ring and $S$ be an integral domain with $\rchar(S) \neq 2$.
+Let $f : R \to S$ be a function such that $f(x + y) = f(x) + f(y)$ and $f(x^2) = f(x)^2$ for all $x \in R$.
+Then $f$ is either the zero function or a ring homomorphism.
+\end{lemma}
+\begin{proof}
+The second identity yields $f(1) = f(1)^2 \implies f(1) \in \{0, 1\}$.
+Thus, it suffices to show that $f(xy) = f(x) f(y)$ for all $x, y \in R$.
+We use the standard trick
+\[ f(x^2) + f(y^2) + f(xy + yx) = f((x + y)^2) = f(x + y)^2 = f(x)^2 + 2 f(x) f(y) + f(y)^2, \]
+\[ f(xy) + f(yx) = 2 f(x) f(y) \quad \forall x, y \in R. \tag{1-1}\label{2016a7-eq1-1} \]
+While the above equation finishes the proof if $R$ is commutative, it does not in the non-commutative case.
+We still need a few more steps.
+
+For any $x, y \in R$, we have
+\[ f(xyx) + f(yxx) = 2 f(x) f(yx), \quad f(xxy) + f(xyx) = 2 f(x) f(xy), \quad f(xxy) + f(yxx) = 2 f(x)^2 f(y). \]
+Taking linear combinations yield
+\[ 2 f(xyx) = 2 f(x) (f(xy) + f(yx)) - 2 f(x)^2 f(y) = 2 f(x)^2 f(y), \]
+    and thus $f(xyx) = f(x)^2 f(y)$.
+Now we consider
+\[ f(xy)^2 + f(yx)^2 = f(xyxy) + f(yxyx) = 2 f(xyx) f(y) = 2 f(x)^2 f(y)^2. \]
+Combining with~\eqref{2016a7-eq1-1} yields $(f(xy) - f(yx))^2 = 0$, and thus $f(xy) = f(yx)$ for all $x, y \in R$.
+Plugging back into~\eqref{2016a7-eq1-1} gives $f(xy) = f(x) f(y)$ for all $x, y \in R$, as desired.
+\end{proof}
+
+First, plugging $x = y = 0$ into~\eqref{2016a7-eq0} yields $\max\{2 f(0), f(0)\} = -f(0)^2$.
+Solving for $f(0)$ yields $f(0) \in \{0, 1\}$.
+The case $f(0) = 0$ corresponds to the first two answer; the case $f(0) = -1$ corresponds to the last two.
+We now divide into two cases based on the value of $f(0)$.
+
+
+
+\subsubsection*{Case 1: $f(0) = 0$}
+
+Plugging $y = 0$ into~\eqref{2016a7-eq0} yields
+\[ f(x^2) = f(x)^2 \quad \forall x \in R. \]
+In the view of Lemma~\ref{2016a7-1}, it suffices to prove that $f$ is additive.
+
+The bound $f(x + y)^2 \geq (f(x) + f(y))^2$ from~\eqref{2016a7-eq0} and the above equality suffices.
+Due to the above equality, this bound can be rearranged to $f(z)^2 \geq (f(x) + f(y))^2$ whenever $x + y + z = 0$.
+Now summing cyclically and rearranging gives
+\[ (f(x) + f(y) + f(z))^2 = 0 \iff f(x) + f(y) + f(z) = 0 \quad \forall x, y, z \in R, x + y + z = 0. \]
+Plugging $z = 0$ and $y = -x$ implies that $f$ is odd.
+Finally, plugging $z = -(x + y)$ implies that $f$ is additive. 
+
+
+
+\subsubsection*{Case 2: $f(0) = -1$}
+
+This time, we have
+\[ f(x^2) = f(x)^2 + 2 f(x) \quad \forall x \in R, \]
+    which can also be written as $f(x^2) + 1 = (f(x) + 1)^2$.
+This also implies that for any $x \in R$, either $f(-x) = f(x)$ or $f(-x) + f(x) = -2$.
+By the virtue of Lemma~\ref{2016a7-1}, it suffices to show that $f + 1$ is additive.
+We make use of the following claim.
+
+\begin{claim}
+For any $t \in R$ such that $f(t) = f(-t)$, we have $f(t) < 1$.
+\end{claim}
+\begin{proof}
+Plugging $(x, y) = (t, -t)$ into~\eqref{2016a7-eq0} yields $1 \geq 2 f(t)^2 + 2 f(t^2) = 4 f(t)^2 + 4 f(t)$.
+This is impossible if $f(t) \geq 1$.
+\end{proof}
+
+First suppose that $f$ is not even.
+That is, there exists $t \in R$ such that $f(-t) \neq f(t)$.
+Comparing~\eqref{2016a7-eq0} with $(x, y)$ and $(-x, -y)$, and then using the top equality, gives
+\[ f(x + y) - f(-(x + y)) = f(-x) f(-y) - f(x) f(y). \tag{1}\label{2016a7-eq1} \]
+
+For any $x \in R$ such that $f(-x) = f(x)$, we get
+\[ f(x + y) - f(-(x + y)) = f(x) (f(-y) - f(y)) \]
+    and similarly, replacing $x$ with $-x$ and $y$ with $x + y$ yields
+\[ f(y) - f(-y) = f(-x) (f(-(x + y)) - f(x + y)) = f(x) (f(-(x + y)) - f(x + y)). \]
+Combining the two with $y = t$ yields $f(x)^2 = 1$ since $f(-t) \neq f(t)$.
+Then $f(x) = f(-x) = \pm 1$, and the above claim yields $f(x) = f(-x) = -1$.
+
+Since $f(-x) = f(x)$ implies $f(x) = -1$, we have $f(x) + f(-x) = -2$ for all $x \in R$.
+Substituting into~\eqref{2016a7-eq1} and simplifying yields $f(x + y) = f(x) + f(y) + 1$ for all $x, y \in R$.
+Thus $f + 1$ is additive.
+
+It remains to consider the case where $f$ is even.
+The claim yields $f(x) < 1$ for all $x \in R$.
+Comparing~\eqref{2016a7-eq0} with $(x, y) = (x, x)$ and $(x, y) = (x, -x)$ yields $f(2x)^2 = 1$ for all $x \in R$.
+Then the claim implies $f(2x) = -1$ for all $x \in R$.
+Plugging $y = x$ into~\eqref{2016a7-eq0} again yields
+\[ 1 = 2 f(x)^2 + \max\{-1, 2 f(x)^2 + 4 f(x)\} \geq 2 f(x)^2 - 1. \]
+Then we get $2 f(x)^2 \leq 2 \implies |f(x)| \leq 1$.
+Since $f(x) < 1$, this yields either $f(x) = 1$ or $|f(x)| < 1$.
+Furthermore, in the latter case, we have $4 f(x)^2 + 4 f(x) = 1$.
+Since $y^2 + y \leq 0$ for $-1 \leq y \leq 0$, this equality implies $f(x) > 0$.
+
+Finally, we show that the case $4 f(x)^2 + 4 f(x) = 1$ is impossible.
+Suppose that it indeed happens.
+Then $f(x) \geq 0$ and $f(x^2) = f(x)^2 + 2 f(x) > f(x)$.
+But then $1 = 4 f(x^2)^2 + 4 f(x^2) > 4 f(x)^2 + 4 f(x) = 1$; a contradiction.
+Thus $f \equiv -1$, and we are done.

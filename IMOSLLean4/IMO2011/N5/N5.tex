@@ -1,0 +1,68 @@
+Let $G$ be an additive group.
+We say that a function $f : G \to \N^+$ is \emph{good} if
+\[ f(x - y) \mid f(x) - f(y) \quad \forall x, y \in G. \tag{*}\label{2011n5-eq0} \]
+Prove that for any good function $f$ and $x, y \in G$, if $f(x) \leq f(y)$, then $f(x) \mid f(y)$.
+
+\textbf{Extra.}
+Find all good functions.
+
+
+
+\subsection*{Answer (Extra)}
+
+Consider a non-empty finite sequence $(G_i, n_i)_{i = 0}^k$ of pairs, where $G_i$ is a subgroup of $G$ and $n_i \in \N^+$.
+The pair satisfy $G_0 = G$, $G_i \supsetneq G_{i + 1}$, $n_i < n_{i + 1}$, and $n_i \mid n_{i + 1}$ for all $0 \leq i < k$.
+Define $f : G \to \N^+$ by $f(x) = n_j$, where $j$ is the largest index such that $x \in G_j$.
+Then $f$ satisfies~\eqref{2011n5-eq0}, and all functions satisfying~\eqref{2011n5-eq0} can be described in this way.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2011SL.pdf}
+
+We follow Solution 1 of the official solution for the original problem.
+We use it as a lemma to describe all good functions.
+
+First, by setting $y = 0$ in~\eqref{2011n5-eq0} yields $f(x) \mid f(0)$ for any $x \in G$.
+Then setting $x = 0$ instead yields $f(-y) \mid f(0) - f(y)$ and thus $f(-y) \mid f(y)$ for any $y \in G$.
+Since $f(-y)$ and $f(y)$ divides each other and are positive integers, we get $f(-y) = f(y)$ for all $y \in G$.
+
+\begin{lemma}
+For any $x, y \in G$, if $f(x) \leq f(y)$, then $f(x) \mid f(y)$.
+\end{lemma}
+\begin{proof}
+Clearly, we can assume that $f(x) < f(y)$.
+By~\eqref{2011n5-eq0}, we have $f(y - x) \mid f(y) - f(x)$.
+Thus, it suffices to prove that $f(y - x) = f(x)$.
+
+First note that $f(x) < f(y)$ and $f(y - x) \mid f(y) - f(x)$ implies $f(y) - f(x) \geq f(y - x)$.
+That is, $f(y) \geq f(y - x) + f(x) > |f(y - x) - f(x)|$.
+On the other hand,~\eqref{2011n5-eq0} yields
+\[ f(y) = f(y - x - (-x)) \mid f(y - x) - f(-x) = f(y - x) - f(x). \]
+Since $f(y) > |f(y - x) - f(x)|$, this forces $f(y - x) = f(x)$, as desired.
+\end{proof}
+
+We now find all good functions $f : G \to \N^+$.
+Recall that $f(x) \mid f(0)$ for any $x \in G$ and that $f$ is even.
+Now, for each integer $n$ dividing $f(0)$, let $H_n = \{x \in G : n \mid f(x)\}$.
+By assumption, we get $0 \in H_n$.
+Since $f$ is even, it is easy to check that $H_n$ is closed under negation.
+Finally,~\eqref{2011n5-eq0} yields $f(x) \mid f(x + y) - f(y)$ for any $x, y \in G$.
+That means if $x, y \in G$, then $n \mid f(x + y)$ as well, implying $x + y \in G$.
+Thus $H_n$ is in fact a subgroup of $G$.
+
+Given the above informations, we now describe $f$ as in the answer section.
+Since any element of $f(G)$ divides $f(0)$, $f(G)$ is in fact finite.
+Enumerate its elements as $n_0 < n_1 < n_2 < \ldots < n_k$ in increasing order, where $k \geq 0$.
+The original problem yields $n_i \mid n_j$ for each $i \leq j$.
+Now we can check by hand that $f$ matches the description in the answer section, with $G_i = H_{n_i}$ for each $i \leq k$.
+
+We now prove the converse.
+For each $x \in G$, let $i(x)$ denote the largest index such that $x \in G_{i(x)}$.
+Now fix $x, y \in G$, and for convenience, write $H = G_{i(x - y)}$.
+Then $x - y \in H$, and since $H$ is a subgroup, we have $x \in H \iff y \in H$.
+If $x, y \in H$, then $f(x - y)$ divides both $f(x)$ and $f(y)$, so we are done.
+If $x, y \notin H$, then $i(x), i(y) < i(x - y)$, so $x - y \in G_{i(x)}$ and $x - y \in G_{i(y)}$.
+Since $x - y, x \in G_{i(x)}$, we have $y \in G_{i(x)}$, so $i(x) \leq i(y)$.
+Similarly, $i(y) \leq i(x)$, so $i(x) = i(y)$ and thus $f(x) = f(y)$.

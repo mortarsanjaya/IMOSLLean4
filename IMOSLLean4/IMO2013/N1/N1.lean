@@ -20,12 +20,11 @@ namespace IMO2013N1
 theorem final_solution {f : ℕ+ → ℕ+} :
     (∀ m n : ℕ+, m * m + f n ∣ m * f m + n) ↔ f = id := by
   ---- Only `→` needs to be done now
-  refine ⟨λ h ↦ funext λ n ↦ le_antisymm ?_ ?_,
-    λ h m n ↦ h.symm ▸ dvd_refl (m * m + n)⟩
+  refine ⟨λ h ↦ funext λ n ↦ le_antisymm ?_ ?_, λ h m n ↦ h.symm ▸ dvd_refl (m * m + n)⟩
   ---- `f(n) ≤ n`
   · specialize h (f n) n
-    rw [← mul_add_one (α := ℕ+)] at h
-    replace h := (dvd_mul_right _ _).trans h
+    rw [← mul_add_one (f n)] at h
+    apply (dvd_mul_right _ _).trans at h
     rw [PNat.dvd_iff, PNat.add_coe, PNat.mul_coe,
       Nat.dvd_add_right ⟨_, rfl⟩, ← PNat.dvd_iff] at h
     exact PNat.le_of_dvd h
@@ -34,6 +33,5 @@ theorem final_solution {f : ℕ+ → ℕ+} :
     · exact (f 1).one_le
     · rcases PNat.exists_eq_succ_of_ne_one h0 with ⟨k, rfl⟩
       replace h := PNat.le_of_dvd (h (k + 1) (k + 1))
-      rw [add_one_mul (α := ℕ+), add_right_comm,
-        add_assoc, add_one_mul (α := ℕ+), add_assoc] at h
-      exact le_of_mul_le_mul_left' <| le_of_add_le_add_right (α := ℕ+) h
+      rw [add_one_mul k, add_right_comm, add_assoc, add_one_mul k, add_assoc] at h
+      exact le_of_mul_le_mul_left' (le_of_add_le_add_right h)

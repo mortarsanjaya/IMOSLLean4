@@ -1,0 +1,19 @@
+Let $n$ be an integer and $A$ be a subset of $\{0, 1, \ldots, 5^n\}$ of size $4n + 2$.
+Prove that there exists $a, b, c \in A$ such that $a < b < c$ and $c + 2a > 3b$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2021SL.pdf}
+
+We follow Solution 1 of the official solution.
+More generally, let $x_0 < x_1 < \ldots < x_{N + 1}$ be non-negative integers such that $x_k + 2 x_i \leq 3 x_j$ for all $k > j > i$.
+Then we prove that $x_{N + 1} \geq (3/2)^N$.
+For the original problem, just take $N = 4n$ and choose the $x_i$s such that $A = \{x_0, x_1, \ldots, x_{N + 1}\}$.
+
+We are given that $x_{N + 1} + 2 x_i \leq 3 x_{i + 1}$ for each $i < N$.
+Rearranging gives $2 (x_{N + 1} - x_i) \geq 3 (x_{N + 1} - x_{i + 1})$.
+Now it's immediate by induction on $i$ that $2^i (x_{N + 1} - x_0) \geq 3^i (x_{N + 1} - x_i)$ for all $i \leq N$.
+In particular, we get the desired inequality:
+\[ 2^N x_{N + 1} \geq 2^N (x_{N + 1} - x_0) \geq 3^N (x_{N + 1} - x_N) \geq 3^N. \]

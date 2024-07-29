@@ -45,7 +45,7 @@ theorem g_iter_lt_f_of_spanishCouple [LinearOrder α]
     (h : ∀ f : α → α, StrictMono f → ∀ x, x ≤ f x) (h0 : SpanishCouple f g) :
     ∀ (k : ℕ) (x : α), (g^[k]) x < f x
   | 0, x => (h f h0.f_mono x).lt_of_ne λ h1 ↦ (h0.spec x).not_le <|
-      (congr_arg g h1.symm).trans_le <| (h g h0.g_mono _).trans (h f h0.f_mono _)
+      (congrArg g h1.symm).trans_le <| (h g h0.g_mono _).trans (h f h0.f_mono _)
   | k + 1, x => h0.g_mono.lt_iff_lt.mp <| (h0.spec x).trans' <|
       (g_iter_lt_f_of_spanishCouple h h0 k _).trans_eq' <|
       (g.iterate_succ_apply' _ _).symm
@@ -87,7 +87,7 @@ theorem final_solution_part_2_general [Preorder β]
       refine h2.imp_right λ h3 ↦ ⟨h3.1, (h.iterate _ h3.2).trans_eq ?_⟩
       rw [← h3.1]
     spec := λ p ↦ by
-      refine prod_lex_lt_iff.mpr <| Or.inr <| ⟨rfl, ?_⟩
+      refine prod_lex_lt_iff.mpr <| Or.inr ⟨rfl, ?_⟩
       rw [← Function.iterate_add_apply, ← two_mul, pow_succ']
       exact h.strictMono_iterate_of_lt_map (h0 p.2)
         (Nat.mul_lt_mul_of_pos_right (Nat.lt_succ_self 2)

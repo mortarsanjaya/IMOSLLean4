@@ -1,0 +1,39 @@
+Prove that, for any positive integer $n > 1$, there exists infinitely many positive integers $k$ such that $\lfloor n^k/k \rfloor$ is odd.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2014SL.pdf}
+
+The presented solution below is Solution 2 of the official solution, with a difference in one case.
+When $n > 2$ and $n$ is even, instead of taking $k$ to be the powers of a fixed prime factor of $n - 1$, we just use powers of $n - 1$.
+There are three cases.
+
+\begin{itemize}
+
+    \item 
+    Case 1: $n > 1$ is odd.
+
+    Then for any $k \geq 0$, since $k < n^k$, we get $\lfloor n^{n^k}/n^k \rfloor = n^{n^k - k}$, which is odd.
+    Thus the choice $m = n^k$ for all $k \geq 0$ works.
+
+    \item
+    Case 2: $n > 2$ is even.
+
+    Write $n = r + 1$, where $r > 1$ is odd.
+    Then $(r + 1)^{r^k}$ is even and congruent to $1$ modulo $r^k$ for any $k \geq 1$.
+    This can be proved, for example, by induction on $k$.
+    This means that $\lfloor (r + 1)^{r^k}/r^k \rfloor$ is always odd for any $k \geq 1$.
+    So, $m = r^k$ for all $k \geq 1$ works.
+
+    \item
+    Case 3: $n = 2$.
+
+    This time, we take $m = 3 \cdot 4^k$ across all $k \geq 1$.
+    That is, we only need that $q = \lfloor 2^{3 \cdot 4^k}/(3 \cdot 4^k) \rfloor$ is odd for all $k \geq 1$.
+    Since $2k \leq 3 \cdot 4^k$ for all $k \geq 1$, we can write $q = \lfloor 2^{3 \cdot 4^k - 2k}/3 \rfloor$.
+    But $2^{3 \cdot 4^k - 2k} \equiv 1 \pmod{3}$ since $3 \cdot 4^k - 2k$ is even.
+    So indeed, $q$ is odd.
+
+\end{itemize}

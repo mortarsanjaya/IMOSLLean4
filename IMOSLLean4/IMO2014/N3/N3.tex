@@ -1,0 +1,45 @@
+Consider a collection $\cC$ of coins of value $1/n$ for some positive integer $n$.
+A partition of $\cC$ into $N$ groups is called an \emph{$N$-Cape Town} partition if the total value of coins in each group is at most $1$.
+Prove that if the total value of coins in $\cC$ is at most $N + 1/2$, then $\cC$ has an $(N + 1)$-Cape Town partition.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2014SL.pdf}
+
+We proceed with the official solution.
+In the implementation, $\cC$ is a multiset, and we allow $\cC$ to contain coins of value $0$.\footnote{
+    This is implemented by accepting that $0^{-1} = 0$. Yes, $0$ has an inverse!}
+The process is as follows.
+
+\begin{itemize}
+
+    \item 
+    First, we can assume that $\cC$ contains no coin of value $1$.
+    Otherwise, just put them into a single group per value $1$ coins and induct on $N$.
+    Similarly, for each $k > 0$, if there are at least $k$ coins of value $1/k$, put $k$ of them in one group and induct again.
+    At this point, we can assume that for any $k > 0$, there are less than $k$ coins of value $1/k$ in $\cC$.
+
+    \item
+    Next, for each $k > 0$, if there are at least two coins of value $1/(2k)$, we can merge them into a coin of value $1/k$.
+    Then we just induct and choose a partition of the new collection.
+    To obtain a partition of the original collection, one coin of value $1/k$ is split back into two coins of value $1/(2k)$.
+    Thus, we can now assume that there are at most one coin of value $1/(2k)$ for each $k > 0$.
+
+    \item
+    Consider the case where the previous assumptions hold and also all coins have value at least $1/(2N + 2)$.
+    Split them into $N + 1$ groups $G_1, G_2, \ldots, G_{N + 1}$, where each $G_k$ consists of coins of value $1/(2k - 1)$ and $1/(2k)$.
+    By the previous assumption, the total value of coins in $G_k$ is at most
+    \[ \frac{2k - 2}{2k - 1} + \frac{1}{2k} < 1. \]
+    Thus this is an $(N + 1)$-Cape Town partition of $\cC$.
+
+    \item 
+    Now we induct on the number of coins of value less than $1/(2N + 2)$ in $\cC$.
+    Suppose that such coin exist, say of value $1/k_0$ where $k_0 > 2N + 2$.
+    Let $\cC'$ be the collection obtained by removing this coin, and assume that $\cC'$ has an $(N + 1)$-Cape Town partition.
+    One of the groups in the $(N + 1)$-Cape Town partition has size at most
+    \[ \frac{N + 1/2}{N + 1} = 1 - \frac{1}{2N + 2}. \]
+    Since $k_0 > 2N + 2$, the extra coin of value $1/k_0$ fit in this partition.
+
+\end{itemize}

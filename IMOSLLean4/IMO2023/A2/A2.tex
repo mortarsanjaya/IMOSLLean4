@@ -1,0 +1,41 @@
+A group $(G, +)$ is called $2$-divisible if the map $x \mapsto 2x$ on $G$ is surjective.
+That is, every element of $G$ can be written as $2y$ for some $y \in G$.
+
+Let $(G, +)$ be a $2$-divisible abelian group and $R$ be a totally ordered ring.
+Let $f : G \to R$ be a function such that for any $x, y \in G$,
+\[ f(x + y) f(x - y) \geq f(x)^2 - f(y)^2. \tag{*}\label{2023a2-eq0} \]
+Furthermore, suppose that the inequality is strict for some $x_0, y_0 \in G$.
+Prove that either $f \geq 0$ or $f \leq 0$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow Solution 1 of the official solution with some simplification.
+
+Consider~\eqref{2023a2-eq0} with $(x, y)$ and $(y, x)$.
+Adding the two inequalities yield
+\[ f(x + y) (f(x - y) + f(y - x)) \geq 0 \quad \forall x, y \in G. \tag{*}\label{2023a2-eq1} \]
+Furthermore, for a given $x_0, y_0 \in G$, if one of the two is strict, then the above inequality is strict.
+That is, there exists $x_0, y_0 \in G$ such that
+\[ f(x_0 + y_0) (f(x_0 - y_0) + f(y_0 - x_0)) > 0. \]
+Let $s = x_0 - y_0$; the above implies that $f(s) + f(-s) \neq 0$ for some $s \in G$.
+Now for any $t \in G$, choose $x \in G$ such that $2x = s + t$, then set $y = x - s$.
+Then $x + y = t$ and $x - y = s$, so~\eqref{2023a2-eq1} yields
+\[ f(t) (f(s) + f(-s)) \geq 0 \quad \forall t \in G. \]
+Since $f(s) + f(-s) \neq 0$, this means $f(t)$ must have the same sign as $f(s) + f(-s)$, or is zero.
+That is, if $f(s) + f(-s) > 0$, then $f \geq 0$; otherwise $f \leq 0$.
+
+
+
+\subsection*{Extra notes}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h1673292p10651933}
+
+It might be of interest to determine all $f$ satisfying~\eqref{2023a2-eq0}.
+However, characterization of such functions seem hard.
+The pure equality case is asked in the above referenced link.
+Other functions that work include any constant function and any homomorphism from $(G, +)$ to $(R_{>0}, *)$.
+There are more weird functions that work as well; for example, any function that takes value between $3$ and $4$ fits the description.

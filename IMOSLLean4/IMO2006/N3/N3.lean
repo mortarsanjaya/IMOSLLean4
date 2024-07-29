@@ -30,9 +30,9 @@ theorem g_zero : g 0 = 0 := rfl
 
 theorem g_succ (n : ℕ) : g n.succ = g n + n.succ.divisors.card := by
   rw [g, g, Nat.divisors]; simp only [Nat.succ_div]
-  rw [card_filter, sum_Ico_eq_sum_range, Nat.add_sub_cancel, sum_add_distrib,
-    sum_range_succ, Nat.div_eq_of_lt n.lt_succ_self]
-  exact congrArg₂ _ rfl (by simp only [add_comm 1])
+  rw [card_filter, sum_Ico_eq_sum_range, Nat.add_sub_cancel,
+    sum_add_distrib, sum_range_succ, Nat.div_eq_of_lt n.lt_succ_self]
+  exact congrArg _ (by simp only [add_comm 1])
 
 theorem g_eq_sum_divisors_card : ∀ n : ℕ, g n = (range n).sum λ k ↦ k.succ.divisors.card
   | 0 => by rw [sum_range_zero, g_zero]
@@ -83,6 +83,18 @@ theorem f_self_lt_f_succ_of_divisors_card {n : ℕ} (h : n ≠ 0)
        _ = n.succ.divisors.card * n := by
         rw [sum_const, card_range, smul_eq_mul, mul_comm]
 
+theorem f_succ_lt_self_of_succ_prime_large (h : 6 ≤ n) (h0 : n.succ.Prime) :
+    f n.succ < f n := by
+  apply f_lt_f_of_g
+  rw [g_succ, card_divisors_prime h0, add_mul, Nat.mul_succ, add_lt_add_iff_left]
+  exact two_mul_lt_g n h
+
+
+
+
+
+/-! ### Final solution -/
+
 /-- Final solution, part 1 -/
 theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite :=
   Set.infinite_of_forall_exists_gt λ N ↦ by
@@ -92,23 +104,17 @@ theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite :=
         ⟨Extra.seqMax (λ n ↦ n.succ.divisors.card) N,
         λ _ ↦ Extra.le_seqMax_of_le (λ n ↦ n.succ.divisors.card)⟩
       have h1 := exists_lt_card_divisor_succ K
-      refine ⟨Nat.find h1,
+      exact ⟨Nat.find h1,
         (Nat.lt_find_iff h1 _).mpr λ k h2 ↦ (h0 k h2).not_lt,
         λ k h2 ↦ (le_of_not_lt (Nat.find_min h1 h2)).trans_lt (Nat.find_spec h1)⟩
     exact ⟨n, f_self_lt_f_succ_of_divisors_card (Nat.not_eq_zero_of_lt h0) h1, h0⟩
-
-theorem f_succ_lt_self_of_succ_prime_large (h : 6 ≤ n) (h0 : n.succ.Prime) :
-    f n.succ < f n := by
-  apply f_lt_f_of_g
-  rw [g_succ, card_divisors_prime h0, add_mul, Nat.mul_succ, add_lt_add_iff_left]
-  exact two_mul_lt_g n h
 
 /-- Final solution, part 2 -/
 theorem final_solution_part2 : {n : ℕ | f n.succ < f n}.Infinite :=
   Set.infinite_of_forall_exists_gt λ N ↦ by
     obtain ⟨n, h, h0, h1⟩ : ∃ n, 6 ≤ n ∧ n.succ.Prime ∧ N < n := by
       rcases (max 6 (N + 1) + 1).exists_infinite_primes with ⟨_ | n, h, h0⟩
-      exact absurd h0 Nat.not_prime_zero
-      rw [Nat.add_le_add_iff_right, max_le_iff] at h
-      exact ⟨n, h.1, h0, h.2⟩
+      · exact absurd h0 Nat.not_prime_zero
+      · rw [Nat.add_le_add_iff_right, max_le_iff] at h
+        exact ⟨n, h.1, h0, h.2⟩
     exact ⟨n, f_succ_lt_self_of_succ_prime_large h h0, h1⟩

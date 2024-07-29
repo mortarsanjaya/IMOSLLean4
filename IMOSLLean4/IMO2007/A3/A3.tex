@@ -1,0 +1,21 @@
+Let $F$ be a totally ordered field, and let $n$ be a positive integer.
+Let $x, y \in F$ be positive elements such that $x^n + y^n = 1$.
+Prove that
+\[ \left(\sum_{k = 1}^n \frac{1 + x^{2k}}{1 + x^{4k}}\right) \left(\sum_{k = 1}^n \frac{1 + y^{2k}}{1 + y^{4k}}\right) < \frac{1}{(1 - x)(1 - y)}. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+We just follow Solution 1 of the official solution.
+It is based on the inequality
+\[ \frac{1 + t^2}{1 + t^4} < \frac{1}{t}. \]
+We first show that the above holds for any $t > 0$ with $t \neq 1$.
+Indeed, it rearranges as $(t - 1)(t^3 - 1) = t^4 - t^3 - t + 1 > 0$, which holds since $t \neq 1$.
+
+Now, using this inequality, the left hand side is less than
+\[ \left(\sum_{k = 1}^n \frac{1}{x^k}\right) \left(\sum_{k = 1}^n \frac{1}{y^k}\right) = \frac{1 - x^n}{x^n (1 - x)} \cdot \frac{1 - y^n}{y^n (1 - y)}. \]
+But $x^n + y^n = 1$, so the above expression simplifies to the right hand side.
+We are done.

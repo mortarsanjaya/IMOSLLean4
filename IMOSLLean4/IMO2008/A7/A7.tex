@@ -1,0 +1,65 @@
+Let $F$ be a totally ordered field, and denote $F_{>0} = \{x \in F : x > 0\}$.
+Prove that, for any $a, b, c, d \in F_{>0}$,
+\[ \frac{(a - b)(a - c)}{a + b + c} + \frac{(b - c)(b - d)}{b + c + d} + \frac{(c - d)(c - a)}{c + d + a} + \frac{(d - a)(d - b)}{d + a + b} \geq 0. \tag{*}\label{2008a7-eq0} \]
+Find all cases of equality.
+
+
+
+\subsection*{Answer}
+
+Equality holds if and only if $a = c$ and $b = d$.
+
+
+
+\subsection*{Solution}
+
+To shorten notation, let $y = a + c$, $z = b + d$, $\epsilon = a - c$ and $\delta = b - d$.
+Instead of following the official solution, we prove a decent bound: the LHS is bounded below by
+\[ \frac{4|\epsilon|^2 + 4|\delta|^2 - |\epsilon||\delta|}{6 (y + z)}. \]
+Since $4(4x^2 + 4y^2 - xy) = 7(x + y)^2 + 9(x - y)^2$ for any $x, y \in F$, this proves that the inequality is strict unless $\epsilon = \delta = 0$.
+
+We start with some algebraic manipulation.
+For any $a, b, c, d \in F$ positive, observe that
+\[ 2\left(\frac{a - b}{a + b + c} - \frac{c - d}{c + d + a}\right) = \frac{a - c}{a + c + b} + \frac{a - c}{a + c + d} - \frac{3(a + c)(b - d)}{(a + c + b)(a + c + d)}. \]
+In particular,
+\[ 2\left(\frac{(a - b)(a - c)}{a + b + c} + \frac{(c - d)(c - a)}{c + d + a}\right) \geq \frac{4(a - c)^2}{2(a + c) + (b + d)} - \frac{3(a + c)(a - c)(b - d)}{(a + c + b)(a + c + d)}. \]
+As a result, using Cauchy-Schwarz inequality,
+\begin{align*}
+    2 \cdot LHS
+    &\geq \frac{4 \epsilon^2}{2y + z} - \frac{3y \epsilon \delta}{(y + b)(y + d)} + \frac{4 \delta^2}{2z + y} + \frac{3z \delta \epsilon}{(z + a)(z + c)} \\
+    &\geq \frac{4(|\epsilon| + |\delta|)^2}{3(y + z)} - 3 \epsilon \delta \left(\frac{y}{(y + b)(y + d)} - \frac{z}{(z + a)(z + c)}\right) \\
+    &\geq \frac{4(|\epsilon| + |\delta|)^2}{3(y + z)} - 3 |\epsilon| |\delta| \max\left\{\frac{y}{(y + b)(y + d)}, \frac{z}{(z + a)(z + c)}\right\} \\
+    &\geq \frac{4(|\epsilon| + |\delta|)^2}{3(y + z)} - 3 |\epsilon| |\delta| \cdot \frac{1}{y + z} \\
+    &= \frac{4|\epsilon|^2 + 4|\delta|^2 - |\epsilon||\delta|}{3 (y + z)}.
+\end{align*}
+
+
+
+
+
+\iffalse
+
+To shorten notation, let $y = x_0 + x_2$, $z = x_1 + x_3$, $\epsilon = x_0 - x_2$, and $\delta = x_1 - x_3$.
+Clearly, $x_0 = x_2$ and $x_1 = x_3$ yields equality.
+To prove~\eqref{2008a7-eq0} with no other equality case, it suffices to prove a stronger bound:
+\[ \sum_{j = 0}^3 \frac{(x_j - x_{j + 1})(x_j - x_{j + 2})}{x_j + x_{j + 1} + x_{j + 2}} \geq \frac{4|\epsilon|^2 + 4|\delta|^2 - |\epsilon||\delta|}{6 (y + z)}. \]
+
+We start with some algebraic manipulation.
+For any $a, b, c, d \in F$ positive, observe that
+\[ 2\left(\frac{a - b}{a + b + c} - \frac{c - d}{c + d + a}\right) = \frac{a - c}{a + c + b} + \frac{a - c}{a + c + d} - \frac{3(a + c)(b - d)}{(a + c + b)(a + c + d)}. \]
+In particular,
+\[ 2\left(\frac{a - b}{a + b + c} - \frac{c - d}{c + d + a}\right) \geq \frac{4(a - c)}{2(a + c) + (b + d)} - \frac{3(a + c)(b - d)}{(a + c + b)(a + c + d)}. \]
+As a result, using Cauchy-Schwarz inequality,
+\begin{align*}
+    & 2 \sum_{j = 0}^3 \frac{(x_j - x_{j + 1})(x_j - x_{j + 2})}{x_j + x_{j + 1} + x_{j + 2}} \\
+    \geq\;& \frac{4 \epsilon^2}{2y + z} - \frac{3y \epsilon \delta}{(y + b)(y + d)} + \frac{4 \delta^2}{2z + y} + \frac{3z \delta \epsilon}{(z + a)(z + c)} \\
+    \geq\;& \frac{4(|\epsilon| + |\delta|)^2}{3(y + z)} - 3 \epsilon \delta \left(\frac{y}{(y + b)(y + d)} - \frac{z}{(z + a)(z + c)}\right) \\
+    \geq\;& \frac{4(|\epsilon| + |\delta|)^2}{3(y + z)} - 3 |\epsilon| |\delta| \max\left\{\frac{y}{(y + b)(y + d)}, \frac{z}{(z + a)(z + c)}\right\} \\
+    \geq\;& \frac{4(|\epsilon| + |\delta|)^2}{3(y + z)} - 3 |\epsilon| |\delta| \cdot \frac{1}{y + z} \\
+    =\;& \frac{4|\epsilon|^2 + 4|\delta|^2 - |\epsilon||\delta|}{3 (y + z)}.
+\end{align*}
+Dividing both sides by $2$ yields the desired inequality.
+In a simpler form, we also get the bound
+\[ \sum_{j = 0}^3 \frac{(x_j - x_{j + 1})(x_j - x_{j + 2})}{x_j + x_{j + 1} + x_{j + 2}} \geq \frac{7(|\epsilon| + |\delta|)^2}{12(y + z)} = \frac{7(|a - c| + |b - d|)^2}{12(a + b + c + d)}. \]
+
+\fi

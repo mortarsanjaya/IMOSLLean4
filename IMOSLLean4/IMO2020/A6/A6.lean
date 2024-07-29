@@ -38,19 +38,18 @@ theorem good_add_one : good (· + 1) := λ a b ↦ by
     rw [Int.natCast_pow, Int.natAbs_sq, sq, ← mul_one_add, add_comm]
   rw [add_one_iterate, Int.ofNat_add, add_add_add_comm, h, h]
 
-theorem const_iterate (a b : α) :
-    ∀ n, (λ _ ↦ b)^[n] a = bif n.beq 0 then a else b
+theorem const_iterate (a b : α) : ∀ n, (λ _ ↦ b)^[n] a = bif n.beq 0 then a else b
   | 0 => rfl
   | _ + 1 => iterate_succ_apply' _ _ _
 
 theorem good_zero : good (λ _ ↦ 0) := λ a b ↦ by
   rw [const_iterate, ← Int.add_mul, Int.mul_zero]
-  cases h : (a.natAbs ^ 2 + b.natAbs ^ 2).beq 0
-  · rfl
-  · have h0 : ∀ c : ℤ, c.natAbs ^ 2 = 0 ↔ c = 0 :=
-      λ c ↦ by rw [sq_eq_zero_iff, Int.natAbs_eq_zero]
-    rw [Nat.beq_eq, add_eq_zero, h0, h0] at h
-    rw [h.1, h.2]; rfl
+  cases h : (a.natAbs ^ 2 + b.natAbs ^ 2).beq 0 with
+  | false => rfl
+  | true => have h0 (c : ℤ) : c.natAbs ^ 2 = 0 ↔ c = 0 := by
+              rw [sq_eq_zero_iff, Int.natAbs_eq_zero]
+            rw [Nat.beq_eq, add_eq_zero, h0, h0] at h
+            rw [h.1, h.2]; rfl
 
 
 
@@ -75,10 +74,9 @@ theorem map_iterate_sq_add_one (a : ℤ) :
     mul_zero, add_zero, ← map_iterate_sq h] at h0
 
 theorem eq_add_one_of_injective (h0 : f.Injective) : f = (· + 1) :=
-  funext λ a ↦ h0.iterate ((a + 1).natAbs ^ 2) <| map_iterate_sq_add_one h a
+  funext λ a ↦ h0.iterate ((a + 1).natAbs ^ 2) (map_iterate_sq_add_one h a)
 
-theorem exists_iter_add_large_eq (a : ℤ) :
-    ∀ k : ℕ, ∃ N : ℕ, f^[N + k] a = f^[N] (a + k)
+theorem exists_iter_add_large_eq (a : ℤ) : ∀ k : ℕ, ∃ N : ℕ, f^[N + k] a = f^[N] (a + k)
   | 0 => ⟨0, a.add_zero.symm⟩
   | k + 1 => by
       rcases exists_iter_add_large_eq a k with ⟨N, h0⟩
@@ -129,8 +127,7 @@ theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
     iterate_succ_apply, ← h2, Commute.iterate_self, ← h4,
     add_left_comm, ← add_assoc, iterate_succ_apply']
 
-theorem eq_zero_of_not_injective (h0 : ∃ M : ℤ, ∀ n : ℕ, |f^[n] 0| < M) :
-    f = 0 := by
+theorem eq_zero_of_not_injective (h0 : ∃ M : ℤ, ∀ n : ℕ, |f^[n] 0| < M) : f = 0 := by
   -- Start with `f^2(0) = 0` and `∀ a, a ≠ 0 → f(-a) = f(a)`
   rcases h0 with ⟨M, h0⟩
   have h1 (a : ℤ) : f^[2 * a.natAbs ^ 2] 0 = a * (f a - f (-a)) := by

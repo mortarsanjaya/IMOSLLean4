@@ -6,7 +6,9 @@ Determine all pairs of functions $(f, g) : R \to R$ such that for any $x, y \in 
 
 \subsection*{Answer}
 
-
+Let $\phi : R_1 \times R_2 \cong R$ be an isomorphism of rings.
+Define $f$ and $g$ by $f(\phi(x, y)) = (x^2 + c, 0)$ and $g(\phi(x, y)) = (x, 0)$ for all $x \in R_1$ and $y \in R_2$, where $c \in R_1$ is fixed.
+Then $(f, g)$ satisfies~\eqref{2011a3-eq0}, and all functions satisfying~\eqref{2011a3-eq0} are of this form for some ring isomorphism $R_1 \times R_2 \cong R$ and $c \in R_1$
 
 
 
@@ -47,3 +49,10 @@ Since $A^2 = A$ and clearly $\langle A - 1, A \rangle = 1$, by Chinese Remainder
 That is, there is an isomorphism $\phi : R \cong R_1 \times R_2$ sending $A$ to $(1, 0)$.
 Since $CA = C$, $\phi(C) = (c, 0)$ for some $c \in R_1$.
 Then one can check that $f(x, y) = (x^2 + c, 0)$ and $g(x, y) = (x, 0)$ for any $x \in R_1$ and $y \in R_2$.
+
+
+\subsection*{Further directions}
+
+A lot of the steps are implemented without assuming that $R$ is commutative.
+Not only that, we have a complete solution without commutativity if we do not look into some structural decomposition of $R$.
+Can we get a nice description of the result with either a structural decomposition or using ring homomorphisms?

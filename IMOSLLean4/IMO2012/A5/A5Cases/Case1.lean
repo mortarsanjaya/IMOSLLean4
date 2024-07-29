@@ -164,7 +164,7 @@ lemma value_bash (x : R) : x = 0 ∨ x = 1 ∨ x = -1 := by
       rw [eq_neg_iff_add_eq_zero, two_add_one_eq_three, Rchar hf]
     rw [sub_eq_add_neg, ← h3, triple_sum_eq_zero hf]
   ---- Now get `f(x) + f(x + 1) + f(x - 1) + f(-x) + f(-x + 1) + f(-x - 1) = 0`
-  replace h : _ + _ = 0 + 0 := congr_arg₂ (· + ·) (h x) (h (-x))
+  replace h : _ + (f (-x) + _ + _) = 0 + 0 := congrArg₂ (· + ·) (h x) (h (-x))
   rw [add_zero, ← neg_add', add_right_comm (f _), add_add_add_comm,
     add_add_add_comm (f _), h0, h2, neg_add_eq_sub, ← neg_sub x, h1,
     one_add_one_eq_two, two_add_one_eq_three] at h

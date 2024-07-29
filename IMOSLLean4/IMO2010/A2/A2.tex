@@ -1,0 +1,35 @@
+Let $R$ be a totally ordered commutative ring.
+Fix some $a, b, c, d \in R$ such that $a + b + c + d = 6$ and $a^2 + b^2 + c^2 + d^2 = 12$.
+Prove that
+\[ 36 \leq 4(a^3 + b^3 + c^3 + d^3) - (a^4 + b^4 + c^4 + d^4) \leq 48. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2010SL.pdf}
+
+We generalize Solution 1 and then restrict as necessary.
+The generalized bound may not be strict in some cases.
+
+\begin{claim}
+Fix some $n \geq 1$ and $a_1, a_2, \ldots, a_n \in F$.
+For convenience, denote
+\[ \sigma_1 = \displaystyle \sum_{i = 1}^n a_i, \quad \sigma_2 = \displaystyle \sum_{i = 1}^n a_i^2. \]
+Set $B = 6 \sigma_2 - 4 \sigma_1 + n$, $C = (\sigma_2 - 2 \sigma_1 + n)^2$, and
+\[ L = 4 \sum_{i = 1}^n a_i^3 - \sum_{i = 1}^n a_i^4. \]
+Then $B - L \leq C \leq n(B - L)$.
+\end{claim}
+\begin{proof}
+The proof is based on the identity $4x^3 - x^4 = (6x^2 - 4x + 1) - (x - 1)^4$.
+For each $i \leq n$, let $b_i = (a_i - 1)^2$.
+Then we have
+\[ 4 \sum_{i = 1}^n a_i^3 - \sum_{i = 1}^n a_i^4 = \sum_{i = 1}^n ((6 a_i^2 - 4 a_i + 1) - (a_i - 1)^4) = B - \sum_{i = 1}^n b_n^2. \]
+Thus, the inequality to be proved reduces to
+\[ C\leq \sum_{i = 1}^n b_n^2 \leq nC. \]
+Finally, notice that $C = \displaystyle \left(\sum_{i = 1}^n b_n\right)^2$.
+Thus, the left inequality follows by QM-AM, while the right inequality is trivial.
+\end{proof}
+
+In the original problem, $n = 4$, $\sigma_1 = 6$ and $\sigma_2 = 12$.
+This means $B = 52$ and $C = 4^2 = 16$, giving us the desired bound.

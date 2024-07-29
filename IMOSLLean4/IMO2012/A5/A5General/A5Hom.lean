@@ -31,10 +31,9 @@ theorem good_hom_comp (h : good f) [NonAssocSemiring S₀]
 
 theorem NontrivialGood.comp_hom (hf : NontrivialGood f) [NonAssocSemiring R₀]
     (φ : R₀ →+* R) : NontrivialGood (f ∘ φ) :=
-  ⟨good_comp_hom hf.is_good φ, hf.map_one ▸ congrArg f φ.map_one,
-    hf.map_zero_add_one ▸ congrArg (λ x ↦ f x + 1) φ.map_zero⟩
+  ⟨good_comp_hom hf.is_good φ, hf.map_zero_add_one ▸ congrArg (λ x ↦ f x + 1) φ.map_zero⟩
 
 theorem NontrivialGood.hom_comp (hf : NontrivialGood f) [NonAssocSemiring S₀]
     (φ : S →+* S₀) : NontrivialGood (φ ∘ f) :=
-  ⟨good_hom_comp hf.is_good φ, φ.map_zero ▸ φ.congr_arg hf.map_one,
-    by rw [← φ.map_one, ← φ.map_zero, ← hf.map_zero_add_one, φ.map_add]; rfl⟩
+  ⟨good_hom_comp hf.is_good φ,
+  by rw [← φ.map_one, ← φ.map_zero, ← hf.map_zero_add_one, φ.map_add]; rfl⟩

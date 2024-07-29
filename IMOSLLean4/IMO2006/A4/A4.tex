@@ -1,0 +1,26 @@
+Let $F$ be a totally ordered field and $a_1, a_2, \ldots, a_n \in F$ be positive.
+Prove that
+\[ \sum_{i < j} \frac{a_i a_j}{a_i + a_j} \leq \frac{n}{2(a_1 + a_2 + \ldots + a_n)} \sum_{i < j} a_i a_j. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2006SL.pdf}
+
+We follow Solution 1 of the official solution with some modification.
+
+Denote $S = a_1 + a_2 + \ldots + a_n$.
+Clearly, it suffices to show that
+\[ 2S \sum_{i \neq j} \frac{a_i a_j}{a_i + a_j} \leq n \sum_{i \neq j} a_i a_j. \]
+Since $4 a_i a_j = (a_i + a_j)^2 - (a_i - a_j)^2$, we have
+\begin{align*}
+    2S \sum_{i \neq j} \frac{a_i a_j}{a_i + a_j}
+    &= \frac{S}{2} \sum_{i \neq j}\left(a_i + a_j - \frac{(a_i - a_j)^2}{a_i + a_j}\right) \\
+    &= (n - 1) S^2 - \frac{1}{2} \sum_{i \neq j} \frac{S (a_i - a_j)^2}{a_i + a_j} \\
+    &\leq (n - 1) S^2 - \frac{1}{2} \sum_{i \neq j} (a_i - a_j)^2 \\
+    &= (n - 1) S^2 - \frac{1}{2} \sum_{i, j} (a_i^2 + a_j^2 - 2 a_i a_j) \\
+    &= (n - 1) S^2 - \left(n \sum_{i = 1}^n a_i^2 - S^2\right) \\
+    &= nS^2 - n \sum_{i = 1}^n a_i^2 \\
+    &= n \sum_{i \neq j} a_i a_j.
+\end{align*}

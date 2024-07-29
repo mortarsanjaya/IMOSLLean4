@@ -32,19 +32,16 @@ open Extra
 variable [LinearOrderedAddCommGroup G] (a : ℕ → G) (n : ℕ)
 
 /-- Final solution, part 1 -/
-theorem final_solution_part1 {x : ℕ → G}
-    (h : Monotone x) (h0 : k ≤ m) (h1 : m ≤ n) :
+theorem final_solution_part1 {x : ℕ → G} (h : Monotone x) (h0 : k ≤ m) (h1 : m ≤ n) :
     a k - a m ≤ 2 • seqMax (λ i ↦ |x i - a i|) n := by
   apply (le_add_of_nonneg_left (sub_nonneg_of_le (h h0))).trans
   rw [← add_comm_sub, sub_add, sub_sub_sub_comm, two_nsmul]
   have X {i} : i ≤ n → |x i - a i| ≤ seqMax (λ i ↦ |x i - a i|) n :=
     le_seqMax_of_le (λ i ↦ |x i - a i|)
-  exact (le_abs_self _).trans <| (abs_sub _ _).trans <|
-    add_le_add (X h1) (X (h0.trans h1))
+  exact (le_abs_self _).trans <| (abs_sub _ _).trans <| add_le_add (X h1) (X (h0.trans h1))
 
 /-- Final solution, part 2 -/
-theorem final_solution_part2
-    (h : ∀ k m : ℕ, k ≤ m → m ≤ n → a k - a m ≤ 2 • g) :
+theorem final_solution_part2 (h : ∀ k m : ℕ, k ≤ m → m ≤ n → a k - a m ≤ 2 • g) :
     ∃ x : ℕ → G, Monotone x ∧ seqMax (λ i ↦ |x i - a i|) n = g :=
   ⟨λ i ↦ seqMax a i - g, λ i j h0 ↦ sub_le_sub_right (seqMax_mono a h0) g, by
     apply le_antisymm

@@ -1,0 +1,46 @@
+\begin{enumerate}
+
+\item
+Let $F$ be an ordered field, and consider $x, y, z \in F \setminus \{1\}$ satisfying $xyz = 1$.
+Prove that \[ \frac{x^2}{(x - 1)^2} + \frac{y^2}{(y - 1)^2} + \frac{z^2}{(z - 1)^2} \geq 1. \]
+
+\item
+Show that there exists infinitely many triplets $(x, y, z) \in (\Q \setminus \{1\})^3$ with $xyz = 1$ such that the above inequality becomes equality.
+
+\end{enumerate}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2008SL.pdf}
+
+For both parts, we follow the official solution.
+For part (b), we just write down the explicit triplets given at the end and prove that it works.
+
+\begin{enumerate}
+
+\item
+Let $a = \frac{x}{x - 1}$, $b = \frac{y}{y - 1}$, and $c = \frac{z}{z - 1}$.
+Equivalently, $x = \frac{a}{a - 1}$, $y = \frac{b}{b - 1}$, and $z = \frac{c}{c - 1}$.
+The equation $xyz = 1$ is equivalent to $abc = (a - 1)(b - 1)(c - 1)$, or $a + b + c - 1 = ab + bc + ca$.
+Then we get
+\[ a^2 + b^2 + c^2 = (a + b + c)^2 - 2(a + b + c - 1) = (a + b + c - 1)^2 + 1 \geq 1. \]
+
+
+
+\item
+First, consider any field $F$.
+Take any $t \in F$ such that $t \neq 0$, $t + 1 \neq 0$, and $t^2 + t + 1 \neq 0$.
+We set $(x, y, z) = (-(t + 1)/t^2, t/(t + 1)^2, -t(t + 1))$.
+One can check that $x, y, z \neq 1$ and $xyz = 1$.
+Using the notations $a, b, c$ as in the previous part, we then get $a^2 + b^2 + c^2 = 1$ if $abc = 1$.
+Thus, it remains to check that $a + b + c = 1$.
+Indeed, by bashing, we have
+\[ a = \frac{t + 1}{t^2 + t + 1}, \quad b = \frac{-t}{t^2 + t + 1}, \quad c = \frac{t^2 + t}{t^2 + t + 1}. \]
+
+Finally, any $t > 0$ works if $F$ is an ordered field.
+Different values of $t$ give different values of $z$.
+We are done; we just range $t$ among, say, the positive integers.
+
+\end{enumerate}
