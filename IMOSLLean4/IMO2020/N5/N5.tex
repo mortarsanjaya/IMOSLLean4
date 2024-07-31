@@ -1,0 +1,210 @@
+For any monoid $M_1$ and $M_2$, let $\Hom(M_1, M_2)$ denote the set of monoid homomorphisms from $M_1$ to $M_2$.
+For most part, we use multiplication as the monoid operation.
+
+Let $M$ be a commutative and cancellative monoid.
+For any $f \in \Hom(\N^+, M)$, we say that $n \in \N^+$ is $f$-\emph{reflexive} if $f(a) = f(b)$ for any $a, b \in \N^+$ with $a + b = n$.
+Next, we say that $f$ is:
+\begin{itemize}
+    \item   \emph{good}, if there exists infinitely many $f$-reflexive integers;
+    \item   \emph{of local class} at a prime $p$, if $p^k$ is $f$-reflexive for all $k \in \N$;
+    \item   \emph{of global class}, if there exists infinitely $f$-reflexive primes.
+\end{itemize}
+
+First, all good maps are either of local class of global class.
+It follows from the following general lemma:
+
+\begin{lemma}
+Let $M$ be a cancellative monoid and $f \in \Hom(\N^+, M)$.
+Given $c, d \in \N^+$ such that $d \mid c$ and $c$ is $f$-reflexive, $d$ is also $f$-reflexive.
+\end{lemma}
+\begin{proof}
+Let $c = dk$, and consider some arbitrary $a, b \in \N^+$ such that $a + b = d$.
+Since $c$ is $f$-reflexive and $(a + b) k = dk = c$, we get $f(ak) = f(bk)$.
+Then $f(a) f(k) = f(b) f(k)$, and cancellative property gives $f(a) = f(b)$.
+\end{proof}
+
+Our goal is to classify all local class and global class homomorphisms.
+The main results are as follows.
+
+\begin{theorem}\label{2020n5-main1}
+Consider the map $L_p : M \times \Hom(\F_p^{\times}/\{\pm 1\}, M) \to \Hom(\N^+, M)$ given by
+\[ L_p(c, \phi)(p^k n) = c^k \phi(\overline{n}) \quad \forall k, n \in \N, \; \gcd(n, p) = 1, \]
+    where $\overline{n}$ denotes the reduction mod $p$ of $n$ to $\F_p^{\times}$.
+Then $L_p$ is a bijection from $M \times \Hom(\F_p^{\times}/\{\pm 1\}, M)$ to the set of local class maps at $p$.
+(It is in fact an isomorphism of monoids.)
+\end{theorem}
+
+\begin{theorem}\label{2020n5-main2}
+The only map that belongs to either two local classes at distinct primes or a local class and the global class is the zero map.
+\end{theorem}
+
+\begin{theorem}\label{2020n5-main3}
+If $M$ is torsion-free, then
+\begin{itemize}
+    \item   the only global class map on $M$ is zero;
+    \item   the local class maps at $p$ are given by $p^k n \mapsto c^k$ for some $c \in M$.
+\end{itemize}
+\end{theorem}
+
+In addition, we prove:
+
+\begin{theorem}\label{2020n5-main4}
+There exists a non-zero global class maps over $M = \{\pm 1\} \cong \Z/2\Z$.
+\end{theorem}
+
+
+
+
+
+\subsection*{Solution}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h2625925p29340833}
+
+The reference links to an AoPS solution by the user \textbf{BlazingMuddy} (author of this project, post \#40).
+It proves all the above theorem.
+We start by proving the first three.
+
+\begin{lemma}\label{2020n5-1}
+Let $f \in \Hom(\N^+, M)$ and $p$ be an $f$-reflexive prime.
+Then $f(km \% p) = f(k) f(m)$ for any $0 < k, m < p$, where $km \% p$ denotes the remainder of $km$ divided by $p$.
+\end{lemma}
+\begin{proof}
+Strong induction on $k$ and $m$.
+The easy base case is $km < p$.
+Now fix some $1 < k_0, m_0 < p$ with $k_0 m_0 > p$, and suppose that
+\begin{itemize}
+    \item   for any $0 < k < k_0$ and $0 < m < p$, we have $f(km \% p) = f(k) f(m)$;
+    \item   for any $0 < m < m_0$, we have $f(k_0 m \% p) = f(k_0) f(m)$.
+\end{itemize}
+
+The goal is to prove that $f(k_0 m_0 \% p) = f(k_0) f(m_0)$.
+Let $p = q m_0 + r$, where $q = \lfloor p/m_0 \rfloor < k_0$ and $0 < r < m_0$.
+
+First, since $p$ is $f$-reflexive, we have
+\[ f(k_0 q m_0 \% p) = f(k_0 r \% p), \quad f(q) f(m_0) = f(q m_0) = f(r). \]
+By induction hypothesis on $k$, we get $f(k_0 q m_0 \% p) = f(q) f(k_0 m_0 \% p)$.
+By induction hypothesis on $m$, we get $f(k_0 r \% p) = f(k_0) f(r) = f(q) f(k_0) f(m_0)$.
+We are done by cancelling out $f(q)$ from the left hand side.
+\end{proof}
+
+\begin{lemma}\label{2020n5-2}
+Fix $f \in \Hom(\N^+, M)$, and let $p$ be a prime and $a \in \N$.
+Suppose that $p^b$ is $f$-reflexive for all $b \leq a$.
+Then $f(k) = f(k \% p)$ for any $0 < k < p^a$ coprime with $p$.
+\end{lemma}
+\begin{proof}
+Induction on $a$, with the base cases $a = 0$ and $a = 1$ trivial.
+Fix $a \geq 1$, and suppose that:
+\begin{itemize}
+    \item   $f(k) = f(k \% p)$ for any $0 < k < p^a$ coprime with $p$;
+    \item   $p^b$ is $f$-reflexive for all $b \leq a + 1$.
+\end{itemize}
+
+Now consider an arbitrary $0 < k < p^{a + 1}$ coprime with $p$.
+The goal is to show that $f(k) = f(k \% p)$.
+We proceed by strong induction on $k$.
+That is, assume that $f(k') = f(k' \% p)$ for all $0 < k' < k$ coprime with $p$.
+Clearly, we are done if $0 < k < p^a$, so suppose that $k > p^a$.
+
+Write $p^{a + 1} = qk + r$, where $0 \leq r < k$.
+Since $p^a < k < p^{a + 1}$, we know that $0 < q < p$.
+Since $k$ is coprime with $p$, $r$ is also coprime with $p$.
+By $f$-reflexivity of $p^{a + 1}$, we have $f(q) f(k) = f(qk) = f(r)$.
+By induction hypothesis, $f(r) = f(r \% p)$.
+By $f$-reflexivity of $p$, we have $f(r \% p) = f(qk \% p)$.
+By Lemma~\ref{2020n5-1}, $f(qk \% p) = f(q) f(k \% p)$.
+Cancelling $f(q)$ from the left yields $f(k) = f(k \% p)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{2020n5-main1}]
+First, we show that $L_p(c, \phi)$ is always local class at $p$.
+It is easy to check that $L_p(c, \phi)$ is a homomorphism.
+Next, take arbitrary $a, b \in \N^+$ and $k \in \N$ such that $a + b = p^k$.
+Then $\gcd(a, b)$ is a power of $p$, so we can write $a = p^d x$ and $b = p^d y$ for some $d < k$ and $x, y \in \N^+$ coprime with $p$.
+We have $x + y = p^{k - d}$, a power of $p$, so $p \mid x + y$ and thus $\overline{x} = -\overline{y}$.
+Since $\phi(-1) = -1$, we get
+\[ f(x) = \phi(\overline{x}) = \phi(\overline{y}) = f(y). \]
+Finally, multiply with $f(p^d) = c^d$ on both sides.
+We get $f(a) = f(b)$, as desired.
+
+Second, we prove that all local class maps (at $p$) is in the image of $L_p$.
+Indeed, consider any $f \in \Hom(\N^+, M)$ that is local class at $p$.
+Lemma~\ref{2020n5-main1} implies that there exists $\phi \in \Hom(\F_p^{\times}, M)$ such that $\phi(\overline{k}) = f(k)$ for all $k$ coprime with $p$.
+Furthermore, $\phi$ restricts to a homomorphism from $\F_p^{\times}/\{\pm 1\}$ to $M$, since $\phi(-1) = f(p - 1) = f(1) = 1$.
+Then it is easy to see that $f = L_p(f(p), \phi)$.
+
+Finally, we show that $L_p(c, \phi)$ is injective.
+Indeed, suppose that $L_p(c, \phi) = L_p(c', \phi')$.
+Evaluating at $p$ yields $c = c'$.
+Evaluating at each $0 < k < p$ yields $\phi = \phi'$.
+Thus $(c, \phi) = (c', \phi')$, as desired.
+\end{proof}
+
+\begin{lemma}\label{2020n5-3}
+Let $f \in \Hom(\N^+, M)$ be local class at a prime $p$.
+Suppose that there exists $n > p^2$ coprime with $p$ such that $n$ is $f$-reflexive.
+Then $f \equiv 1$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{2020n5-2}, it suffices to show that $f(p) = 1$ and $f(k) = 1$ for all $0 < k < p$.
+For each $0 < k \leq p$, we have $f(p) f(k) = f(pk) = f(n - pk)$.
+By Lemma~\ref{2020n5-2}, $f(n - pk) = f(n \% p)$, independent of $k$.
+In particular, $f(p) f(k) = f(p)$, so $f(k) = 1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{2020n5-main2}]
+If $f$ is local class at primes $p$ and $q > p$, then $n = q^2 > p^2$ is $f$-reflexive.
+Similarly, if $f$ is local class at a prime $p$ and is global class, then $n = q > p^2$ is $f$-reflexive for some $q$ prime.
+In both cases, $n > p^2$ is coprime with $p$ and is $f$-reflexive.
+By Lemma~\ref{2020n5-3}, $f \equiv 1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{2020n5-main3}]
+If $M$ is torsion-free, then $\Hom(\F_p^{\times}, M) = \{1\}$.
+By Lemma~\ref{2020n5-1}, for any $p$ that is $f$-reflexive, we get $f(k) = 1$ for all $k < p$.
+Thus $f \equiv 1$ if $f$ is global class.
+If $f$ is local class at a prime $p$, then Lemma~\ref{2020n5-2} with Lemma~\ref{2020n5-1} yields $f(k) = 1$ for all $k$ coprime with $p$.
+Thus $f(p^k n) = f(p)^k$ for all $k \in \N$ and $n$ coprime with $p$.
+\end{proof}
+
+Finally, we prove Theorem~\ref{2020n5-main4}.
+
+\begin{proof}[Proof of Theorem~\ref{2020n5-main4}]
+We explicitly constructing a non-zero global class map over $\{\pm 1\}$.
+Consider a sequence of primes $p_1 < p_2 < p_3 < \ldots$.
+For each $k \in \N^+$, set $f(k) = \left(\frac{k}{p_k}\right)$, the Legendre symbol of $k$ over $p_k$.
+To make $f$ a monoid homomorphism, we require $\left(\frac{k}{p_i}\right) = \left(\frac{k}{p_j}\right)$ whenever $k \leq p_i < p_j$.
+To make sure that $f(p_i - 1) = 1$ for each $i$, we also require $p_i \equiv 1 \pmod{4}$.
+With this in mind, we take $(p_k)_{k \geq 1}$ such that:
+\begin{itemize}
+    \item   $p_1 \equiv 1 \pmod{4}$, e.g. $p_1 = 5$;
+    \item   $p_{k + 1} \equiv p_k \pmod{4 (p_k - 1)!}$ for each $k \in \N^+$.
+\end{itemize}
+
+The existence of such sequence follows by Dirichlet's theorem on arithmetic progressions.
+The compatibility requirement of the Legendre symbols is satisfied by quadratic reciprocity.
+The resulting map $f$ is a monoid homomorphism as $f(k) = \left(\frac{k}{p_j}\right)$ for any $j$ large enough.
+Since $p_k \equiv 1 \pmod{4}$ for all $k$, each $p_k$ is $f$-reflexive.
+Thus, $f$ is a non-zero global class map.
+\end{proof}
+
+
+
+
+
+\subsection*{Extra notes}
+
+Lemma~\ref{2020n5-1} can be proved without assuming that $M$ is cancellative.
+However, to prove it, we first need to prove that for any $0 < k < p$, $f(k)$ has a double-sided inverse of form $f(s)$ for some $s > 0$.
+This can be proved via induction, also using Euclidean algorithm.
+Both Lemma~\ref{2020n5-2} and Lemma~\ref{2020n5-3} also holds without assuming that $M$ is cancellative as well.
+In particular, the same holds for Theorem~\ref{2020n5-main1} and Theorem~\ref{2020n5-main2}.
+
+The three results can even be proved on any magmas $(M, \cdot)$ with identity.
+However, the statement of Theorem~\ref{2020n5-main1} has to be modified.
+Instead of $M \times \Hom(\F_p^{\times}/\{\pm 1\}, M)$, the set of local class maps at $p$ is in bijection with the subset of this set consisting of pairs $(c, \phi)$ such that $c$ and the image of $\phi$ commutes and associates with each other.
+
+It is actually possible to prove Theorem~\ref{2020n5-main4} for all monoids with non-zero torsion.
+It is not hard to reduce the result to the case $M = \Z/q\Z$ for some prime $q$.
+However, for $q \neq 2$, the proof requires Chebotarev density theorem over abelian extensions of $\Q(\zeta_q)$.
+This is much more general than Dirichlet's theorem on arithmetic progressions.
