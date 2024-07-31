@@ -17,7 +17,7 @@ We say that `f` is:
 1. *good*, if there exists infinitely many `f`-reflexive integers;
 2. of *local class* at a prime `p`, if `p^k` is `f`-reflexive for all `k : ℕ`;
 3. of *global class* if infinitely many primes are `f`-reflexive.
-We prove basic properties of these maps.
+We prove various properties of these maps.
 -/
 
 namespace IMOSL
@@ -61,6 +61,8 @@ lemma reflexive.of_dvd [IsRightCancelMul M] {f : MulMap M}
 
 
 
+/-! ### Proof of Main Theorem 1 -/
+
 /-- TODO: Get this to mathlib, or delete it once it gets into mathlib -/
 lemma mod_add_mod_eq_of_dvd_add_of_not_dvd {a b c : ℕ} (h : c ∣ a + b) (ha : ¬c ∣ a) :
     c = a % c + b % c := by
@@ -78,12 +80,15 @@ lemma mod_add_mod_eq_of_dvd_add_of_not_dvd {a b c : ℕ} (h : c ∣ a + b) (ha :
   obtain rfl : k = 1 := Nat.le_antisymm (Nat.le_of_lt_succ h1) h0
   rw [h2, c.mul_one]
 
-
 variable {p : Nat.Primes} {f : MulMap M}
+
+section
+
+variable (hf : reflexive f p)
 
 /-- If a prime `p` is `f`-reflexive, then for any `0 < k < p`, then `f(k)` is the
   left inverse of some `f(m)`. Useful to remove the need of `M` to be cancellative. -/
-lemma reflexive.map_invertible_of_lt_prime (hf : reflexive f p) :
+lemma reflexive.map_invertible_of_lt_prime :
     ∀ {k}, 0 < k → k < p.1 → ∃ m, 0 < m ∧ f k * f m = 1 := by
   ---- Set up strong induction and eliminate the case `k = 1`
   intro k hk hkp; induction' k using Nat.strong_induction_on with k₀ k_ih
@@ -102,7 +107,7 @@ lemma reflexive.map_invertible_of_lt_prime (hf : reflexive f p) :
   exact congrArg₂ _ (hf _ (Nat.mul_pos hk h0) _ h (Nat.div_add_mod _ k₀)) rfl
 
 /-- The main claim on `f`-reflexive primes. -/
-lemma reflexive.map_mul_mod_prime_formula (hf : reflexive f p) :
+lemma reflexive.map_mul_mod_prime_formula :
     ∀ {k}, 0 < k → k < p.1 → ∀ {m}, 0 < m → m < p.1 → f (k * m % p) = f k * f m := by
   ---- Set up the strong induction
   intro k hk hkp; induction' k using Nat.strong_induction_on with k₀ k_ih
@@ -158,11 +163,13 @@ lemma reflexive.map_mul_mod_prime_formula (hf : reflexive f p) :
     hs, mul_one, mul_one, f.map_mul hk hm] at m_ih
 
 /-- The main claim on `f`-reflexive primes, stated purely in terms of modulus. -/
-lemma reflexive.mul_mod_prime_eq_map_mod_mul_map_mod
-    (hf : reflexive f p) (hk : ¬p.1 ∣ k) (hm : ¬p.1 ∣ m) :
+lemma reflexive.mul_mod_prime_eq_map_mod_mul_map_mod (hk : ¬p.1 ∣ k) (hm : ¬p.1 ∣ m) :
     f (k * m % p) = f (k % p) * f (m % p) :=
   k.mul_mod m p ▸ hf.map_mul_mod_prime_formula (Nat.emod_pos_of_not_dvd hk)
     (k.mod_lt p.2.pos) (Nat.emod_pos_of_not_dvd hm) (m.mod_lt p.2.pos)
+
+end
+
 
 /-- The main claim on `f`-reflexive prime powers. -/
 lemma reflexive.prime_power_map_eq_map_mod (hf : ∀ b ≤ a, reflexive f (p ^ b)) :
@@ -220,8 +227,16 @@ lemma reflexive.prime_power_map_eq_map_mod (hf : ∀ b ≤ a, reflexive f (p ^ b
 lemma localClass.map_eq_map_mod (hf : localClass p f) (h : ¬p.1 ∣ k) : f k = f (k % p) :=
   reflexive.prime_power_map_eq_map_mod (λ b _ ↦ hf b) (Nat.lt_pow_self p.2.one_lt k) h
 
+
+
+/-! ### Proof of Main Theorem 2 -/
+
+section
+
+variable (hf : localClass p f)
+
 /-- If `f` is local class at `p` and `n > p^2` coprime with `p` is `f`-reflexive, `f = 1` -/
-lemma localClass.eq_zero_of_big_reflexive (hf : localClass p f)
+lemma localClass.eq_zero_of_big_reflexive
     (hn : p.1 ^ 2 < n) (hn0 : ¬p.1 ∣ n) (h : reflexive f n) : f = 1 := by
   ---- Reduce to `f(k) = 1` for all `0 < k ≤ p`
   suffices ∀ k : ℕ, 0 < k → k ≤ p → f k = 1 by
@@ -249,3 +264,18 @@ lemma localClass.eq_zero_of_big_reflexive (hf : localClass p f)
     _ = f k * (f p * f s) := by rw [h1, hs, mul_one]
     _ = f (k * p) * f s := by rw [← f.map_assoc, ← f.map_mul hk p.2.pos]
     _ = _ := by rw [h0 k hk hk0, hs]
+
+/-- If `f` is local class at two distinct primes, then `f = 1` -/
+lemma localClass.eq_one_of_two_primes (hf0 : localClass q f) (h : p ≠ q) : f = 1 := by
+  refine hf.eq_zero_of_big_reflexive (Nat.lt_pow_self q.2.one_lt _) ?_ (hf0 _)
+  rwa [← p.2.coprime_iff_not_dvd, Nat.coprime_pow_right_iff (Nat.pow_pos p.2.pos),
+    p.2.coprime_iff_not_dvd, Nat.prime_dvd_prime_iff_eq p.2 q.2, Nat.Primes.coe_nat_inj]
+
+lemma localClass.eq_one_of_global_class (hf0 : globalClass f) : f = 1 := by
+  obtain ⟨q, h, h0⟩ := hf0 (p ^ 2)
+  refine hf.eq_zero_of_big_reflexive h (λ h1 ↦ h.not_le ?_) h0
+  rw [(Nat.prime_dvd_prime_iff_eq p.2 q.2).mp h1, sq]; exact Nat.le_mul_self q.1
+
+alias globalClass.eq_one_of_local_class := localClass.eq_one_of_global_class
+
+end

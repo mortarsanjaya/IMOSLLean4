@@ -21,6 +21,7 @@ We prove basic properties of these maps.
 
 namespace IMOSL
 namespace IMO2020N5
+namespace PNat
 
 variable [MulOneClass M]
 
@@ -42,3 +43,9 @@ lemma globalClass.is_good {f : ℕ+ →* M} (hf : globalClass f) : good f :=
 
 lemma reflexive.one (f : ℕ+ →* M) : reflexive f 1 :=
   λ _ b h ↦ h.not_gt.elim (b.one_le.trans_lt (PNat.lt_add_left _ _))
+
+lemma reflexive.of_dvd [IsRightCancelMul M] {f : ℕ+ →* M} (h : reflexive f d) (h0 : c ∣ d) :
+    reflexive f c := λ a b h1 ↦ by
+  rcases h0 with ⟨k, rfl⟩
+  specialize h (a * k) (b * k) (h1 ▸ (add_mul a b k).symm)
+  rwa [f.map_mul, f.map_mul, mul_left_inj] at h
