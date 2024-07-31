@@ -36,8 +36,9 @@ instance {M : outParam Type*} [MulOneClass M] : FunLike (MulMap M) ℕ M where
   coe := toFun
   coe_injective' := λ _ _ _ ↦ by rwa [mk.injEq]
 
-@[ext] theorem ext {f g : MulMap M} (h : ∀ n, f n = g n) : f = g :=
-  DFunLike.ext _ _ h
+@[ext] theorem ext {f g : MulMap M} (h : ∀ n, 0 < n → f n = g n) : f = g :=
+  DFunLike.ext _ _ λ n ↦ n.eq_zero_or_pos.elim
+    (λ h ↦ h ▸ f.map_zero'.trans g.map_zero'.symm) (h n)
 
 @[simp] theorem toFun_eq_coe : f.toFun = f := rfl
 
@@ -71,3 +72,21 @@ theorem map_assoc (k m n) : f k * f m * f n = f k * (f m * f n) := by
   · rw [f.map_zero, mul_one, mul_one]
   · rw [← f.map_mul hk hm, ← f.map_mul (Nat.mul_pos hk hm) hn,
       k.mul_assoc, f.map_mul hk (Nat.mul_pos hm hn), f.map_mul hm hn]
+
+
+instance : One (MulMap M) := ⟨⟨λ _ ↦ 1, rfl, rfl, λ _ _ ↦ (one_mul 1).symm⟩⟩
+
+instance {M} [CommMonoid M] : Mul (MulMap M) := ⟨λ f g ↦
+  { toFun := λ n ↦ f n * g n
+    map_zero' := (congrArg₂ _ f.map_zero' g.map_zero').trans (mul_one 1)
+    map_one' := (congrArg₂ _ f.map_one' g.map_one').trans (mul_one 1)
+    map_mul' := λ hm hn ↦ by
+      show f (_ * _) * g (_ * _) = (f _ * g _) * (f _ * g _)
+      rw [f.map_mul hm hn, g.map_mul hm hn, ← mul_assoc, mul_assoc (f _),
+        mul_comm (f _) (g _), ← mul_assoc, mul_assoc] }⟩
+
+instance {M} [CommMonoid M] : CommMonoid (MulMap M) :=
+  { mul_comm := λ f g ↦ ext λ _ _ ↦ mul_comm _ _
+    mul_assoc := λ f g h ↦ ext λ _ _ ↦ mul_assoc _ _ _
+    mul_one := λ f ↦ ext λ _ _ ↦ mul_one _
+    one_mul := λ f ↦ ext λ _ _ ↦ one_mul _ }

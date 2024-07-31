@@ -45,7 +45,7 @@ lemma toPNatHom_ofPNatHom (φ : ℕ+ →* M) : (ofPNatHom φ).toPNatHom = φ :=
   MonoidHom.ext λ n ↦ dif_pos n.2
 
 lemma ofPNatHom_toPNatHom (f : MulMap M) : ofPNatHom f.toPNatHom = f :=
-  MulMap.ext λ n ↦ n.eq_zero_or_pos.elim (λ h ↦ h ▸ f.map_zero.symm) (λ h ↦ dif_pos h)
+  MulMap.ext λ _ h ↦ dif_pos h
 
 def toPNatHomEquiv : MulMap M ≃ (ℕ+ →* M) :=
   { toFun := toPNatHom

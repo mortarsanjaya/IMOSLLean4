@@ -24,21 +24,21 @@ namespace IMO2020N5
 
 variable [MulOneClass M]
 
-abbrev reflexive (f : ℕ+ →*  M) (n : ℕ+) := ∀ a b, a + b = n → f a = f b
+abbrev reflexive (f : ℕ+ →* M) (n : ℕ+) := ∀ a b, a + b = n → f a = f b
 
-def good (f : ℕ+ →*  M) := ∀ N, ∃ n > N, reflexive f n
+def good (f : ℕ+ →* M) := ∀ N, ∃ n > N, reflexive f n
 
 def localClass (p : Nat.Primes) (f : ℕ+ →*  M) := ∀ k, reflexive f (p ^ k)
 
-def globalClass (f : ℕ+ →*  M) := ∀ N : ℕ+, ∃ p : Nat.Primes, N < p ∧ reflexive f p
+def globalClass (f : ℕ+ →* M) := ∀ N : ℕ+, ∃ p : Nat.Primes, N < p ∧ reflexive f p
 
 
 
-lemma localClass.is_good {f : ℕ+ →*  M} (hf : localClass p f) : good f :=
+lemma localClass.is_good {f : ℕ+ →* M} (hf : localClass p f) : good f :=
   λ N ↦ ⟨p ^ N.1, Nat.lt_pow_self p.2.one_lt N, hf N⟩
 
-lemma globalClass.is_good {f : ℕ+ →*  M} (hf : globalClass f) : good f :=
+lemma globalClass.is_good {f : ℕ+ →* M} (hf : globalClass f) : good f :=
   λ N ↦ (hf N).elim λ p h ↦ ⟨p, h⟩
 
-lemma reflexive.one (f : ℕ+ →*  M) : reflexive f 1 :=
+lemma reflexive.one (f : ℕ+ →* M) : reflexive f 1 :=
   λ _ b h ↦ h.not_gt.elim (b.one_le.trans_lt (PNat.lt_add_left _ _))

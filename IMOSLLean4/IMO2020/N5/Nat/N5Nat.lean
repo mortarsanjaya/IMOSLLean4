@@ -42,6 +42,9 @@ lemma localClass.is_good {f : MulMap M} (hf : localClass p f) : good f :=
 lemma globalClass.is_good {f : MulMap M} (hf : globalClass f) : good f :=
   λ N ↦ (hf N).elim λ p h ↦ ⟨p, h⟩
 
+lemma localClass.reflexive_self {f : MulMap M} (hf : localClass p f) : reflexive f p :=
+  p.1.pow_one ▸ hf 1
+
 lemma reflexive.one (f : MulMap M) : reflexive f 1 :=
   λ _ ha _ hb h ↦ h.not_gt.elim (Nat.add_le_add ha hb)
 
@@ -173,7 +176,8 @@ lemma reflexive.prime_power_map_eq_map_mod (hf : ∀ b ≤ a, reflexive f (p ^ b
   · rintro k hk -; exact congrArg f (Nat.mod_eq_of_lt (hk.trans_eq p.1.pow_one)).symm
   ---- Now set up strong induction on `k`, resolving the case `k ≤ p^a`
   intro k hk hk0; induction' k using Nat.strong_induction_on with k k_ih
-  obtain hk | rfl | hk1 : k < p ^ a.succ ∨ k = p ^ a.succ ∨ p ^ a.succ < k := lt_trichotomy _ _
+  obtain hk | rfl | hk1 : k < p ^ a.succ ∨ k = p ^ a.succ ∨ p ^ a.succ < k :=
+    lt_trichotomy _ _
   · exact a_ih (λ b hb ↦ hf b (Nat.le_add_right_of_le hb)) hk hk0
   · exact hk0.elim ⟨p ^ a, Nat.pow_succ'⟩
   clear a_ih
@@ -202,8 +206,8 @@ lemma reflexive.prime_power_map_eq_map_mod (hf : ∀ b ≤ a, reflexive f (p ^ b
       hf (a + 2) (a + 2).le_refl _ (Nat.mul_pos hq hk2)
         _ (Nat.pos_of_ne_zero λ h1 ↦ hr ⟨0, h1.trans p.1.mul_zero.symm⟩) h
     _ = f (p ^ (a + 2) % k % p) := by
-      have h0 : p ^ (a + 2) % k < k := Nat.mod_lt _ hk2
-      exact k_ih _ h0 (h0.trans hk) hr
+      have h1 : p ^ (a + 2) % k < k := Nat.mod_lt _ hk2
+      exact k_ih _ h1 (h1.trans hk) hr
     _ = f (p ^ (a + 2) / k * k % p) := by
       refine h0 _ (Nat.emod_pos_of_not_dvd hr) _ (Nat.emod_pos_of_not_dvd hqr)
         (mod_add_mod_eq_of_dvd_add_of_not_dvd ?_ hr).symm
@@ -215,3 +219,33 @@ lemma reflexive.prime_power_map_eq_map_mod (hf : ∀ b ≤ a, reflexive f (p ^ b
 /-- Characterization of multiplicative maps of local class at a fixed prime -/
 lemma localClass.map_eq_map_mod (hf : localClass p f) (h : ¬p.1 ∣ k) : f k = f (k % p) :=
   reflexive.prime_power_map_eq_map_mod (λ b _ ↦ hf b) (Nat.lt_pow_self p.2.one_lt k) h
+
+/-- If `f` is local class at `p` and `n > p^2` coprime with `p` is `f`-reflexive, `f = 1` -/
+lemma localClass.eq_zero_of_big_reflexive (hf : localClass p f)
+    (hn : p.1 ^ 2 < n) (hn0 : ¬p.1 ∣ n) (h : reflexive f n) : f = 1 := by
+  ---- Reduce to `f(k) = 1` for all `0 < k ≤ p`
+  suffices ∀ k : ℕ, 0 < k → k ≤ p → f k = 1 by
+    ext k hk; induction' k using Nat.strong_induction_on with k k_ih
+    obtain ⟨m, rfl⟩ | h0 : p.1 ∣ k ∨ ¬p.1 ∣ k := dec_em (p.1 ∣ k)
+    · have h1 : 0 < m := Nat.pos_of_mul_pos_left hk
+      rw [f.map_mul p.2.pos h1, this p p.2.pos p.1.le_refl, one_mul]
+      exact k_ih _ ((Nat.lt_mul_iff_one_lt_left h1).mpr p.2.one_lt) h1
+    · rw [hf.map_eq_map_mod h0]
+      exact this _ (Nat.emod_pos_of_not_dvd h0) (k.mod_lt p.2.pos).le
+  ---- Prove `f(k) = 1` for all `0 < k ≤ p`
+  have h0 (k) (hk : 0 < k) (hk0 : k ≤ p.1) : f (k * p) = f (n % p) := by
+    obtain ⟨n', rfl⟩ : ∃ n', n = k * p + n' := by
+      refine Nat.exists_eq_add_of_le ((Nat.mul_le_mul_right _ hk0).trans ?_)
+      rw [← sq]; exact hn.le
+    replace hn0 : ¬p.1 ∣ n' := by rwa [← Nat.dvd_add_iff_right ⟨k, k.mul_comm _⟩] at hn0
+    rw [Nat.add_comm, Nat.add_mul_mod_self_right, ← hf.map_eq_map_mod hn0]
+    refine h _ (Nat.mul_pos hk p.2.pos) _ (Nat.pos_of_ne_zero ?_) rfl
+    rintro rfl; exact hn0 ⟨0, rfl⟩
+  have h1 : f p = f (n % p) := by rw [← h0 1 Nat.one_pos p.2.one_le, p.1.one_mul]
+  obtain ⟨s, -, hs⟩ : ∃ s, 0 < s ∧ f (n % p) * f s = 1 :=
+    hf.reflexive_self.map_invertible_of_lt_prime
+      (Nat.emod_pos_of_not_dvd hn0) (n.mod_lt p.2.pos)
+  intro k hk hk0; calc
+    _ = f k * (f p * f s) := by rw [h1, hs, mul_one]
+    _ = f (k * p) * f s := by rw [← f.map_assoc, ← f.map_mul hk p.2.pos]
+    _ = _ := by rw [h0 k hk hk0, hs]
