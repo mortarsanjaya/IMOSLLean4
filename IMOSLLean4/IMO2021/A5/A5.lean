@@ -133,18 +133,20 @@ theorem final_solution [LinearOrderedField F] {r : F} (hr : 0 < r)
     exact div_pos (pow_pos hr 2) X
   ---- Case 2: `l` contains a positive element
   · replace X : 0 < 3 * r := mul_pos X hr
+    -- Partial calculation
     calc
       _ ≤ ((l.foldr (· + ·) 0) ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) :=
         targetSumPair_main_ineq hl h
-      _ < (l.foldr (· + ·) 0) ^ 3 / (3 * r) := by
-        refine div_lt_div_of_pos_right ?_ X
-        rw [sub_lt_self_iff, ← List.foldr_map]
-        apply foldr_add_pos
-        · simp only [List.mem_map]; rintro _ ⟨a, ha, rfl⟩
-          exact pow_nonneg (hl a ha) 3
-        · simp only [not_forall, _root_.not_imp] at h0
-          rcases h0 with ⟨a, ha, h0⟩
-          exact ⟨a ^ 3, List.mem_map_of_mem (· ^ 3) ha, pow_ne_zero 3 h0⟩
+      _ < (l.foldr (· + ·) 0) ^ 3 / (3 * r) := ?_
       _ ≤ r ^ 3 / (3 * r) :=
         div_le_div_of_nonneg_right (pow_le_pow_left (foldr_add_nonneg hl) h 3) X.le
       _ = r ^ 2 / 3 := by rw [pow_succ, mul_div_mul_right _ _ hr.ne.symm]
+    -- It remains to show that `((∑ a_i)^3 - ∑ a_i^3)/(3r) ≤ (∑ a_i)^3/(3r)`
+    refine div_lt_div_of_pos_right ?_ X
+    rw [sub_lt_self_iff, ← List.foldr_map]
+    apply foldr_add_pos
+    · simp only [List.mem_map]; rintro _ ⟨a, ha, rfl⟩
+      exact pow_nonneg (hl a ha) 3
+    · simp only [not_forall, _root_.not_imp] at h0
+      rcases h0 with ⟨a, ha, h0⟩
+      exact ⟨a ^ 3, List.mem_map_of_mem (· ^ 3) ha, pow_ne_zero 3 h0⟩
