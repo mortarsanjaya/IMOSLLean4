@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.NatSequence.AntitoneConst
 import IMOSLLean4.Extra.Infinitesimal.Archimedean
-import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Fin.VecNotation
 
 /-!
@@ -82,8 +81,11 @@ theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
     exact one_ne_zero (zero_eq_neg.mp h)
   ---- Formula for `f^n(r)`
   · rw [neg_neg]; refine Nat.rec rfl λ n h0 ↦ ?_
+    have X0 : (n.succ : Fin 2) = n + 1 := by
+      rw [Fin.ext_iff, Fin.val_add, Fin.val_natCast,
+        Fin.val_natCast, Fin.val_one, Nat.mod_add_mod]
     rw [f.iterate_succ_apply', f, Int.fract, h, X, h0,
-      neg_one_mul, sub_neg_eq_add, neg_add', Nat.cast_succ]
+      neg_one_mul, sub_neg_eq_add, neg_add', X0]
     exact Fin.cases rfl (λ i ↦ by simp [Fin.fin_one_eq_zero i]) n
 
 theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f^[n] r⌋ = -C) :
