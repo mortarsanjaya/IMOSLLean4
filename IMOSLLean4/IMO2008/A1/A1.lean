@@ -20,12 +20,30 @@ namespace IMO2008A1
 
 /-! ### Unbundled version of the problem -/
 
-structure weakGood [OrderedRing R] (f : R → R) : Prop where
+structure weakGood [OrderedSemiring R] (f : R → R) : Prop where
   map_pos_of_pos : ∀ x > 0, f x > 0
   good' : ∀ p > 0, ∀ q > 0, ∀ r > 0, ∀ s > 0, p * q = r * s →
     (f p ^ 2 + f q ^ 2) * (r ^ 2 + s ^ 2) = (p ^ 2 + q ^ 2) * (f (r ^ 2) + f (s ^ 2))
 
-variable [LinearOrderedCommRing R]
+variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+
+theorem side_ineq {x y : R} (h : (x ^ 2 + 1) * y = (y ^ 2 + 1) * x) : x = y ∨ y * x = 1 := by
+  wlog h0 : ∃ c, y = x + c
+  · rw [eq_comm, mul_comm]; apply this h.symm
+    exact exists_add_of_le ((le_total x y).resolve_left (mt exists_add_of_le h0))
+  ---- Focus on the case `x ≤ y`
+  rw [sq, sq, add_one_mul _ y, add_one_mul _ x, mul_rotate, mul_assoc, mul_assoc] at h
+  rcases h0 with ⟨c, rfl⟩
+  rw [add_mul x c (_ * x), add_assoc, add_right_inj, add_comm, add_left_inj, eq_comm] at h
+  rw [self_eq_add_right, or_comm, add_comm]
+  generalize (c + x) * x = y at h ⊢
+  ---- It remains to show `cy = c → y = 1 ∨ c = 0`
+  obtain ⟨d, h0⟩ | ⟨d, rfl⟩ : (∃ d, 1 = y + d) ∨ (∃ d, y = 1 + d) :=
+    (le_total y 1).imp exists_add_of_le exists_add_of_le
+  · rw [h0, self_eq_add_right, ← mul_eq_zero, mul_comm,
+      ← add_right_eq_self, ← mul_add, ← h0, h, mul_one]
+  · rw [mul_one_add c, add_right_eq_self, mul_eq_zero] at h
+    rwa [add_right_eq_self, or_comm]
 
 theorem weakGood_iff {f : R → R} :
     weakGood f ↔ (∀ x > 0, f x = x) ∨ (∀ x > 0, x * f x = 1) := by
@@ -49,14 +67,10 @@ theorem weakGood_iff {f : R → R} :
         ← pow_mul, mul_right_cancel_iff_of_pos two_pos, h X, ← pow_mul, ← pow_mul] at h1
     have h2 {x} (hx : 0 < x) : f x = x ∨ x * f x = 1 := by
       specialize h1 hx one_pos
-      rw [h0, one_pow, mul_one, pow_add _ 2 2, pow_add _ 2 2, add_one_mul (α := R),
-        mul_assoc, add_one_mul (α := R), mul_assoc, add_comm, ← sub_eq_sub_iff_add_eq_add,
-        mul_comm (x ^ 2) (f x ^ 2), ← sub_mul, ← sub_eq_zero, ← mul_one_sub, mul_eq_zero] at h1
-      have h2 : 0 < f x := hf.map_pos_of_pos x hx
-      revert h1; refine Or.imp (λ h1 ↦ ?_) (λ h1 ↦ ?_)
-      · rwa [sub_eq_zero, sq_eq_sq hx.le h2.le, eq_comm] at h1
-      · rw [sub_eq_zero, ← mul_pow, eq_comm, sq_eq_one_iff, mul_comm] at h1
-        exact h1.resolve_right ((neg_one_lt_zero (α := R)).trans (mul_pos hx h2)).ne.symm
+      rw [h0, one_pow, mul_one, pow_mul _ 2 2, pow_mul _ 2 2] at h1
+      have hfx : 0 < f x := hf.map_pos_of_pos x hx
+      refine (side_ineq h1).imp (sq_eq_sq hfx.le hx.le).mp λ h2 ↦ ?_
+      rwa [← mul_pow, pow_eq_one_iff_of_nonneg (mul_pos hx hfx).le (Nat.succ_ne_zero 1)] at h2
     have h3 {x y} (hx : 0 < x) (hy : 0 < y) (hx' : x * f x ≠ 1) : f y = y := by
       specialize h1 hx hy
       have hx0 : f x = x := (h2 hx).resolve_right hx'
