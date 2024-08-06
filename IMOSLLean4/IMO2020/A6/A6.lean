@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Nat
 import Mathlib.Algebra.Group.Int
-import Mathlib.Algebra.Order.Group.Unbundled.Basic
+import Mathlib.Init.Data.Int.Order
+import Mathlib.Order.Basic
 import IMOSLLean4.Extra.NatSequence.SeqMax
 
 /-!
@@ -136,8 +136,8 @@ theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
 theorem eq_zero_of_not_injective (h0 : ∃ M, ∀ n, (f^[n] 0).natAbs < M) : f = 0 := by
   rcases h0 with ⟨M, h0⟩
   have h1 (a : ℤ) : f^[2 * a.natAbs ^ 2] 0 = a * (f a - f (-a)) := by
-    have h1 := h a (-a); rwa [a.natAbs_neg, add_neg_self,
-      ← two_mul, Int.neg_mul, ← sub_eq_add_neg, ← Int.mul_sub] at h1
+    have h1 := h a (-a); rwa [a.natAbs_neg, add_neg_self, ← Nat.two_mul,
+      Int.neg_mul, ← sub_eq_add_neg, ← Int.mul_sub] at h1
   replace h0 (n) (ha : M ≤ n) : f^[2 * n ^ 2] 0 = 0 := by
     refine Int.natAbs_eq_zero.mp <| Nat.eq_zero_of_dvd_of_lt
       ⟨(f n - f (-n)).natAbs, ?_⟩ ((h0 _).trans_le ha)
@@ -146,8 +146,8 @@ theorem eq_zero_of_not_injective (h0 : ∃ M, ∀ n, (f^[n] 0).natAbs < M) : f =
   replace h0 : f^[2] 0 = 0 := by
     have h2 : M ≤ M ^ 2 + 1 := sq M ▸ Nat.le_succ_of_le M.le_mul_self
     replace h2 := h0 (M ^ 2 + 1) h2
-    rwa [add_sq, sq, Nat.mul_one, ← Nat.add_mul, one_pow, Nat.mul_add_one,
-      Nat.add_comm, f.iterate_add_apply, ← Nat.mul_assoc, Nat.mul_right_comm,
+    rwa [Nat.pow_two, (M ^ 2).succ_mul, ← Nat.add_assoc, ← Nat.mul_succ,
+      Nat.mul_add_one, Nat.add_comm, f.iterate_add_apply, ← Nat.mul_assoc,
       f.iterate_mul, Function.iterate_fixed (h0 M M.le_refl)] at h2
   replace h1 (a : ℤ) (ha : a ≠ 0) : f a = 0 := by
     replace h1 : f a = f (-a) := by
