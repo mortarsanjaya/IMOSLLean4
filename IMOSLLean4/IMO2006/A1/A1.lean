@@ -118,14 +118,12 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
 
 
 
-/-! ### Summary -/
+/-! ### Extra predicates -/
 
 /-- Predicate for what the sequence `(f^[n](x))_{n ≥ 0}` looks like eventually. -/
 inductive GeneralGood : (ℕ → R) → Prop
-  | const_zero :
-      GeneralGood λ _ ↦ 0
-  | two_periodic (s : R) (_ : 0 < s) (_ : s < 1) :
-      GeneralGood λ n ↦ ![-s, s - 1] n
+  | const_zero : GeneralGood λ _ ↦ 0
+  | two_period (s : R) (_ : 0 < s) (_ : s < 1) : GeneralGood λ n ↦ ![-s, s - 1] n
   | const_nonzero_add_Infinitesimal (C : ℕ) (_ : 1 < C) (ε : R) (_ : Infinitesimal ε)
         (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2 + (-C) ^ n * ε) :
       GeneralGood a
@@ -133,23 +131,37 @@ inductive GeneralGood : (ℕ → R) → Prop
 /-- Predicate for what the sequence `(f^[n](x))_{n ≥ 0}` looks like eventually,
   in the archimedean case. -/
 inductive ArchimedeanGood : (ℕ → R) → Prop
-  | const_zero :
-      ArchimedeanGood λ _ ↦ 0
-  | two_periodic (s : R) (_ : 0 < s) (_ : s < 1) :
-      ArchimedeanGood λ n ↦ ![-s, s - 1] n
+  | const_zero : ArchimedeanGood λ _ ↦ 0
+  | two_period (s : R) (_ : 0 < s) (_ : s < 1) : ArchimedeanGood λ n ↦ ![-s, s - 1] n
   | const_nonzero (C : ℕ) (_ : 1 < C) (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2) :
       ArchimedeanGood a
 
-theorem ArchimedeanGood_of_GeneralGood [Archimedean R] {a : ℕ → R} (h : GeneralGood a) :
-    ArchimedeanGood a :=
-  h.recOn ArchimedeanGood.const_zero ArchimedeanGood.two_periodic
-    ---- Remaining case: `const_nonzero_add_Infinitesimal`
-    λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ by
-      rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
+theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : GeneralGood a) :
+    ArchimedeanGood a := by
+  refine h.recOn ArchimedeanGood.const_zero ArchimedeanGood.two_period ?_
+  ---- Case `const_nonzero_add_Infinitesimal` remaining
+  refine λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ ?_
+  rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
+
+theorem ArchimedeanGood.two_periodic {a : ℕ → R} (h : ArchimedeanGood a) (n) :
+    a (n + 2) = a n := by
+  refine h.recOn rfl ?_ ?_
+  ---- Case `two_period`
+  · rintro s - -; apply congrArg
+    rw [Fin.ext_iff, Fin.val_natCast, Fin.val_natCast, Nat.add_mod_right]
+  ---- Case `const_nonzero`
+  · rintro C - a ha
+    have hC : 0 < (C : R) + 1 := (Nat.cast_pos.mpr C.succ_pos).trans_eq C.cast_succ
+    rw [← mul_left_cancel_iff_of_pos hC, ha, ha]
 
 
-/-- Final solution, general (non-archimedean) version -/
-theorem final_solution_general (r : R) : ∃ N, GeneralGood (f^[· + N] r) := by
+
+
+
+/-! ### Summary -/
+
+/-- Main result, general (non-archimedean) version -/
+theorem eventually_GeneralGood (r : R) : ∃ N, GeneralGood (f^[· + N] r) := by
   rcases floor_f_iter_eventually_const r with ⟨_ | _ | C, N, h⟩
   ---- Case 1: `C = 0`
   · suffices ∀ n, f^[n + (N + 1)] r = 0
@@ -159,13 +171,20 @@ theorem final_solution_general (r : R) : ∃ N, GeneralGood (f^[· + N] r) := by
   ---- Case 2: `C = 1`
   · simp only [f.iterate_add_apply] at h ⊢
     obtain ⟨s, h0, h1⟩ := case_floor_neg_one h
-    exact ⟨N, funext h1 ▸ GeneralGood.two_periodic s h0.1 h0.2⟩
+    exact ⟨N, funext h1 ▸ GeneralGood.two_period s h0.1 h0.2⟩
   ---- Case 3: `C > 1`
   · simp only [f.iterate_add_apply] at h ⊢
     have h0 := Nat.one_lt_succ_succ C
     obtain ⟨ε, hε, h1⟩ := case_floor_neg_of_one_lt h0 h
     exact ⟨N, GeneralGood.const_nonzero_add_Infinitesimal _ h0 ε hε _ h1⟩
 
+/-- Main result, archimedean version -/
+theorem eventually_ArchimedeanGood [Archimedean R] (r : R) :
+    ∃ N, ArchimedeanGood (f^[· + N] r) :=
+  (eventually_GeneralGood r).imp λ _ ↦ GeneralGood.toArchimedeanGood
+
 /-- Final solution -/
-theorem final_solution [Archimedean R] (r : R) : ∃ N, ArchimedeanGood (f^[· + N] r) :=
-  (final_solution_general r).imp λ _ ↦ ArchimedeanGood_of_GeneralGood
+theorem final_solution [Archimedean R] (r : R) : ∃ N, ∀ n ≥ N, f^[n + 2] r = f^[n] r := by
+  refine (eventually_ArchimedeanGood r).imp λ N hN n hn ↦ ?_
+  have h := hN.two_periodic (n - N)
+  rwa [Nat.add_right_comm, Nat.sub_add_cancel hn] at h
