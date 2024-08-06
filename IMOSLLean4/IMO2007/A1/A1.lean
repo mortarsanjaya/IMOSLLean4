@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.NatSequence.SeqMax
 import Mathlib.Algebra.Order.Group.Abs
-import Mathlib.Algebra.Order.Group.Nat
 
 /-!
 # IMO 2007 A1 (P1)
