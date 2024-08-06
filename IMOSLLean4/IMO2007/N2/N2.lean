@@ -33,3 +33,9 @@ theorem final_solution_explicit (h : 0 < b) (h0 : ∃ c : ℤ, (b ^ 2 : ℤ) ∣
   · exact ⟨c, rfl⟩
   · refine ⟨-c, ((Nat.odd_iff_not_even.mpr λ h1 ↦ h.not_le ?_).neg_pow c).symm⟩
     exact neg_nonpos_of_nonneg (h1.pow_nonneg c)
+
+/-- Final solution -/
+theorem final_solution (h : 0 < b) (h0 : ∀ k : ℕ, 0 < k → ∃ c : ℤ, (k : ℤ) ∣ b - c ^ n) :
+    ∃ a : ℤ, b = a ^ n := by
+  lift b to ℕ using h.le
+  exact final_solution_explicit h (h0 (b ^ 2) (Nat.pow_pos (Int.ofNat_pos.mp h)))
