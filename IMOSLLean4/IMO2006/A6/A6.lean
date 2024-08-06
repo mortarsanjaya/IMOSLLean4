@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Tactic.Ring
 
 /-!
@@ -41,7 +41,7 @@ theorem good_alt {M : R} :
     good M ↔ ∀ a b c, 3 ^ 2 * |(b - a) * (c - b) * (a - c) * (a + b + c)|
       ≤ M * ((b - a) ^ 2 + (c - b) ^ 2 + (a - c) ^ 2 + (a + b + c) ^ 2) ^ 2 :=
   forall_congr' λ a ↦ forall_congr' λ b ↦ forall_congr' λ c ↦ by
-    have X0 : (0 : R) < 3 ^ 2 := pow_pos (zero_lt_three' R) 2
+    have X0 : (0 : R) < 3 ^ 2 := pow_pos zero_lt_three 2
     rw [ring_id1, ring_id2, mul_pow, mul_left_comm, mul_le_mul_iff_of_pos_left X0]
 
 theorem ring_ineq1 (r t : R) : 2 ^ 8 * (r ^ 3 * t) ≤ 3 ^ 3 * (r + t) ^ 4 :=
@@ -61,11 +61,10 @@ theorem ring_ineq2 {x y z : R} (h : x + y + z = 0) :
 theorem ring_ineq3 (a b c : R) :
     2 ^ 9 * ((b - a) * (c - b) * (a - c) * (a + b + c)) ^ 2
       ≤ ((b - a) ^ 2 + (c - b) ^ 2 + (a - c) ^ 2 + (a + b + c) ^ 2) ^ 4 := by
-  refine le_of_mul_le_mul_left ?_ (pow_pos (zero_lt_three' R) 3)
+  refine le_of_mul_le_mul_left ?_ (pow_pos zero_lt_three 3)
   rw [mul_left_comm, pow_succ, mul_assoc, ← mul_assoc 2, mul_pow, ← mul_assoc (2 * _)]
   refine (ring_ineq1 _ _).trans' <| mul_le_mul_of_nonneg_left
-    (mul_le_mul_of_nonneg_right (ring_ineq2 ?_) (sq_nonneg _))
-    (pow_nonneg (zero_le_two (α := R)) 8)
+    (mul_le_mul_of_nonneg_right (ring_ineq2 ?_) (sq_nonneg _)) (pow_nonneg zero_le_two 8)
   rw [sub_add_sub_cancel', sub_add_sub_cancel, sub_self]
 
 
@@ -85,8 +84,8 @@ theorem good_lower_bound (hM : 3 ^ 2 * √2 ≤ 2 ^ 5 * M) : good M := good_alt.
   have h : (0 : R) < 2 := two_pos
   rw [← mul_le_mul_iff_of_pos_left (pow_pos h 5), mul_left_comm, ← mul_assoc _ M]
   apply (mul_le_mul_of_nonneg_right hM (sq_nonneg _)).trans'
-  rw [mul_assoc (3 ^ 2), mul_le_mul_iff_of_pos_left (pow_pos (zero_lt_three' R) 2),
-    ← abs_eq_self.mpr h.le, ← abs_eq_self.mpr (sqrt2_nonneg (R := R)), ← abs_pow,
+  rw [mul_assoc (3 ^ 2), mul_le_mul_iff_of_pos_left (pow_pos zero_lt_three 2),
+    ← abs_of_nonneg h.le, ← abs_of_nonneg (sqrt2_nonneg (R := R)), pow_abs,
     ← abs_mul, ← abs_sq, ← abs_mul, ← sq_le_sq, mul_pow, mul_pow √2, sqrt2_sq,
     ← pow_mul, ← pow_mul, pow_succ', mul_assoc]
   exact mul_le_mul_of_nonneg_left (ring_ineq3 a b c) h.le
@@ -98,7 +97,7 @@ theorem good_upper_bound (hM : good M) : 9 * sqrt2 ≤ 32 * M := by
     sub_sq', add_sq' √2, sub_add_add_cancel, sqrt2_sq, ← mul_assoc, abs_mul] at hM
   have h : |2 * 3 * 3 ^ 2 * (2 + 1)| = (18 * 9 : R) := by norm_num
   have h0 : (2 + 3 ^ 2 + (2 + 3 ^ 2) + 2) ^ 2 = (18 * 32 : R) := by norm_num
-  rw [h, h0, mul_comm M, mul_assoc, mul_assoc, abs_eq_self.mpr sqrt2_nonneg] at hM
+  rw [h, h0, mul_comm M, mul_assoc, mul_assoc, abs_of_nonneg sqrt2_nonneg] at hM
   exact le_of_mul_le_mul_left hM (by norm_num)
 
 theorem good_iff : good M ↔ 9 * sqrt2 ≤ 32 * M :=
@@ -115,5 +114,6 @@ end
 
 /-- Final solution -/
 theorem final_solution [LinearOrderedField F] [HasSqrt2 F] {M : F} :
-    good M ↔ 9 * √2 / 32 ≤ M :=
-  good_iff.trans (div_le_iff' (by norm_num)).symm
+    good M ↔ 9 * √2 / 32 ≤ M := by
+  have h : 0 < (32 : F) := by norm_num
+  rw [good_iff, Iff.comm, ← mul_le_mul_iff_of_pos_left h, mul_div_cancel₀ _ h.ne.symm]

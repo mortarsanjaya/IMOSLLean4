@@ -37,11 +37,10 @@ theorem floor_f_natAbs_le (r : R) : ⌊f r⌋.natAbs ≤ ⌊r⌋.natAbs := by
   rw [← Nat.cast_le (α := ℤ), Int.cast_natAbs, Int.cast_natAbs,
     Int.cast_abs, Int.cast_id, Int.cast_abs, Int.cast_id]
   rcases le_total 0 ⌊r⌋ with h | h
-  · rw [abs_eq_self.mpr h, abs_eq_self.mpr (floor_f_nonneg h), ← Int.cast_le (R := R)]
+  · rw [abs_of_nonneg h, abs_of_nonneg (floor_f_nonneg h), ← Int.cast_le (R := R)]
     exact (Int.floor_le _).trans <| mul_le_of_le_one_right
       (Int.cast_nonneg.mpr h) (Int.fract_lt_one r).le
-  · rw [abs_eq_neg_self.mpr (floor_f_nonpos h),
-      abs_eq_neg_self.mpr h, neg_le_neg_iff, Int.le_floor]
+  · rw [abs_of_nonpos (floor_f_nonpos h), abs_of_nonpos h, neg_le_neg_iff, Int.le_floor]
     exact le_mul_of_le_one_right (Int.cast_nonpos.mpr h) (Int.fract_lt_one r).le
 
 theorem floor_f_iter_natAbs_le (r : R) : ∀ k, ⌊f^[k] r⌋.natAbs ≤ ⌊r⌋.natAbs
@@ -64,7 +63,7 @@ theorem floor_f_iter_eventually_const (r : R) : ∃ (C N : ℕ), ∀ n, ⌊f^[n 
   simp only at h h0 ⊢; rcases C.eq_zero_or_pos with rfl | h1; rfl
   specialize h (n + 1); rw [Nat.add_right_comm, f.iterate_succ_apply'] at h
   replace h1 : 0 < ⌊f^[n + N] r⌋ := by rwa [h0, Nat.cast_pos]
-  rw [← h, Int.natCast_natAbs, abs_eq_self.mpr (floor_f_nonneg h1.le)] at h0
+  rw [← h, Int.natCast_natAbs, abs_of_nonneg (floor_f_nonneg h1.le)] at h0
   exact absurd h0.symm (floor_f_lt_of_floor_pos h1).ne
 
 theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
@@ -109,7 +108,7 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
   replace h (s : R) : |(C + 1) * Int.fract s - C| < ((C + 1 + C : ℕ) : R) := by
     apply (abs_sub _ _).trans_lt
     rw [Nat.abs_cast, Nat.cast_add, add_lt_add_iff_right, ← Nat.cast_succ,
-      abs_mul, Nat.abs_cast, abs_eq_self.mpr (Int.fract_nonneg s)]
+      abs_mul, Nat.abs_cast, abs_of_nonneg (Int.fract_nonneg s)]
     exact mul_lt_of_lt_one_right (Nat.cast_pos.mpr C.succ_pos) (Int.fract_lt_one _)
   refine Infinitesimal.iff_nsmul_Nat_bdd.mpr ⟨C + 1 + C, λ k ↦ ?_⟩
   apply (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC k).le).trans_lt

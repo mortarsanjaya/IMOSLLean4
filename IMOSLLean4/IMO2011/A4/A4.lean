@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.PNat.Basic
+import Mathlib.Order.Monotone.Basic
 
 /-!
 # IMO 2011 A4
@@ -56,7 +57,7 @@ theorem final_solution {f g : ℕ → ℕ} :
       exact Nat.le_add_right _ _
     refine ⟨rfl, funext λ n ↦ ?_⟩
     simp_rw [iterate_id, Function.id_def, Nat.succ_inj',
-      add_right_eq_self, add_eq_zero_iff] at h
+      Nat.add_eq_left, Nat.add_eq_zero] at h
     rcases n with _ | n
     exacts [(h 0).1, (h n).2]
 
