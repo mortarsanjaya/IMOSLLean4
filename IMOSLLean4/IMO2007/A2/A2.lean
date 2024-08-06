@@ -27,9 +27,10 @@ def good (f : ℕ → ℕ) := ∀ m n : ℕ, f m + f (f n) ≤ f (m + n + 1)
 theorem sub_right_is_good (C : ℕ) : good (· - C) := λ m n ↦ by
   dsimp only; rcases le_total n C with h | h
   · rw [Nat.sub_eq_zero_of_le h, Nat.zero_sub, Nat.add_zero, Nat.add_assoc]
-    exact Nat.sub_le_sub_right le_self_add _
-  · rw [le_iff_exists_add] at h; rcases h with ⟨d, rfl⟩
-    rw [Nat.add_sub_cancel_left, add_right_comm, C.add_comm, ← add_assoc, Nat.add_sub_cancel]
+    exact Nat.sub_le_sub_right (Nat.le_add_right _ _) _
+  · obtain ⟨d, rfl⟩ : ∃ d, n = C + d := Nat.exists_eq_add_of_le h
+    rw [Nat.add_sub_cancel_left, Nat.add_right_comm,
+      C.add_comm, ← Nat.add_assoc, Nat.add_sub_cancel]
     exact Nat.add_le_add ((Nat.sub_le m C).trans m.le_succ) (Nat.sub_le d C)
 
 theorem add_cond_modeq_zero_is_good (h : K ≠ 1) :
@@ -44,9 +45,9 @@ theorem add_cond_modeq_zero_is_good (h : K ≠ 1) :
   | true =>
       have h1 : n.succ % K = 0 := Nat.beq_eq ▸ h0
       rw [cond_true, n.succ.succ_eq_add_one, n.succ.add_mod, h1, Nat.zero_add, Nat.mod_mod,
-        Nat.one_mod_of_ne_one h, add_add_add_comm, m.add_assoc n, Nat.add_le_add_iff_left]
+        Nat.one_mod_of_ne_one h, m.add_add_add_comm, m.add_assoc n, Nat.add_le_add_iff_left]
       refine (congrFun₂ (congrArg cond ?_) 1 0).le
-      rw [← Nat.succ_add, m.succ.add_mod n.succ, h1, add_zero, Nat.mod_mod]
+      rw [← Nat.succ_add, m.succ.add_mod n.succ, h1, Nat.add_zero, Nat.mod_mod]
 
 
 
@@ -54,9 +55,9 @@ section
 
 variable {f : ℕ → ℕ} (h : good f)
 
-theorem good_monotone : Monotone f := λ x y h0 ↦ by
-  rw [le_iff_exists_add] at h0; rcases h0 with ⟨_ | c, rfl⟩
-  exacts [(f y).le_refl, le_of_add_le_left (h x c)]
+theorem good_monotone (h0 : x ≤ y) : f x ≤ f y := by
+  obtain ⟨_ | c, rfl⟩ : ∃ c, y = x + c := Nat.exists_eq_add_of_le h0
+  exacts [(f y).le_refl, Nat.le_of_add_right_le (h x c)]
 
 theorem good_map_zero : f 0 = 0 :=
   (f 0).eq_zero_or_pos.resolve_right λ h0 ↦
@@ -70,9 +71,9 @@ theorem good_val_bound (N : ℕ) : f N ≤ N + 1 := by
       (Nat.add_le_add h1 (good_monotone h (le_of_lt h0)))
   -- For the case `m = N + 1`, get some `d ≥ N` such that `f((N + 1)^2) = (N + 1)^2 + d + 1`
   replace h1 : ∃ d : ℕ, N ≤ d ∧ f ((N + 1) * (N + 1)) = (N + 1) * (N + 1) + d + 1 := by
-    apply (good_monotone h N.le_succ).trans' at h0
+    replace h0 := (good_monotone h N.le_succ).trans' h0
     obtain ⟨c, h1⟩ := Nat.exists_eq_add_of_le ((Nat.mul_le_mul_right _ h0).trans (h1 (N + 1)))
-    refine ⟨N + c, le_self_add, ?_⟩
+    refine ⟨N + c, N.le_add_right c, ?_⟩
     rw [h1, Nat.succ_mul, Nat.add_assoc, Nat.add_assoc _ (N + c), N.add_right_comm]
   -- Finishing: prove `f(d) = 0`
   rcases h1 with ⟨d, h1, h2⟩
