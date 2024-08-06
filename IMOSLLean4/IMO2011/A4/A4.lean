@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.PNat.Basic
-import Mathlib.Order.Monotone.Basic
 
 /-!
 # IMO 2011 A4
