@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.IntLinearSolver
 import Mathlib.Data.Int.Interval
-import Mathlib.Data.Int.Order.Lemmas
 
 /-!
 # IMO 2014 A4
@@ -20,8 +19,7 @@ namespace IMOSL
 namespace IMO2014A4
 
 /-- Given `b k : ℤ` with `k ≠ 0`, there exists `m < n` such that `b^m ≡ b^n (mod k)`. -/
-theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) :
-    ∃ m n, m ≠ n ∧ b ^ m % k = b ^ n % k := by
+theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) : ∃ m n, m ≠ n ∧ b ^ m % k = b ^ n % k := by
   have h0 : Set.MapsTo (b ^ · % k) Set.univ (Finset.Ico 0 (|k|)) := λ x _ ↦ by
     rw [Finset.coe_Ico, Set.mem_Ico]
     exact ⟨(b ^ x).emod_nonneg h, (b ^ x).emod_lt h⟩
@@ -35,8 +33,7 @@ theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) :
 
 /-! ## Start of the problem -/
 
-def good (b c : ℤ) (f : ℤ → ℤ) :=
-  ∀ x y : ℤ, f (y + f x) - f y = f (b * x) - f x + c
+def good (b c : ℤ) (f : ℤ → ℤ) := ∀ x y : ℤ, f (y + f x) - f y = f (b * x) - f x + c
 
 theorem linear_good (k m : ℤ) : good (k + 1) (k * m) (k * · + m) := λ x y ↦ by
   rw [add_sub_add_right_eq_sub, mul_add, add_sub_cancel_left, add_one_mul (α := ℤ),

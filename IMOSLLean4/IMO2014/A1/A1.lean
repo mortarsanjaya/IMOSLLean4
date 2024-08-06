@@ -5,15 +5,13 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.BigOperators.Group.Finset
-import Mathlib.Algebra.Ring.Int
-import Mathlib.Algebra.Order.Group.Int
 
 /-!
 # IMO 2014 A1 (P1)
 
 Let $(z_n)\_{n ≥ 0}$ be an infinite sequence of positive integers.
 Prove that there exists a unique non-negative integer $N$ such that
-$$ N z_N < \sum_{j = 0}^N z_j \leq (N + 1) z_{N + 1}. $$
+$$ N z_N < \sum_{j = 0}^N z_j ≤ (N + 1) z_{N + 1}. $$
 Furthermore, prove that $N$ is positive.
 
 **Extra**: Show that $\binom{N}{2} < z_0$.
@@ -27,33 +25,32 @@ open Finset
 def d (z : ℕ → ℤ) (n : ℕ) := (range (n + 1)).sum z - n * z n
 
 theorem d_zero (z : ℕ → ℤ) : d z 0 = z 0 := by
-  rw [d, sum_range_one, Int.Nat.cast_ofNat_Int, Int.zero_mul, sub_zero]
+  rw [d, sum_range_one, Int.Nat.cast_ofNat_Int, Int.zero_mul, Int.sub_zero]
 
 theorem d_succ (z : ℕ → ℤ) (n : ℕ) :
     d z (n + 1) = (range (n + 1)).sum z - n * z (n + 1) := by
   rw [d, sum_range_succ, Int.natCast_add, Int.natCast_one,
-    add_one_mul (α := ℤ), add_sub_add_right_eq_sub]
+    Int.add_mul, Int.one_mul, add_sub_add_right_eq_sub]
 
 theorem d_one (z : ℕ → ℤ) : d z 1 = z 0 := by
-  rw [d_succ, sum_range_one, Nat.cast_zero, zero_mul, sub_zero]
+  rw [d_succ, sum_range_one, Int.ofNat_zero, Int.zero_mul, Int.sub_zero]
 
 variable {z : ℕ → ℤ} (h : StrictMono z)
 
 theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
-  rw [d_succ, d, sub_sub, ← mul_add_one (α := ℤ)]
-  exact Int.sub_le_sub_left
-    (Int.mul_le_mul_of_nonneg_left (h n.lt_succ_self) (Int.ofNat_zero_le n)) _
+  have X : (n : ℤ) * (z n + 1) = n * z n + n := by rw [Int.mul_add, Int.mul_one]
+  rw [d_succ, d, sub_sub, ← X]; apply Int.sub_le_sub_left
+  exact Int.mul_le_mul_of_nonneg_left (h n.lt_succ_self) (Int.ofNat_zero_le n)
 
 theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
   | 0 => ((d_zero z).trans (sub_zero _).symm).le
   | n + 1 => by
-      rw [Nat.choose, Nat.choose_one_right, Nat.cast_add, ← sub_sub, sub_right_comm]
+      rw [Nat.choose, Nat.choose_one_right, Int.ofNat_add, ← sub_sub, sub_right_comm]
       exact Int.le_sub_right_of_add_le <|
         (Int.add_le_of_le_sub_right (main_lemma h n)).trans (binom_bound n)
 
 theorem d_nonpos_of_big (h0 : (z 0).natAbs ≤ n.choose 2) : d z n ≤ 0 :=
-  (binom_bound h n).trans <| Int.sub_nonpos_of_le <| (le_abs_self _).trans <|
-    (z 0).natCast_natAbs.symm.trans_le <| Int.ofNat_le.mpr h0
+  (binom_bound h n).trans (Int.sub_nonpos_of_le (Int.le_natAbs.trans (Int.ofNat_le.mpr h0)))
 
 theorem d_nonpos_mono (h0 : d z n ≤ 0) : (h1 : n ≤ k) → d z k ≤ 0 :=
   Nat.le_induction h0 (λ x _ h2 ↦ (main_lemma h x).trans <|
@@ -84,8 +81,8 @@ theorem eq_greatestDPos_iff :
   have h1 := greatestDPos_is_d_pos h h0
   have h2 := greatestDPos_succ_not_d_pos h h0
   ⟨λ h3 ↦ h3 ▸ ⟨h1, h2⟩, λ h3 ↦ le_antisymm
-    (le_of_not_lt λ h4 ↦ h3.1.not_le <| d_nonpos_mono h h2 h4)
-    (le_of_not_lt λ h4 ↦ h1.not_le <| d_nonpos_mono h h3.2 h4)⟩
+    (le_of_not_lt λ h4 ↦ h3.1.not_le (d_nonpos_mono h h2 h4))
+    (le_of_not_lt λ h4 ↦ h1.not_le (d_nonpos_mono h h3.2 h4))⟩
 
 
 
@@ -103,7 +100,8 @@ theorem final_solution_part2 :
     N = greatestDPos h ↔ ↑N * z N < (range (N + 1)).sum z ∧
       (range (N + 1)).sum z ≤ N * z (N + 1) := by
   rw [eq_greatestDPos_iff h h0, d_succ]
-  exact and_congr sub_pos sub_nonpos
+  refine and_congr Int.sub_pos ?_
+  rw [← Int.le_add_iff_sub_le, Int.zero_add]
 
 /-- Final solution, extra: `C(N, 2) < z_0`, implemented as `C(N, 2) < (z 0).nat_abs`. -/
 theorem final_solution_extra : (greatestDPos h).choose 2 < (z 0).natAbs :=

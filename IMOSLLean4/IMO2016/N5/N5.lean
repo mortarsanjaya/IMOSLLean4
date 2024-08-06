@@ -100,7 +100,7 @@ theorem exists_x_sq_le_a (h : ∃ x y, nice k a x y) :
   ---- Reduce to a decreasing induction statement
   let P (N : ℕ) : Prop := ∃ x y : ℤ, 0 ≤ x ∧ x ^ 2 ≤ N ∧ nice k a x y
   suffices P a.natAbs by
-    dsimp only [P] at this; rwa [Int.natCast_natAbs, abs_eq_self.mpr ha.le] at this
+    dsimp only [P] at this; rwa [Int.natCast_natAbs, abs_of_nonneg ha.le] at this
   revert h; suffices ∀ N, a.natAbs ≤ N → P (N + 1) → P N by
     rintro ⟨x, y, h⟩
     obtain h0 | h0 : x ^ 2 ≤ a.natAbs ∨ a.natAbs ≤ x ^ 2 := le_total _ _
