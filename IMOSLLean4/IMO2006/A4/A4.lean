@@ -13,8 +13,8 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 Let $F$ be a totally ordered field and $a_1, a_2, …, a_n ∈ F$ be positive.
 Prove the inequality
-$$ \sum_{i ≠ j} \frac{a_i a_j}{a_i + a_j}
-  ≤ \frac{n}{2(a_1 + a_2 + … + a_n)} \sum_{i ≠ j} a_i a_j. $$
+$$ \sum_{i < j} \frac{a_i a_j}{a_i + a_j}
+  ≤ \frac{n}{2(a_1 + a_2 + … + a_n)} \sum_{i < j} a_i a_j. $$
 -/
 
 namespace IMOSL
