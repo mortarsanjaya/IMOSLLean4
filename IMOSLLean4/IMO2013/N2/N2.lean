@@ -19,8 +19,7 @@ A possible generalization is by replacing $2^k - 1$ with an arbitrary positive i
 Then the question asks to find the smallest $k = k(N) ∈ ℕ^+$ such that there exist
   positive integers $m_1, m_2, …, m_k$ for which the above desired equality hold.
 Some easy results are as follows:
-* The result `good_two_mul_add_one` given below implies that
-  $k(2N + 1) ≤ k(N) + 1$ for any $N ∈ ℕ^+$.
+* The result `good_two_mul_add_one` implies that $k(2N + 1) ≤ k(N) + 1$ for any $N ∈ ℕ^+$.
 * $k(6) = 4 > ⌈\log_2 (6 + 1)⌉$.
 -/
 

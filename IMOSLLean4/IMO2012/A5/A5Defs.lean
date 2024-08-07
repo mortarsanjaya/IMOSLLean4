@@ -19,8 +19,10 @@ We also define some notions; we say that $f$ is
 * `NontrivialGood` if $f$ is good and $f(0) = -1$;
 * `ReducedGood` if $f$ is non-trivial good and there is no non-zero $f$-periodic element.
 
-The `NontrivialGood` functions are collected in the folder `A5Answers`.
-The final characterization of `good` functions are done in the main file `A5/A5.lean`.
+The `NontrivialGood` functions are defined in the folder `A5Answers`.
+They file `IMOSLLean4/IMO2012/A5/A5Answers/Common.lean` collects all these functions.
+The file `IMOSLLean4/IMO2012/A5/A5.lean` proves that these are
+  precisely the good functions, up to ring homomorphism.
 -/
 
 namespace IMOSL

@@ -15,8 +15,8 @@ Find all integers $M$ such that $f^k(M)$ is even for some $k ∈ ℕ$.
 ### Notes
 
 The original formulation is slightly different.
-Instead of $f : ℤ → ℤ$, we define $f : ℚ → ℚ$ by $f(n) = n ⌊n⌋$.
-Then the problem asks for which $M ∈ ℕ⁺$ does there exists
+Instead of $f : ℤ → ℤ$, we define $f : ℚ → ℚ$ by $f(q) = q ⌊q⌋$.
+Then the problem asks for which $M ∈ ℕ^+$ does there exists
   $k ∈ ℕ$ such that $f^k(M + 1/2)$ is an integer.
 -/
 

@@ -10,7 +10,7 @@ import Mathlib.Data.Finite.Basic
 # IMO 2017 A3
 
 Let $S$ be a finite set, and fix some $f : S → S$.
-Suppose that, for any $g : S → S$, $f ∘ g ∘ f = g ∘ f ∘ g$ implies $g = f$.
+Suppose that, for any $g : S → S$, $$f ∘ g ∘ f = g ∘ f ∘ g \implies g = f. $$
 Prove that $f^2(S) = f(S)$.
 
 ### Further directions

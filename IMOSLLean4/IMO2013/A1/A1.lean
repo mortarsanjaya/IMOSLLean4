@@ -11,9 +11,10 @@ import Mathlib.Algebra.BigOperators.Fin
 # IMO 2013 A1
 
 Let $R$ be a commutative ring.
-Given $a_1, …, a_n ∈ R$, we define $f(a_1, a_2, …, a_n)$ as follows.
+Given $a_1, …, a_n ∈ R$, we define $f(a_1, a_2, …, a_n)$ as follows:
+
 Let $u_0 = u_1 = 1$, and define $u_{k + 2} = u_{k + 1} + a_k u_k$ for each $0 ≤ k < n$.
-Then set $f(a_1, a_2, …, a_n) = u_{n + 1}$.
+Then set $$f(a_1, a_2, …, a_n) = u_{n + 1}. $$
 
 Prove that, for any $a_1, a_2, a_3, …, a_n ∈ R$, we have
 $$ f(a_1, a_2, …, a_n) = f(a_n, a_{n - 1}, …, a_1). $$

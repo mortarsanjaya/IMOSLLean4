@@ -14,6 +14,7 @@ Let $(b_n)_{n ≥ 0}$ be a sequence of positive integers.
 Let $(a_n)_{n ≥ 0}$ be a sequence of integers defined by $a_0 = 0$, $a_1 = 1$, and
 * $a_{n + 2} = a_{n + 1} b_{n + 1} + a_n$ if $b_n = 1$;
 * $a_{n + 2} = a_{n + 1} b_{n + 1} - a_n$ if $b_n > 1$.
+
 Prove that $\max\{a_n, a_{n + 1}\} ≥ n$ for any $n ≥ 0$.
 -/
 

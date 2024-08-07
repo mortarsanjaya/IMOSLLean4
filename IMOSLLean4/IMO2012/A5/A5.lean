@@ -22,18 +22,19 @@ $$ f(xy + 1) = f(x) f(y) + f(x + y). $$
 
 The solution is broken up into several files.
 We highlight some of the most important ones.
-* The file `A5/A5Defs.lean` defines the functional equation.
-* The file `A5Answers/Common.lean` defines the predicate `isNontrivialAnswer`,
-    which describes all guesses for the solution up to homomorphism.
+* The file `IMOSLLean4/IMO2012/A5/A5Defs.lean` defines the functional equation.
+* The file `IMOSLLean4/IMO2012/A5/A5Answers/Common.lean` defines the predicate
+    `isNontrivialAnswer`, which describes all guesses for the solution up to homomorphism.
   It also proves that all the guess functions work.
-* The file `A5General/A5Periodic.lean` defines the quotient of $R$ by $f$-periods.
+* The file `IMOSLLean4/IMO2012/A5/A5General/A5Periodic.lean`
+    defines the quotient of $R$ by $f$-periods.
   It also proves that the set $I$ of $f$-periods form an ideal, and
     the induced quotient function $\tilde{f} : R/I → S$ is good.
 
-Three files prove that no other functions are good.
-* `A5Cases/Case1.lean` solves the problem in the case `f(-1) ≠ 0`.
-* `A5Cases/Case2.lean` solves the problem in the case `f(-1) = 0`, `char(R) ≠ 2`.
-* `A5Cases/Case3.lean` solves the problem in the case `char(R) = 2`.
+Three files prove that no other functions are good:
+* `IMOSLLean4/IMO2012/A5/A5Cases/Case1.lean` for case `f(-1) ≠ 0`.
+* `IMOSLLean4/IMO2012/A5/A5Cases/Case2.lean` for case `f(-1) = 0`, `char(R) ≠ 2`.
+* `IMOSLLean4/IMO2012/A5/A5Cases/Case3.lean` for case `char(R) = 2`.
 -/
 
 namespace IMOSL

@@ -9,12 +9,11 @@ import Mathlib.Algebra.BigOperators.Group.Finset
 /-!
 # IMO 2014 A1 (P1)
 
-Let $(z_n)\_{n ≥ 0}$ be an infinite sequence of positive integers.
-Prove that there exists a unique non-negative integer $N$ such that
-$$ N z_N < \sum_{j = 0}^N z_j ≤ (N + 1) z_{N + 1}. $$
-Furthermore, prove that $N$ is positive.
-
-**Extra**: Show that $\binom{N}{2} < z_0$.
+Let $(z_n)_{n ≥ 0}$ be an infinite sequence of positive integers.
+1. Prove that there exists a unique non-negative integer $N$ such that
+  $$ N z_N < \sum_{j = 0}^N z_j ≤ (N + 1) z_{N + 1}. $$
+2. Prove that $N$ is positive.
+3. **Extra**. Show that $\binom{N}{2} < z_0$.
 -/
 
 namespace IMOSL
@@ -88,20 +87,20 @@ theorem eq_greatestDPos_iff :
 
 
 
-/-! ## Final solution -/
+/-! ### Final solution -/
 
-/-- Final solution, part 1: `N` is positive. -/
-theorem final_solution_part1 : 0 < greatestDPos h :=
-  Nat.pos_of_ne_zero λ h1 ↦ Nat.findGreatest_eq_zero_iff.mp
-    h1 Nat.one_pos (Nat.succ_pos _) (d_one_pos h0)
-
-/-- Final solution, part 2: `N` is indeed the index we are looking for. -/
-theorem final_solution_part2 :
+/-- Final solution, part 1: `N` is indeed the index we are looking for. -/
+theorem final_solution_part1 :
     N = greatestDPos h ↔ ↑N * z N < (range (N + 1)).sum z ∧
       (range (N + 1)).sum z ≤ N * z (N + 1) := by
   rw [eq_greatestDPos_iff h h0, d_succ]
   refine and_congr Int.sub_pos ?_
   rw [← Int.le_add_iff_sub_le, Int.zero_add]
+
+/-- Final solution, part 2: `N` is positive. -/
+theorem final_solution_part2 : 0 < greatestDPos h :=
+  Nat.pos_of_ne_zero λ h1 ↦ Nat.findGreatest_eq_zero_iff.mp
+    h1 Nat.one_pos (Nat.succ_pos _) (d_one_pos h0)
 
 /-- Final solution, extra: `C(N, 2) < z_0`, implemented as `C(N, 2) < (z 0).nat_abs`. -/
 theorem final_solution_extra : (greatestDPos h).choose 2 < (z 0).natAbs :=

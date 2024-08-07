@@ -13,12 +13,13 @@ import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 # IMO 2017 A4
 
 Let $G$ be a totally ordered abelian group and let $D$ be a natural number.
-A sequence $(a_n)\_{n ≥ 0}$ of elements of $G$ satisfies the following properties:
+A sequence $(a_n)_{n ≥ 0}$ of elements of $G$ satisfies the following properties:
 * for any $i, j ∈ ℕ$ with $i + j ≥ D$, we have $a_{i + j + 1} ≤ -a_i - a_j$,
 * for any $n ≥ D$, there exists $i, j ∈ ℕ$ such that
     $i + j = n$ and $a_{n + 1} = -a_i - a_j$.
-Prove that $(a_n)\_{n ≥ 0}$ is bounded.
-Explicitly, prove that $|a_n| ≤ 2 \max\\{B, C - B\\}$, where
+
+Prove that $(a_n)_{n ≥ 0}$ is bounded.
+Explicitly, prove that $|a_n| ≤ 2 \max\{B, C - B\}$, where
   $B = \max_{n ≤ D} a_n$ and $C = \max_{n ≤ D} (-a_n)$.
 -/
 
@@ -32,8 +33,8 @@ variable [LinearOrderedAddCommGroup G]
 abbrev good1 (D : ℕ) (a : ℕ → G) :=
   ∀ i j : ℕ, D ≤ i + j → a (i + j + 1) ≤ -(a i + a j)
 
-abbrev good2 (D : ℕ) (a : ℕ → G) :=
-  ∀ n : ℕ, D ≤ n → ∃ i j : ℕ, i + j = n ∧ a (n + 1) = -(a i + a j)
+abbrev good2 {G} [AddCommGroup G] (D : ℕ) (a : ℕ → G) :=
+  ∀ n ≥ D, ∃ i j : ℕ, i + j = n ∧ a (n + 1) = -(a i + a j)
 
 
 
@@ -124,7 +125,7 @@ end SeqMax
 
 
 
-/-! ## Final solution -/
+/-! ### Final solution -/
 
 /-- Final solution -/
 theorem final_solution {a : ℕ → G} (h : good1 D a) (h0 : good2 D a) (n : ℕ) :

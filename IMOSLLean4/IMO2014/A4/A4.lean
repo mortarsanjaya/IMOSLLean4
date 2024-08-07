@@ -31,7 +31,7 @@ theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) : ∃ m n, m ≠ n ∧ b ^ m % 
 
 
 
-/-! ## Start of the problem -/
+/-! ### Start of the problem -/
 
 def good (b c : ℤ) (f : ℤ → ℤ) := ∀ x y : ℤ, f (y + f x) - f y = f (b * x) - f x + c
 

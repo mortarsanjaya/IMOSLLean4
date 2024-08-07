@@ -24,6 +24,8 @@ namespace IMO2014N3
 
 open Multiset
 
+/-! ### Extra lemmas -/
+
 theorem Multiset_mem_sum [DecidableEq α] {P : Multiset (Multiset α)} {a : α} :
     a ∈ P.sum ↔ ∃ M ∈ P, a ∈ M := by
   rw [sum_eq_sum_toEnumFinset, Finset.mem_sum]

@@ -11,9 +11,9 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Multiset
 /-!
 # IMO 2016 A1
 
-Let $R$ be a totally ordered commutative ring and denote $R_{≥0} = \\{x ∈ R : x ≥ 0\\}$.
-Let $a_1, a_2, …, a_n, c ∈ R_{≥0}$ such that $a_i a_j ≥ c$ whenever $i ≠ j$.
-Let $r ∈ R_{≥0}$ such that $nr ≥ a_1 + a_2 + … + a_n$.
+Let $R$ be a totally ordered commutative ring.
+Let $a_1, a_2, …, a_n, c ∈ R$ non-negative such that $a_i a_j ≥ c$ whenever $i ≠ j$.
+Let $r ∈ R$ non-negative such that $nr ≥ a_1 + a_2 + … + a_n$.
 Prove that $$ \prod_{i = 1}^n (a_i^2 + c) ≤ (r^2 + c)^n. $$
 -/
 
