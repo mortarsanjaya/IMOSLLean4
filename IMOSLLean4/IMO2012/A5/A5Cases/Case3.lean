@@ -182,7 +182,8 @@ lemma map_add_one_eq_zero_iff_map_eq {x} : f (x + 1) = 0 ↔ f x ^ 2 = 1 := by
   refine ⟨λ h0 ↦ ?_, λ h0 ↦ ?_⟩
   · have h1 := Eq3_v2 hf x
     rw [h0, zero_mul, zero_mul, add_zero, zero_eq_mul] at h1
-    exact h1.elim eq_of_sub_eq_zero λ h1 ↦ eq_of_sub_eq_zero h1 ▸ one_pow 2
+    refine h1.elim eq_of_sub_eq_zero λ h1 ↦ ?_
+    rw [eq_of_sub_eq_zero h1, one_pow]
   · rcases main_cases hS hf x with (h1 | h1) | ⟨h1, h2⟩
     · rw [h1, sq, zero_mul] at h0
       rw [← mul_one (f _), ← h0, mul_zero]

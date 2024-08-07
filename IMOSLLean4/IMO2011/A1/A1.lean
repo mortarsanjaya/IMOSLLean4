@@ -217,7 +217,7 @@ lemma four_le_p_val_imp₁ {A : Card4NatSet} (hA : 4 ≤ A.p_val) :
 
 lemma four_le_p_val_imp₂ {A : Card4NatSet} (hA : 4 ≤ A.p_val) :
     ∃ (n : ℕ) (hn : 0 < n), A = MaxSet1.nsmul hn ∨ A = MaxSet2.nsmul hn :=
-  ⟨A.f 0, A.f_pos 0, (four_le_p_val_imp₁ hA).imp (Card4NatSet.ext _ _) (Card4NatSet.ext _ _)⟩
+  ⟨A.f 0, A.f_pos 0, (four_le_p_val_imp₁ hA).imp Card4NatSet.ext Card4NatSet.ext⟩
 
 lemma four_le_p_val_iff {A : Card4NatSet} :
     4 ≤ A.p_val ↔ ∃ (n : ℕ) (hn : 0 < n), A = MaxSet1.nsmul hn ∨ A = MaxSet2.nsmul hn := by

@@ -31,7 +31,7 @@ protected lemma toFinset_toList (P : 𝔽₂X) : P.toList.toFinset = P.toFinset 
   P.toFinset.sort_toFinset _
 
 protected lemma toList_inj {P Q : 𝔽₂X} : P.toList = Q.toList ↔ P = Q :=
-  ⟨λ h ↦ 𝔽₂X.ext _ _ <| by rw [← 𝔽₂X.toFinset_toList, h, 𝔽₂X.toFinset_toList],
+  ⟨λ h ↦ 𝔽₂X.ext (by rw [← 𝔽₂X.toFinset_toList, h, 𝔽₂X.toFinset_toList]),
   congrArg 𝔽₂X.toList⟩
 
 

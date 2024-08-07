@@ -61,16 +61,16 @@ theorem sum_map_replicate_two (C : Multiset ℕ) :
       ext x; rw [count_add, count_add, count_replicate,
         count_replicate, count_filter, count_filter, Nat.mul_succ]
       obtain h | h : x ≤ 2 * N ∨ 2 * N < x := le_or_lt x (2 * N)
-      · rw [if_pos h, if_pos (h.trans ((2 * N).le_add_right 2)), add_left_eq_self, add_eq_zero]
-        exact ⟨if_neg (h.trans_lt (2 * N).lt_succ_self).ne,
-          if_neg (h.trans_lt (Nat.lt_add_of_pos_right Nat.two_pos)).ne⟩
+      · have h0 : x < 2 * N + 2 := h.trans_lt (Nat.lt_add_of_pos_right Nat.two_pos)
+        rw [if_pos h, if_pos h0.le, add_left_eq_self, add_eq_zero]
+        exact ⟨if_neg (Nat.lt_succ_of_le h).ne.symm, if_neg h0.ne.symm⟩
       rw [if_neg h.not_le, add_zero]
       rw [Nat.lt_iff_add_one_le, le_iff_eq_or_lt, Nat.lt_iff_add_one_le, le_iff_eq_or_lt] at h
       rcases h with rfl | rfl | h
-      · rw [if_pos rfl, if_neg (2 * N + 1).succ_ne_self.symm,
+      · rw [if_pos rfl, if_neg (2 * N + 1).succ_ne_self,
           add_zero, if_pos (2 * N).succ.le_succ]
-      · rw [if_neg (2 * N + 1).succ_ne_self, zero_add, if_pos rfl, if_pos (le_refl _)]
-      · rw [if_neg (Nat.lt_of_succ_lt h).ne.symm, zero_add, if_neg h.ne.symm, if_neg h.not_le]
+      · rw [if_neg (2 * N + 1).succ_ne_self.symm, zero_add, if_pos rfl, if_pos (le_refl _)]
+      · rw [if_neg (Nat.lt_of_succ_lt h).ne, zero_add, if_neg h.ne, if_neg h.not_le]
 
 
 
