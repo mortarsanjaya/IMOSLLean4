@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Abs
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Tactic.Ring
 
 /-!
@@ -114,6 +114,5 @@ end
 
 /-- Final solution -/
 theorem final_solution [LinearOrderedField F] [HasSqrt2 F] {M : F} :
-    good M ↔ 9 * √2 / 32 ≤ M := by
-  have h : 0 < (32 : F) := by norm_num
-  rw [good_iff, Iff.comm, ← mul_le_mul_iff_of_pos_left h, mul_div_cancel₀ _ h.ne.symm]
+    good M ↔ 9 * √2 / 32 ≤ M :=
+  good_iff.trans (div_le_iff' (by norm_num : 0 < (32 : F))).symm
