@@ -4,11 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.Basic
-import Mathlib.Order.Bounds.Basic
-import Mathlib.Algebra.Order.Field.Defs
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.Field.Unbundled.Basic
+import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Data.Fin.VecNotation
 
 /-!
@@ -53,8 +49,7 @@ theorem good_ineq2 [LinearOrderedSemifield F] [ExistsAddOfLE F]
   have h2 : 0 < x 1 * x 3 := mul_pos (h 1) (h 3)
   have h3 : 0 < (x 0 * x 2) * (x 1 * x 3) := mul_pos h1 h2
   rw [div_add_div _ _ h2.ne.symm h1.ne.symm, ← sq, ← sq, mul_comm (x 1 * x 3),
-    div_add' _ _ _ h3.ne.symm, ← mul_assoc, ← add_sq',
-    ← mul_le_mul_iff_of_pos_right h3, div_mul_cancel₀ _ h3.ne.symm]
+    div_add' _ _ _ h3.ne.symm, ← mul_assoc, ← add_sq', le_div_iff h3]
   exact good_ineq1 h h0
 
 theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
