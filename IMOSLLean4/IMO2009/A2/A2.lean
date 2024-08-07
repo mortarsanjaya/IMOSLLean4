@@ -148,6 +148,12 @@ theorem field_ineq5 (h : a⁻¹ + b⁻¹ + c⁻¹ = a + b + c) : 3 ≤ a * b + b
   rw [← h, field_identity2 ha.ne.symm hb.ne.symm hc.ne.symm, sq] at h0
   exact le_of_mul_le_mul_right h0 (ring_ineq5 ha hb hc)
 
+
+
+
+
+/-! ### Summary -/
+
 /-- Final solution -/
 theorem final_solution (h : a⁻¹ + b⁻¹ + c⁻¹ = a + b + c) :
     ((2 * a + b + c) ^ 2)⁻¹ + ((2 * b + c + a) ^ 2)⁻¹ + ((2 * c + a + b) ^ 2)⁻¹ ≤ 3 / 16 := by

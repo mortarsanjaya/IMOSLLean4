@@ -109,6 +109,7 @@ end
 
 /-! ### Final solution -/
 
+/-- Final solution, unordered version -/
 theorem final_solution_unordered [LinearOrderedField F] [DecidableEq ι]
     (a : ι → F) {S : Finset ι} (hS : ∀ i ∈ S, 0 < a i) :
     S.offDiag.sum (λ p ↦ a p.1 * a p.2 / (a p.1 + a p.2))

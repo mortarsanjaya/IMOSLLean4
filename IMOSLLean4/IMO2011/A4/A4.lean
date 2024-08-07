@@ -12,7 +12,7 @@ import Mathlib.Data.PNat.Basic
 Find all functions $f, g : ℕ → ℕ$ such that, for any $k ∈ ℕ$,
 $$ f^{g(k) + 2}(k) + g^{f(k) + 1}(k) + g(k + 1) + 1 = f(k + 1). $$
 
-### Note
+### Extra Notes
 
 The original version using signature $ℕ^+ → ℕ^+$ is:
 $$ f^{g(k) + 1}(k) + g^{f(k)}(k) + g(k + 1) = f(k + 1) + 1. $$
@@ -23,7 +23,7 @@ namespace IMO2011A4
 
 open Function
 
-/-! ## `ℕ` version -/
+/-! ### `Nat` version -/
 
 lemma main_step {f g : ℕ → ℕ} (h : ∀ k, f^[g k + 2] k < f (k + 1)) : f = id := by
   ---- Start with `f(n) ≥ n` for all `n : ℕ`
@@ -43,8 +43,8 @@ lemma main_step {f g : ℕ → ℕ} (h : ∀ k, f^[g k + 2] k < f (k + 1)) : f =
   rw [← Nat.lt_succ_iff, ← h2.lt_iff_lt]
   exact (h1 _ _).trans_lt (h n)
 
-/-- Final solution -/
-theorem final_solution {f g : ℕ → ℕ} :
+/-- Final solution, `Nat` version -/
+theorem final_solution_Nat {f g : ℕ → ℕ} :
     (∀ k, f^[g k + 2] k + (g^[f k + 1] k + g (k + 1)) + 1 = f (k + 1))
       ↔ f = id ∧ g = λ _ ↦ 0 := by
   refine Iff.symm ⟨λ h k ↦ ?_, λ h ↦ ?_⟩
@@ -64,7 +64,7 @@ theorem final_solution {f g : ℕ → ℕ} :
 
 
 
-/-! ## `ℕ+` (original) version -/
+/-! ### `PNat` version -/
 
 theorem PNat_to_Nat_prop {P : ℕ+ → Prop} : (∀ n, P n) ↔ ∀ n : ℕ, P n.succPNat :=
   ⟨λ h n ↦ h n.succPNat, λ h n ↦ n.succPNat_natPred ▸ h _⟩
@@ -83,15 +83,15 @@ theorem PNat_Nat_conj_iterate (f : ℕ → ℕ) (m : ℕ+) :
   | 0 => m.succPNat_natPred.symm
   | k + 1 => by rw [iterate_succ_apply', iterate_succ_apply', PNat_Nat_conj_iterate f m k]; rfl
 
-/-- Final solution, `ℕ+` version -/
-theorem final_solution_PNat {f g : ℕ+ → ℕ+} :
+/-- Final solution -/
+theorem final_solution {f g : ℕ+ → ℕ+} :
     (∀ n, f^[g n + 1] n + (g^[f n] n + g (n + 1)) = f (n + 1) + 1)
       ↔ f = id ∧ g = λ _ ↦ 1 := by
   obtain ⟨f, rfl⟩ := PNat_exists_Nat_conj f
   obtain ⟨g, rfl⟩ := PNat_exists_Nat_conj g
   rw [eq_comm, PNat_eq_Nat_conj_iff, eq_comm (b := λ _ ↦ 1),
     PNat_eq_Nat_conj_iff, PNat_to_Nat_prop, Iff.comm]
-  refine final_solution.symm.trans (forall_congr' λ n ↦ ?_)
+  refine final_solution_Nat.symm.trans (forall_congr' λ n ↦ ?_)
   rw [← PNat.coe_inj, PNat_Nat_conj_iterate, PNat_Nat_conj_iterate]
   simp only [Nat.natPred_succPNat, PNat.add_coe, Nat.succPNat_coe, Nat.succ_add]
   rw [← add_left_inj 2]; rfl

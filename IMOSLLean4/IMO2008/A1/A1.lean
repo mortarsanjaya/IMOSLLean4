@@ -10,7 +10,7 @@ import Mathlib.Algebra.Order.Ring.Basic
 /-!
 # IMO 2008 A1 (P4)
 
-Let $R$ be a totally ordered ring, and let $R_{>0} = \\{x ∈ R : x > 0\\}$.
+Let $R$ be a totally ordered ring, and let $R_{>0} = \{x ∈ R : x > 0\}$.
 Find all functions $f : R_{>0} → R_{>0}$ such that for any $p, q, r, s > 0$ with $pq = rs$,
 $$ (f(p)^2 + f(q)^2) (r^2 + s^2) = (p^2 + q^2) (f(r^2) + f(s^2)). $$
 -/

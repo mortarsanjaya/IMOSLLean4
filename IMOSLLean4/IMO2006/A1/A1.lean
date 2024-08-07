@@ -12,9 +12,9 @@ import Mathlib.Data.Fin.VecNotation
 # IMO 2006 A1
 
 Let $R$ be an archimedean ring with floor.
-Denote $f(x) = ⌊x⌋ (x - ⌊x⌋)$ for any $x ∈ R$.
-Prove that for any $r ∈ R$, there exists $N ∈ ℕ$ such that
-  $f^{k + 2}(r) = f^k(r)$ for all $k ≥ N$.
+Define the function $f : R → R$ by $$ f(x) = ⌊x⌋ (x - ⌊x⌋). $$
+Prove that for any $r ∈ R$, there exists $N ∈ ℕ$ such that for all $k ≥ N$,
+$$ f^{k + 2}(r) = f^k(r). $$
 -/
 
 namespace IMOSL

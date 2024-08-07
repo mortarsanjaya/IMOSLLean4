@@ -7,16 +7,16 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Extra.CharTwo.Finset
 
 /-!
-# Explicit construction of `𝔽₂[X]`
+# Explicit construction of `𝔽₂X`
 
-In this file, we explicitly construct the ring `𝔽₂[X]`.
-We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂[X]`.
+In this file, we explicitly construct the ring `𝔽₂[X]`, denoted `𝔽₂X`.
+We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂X`.
 The explicit construction is done so that proof of equality between
   two expressions involving explicit elements can be done with just `rfl`.
 
 ### Implementation details
 
-We implement `𝔽₂[X]` as a wrapper around `Finset ℕ`.
+We implement `𝔽₂X` as a wrapper around `Finset ℕ`.
 Addition is done by symmetric difference.
 Multiplication by `X` is done by adding `1` to every element.
 -/
@@ -26,8 +26,8 @@ namespace IMO2012A5
 
 open Extra
 
-@[ext] structure 𝔽₂X where
-  toFinset : Finset ℕ
+@[ext] structure 𝔽₂X where toFinset : Finset ℕ
+
 
 
 namespace 𝔽₂X
@@ -113,7 +113,7 @@ protected theorem Xpow_add_induction {p : 𝔽₂X → Prop}
 
 /-! ### Multiplication by powers of `X` -/
 
-/-- Given `n` and `P(X)`, compute `X^n P(X)` -/
+/-- Given `n : ℕ` and `P : 𝔽₂X`, compute `X^n P(X)` -/
 def XpowMul (n : ℕ) (P : 𝔽₂X) : 𝔽₂X :=
   ⟨P.toFinset.image λ k ↦ k + n⟩
 

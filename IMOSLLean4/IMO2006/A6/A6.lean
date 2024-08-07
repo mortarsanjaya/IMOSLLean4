@@ -11,7 +11,8 @@ import Mathlib.Tactic.Ring
 # IMO 2006 A6 (P3)
 
 Find the smallest $M ∈ ℝ$ such that for any $a, b, c ∈ ℝ$,
-$$ |ab(a^2 - b^2) + bc(b^2 - c^2) + ca(c^2 - a^2)| ≤ M(a^2 + b^2 + c^2)^2. $$
+$$ \left|ab(a^2 - b^2) + bc(b^2 - c^2) + ca(c^2 - a^2)\right|
+  ≤ M\left(a^2 + b^2 + c^2\right)^2. $$
 -/
 
 namespace IMOSL
@@ -68,6 +69,10 @@ theorem ring_ineq3 (a b c : R) :
   rw [sub_add_sub_cancel', sub_add_sub_cancel, sub_self]
 
 
+
+
+
+/-! ### Solution for rings with `√2` -/
 
 class HasSqrt2 (R) [LinearOrderedCommRing R] where
   sqrt2 : R

@@ -7,9 +7,10 @@ Authors: Gian Cordana Sanjaya
 /-!
 # IMO 2009 C3
 
-Let $L = \\{0, 1\\}^*$ denote the set of finite-length binary words with letters $0$ and $1$.
+Let $\{0, 1\}^*$ denote the set of finite-length binary words with letters $0$ and $1$.
 Let $ε$ denote the empty word.
-Define the function $f : L → ℕ$ recursively by $f(ε) = 1$, $f(0) = f(1) = 7$, and
+
+Define the function $f : \{0, 1\}^* → ℕ$ recursively by $f(ε) = 1$, $f(0) = f(1) = 7$, and
 $$ f(wa0) = 2 f(wa) + 3 f(w) ∧ f(wa1) = 3 f(wa) + f(w). $$
 Fix a word $w ∈ L$, and let $w'$ denote the reversal of $w$.
 Prove that $f(w') = f(w)$.

@@ -11,11 +11,11 @@ import Mathlib.Tactic.Ring
 /-!
 # IMO 2008 A7
 
-Let $F$ be a totally ordered field, and denote $F_{>0} = \\{x ∈ F : x > 0\\}$.
-Prove that, for any $a, b, c, d ∈ F_{>0}$,
-$$ \frac{(a - b)(a - c)}{a + b + c} + \frac{(b - c)(b - d)}{b + c + d}
-  + \frac{(c - d)(c - a)}{c + d + a} + \frac{(d - a)(d - b)}{d + a + b} ≥ 0. $$
-Find all cases of equality.
+Let $F$ be a totally ordered field.
+1. Prove that, for any $a, b, c, d ∈ F$ positive,
+$$ \frac{(a - b)(a - c)}{a + b + c} + \frac{(b - c)(b - d)}{b + c + d} +
+  \frac{(c - d)(c - a)}{c + d + a} + \frac{(d - a)(d - b)}{d + a + b} ≥ 0. $$
+2. Find all cases of equality.
 -/
 
 namespace IMOSL
@@ -73,7 +73,7 @@ theorem field_ineq3 {a b c d : F} (h : 0 < a + c + b) (h0 : 0 < a + c + d) :
 
 
 
-/-! ### Final solution -/
+/-! ### Start of the problem -/
 
 variable {a b c d : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d)
 

@@ -7,13 +7,14 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Tactic.Ring
 
 /-!
-# Explicit construction of ℤ[φ]
+# Explicit construction of `ℤφ`
 
-In this file, we explicitly construct the ring `ℤ[φ]`, where `φ = (1 + √5)/2`.
+In this file, we explicitly construct the ring $ℤ[\phi]$,
+  denoted `ℤφ`, where $φ = \frac{1 + \sqrt{5}}{2}$.
 We prove just the necessary properties for the purpose of the main problem.
 
 TODO:
-* Remove the need for `ring` tactic in `mul_assoc` if possible.
+* Remove the need for `ring` tactic in `ℤφ.mul_assoc` if possible.
 -/
 
 namespace IMOSL

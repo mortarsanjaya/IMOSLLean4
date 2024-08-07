@@ -10,10 +10,10 @@ import Mathlib.Tactic.Ring
 /-!
 # IMO 2008 A2 (P2)
 
-1. Let $F$ be an ordered field, and consider $x, y, z ∈ F \ \\{1\\}$ satisfying $xyz = 1$.
+1. Let $F$ be an ordered field, and consider $x, y, z ∈ F \setminus \{1\}$ with $xyz = 1$.
 Prove that $$ \frac{x^2}{(x - 1)^2} + \frac{y^2}{(y - 1)^2} + \frac{z^2}{(z - 1)^2} ≥ 1. $$
 
-2. Show that there exists infinitely many triplets $(x, y, z) ∈ (ℚ \setminus \\{1\\})^3$
+2. Show that there exists infinitely many triplets $(x, y, z) ∈ (ℚ \setminus \{1\})^3$
   with $xyz = 1$ such that the above inequality becomes equality.
 -/
 
@@ -124,6 +124,12 @@ structure good (p : Fin 3 → ℚ) : Prop where
   p_ne_one : ∀ i, p i ≠ 1
   p_mul_eq_one : p 0 * p 1 * p 2 = 1
   spec : (p 0 / (p 0 - 1)) ^ 2 + (p 1 / (p 1 - 1)) ^ 2 + (p 2 / (p 2 - 1)) ^ 2 = 1
+
+
+
+
+
+/-! ##### Construction -/
 
 def ratMapSol (k : ℕ) : Fin 3 → ℚ
   | 0 => -(k.succ + 1) / k.succ ^ 2

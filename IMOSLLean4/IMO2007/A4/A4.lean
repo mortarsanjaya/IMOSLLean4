@@ -25,6 +25,7 @@ structure weakGood [OrderedAddCommMonoid M] (f : M → M) : Prop where
 
 variable [LinearOrderedAddCommGroup G]
 
+/-- Solution for the unboundled version -/
 theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f x = x + x :=
   ---- `→` direction
   ⟨λ hf ↦ by

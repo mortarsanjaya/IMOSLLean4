@@ -10,8 +10,7 @@ import Mathlib.Algebra.Order.Floor
 /-!
 # IMO 2010 A1 (P1) (Integer/monoid case)
 
-Let $M$ be a monoid and $R$ be a totally ordered ring with floor.
-(Ree mathlib's `FloorRing`.)
+Let $M$ be a monoid and $R$ be a totally ordered ring with floor. (See `FloorRing`.)
 Find all functions $f : M → R$ such that, for any $x, y ∈ M$,
 $$ f(xy) = f(x) ⌊f(y)⌋. $$
 -/

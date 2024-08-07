@@ -13,12 +13,17 @@ A function $f : ℕ → ℕ$ is called *good* if, for any $m, n ∈ ℕ$,
 $$ f(m + n + 1) ≥ f(m) + f(f(n)). $$
 For any $N ∈ ℕ$, determine all $k ∈ ℕ$ for which
   there exists a good function $f$ such that $f(N) = k$.
+
+### Extra Notes
+
+The original version using signature $ℕ^+ → ℕ^+$ is:
+$$ f(m + n) + 1 ≥ f(m) + f(f(n)). $$
 -/
 
 namespace IMOSL
 namespace IMO2007A2
 
-/-! ## `ℕ` version -/
+/-! ### `Nat` version -/
 
 def good (f : ℕ → ℕ) := ∀ m n : ℕ, f m + f (f n) ≤ f (m + n + 1)
 
@@ -85,9 +90,8 @@ theorem good_val_bound (N : ℕ) : f N ≤ N + 1 := by
 end
 
 
-
-/-- Final solution -/
-theorem final_solution :
+/-- Final solution, `Nat` version -/
+theorem final_solution_Nat :
     (∃ f : ℕ → ℕ, good f ∧ f N = k) ↔ cond (N.beq 0) (k = 0) (k ≤ N.succ) := by
   cases h : N.beq 0 with
   | true =>
@@ -106,7 +110,7 @@ theorem final_solution :
 
 
 
-/-! ## `ℕ+` (original) version -/
+/-! ### `PNat` version -/
 
 def goodPNat (f : ℕ+ → ℕ+) := ∀ m n, f m + f (f n) ≤ f (m + n) + 1
 
@@ -137,10 +141,10 @@ theorem good_correspondence {N k : ℕ+} :
   λ ⟨f, h, h0⟩ ↦ ⟨λ x ↦ (f x.natPred).succPNat, goodPNat_iff_good.mpr h,
     (congrArg _ h0).trans k.succPNat_natPred⟩⟩
 
-/-- Final solution, `ℕ+` version -/
-theorem final_solution_PNat {N k : ℕ+} :
+/-- Final solution -/
+theorem final_solution {N k : ℕ+} :
     (∃ f : ℕ+ → ℕ+, goodPNat f ∧ f N = k) ↔ if N = 1 then k = 1 else k ≤ N + 1 := by
-  rw [good_correspondence, final_solution, cond_eq_if]
+  rw [good_correspondence, final_solution_Nat, cond_eq_if]
   have X {n : ℕ+} : n.natPred = 0 ↔ n = 1 := PNat.natPred_inj (n := 1)
   refine if_congr_prop (Nat.beq_eq ▸ X) X ?_
   rw [← PNat.natPred_le_natPred, Nat.succ_eq_add_one, PNat.natPred_add_one]; rfl

@@ -20,6 +20,13 @@ import IMOSLLean4.IMO2012.A5.Extra.BundledRingFun
 
 We describe all non-trivial good maps and prove that they are non-trivial good.
 The proof that they are the only ones is the main content of the problem.
+
+* `isPolyGoodMap f` says that `f` is one of the two polynomial solutions:
+  `x : R ↦ x - 1` and `x : R ↦ x^2 - 1 : R_2`.
+* `isFinGoodMap f` says that `f` is one of the six special solutions:
+  `𝔽₂Map`, `𝔽₃Map1`, `𝔽₃Map2`, `ℤ₄Map`, `𝔽₂εMap`, and `𝔽₄Map`.
+* `isNontrivialAnswer f` says that `f` is either `isPolyGoodMap` or `isFinGoodMap`.
+* `isNontrivialAnswer.NontrivialGood` is a proof the above functions are non-trivial good.
 -/
 
 namespace IMOSL

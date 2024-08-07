@@ -11,16 +11,16 @@ import Mathlib.Algebra.Order.Group.Abs
 # IMO 2007 A1 (P1)
 
 Fix an ordered abelian group $G$ and a positive integer $n$.
-Consider a sequence $(a_i)\_{i = 1}^n$ of elements of $G$.
-Fix an arbitrary non-decreasing sequence $(x_i)\_{i = 1}^n$ in $G$, and let
+Consider a sequence $(a_i)_{i = 1}^n$ of elements of $G$.
+Fix an arbitrary non-decreasing sequence $(x_i)_{i = 1}^n$ in $G$, and let
 $$ L = \max_{j ≤ n} |x_j - a_j|. $$
 * Prove that $2L \geq a_k - a_m$ for any $k ≤ m ≤ n$.
 * Fix an arbitrary $g \in G$ such that $2g \geq a_k - a_m$ for any $k ≤ m ≤ n$.
-  Prove that there exists a choice of $(x_i)\_{i = 1}^n$ such that $L ≤ g$.
+  Prove that there exists a choice of $(x_i)_{i = 1}^n$ such that $L ≤ g$.
 
 ### Notes
 
-The above formulation is chosen to avoid extra layers of $\max$.
+The above formulation is chosen to avoid too many layers of $\max$.
 -/
 
 namespace IMOSL
