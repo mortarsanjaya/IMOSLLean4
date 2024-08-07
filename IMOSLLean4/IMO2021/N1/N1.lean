@@ -9,7 +9,7 @@ import Mathlib.Data.PNat.Factors
 /-!
 # IMO 2021 N1
 
-Find all triplets $(a, b, c)$ of positive integers such that
+Find all triplets $(a, b, n)$ of positive integers such that
 * $a^2 + b + 3$ is cubefree; and
 * $ab + 3b + 8 = n(a^2 + b + 3)$.
 -/
@@ -17,7 +17,7 @@ Find all triplets $(a, b, c)$ of positive integers such that
 namespace IMOSL
 namespace IMO2021N1
 
-/-! ### Formulas over `ℕ+` -/
+/-! ### Formulas over `PNat` -/
 
 theorem PNat_two_mul (k : ℕ+) : k + k = 2 * k := by
   change k + k = (1 + 1) * k; rw [add_mul, one_mul]

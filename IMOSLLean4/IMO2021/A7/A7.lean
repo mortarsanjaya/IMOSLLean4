@@ -15,7 +15,7 @@ Let $R$ be a totally ordered commutative ring.
 Let $(x_n)_{n ≥ 0}$ be a sequence of elements of $R$ such that, for each $n ∈ ℕ$,
 $$ x_{n + 1} x_{n + 2} ≥ x_n^2 + 1. $$
 Show that for any $N ∈ ℕ$,
-$$ 27 (x_0 + x_1 + … + x_{n + 1})^2 > 8 N^3. $$
+$$ 27 (x_0 + x_1 + … + x_{N + 1})^2 > 8 N^3. $$
 -/
 
 namespace IMOSL
