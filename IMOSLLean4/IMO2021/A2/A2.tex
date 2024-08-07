@@ -1,0 +1,46 @@
+For any positive integer $n$, prove that
+\[ 4 \sum_{i = 1}^n \sum_{j = 1}^n \left\lfloor \frac{ij}{n + 1} \right\rfloor \geq n^2 (n - 1). \tag{*}\label{2021a2-eq0} \]
+Determine the equality cases.
+
+
+
+
+\subsection*{Answer}
+
+Equality cases happen precisely when $n + 1$ is prime.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2021SL.pdf}
+
+We follow Solution 1 of the official solution.
+The main claim is the following.
+
+\begin{claim}
+For any $i, j \in \N$,
+\[ \left\lfloor \frac{ij}{n + 1} \right\rfloor + \left\lfloor \frac{i(n + 1 - j)}{n + 1} \right\rfloor
+    = \begin{cases} i, & n + 1 \mid ij, \\ i - 1, & n + 1 \nmid ij. \end{cases} \]
+In particular, the left hand side is at least $i - 1$, and equality holds iff $n + 1 \nmid ij$.
+\end{claim}
+\begin{proof}
+Indeed, $i(n + 1 - j)/(n + 1) = i - ij/(n + 1)$.
+Also, for any $\alpha \in \R$, $\lfloor \alpha \rfloor + \lfloor -\alpha \rfloor$ equals $0$ if $\alpha$ is an integer and $-1$ otherwise.
+\end{proof}
+
+As a result,
+\[ 4 \sum_{i = 1}^n \sum_{j = 1}^n \left\lfloor \frac{ij}{n + 1} \right\rfloor
+    = 2 \sum_{i = 1}^n \sum_{j = 1}^n \left(\left\lfloor \frac{ij}{n + 1} \right\rfloor + \left\lfloor \frac{i(n + 1 - j)}{n + 1} \right\rfloor\right)
+    \geq 2 \sum_{i = 1}^n \sum_{j = 1}^n (i - 1) = n^2 (n - 1). \]
+Equality holds iff each application of the claim holds with equality case.
+That is, $n + 1 \nmid ij$ for any $0 < i, j < n + 1$.
+Clearly this is true if and only if $n + 1$ is prime (or $n = 0$, if it is allowed).
+
+
+
+\subsection*{Extra notes}
+
+The original problem does not ask to prove the above inequality.
+It only asks to find $n$ for which the left hand side is exactly $n^2(n - 1)$.
+I think this formulation, with an extra problem, has more motivation.
