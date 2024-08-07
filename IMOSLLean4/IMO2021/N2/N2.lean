@@ -19,7 +19,7 @@ namespace IMOSL
 namespace IMO2021N2
 
 def good (n : ℕ) :=
-  ∀ x : ℕ → Bool,∃ a b, n ≤ a ∧ a < b ∧ b ≤ 2 * n ∧ x a = x b ∧ ∃ k, a + b = k ^ 2
+  ∀ x : ℕ → Bool, ∃ a b, n ≤ a ∧ a < b ∧ b ≤ 2 * n ∧ x a = x b ∧ ∃ k, a + b = k ^ 2
 
 theorem good_cond1 (h : n ≤ a) (h0 : a < b) (h1 : b < c) (h2 : c ≤ 2 * n)
     (h3 : a + b = k ^ 2) (h4 : a + c = l ^ 2) (h5 : b + c = m ^ 2) :
