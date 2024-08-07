@@ -14,7 +14,10 @@ Let `R` be a ring, `S` be a domain, and `f : R → S` be a non-trivial good func
 We prove that the set `I = {c | ∀ x, f(x + c) = f(x)}` is a two-sided ideal.
 Then we prove that the induced map `R/I → S` is a reduced good function.
 
+### Implementation details
+
 Instead of using ideals explicitly, we use the `RingCon` API.
+The `RingCon` relation is implemented as `PeriodEquiv`.
 -/
 
 namespace IMOSL

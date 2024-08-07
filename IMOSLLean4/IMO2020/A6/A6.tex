@@ -27,7 +27,7 @@ Consider the equation $f^{(a + 1)^2 + 1}(a) = f^{(a + 1)^2}(a + 1)$.
 This means that $f^{n + 1}(a) = f^n(a + 1)$ whenever $n \geq (a + 1)^2$.
 By induction on $k$, for any $k \in \N$ and $a \in \Z$, there exists $N \in \N$ such that $f^{n + k}(a) = f^n(a + k)$ for all $n \geq N$.
 
-Since $f$ is not injective, there exists $k \in \N$ and $a \in \Z$ such that $f(a) = f(a + k)$.
+Since $f$ is not injective, there exists $k \in \N^+$ and $a \in \Z$ such that $f(a) = f(a + k)$.
 Then we get $f^{n + k}(a) = f^n(a + k) = f^n(a)$ for all $n$ big enough.
 If $a \geq 0$, then $f^n(a) = f^{n + a}(0)$ for all $n$ big enough.
 If $a < 0$, then $f^n(0) = f^{n + (-a)}(a)$ for all $n$ big enough.
@@ -43,4 +43,4 @@ This also means that $f(a) = f(-a)$ for all $a \in \Z$.
 We now prove that $f \equiv 0$.
 For $a \neq 0$, since $f$ is even, we have
 \[ f^{a^2}(a) = f^{a^2}(-a) \implies -a f(a) = -a f(-a) = a f(a) \implies f(a) = 0. \]
-Finally,~\eqref{2020a6-eq0} yields $f(0) = f^2(2) = 2 f(1) = 0$.
+Finally,~\eqref{2020a6-eq0} yields $f(0) = f^2(-2) = -2 f(-1) = 0$.

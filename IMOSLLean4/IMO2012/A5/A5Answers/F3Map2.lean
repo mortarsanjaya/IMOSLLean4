@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.A5Defs
 import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.F3
 
 /-!
-# IMO 2012 A5 (𝔽₃Map2)
+# IMO 2012 A5 (`𝔽₃Map2`)
 
 We define `𝔽₃Map2 : 𝔽₃ → ℤ` and prove that it is a good map.
 -/

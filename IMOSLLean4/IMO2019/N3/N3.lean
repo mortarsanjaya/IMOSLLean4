@@ -10,11 +10,11 @@ import Mathlib.Data.Int.Interval
 /-!
 # IMO 2019 N3
 
-A set $S ⊆ ℤ$ is called *rootiful* if for any $a_0, a_1, … a_n ∈ S$ and
-  $x ∈ ℤ$ such that $a_0 + a_1 x + … + a_n x^n = 0$, we have $x ∈ S$.
+A set $S ⊆ ℤ$ is called *rootiful* if for any $a_0, a_1, … a_n ∈ S$, not all zero,
+  and $x ∈ ℤ$ such that $a_0 + a_1 x + … + a_n x^n = 0$, we have $x ∈ S$.
 
-Fix integers $N$ and $C$ with $|N| > 1$ and $C ≠ 0$.
-Find all rootiful sets containing $C(N^a - N^b)$ for all $a, b ∈ ℕ$.
+Fix an integer $N$ with $|N| > 1$.
+Find all rootiful sets containing $N^{a + 1} - N^{b + 1}$ for all $a, b ∈ ℕ$.
 -/
 
 namespace IMOSL

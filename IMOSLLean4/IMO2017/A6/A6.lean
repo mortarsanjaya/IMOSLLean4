@@ -14,10 +14,16 @@ Let $R$ be a ring.
 Determine all functions $f : R → R$ such that, for any $x, y ∈ R$,
 $$ f(f(x) f(y)) + f(x + y) = f(xy). $$
 
-Cases with implemented solution:
+### Implementation details
+
+The solution is still incomplete in the sense that only some subcases have been solved.
+Here are the cases with implemented solution:
 * Case 1: `2 ∈ Rˣ` and `3 ∈ R⁰`.
 * Case 2: `R` is a division ring with `char(R) ≠ 2`.
 * Case 3: `R` is a field.
+
+Case 1 is implemented in `IMOSLLean4/IMO2017/A6/A6MainResults/General.lean`.
+Case 2 and 3 are implemented in `IMOSLLean4/IMO2017/A6/A6MainResults/Field.lean`.
 -/
 
 namespace IMOSL

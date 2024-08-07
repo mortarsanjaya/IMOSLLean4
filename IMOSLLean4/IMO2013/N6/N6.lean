@@ -9,7 +9,7 @@ import Mathlib.Data.Rat.Floor
 /-!
 # IMO 2013 N6
 
-Determine all functions $f : ℚ → ℤ$ such that for any $x ∈ ℚ$, $a ∈ ℤ$, and $b ∈ ℕ⁺$,
+Determine all functions $f : ℚ → ℤ$ such that for any $x ∈ ℚ$, $a ∈ ℤ$, and $b ∈ ℕ^+$,
 $$ f\left(\frac{f(x) + a}{b}\right) = f\left(\frac{x + a}{b}\right). $$
 -/
 

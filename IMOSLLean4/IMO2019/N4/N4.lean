@@ -25,7 +25,7 @@ We do both versions in this file.
 namespace IMOSL
 namespace IMO2019N4
 
-/-! ###### Extra lemmas -/
+/-! ### Extra lemmas -/
 
 lemma dvd_iff_of_dvd_add {c : ℕ} (h : c ∣ a + b) : c ∣ a ↔ c ∣ b :=
   ⟨λ h0 ↦ (Nat.dvd_add_right h0).mp h, λ h0 ↦ (Nat.dvd_add_left h0).mp h⟩
@@ -119,8 +119,8 @@ theorem good_is_linear {f : ℕ → ℕ} (h : good C f) : ∃ k, f = (k * ·) :=
   rw [h8, Nat.mul_left_inj h7.ne_zero] at h10
   rw [h11, ← h10, ← h9]
 
-/-- Final solution -/
-theorem final_solution : good C f ↔ ∃ k : ℕ, f = (k * ·) :=
+/-- Final solution, `Nat` version -/
+theorem final_solution_Nat : good C f ↔ ∃ k : ℕ, f = (k * ·) :=
   ⟨good_is_linear, λ h ↦ h.elim λ k h ↦ h ▸ linear_is_good C k⟩
 
 
@@ -150,6 +150,6 @@ theorem goodPNat_is_linear (h : goodPNat C f) : ∃ k : ℕ+, f = (k * ·) := by
   rw [← PNat.coe_inj, PNat.mul_coe, PNat.mk_coe, ← congr_fun h1, eq_comm]
   exact dif_pos x.pos
 
-/-- Final solution, `ℕ+` version -/
-theorem final_solution_PNat : goodPNat C f ↔ ∃ k : ℕ+, f = (k * ·) :=
+/-- Final solution -/
+theorem final_solution : goodPNat C f ↔ ∃ k : ℕ+, f = (k * ·) :=
   ⟨goodPNat_is_linear, λ h ↦ h.elim λ k h ↦ h ▸ linear_is_goodPNat C k⟩

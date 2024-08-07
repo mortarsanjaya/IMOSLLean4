@@ -66,7 +66,7 @@ theorem special_formula (n : ℕ) :
 
 /-- Final solution -/
 theorem final_solution :
-    ∀ C, ∃ n, C ≤ n ∧ (n ^ 4 + n ^ 2 + 1).primeFactorsList.foldr max ⊥
+    ∀ C, ∃ n ≥ C, (n ^ 4 + n ^ 2 + 1).primeFactorsList.foldr max ⊥
       = ((n + 1) ^ 4 + (n + 1) ^ 2 + 1).primeFactorsList.foldr max ⊥ := by
   simp only [Nat.pow_mul _ 2 2]
   refine general_result (f := λ n ↦ (n ^ 2 + n + 1).primeFactorsList.foldr max ⊥) λ n ↦ ?_

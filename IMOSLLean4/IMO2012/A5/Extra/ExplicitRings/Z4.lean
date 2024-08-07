@@ -9,9 +9,8 @@ import Mathlib.Algebra.Ring.Hom.Defs
 /-!
 # Explicit construction of `ℤ₄`
 
-In this file, we explicitly construct the ring `ℤ/4ℤ`.
-We prove that it is a ring, and we construct ring homomorphisms from `ℤ/4ℤ`.
-Unfortunately, the author chooses to use the notation `ℤ₄` for the sake of short naming.
+In this file, we explicitly construct the ring $ℤ/4ℤ$, (unfortunately) denoted `ℤ₄`.
+We prove that it is a ring, and we construct ring homomorphisms from `ℤ₄`.
 -/
 
 namespace IMOSL

@@ -22,7 +22,7 @@ Prove that $S$ is a subring of $R^σ → R$.
 ### Notes
 
 The original formulation only asks to prove that $S$ is closed under multiplication.
-However, the official solution states that it is easier to prove that $S$ is a ring.
+However, the official solution essentially proves that $S$ is a ring.
 -/
 
 namespace IMOSL
@@ -36,6 +36,7 @@ abbrev MvPolynomial_evalCurry [CommRing R] : MvPolynomial σ R →+* ((σ → R)
 abbrev MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → R) :=
   (MvPolynomial_evalCurry (R := R) (σ := σ)).range
 
+/-- Final solution -/
 theorem final_solution (σ R) [LinearOrderedCommRing R] :
     ∃ T : Subring ((σ → R) → R), T.carrier =
       setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ MvPolynomial_image σ R))) :=

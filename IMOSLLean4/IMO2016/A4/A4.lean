@@ -12,7 +12,7 @@ import Mathlib.Algebra.Ring.Defs
 
 Let $M$ be an integral multiplicative monoid with a cancellative, distributive addition.
 Find all functions $f : M → M$ such that, for all $x, y ∈ M$,
-$$ x f(x^2) f(f(y)) + f(y f(x)) = f(xy) (f(f(y^2)) + f(f(x^2))). $$
+$$ x f(x^2) f(f(y)) + f(y f(x)) = f(xy) \left(f(f(y^2)) + f(f(x^2))\right). $$
 -/
 
 namespace IMOSL

@@ -11,10 +11,12 @@ import Mathlib.Algebra.Ring.Commute
 # IMO 2012 A5 (Quasi-periodic elements)
 
 Let `R` be a ring, `S` be a domain, and `f : R → S` be a non-trivial good function.
-We prove some properties of the set `J = {c | ∀ x, f(c + x) = -f(c) f(x)}`:
-* `c ∈ J ↔ ∀ x, f (x + c) = -f(x) f(c)`,
-* `J` is a two-sided ideal.
-* If `f` is a reduced good function and `c ∈ J` is non-zero, then `R = {0, 1, c, c + 1}`.
+Consider the set `J = {c | ∀ x, f(c + x) = -f(c) f(x)}`.
+We prove that `J` is a two-sided ideal, implemented by `QuasiPeriodic`.
+We prove some more properties:
+* `QuasiPeriodic.iff_right`: `c ∈ J ↔ ∀ x, f (x + c) = -f(x) f(c)`,
+* `QuasiPeriodic.reduced_main_cases`: Let `f` be a reduced good function.
+  If there exists `c ∈ J` non-zero, then `R = {0, 1, c, c + 1}`.
 -/
 
 namespace IMOSL

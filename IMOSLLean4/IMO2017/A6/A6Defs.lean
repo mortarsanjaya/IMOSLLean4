@@ -13,8 +13,13 @@ Let $R$ be a ring.
 Determine all functions $f : R → R$ such that, for any $x, y ∈ R$,
 $$ f(f(x) f(y)) + f(x + y) = f(xy). $$
 
-A function satisfying the above functional equation is called *good*.
-They are called *reduced good* if furthermore, they have no non-zero period.
+This file defines the functional equation and prove the most basic properties.
+We say that $f$ is
+* `good` if it satisfies the above functional equation;
+* `ReducedGood` if in addition, $f$ has no non-zero period.
+
+The `good` functions are characterized for a decent amount of subcases on $R$.
+The file `IMOSLLean4/IMO2017/A6/A6.lean` collects all the main results.
 -/
 
 namespace IMOSL

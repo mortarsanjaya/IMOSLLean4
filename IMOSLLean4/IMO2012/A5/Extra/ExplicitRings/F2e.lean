@@ -8,12 +8,10 @@ import Mathlib.Algebra.Ring.Hom.Defs
 import IMOSLLean4.Extra.CharTwo.Ring
 
 /-!
-# Explicit construction of `𝔽₂[ε]`
+# Explicit construction of `𝔽₂ε`
 
-In this file, we explicitly construct the ring `𝔽₂[ε] := 𝔽₂[X]/⟨X²⟩`.
-We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂[ε]`.
-The explicit construction is used instead of the `DualNumber` API for
-  the purpose of avoiding the use of `Algebra` instances.
+In this file, we explicitly construct the ring $𝔽₂[X]/⟨X²⟩$, denoted `𝔽₂ε`.
+We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂ε`.
 -/
 
 namespace IMOSL
