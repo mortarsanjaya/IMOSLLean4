@@ -21,6 +21,8 @@ namespace IMO2021A6
 
 open Finset
 
+/-- If `c_0 + c_1 m + c_2 m^2 + … + c_n m^n = d_0 + d_1 m + d_2 m^2 + … + d_n m^n`
+  for `0 ≤ c_0, c_1, …, c_n, d_1, …, d_n < m`, then `c_i = d_i` for each `i`. -/
 lemma Fin_digits_map_injOn (m n : ℕ) :
     (Fintype.piFinset (λ _ : Fin n ↦ range m) : Set (Fin n → ℕ)).InjOn
       λ c : (i : Fin n) → ℕ ↦ ∑ i : Fin n, c i * m ^ i.1 := by
@@ -32,7 +34,9 @@ lemma Fin_digits_map_injOn (m n : ℕ) :
   ---- Induction on `n`, discharging the base case immediately
   induction' n with n n_ih
   · rintro c - d - -; exact funext λ i ↦ absurd i.2 i.1.not_lt_zero
-  ---- Focus on the main case
+  /- Focus on the main case `m > 0`. The first step is to prove `c_0 = d_0`.
+    Then we get `c_1 + c_2 m + … + c_n m^{n - 1} = d_1 + d_2 m + … + d_n m^{n - 1}`.
+    By induction hypothesis, this gives `c_i = d_i` for all `0 < i ≤ n`. -/
   intro c hc d hd h
   replace h : c 0 + (∑ i : Fin n, c i.succ * m ^ i.1) * m
       = d 0 + (∑ i : Fin n, d i.succ * m ^ i.1) * m := by
@@ -42,8 +46,9 @@ lemma Fin_digits_map_injOn (m n : ℕ) :
     apply congrArg (· % m) at h
     rwa [Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (hc 0),
       Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (hd 0)] at h
-  refine funext (Fin.cases h0 (congrFun (n_ih (λ i ↦ hc i.succ) (λ i ↦ hd i.succ) ?_)))
-  rwa [h0, Nat.add_right_inj, Nat.mul_left_inj hm] at h
+  have h1 : ∑ i : Fin n, c i.succ * m ^ i.1 = ∑ i : Fin n, d i.succ * m ^ i.1 := by
+    rwa [h0, Nat.add_right_inj, Nat.mul_left_inj hm] at h
+  exact funext (Fin.cases h0 (congrFun (n_ih (λ i ↦ hc i.succ) (λ i ↦ hd i.succ) h1)))
 
 lemma Fin_digits_map_injOn' (m n : ℕ) :
     (Fintype.piFinset (λ _ : Fin n ↦ range m) : Set (Fin n → ℕ)).InjOn
