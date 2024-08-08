@@ -1,0 +1,36 @@
+For each $n \in \N$, denote $[n] = \{0, 1, \ldots, n - 1\}$.
+
+Let $m \in \N$ and $a_0, a_1, \ldots, a_{k - 1} \in \Z$, not necessarily distinct.\footnote{This is unlike the original formulation, which requires them to be pairwise distinct.}
+Let $B_0, B_1, \ldots, B_{m - 1}$ be subsets of $[k]$, and suppose that for each $i \in [m]$,
+\[ \sum_{j \in B_i} a_j = m^{i + 1}. \]
+Prove that $k \geq m/2$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2021SL.pdf}
+
+We follow the official solution using an alternative formulation.
+The cases $m = 0$ and $m = 1$ are trivial, so assume that $m \geq 2$.
+
+Let $|A| = k$ and $A = \{a_0, a_1, \ldots, a_{k - 1}\}$.
+Consider the function $f : [m]^{[m]} \to \Z^{[k]}$ defined by
+\[ f(c_0, c_1, \ldots, c_{m - 1}) = (\alpha_0, \alpha_1, \ldots, \alpha_{k - 1}), \quad \alpha_j = \sum_{i : j \in B_i} c_i. \]
+Note that the image of $f$ lies in $[m(m - 1) + 1]^{[k]}$.
+
+Next, consider the function $g : \Z^{[k]} \to \Z$ defined by
+\[ g(\alpha_0, \alpha_1, \ldots, \alpha_{k - 1}) = \sum_{j \in [k]} \alpha_j a_j. \]
+Then $f \circ g$ is defined by
+\[ f(g(c_0, c_1, \ldots, c_{m - 1})) = \sum_{j \in [k]} \sum_{i : j \in B_i} c_i a_j = \sum_{i \in [m]} \sum_{j \in B_i} c_i a_j = \sum_{i \in [m]} c_i m^{i + 1}. \]
+By the uniqueness of $m$-adic representation, $f \circ g$ is injective.
+In particular, so is $f$.
+Since its image lies in $[m(m - 1) + 1]^{[k]}$, we get
+\[ m^m = \left|[m]^{[m]}\right| \leq \left|[m(m - 1) + 1]^{[k]}\right| = (m(m - 1) + 1)^k \leq m^{2k}. \]
+Thus $2k \geq m$, as desired.
+
+
+
+\subsection*{Extra notes}
+
+If we use $n$ subsets $B_0, B_1, \ldots, B_{n - 1}$, the inequality we would get is $m^n \leq (n(m - 1) + 1)^k$.
