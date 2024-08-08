@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Data.Nat.Prime.Defs
 
 /-!
 # IMO 2021 A2
