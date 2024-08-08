@@ -41,11 +41,10 @@ theorem P_lt_of_seed (h : seed₁ < seed₂) : ∀ n, P seed₁ n < P seed₂ n
   | 0 => h
   | n + 1 => P_lt_of_seed (Nat.pow_lt_pow_of_lt (Nat.lt_succ_self 1) h) n
 
-theorem Nat_lt_two_pow : ∀ n, n < 2 ^ n
-  | 0 => Nat.one_pos
-  | n + 1 => by
-      rw [Nat.pow_succ, Nat.mul_two]
-      exact Nat.add_lt_add_of_lt_of_le (Nat_lt_two_pow n) Nat.one_le_two_pow
+/-- A copy of `Nat.lt_two_pow` -/
+theorem Nat_lt_two_pow : ∀ n, n < 2 ^ n := by
+  refine Nat.rec Nat.one_pos λ n h ↦ ?_
+  rw [Nat.pow_succ, Nat.mul_two]; exact Nat.add_lt_add_of_lt_of_le h Nat.one_le_two_pow
 
 theorem seed_lt_P_one (seed) : seed < P seed 1 :=
   Nat_lt_two_pow seed
@@ -105,9 +104,10 @@ theorem log2_iter_zero (seed) : log2_iter seed 0 = seed := rfl
 
 theorem log2_iter_succ (seed n) : log2_iter seed (n + 1) = log2_iter seed.log2 n := rfl
 
-theorem log2_iter_succ' (seed) : ∀ n, log2_iter seed (n + 1) = (log2_iter seed n).log2
+theorem log2_iter_add (seed n) :
+    ∀ k, log2_iter seed (n + k) = log2_iter (log2_iter seed k) n
   | 0 => rfl
-  | n + 1 => by rw [log2_iter_succ, log2_iter_succ', log2_iter_succ]
+  | k + 1 => by rw [← n.add_assoc, log2_iter_succ, log2_iter_succ, log2_iter_add]
 
 theorem log2_iter_lt_iff {seed} (hk : 0 < k) : ∀ {n}, log2_iter seed n < k ↔ seed < P k n
   | 0 => Iff.rfl
@@ -116,10 +116,16 @@ theorem log2_iter_lt_iff {seed} (hk : 0 < k) : ∀ {n}, log2_iter seed n < k ↔
 theorem log2_iter_eq_zero_iff : log2_iter seed n = 0 ↔ seed < P 1 n := by
   rw [← log2_iter_lt_iff Nat.one_pos, Nat.lt_succ, Nat.le_zero]
 
-theorem log2_iter_eq_zero_of_le (h : m ≤ n) (h0 : log2_iter seed m = 0) :
-    log2_iter seed n = 0 :=
-  log2_iter_eq_zero_iff.mpr <|
-    Nat.lt_of_lt_of_le (log2_iter_eq_zero_iff.mp h0) (P_monotone_iter 1 h)
+theorem log2_iter_monotone_seed (h : seed₁ ≤ seed₂) : ∀ n, log2_iter seed₁ n ≤ log2_iter seed₂ n
+  | 0 => h
+  | n + 1 => log2_iter_monotone_seed (log2_monotone h) n
+
+theorem log2_iter_le_self (seed) : ∀ n, log2_iter seed n ≤ seed
+  | 0 => seed.le_refl
+  | n + 1 => Nat.le_trans (log2_iter_le_self seed.log2 n) (Nat.log2_le_self seed)
+
+theorem log2_antitone_iter (seed) (h : m ≤ n) : log2_iter seed n ≤ log2_iter seed m := by
+  rw [← Nat.sub_add_cancel h, log2_iter_add]; exact log2_iter_le_self _ _
 
 
 
@@ -348,13 +354,49 @@ end isReachable
 /-! ### Final solution -/
 
 /-- Final solution -/
-theorem final_solution (hK : K = 2010 ^ 2010) :
-    isReachable (replicate 6 1) (replicate 5 0 ++ [2010 ^ K]) := by
-  refine isReachable.replicate6_ones_to_A
-    (log2_iter_eq_zero_of_le (Nat.le_add_left 6 10) ?_)
-  rw [log2_iter, log2_iter_eq_zero_iff]
-  have h : 2010 ^ K / 4 ≤ 2 ^ (11 * K) :=
-    Nat.le_trans (Nat.div_le_self _ _) (Nat.pow_mul 2 _ K ▸ Nat.pow_le_pow_left (by simp) K)
-  apply Nat.lt_of_le_of_lt (log2_monotone h)
-  rw [log2_two_pow, hK]
-  simp [P]
+theorem final_solution :
+    isReachable (replicate 6 1) (replicate 5 0 ++ [2010 ^ 2010 ^ 2010]) := by
+  refine isReachable.replicate6_ones_to_A (Nat.eq_zero_of_le_zero ?_)
+  generalize hM : 2010 = M -- Avoid computations of overly big numbers
+  replace hM : M ≤ 2 ^ 11 := hM ▸ Nat.le_add_right 2010 38
+  calc
+    _ ≤ log2_iter (2 ^ (11 * M ^ M)) 16 := by
+      refine log2_iter_monotone_seed (Nat.le_trans (Nat.div_le_self _ _) ?_) 16
+      rw [Nat.pow_mul]; exact Nat.pow_le_pow_left hM (M ^ M)
+    _ = log2_iter (11 * M ^ M) 15 := by rw [log2_iter_succ, log2_two_pow]
+    _ ≤ log2_iter (2 ^ (4 + 11 * M)) 15 := by
+      refine log2_iter_monotone_seed ?_ 15
+      rw [Nat.pow_add, Nat.pow_mul]
+      exact Nat.mul_le_mul (Nat.le_add_right 11 5) (Nat.pow_le_pow_left hM M)
+    _ = log2_iter (4 + 11 * M) 14 := by rw [log2_iter_succ, log2_two_pow]
+    _ ≤ log2_iter (2 ^ 15) 14 := by
+      refine log2_iter_monotone_seed ?_ 14; calc
+        _ ≤ 4 + 11 * 2 ^ 11 := Nat.add_le_add_left (Nat.mul_le_mul_left 11 hM) 4
+        _ ≤ 2 ^ 15 := Nat.le_add_right 22532 10236
+    _ = log2_iter 15 13 := by rw [log2_iter_succ, log2_two_pow]
+    _ ≤ log2_iter 15 3 := log2_antitone_iter 15 (Nat.le_add_right 3 10)
+    _ = 0 := by rfl
+
+
+
+  /-
+  generalize hK : 2010 ^ 2010 = K -- Avoid computations of overly big numbers
+  have X : 2010 ≤ 2 ^ 11 := Nat.le_add_right 2010 38
+  have X0 : 11 ≤ 2 ^ 4 := Nat.le_add_right 11 5
+  replace hK : (11 * K).log2 ≤ 11 * 2010 := calc
+    _ = (11 * 2010 ^ 2010).log2 := by rw [hK]
+    _ ≤ (2 ^ 4 * 2 ^ (11 * 2010)).log2 := by
+      refine log2_monotone (Nat.mul_le_mul X0 (Nat.pow_le_pow_left ?_ 2010))
+
+    _ ≤ 4 + 11 * 2010 := sorry
+  -/
+  /-
+  calc
+  _ ≤ log2_iter (2010 ^ K / 4) 6 := log2_antitone_iter _ (Nat.le_add_right 6 10)
+  _ ≤ log2_iter ((2 ^ 11) ^ K) 6 :=
+    log2_iter_monotone_seed (Nat.le_trans (Nat.div_le_self _ _) (Nat.pow_le_pow_left X K)) 6
+  _ = log2_iter (11 * K) 5 := by rw [← Nat.pow_mul, log2_iter_succ, log2_two_pow]
+  _ = log2_iter (11 * K).log2 4 := rfl
+  _ ≤
+  _ ≤ 0 := sorry
+  -/

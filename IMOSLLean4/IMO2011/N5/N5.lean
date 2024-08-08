@@ -84,6 +84,7 @@ end good
 
 
 
-/-! ### Final solution (original version) -/
+/-! ### Final solution -/
 
+/-- Final solution -/
 alias final_solution := good.map_dvd_of_le

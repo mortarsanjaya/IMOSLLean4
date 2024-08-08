@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A6.A6Lemmas.Basic
-import Mathlib.Algebra.Field.Basic
+import Mathlib.Algebra.Field.Defs
 
 /-!
 # IMO 2017 A6 (P2, Good functions over a division ring)
@@ -25,7 +25,7 @@ theorem DivRing_inv_formula {c : F} (h : c ≠ 0) : f (f (c + 1) * f (c⁻¹ + 1
     mul_add_one c, mul_inv_cancel h, add_comm 1]
 
 /-- Good functions on division rings: either `0` or reduced -/
-theorem DivRing_zero_or_reduced : f = 0 ∨ ReducedGood f := by
+theorem DivRing_zero_or_reduced : f = (λ _ ↦ 0) ∨ ReducedGood f := by
   apply (em (∃ c, c ≠ 0 ∧ f (c + 1) = 0)).imp
   -- Case 1: `f(c + 1) = 0` for some `c ≠ 0`
   · rintro ⟨c, h, h0⟩
@@ -38,5 +38,5 @@ theorem DivRing_zero_or_reduced : f = 0 ∨ ReducedGood f := by
     rw [sub_add_comm, h0, sub_add_cancel, hf.map_one_eq_zero]
 
 /-- The `↔` version of `DivRing_zero_or_reduced` -/
-theorem DivRing_iff_zero_or_reduced : good f ↔ f = 0 ∨ ReducedGood f :=
+theorem DivRing_iff_zero_or_reduced : good f ↔ (f = λ _ ↦ 0) ∨ ReducedGood f :=
   ⟨DivRing_zero_or_reduced, λ h ↦ h.elim (λ hf ↦ hf ▸ zero_is_good) ReducedGood.is_good⟩

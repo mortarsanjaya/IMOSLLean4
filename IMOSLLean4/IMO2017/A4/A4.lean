@@ -5,19 +5,21 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.NatSequence.SeqMax
-import Mathlib.Algebra.Order.Group.Abs
-import Mathlib.Algebra.Order.Group.Nat
+import Mathlib.Algebra.Order.Group.Defs
+import Mathlib.Algebra.Order.Group.Unbundled.Abs
+import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 
 /-!
 # IMO 2017 A4
 
 Let $G$ be a totally ordered abelian group and let $D$ be a natural number.
-A sequence $(a_n)\_{n ≥ 0}$ of elements of $G$ satisfies the following properties:
+A sequence $(a_n)_{n ≥ 0}$ of elements of $G$ satisfies the following properties:
 * for any $i, j ∈ ℕ$ with $i + j ≥ D$, we have $a_{i + j + 1} ≤ -a_i - a_j$,
 * for any $n ≥ D$, there exists $i, j ∈ ℕ$ such that
     $i + j = n$ and $a_{n + 1} = -a_i - a_j$.
-Prove that $(a_n)\_{n ≥ 0}$ is bounded.
-Explicitly, prove that $|a_n| ≤ 2 \max\\{B, C - B\\}$, where
+
+Prove that $(a_n)_{n ≥ 0}$ is bounded.
+Explicitly, prove that $|a_n| ≤ 2 \max\{B, C - B\}$, where
   $B = \max_{n ≤ D} a_n$ and $C = \max_{n ≤ D} (-a_n)$.
 -/
 
@@ -31,8 +33,8 @@ variable [LinearOrderedAddCommGroup G]
 abbrev good1 (D : ℕ) (a : ℕ → G) :=
   ∀ i j : ℕ, D ≤ i + j → a (i + j + 1) ≤ -(a i + a j)
 
-abbrev good2 (D : ℕ) (a : ℕ → G) :=
-  ∀ n : ℕ, D ≤ n → ∃ i j : ℕ, i + j = n ∧ a (n + 1) = -(a i + a j)
+abbrev good2 {G} [AddCommGroup G] (D : ℕ) (a : ℕ → G) :=
+  ∀ n ≥ D, ∃ i j : ℕ, i + j = n ∧ a (n + 1) = -(a i + a j)
 
 
 
@@ -43,7 +45,7 @@ abbrev good2 (D : ℕ) (a : ℕ → G) :=
 theorem abs_le_max_seqMax (a : ℕ → G) (n : ℕ) :
     |a n| ≤ max (Extra.seqMax (-a) n) (2 • Extra.seqMax a n) := by
   rw [le_max_iff]; refine (le_total (a n) 0).imp (λ h ↦ ?_) (λ h ↦ ?_)
-  · rw [abs_of_nonpos h]; exact Extra.le_seqMax_self (-a) n
+  · exact (abs_of_nonpos h).trans_le (Extra.le_seqMax_self (-a) n)
   · rw [abs_of_nonneg h, two_nsmul]
     have h0 := Extra.le_seqMax_self a n
     exact le_add_of_le_of_nonneg h0 (h.trans h0)
@@ -51,7 +53,7 @@ theorem abs_le_max_seqMax (a : ℕ → G) (n : ℕ) :
 theorem good1_bdd_above {a : ℕ → G} (h : good1 D a) (h0 : D ≤ n) :
     a (n + 1) ≤ Extra.seqMax (-a) n - Extra.seqMax a n := by
   rcases Extra.exists_map_eq_seqMax a n with ⟨i, h2, h1⟩
-  rw [le_iff_exists_add] at h2; rcases h2 with ⟨j, rfl⟩
+  obtain ⟨j, rfl⟩ : ∃ j, n = i + j := Nat.exists_eq_add_of_le h2
   apply (h i j h0).trans
   rw [← h1, neg_add_rev, ← sub_eq_add_neg]
   exact sub_le_sub_right (Extra.le_seqMax_of_le (-a) (j.le_add_left i)) (a i)
@@ -123,7 +125,7 @@ end SeqMax
 
 
 
-/-! ## Final solution -/
+/-! ### Final solution -/
 
 /-- Final solution -/
 theorem final_solution {a : ℕ → G} (h : good1 D a) (h0 : good2 D a) (n : ℕ) :

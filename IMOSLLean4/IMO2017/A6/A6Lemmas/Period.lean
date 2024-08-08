@@ -12,6 +12,11 @@ import Mathlib.RingTheory.Congruence.Basic
 
 Let `f : R → R` be a good function and `I = {c : R | f(x + c) = f(x)}`.
 Then `I` is a double-sided ideal, and the induced function `R/I → R/I` is reduced good.
+
+### Implementation details
+
+Instead of using ideals explicitly, we use the `RingCon` API.
+The `RingCon` relation is implemented as `good.toRingCon`.
 -/
 
 namespace IMOSL

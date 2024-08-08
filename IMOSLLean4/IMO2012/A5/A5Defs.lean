@@ -15,9 +15,14 @@ $$ f(xy + 1) = f(x) f(y) + f(x + y). $$
 
 This file defines the functional equation and prove some basic properties.
 We also define some notions; we say that $f$ is
-* *good* if it satisfies the above functional equation;
-* *non-trivial good* if $f$ is good and $f(0) = -1$ (which implies $f(1) = 0$);
-* *reduced good* if $f$ is non-trivial good and there is no non-zero $f$-periodic element.
+* `good` if it satisfies the above functional equation;
+* `NontrivialGood` if $f$ is good and $f(0) = -1$;
+* `ReducedGood` if $f$ is non-trivial good and there is no non-zero $f$-periodic element.
+
+The `NontrivialGood` functions are defined in the folder `A5Answers`.
+They file `IMOSLLean4/IMO2012/A5/A5Answers/Common.lean` collects all these functions.
+The file `IMOSLLean4/IMO2012/A5/A5.lean` proves that these are
+  precisely the good functions, up to ring homomorphism.
 -/
 
 namespace IMOSL

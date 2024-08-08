@@ -10,8 +10,7 @@ import Mathlib.Algebra.Order.Floor
 /-!
 # IMO 2010 A1 (P1) (Integer/monoid case)
 
-Let $M$ be a monoid and $R$ be a totally ordered ring with floor.
-(Ree mathlib's `FloorRing`.)
+Let $M$ be a monoid and $R$ be a totally ordered ring with floor. (See `FloorRing`.)
 Find all functions $f : M → R$ such that, for any $x, y ∈ M$,
 $$ f(xy) = f(x) ⌊f(y)⌋. $$
 -/
@@ -40,7 +39,7 @@ lemma one_add_infinitesimal_mul_is_MonoidGood
   rw [φ.map_mul, nsmul_eq_mul', Nat.cast_mul, ← mul_assoc, nsmul_eq_mul']; apply congrArg
   rw [nsmul_add, nsmul_one, Int.floor_nat_add, Int.cast_add, Int.cast_natCast,
     self_eq_add_right, Int.cast_eq_zero, Int.floor_eq_zero_iff]
-  exact ⟨nsmul_nonneg h _, abs_eq_self.mpr h ▸ h0 (φ n)⟩
+  exact ⟨nsmul_nonneg h _, abs_of_nonneg h ▸ h0 (φ n)⟩
 
 lemma indicator_const_is_good {A : Set M} [DecidablePred (· ∈ A)]
     (h : ∀ m n : M, m * n ∈ A ↔ m ∈ A ∧ n ∈ A) (h0 : ⌊(C : R)⌋ = 1) :
@@ -142,7 +141,7 @@ lemma case_fract_map_one_big (h1 : ¬Infinitesimal (Int.fract (f 1))) :
     · rw [h3, zero_nsmul, if_neg (· rfl)]
     · rw [h3, one_nsmul, if_pos Nat.one_ne_zero]
   ---- Next, change the hypothesis `h2`
-  rw [Infinitesimal, abs_eq_self.mpr (Int.fract_nonneg _)] at h1
+  rw [Infinitesimal, abs_of_nonneg (Int.fract_nonneg _)] at h1
   replace h2 (x) : φ x • Int.fract (f 1) < 1 := by
     have h3 := (h2 x).symm.trans (map_eq_map_one_mul_floor hf x)
     rw [nsmul_eq_mul', ← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero] at h3

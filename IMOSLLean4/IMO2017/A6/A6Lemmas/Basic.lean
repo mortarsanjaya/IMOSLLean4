@@ -11,8 +11,8 @@ import Mathlib.Algebra.Group.Basic
 # IMO 2017 A6 (P2, Basic properties)
 
 We prove basic properties of good functions.
-This file is separated from `A6Defs.lean` since it uses an extra import:
-  `Mathlib.Algebra.Group.Basic`.
+This file is separated from `IMOSLLean4/IMO2012/A6/A6Defs.lean`
+  since it uses an extra import: `Mathlib/Algebra/Group/Basic.lean`.
 -/
 
 namespace IMOSL

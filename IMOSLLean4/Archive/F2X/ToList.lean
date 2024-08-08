@@ -8,10 +8,10 @@ import IMOSLLean4.Archive.F2X.Defs
 import Mathlib.Data.Finset.Sort
 
 /-!
-# List representation of `𝔽₂[X]`
+# List representation of `𝔽₂X`
 
-We provide a list representation of `𝔽₂[X]` and related constructions.
-In particular, `Repr` instance for `𝔽₂[X]` is given here.
+We provide a list representation of `𝔽₂X` and related constructions.
+In particular, `Repr` instance for `𝔽₂X` is given here.
 
 ### Implementation details
 
@@ -24,14 +24,14 @@ namespace 𝔽₂X
 
 open Extra
 
-/-- List representation of `𝔽₂[X]` -/
+/-- List representation of `𝔽₂X` -/
 protected def toList (P : 𝔽₂X) := P.toFinset.sort GE.ge
 
 protected lemma toFinset_toList (P : 𝔽₂X) : P.toList.toFinset = P.toFinset :=
   P.toFinset.sort_toFinset _
 
 protected lemma toList_inj {P Q : 𝔽₂X} : P.toList = Q.toList ↔ P = Q :=
-  ⟨λ h ↦ 𝔽₂X.ext _ _ <| by rw [← 𝔽₂X.toFinset_toList, h, 𝔽₂X.toFinset_toList],
+  ⟨λ h ↦ 𝔽₂X.ext (by rw [← 𝔽₂X.toFinset_toList, h, 𝔽₂X.toFinset_toList]),
   congrArg 𝔽₂X.toList⟩
 
 

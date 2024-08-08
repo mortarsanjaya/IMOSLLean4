@@ -8,9 +8,9 @@ import IMOSLLean4.IMO2012.A5.A5Defs
 import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.F2e
 
 /-!
-# IMO 2012 A5 (𝔽₂εMap)
+# IMO 2012 A5 (`𝔽₂εMap`)
 
-We define `𝔽₂εMap : 𝔽₂[ε] → ℤ` and prove that it is a good map.
+We define `𝔽₂εMap : 𝔽₂ε → ℤ` and prove that it is a good map.
 -/
 
 namespace IMOSL

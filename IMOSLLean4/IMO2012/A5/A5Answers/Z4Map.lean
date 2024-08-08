@@ -8,7 +8,7 @@ import IMOSLLean4.IMO2012.A5.A5Defs
 import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.Z4
 
 /-!
-# IMO 2012 A5 (ℤ₄Map)
+# IMO 2012 A5 (`ℤ₄Map`)
 
 We define `ℤ₄Map : ℤ₄ → ℤ` and prove that it is a good map.
 -/

@@ -1,0 +1,53 @@
+Let $a, b \in \N$ such that $a! + b! \mid a! b!$.
+Prove that $3a \geq 2b + 2$, and find all the equality cases.
+
+
+
+\subsection*{Answer}
+
+Equality holds iff $(a, b) \in \{(2, 2), (4, 5)\}$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2015SL.pdf}
+
+We present Solution 1 of the official solution below.
+The original problem only asks to prove the inequality, but the equality case comes naturally afterwards.
+
+Clearly, $b! > 1$, so $b \geq 2$.
+If $a > b$, then the inequality $3a > 2b + 2$ is obvious.
+So now, assume that $a \leq b$, and write $b = a + c$ for some $c \in \N$ positive.
+It now suffices to show that $a \geq 2c + 2$ and work on the equality case.
+
+Clearly, $a! + b! \mid a! b!$ implies $a! + b! \mid (a!)^2$.
+Then $a! + b! = a! + (a + c)! = a!$ divide $(a!)^2$.
+This simplifies to
+\[ 1 + \binom{a + c}{c} c! = 1 + (a + 1)(a + 2) \ldots (a + c) \mid a!. \]
+Clearly, $a > c$, and the above also means that
+\[ 1 + (a + 1)(a + 2) \ldots (a + c) \mid (c + 1)(c + 2) \ldots a, \tag{1}\label{2015n2-eq1} \]
+    since the divisor is coprime with $1, 2, \ldots, c$.
+Now this implies the inequality
+\[ (a + 1)(a + 2) \ldots (a + c) < (c + 1)(c + 2) \ldots a. \]
+
+Clearly, this fails if $a \leq 2c$.
+Next, consider the case $a = 2c + 1$.
+Then $a + 1 = 2(c + 1)$, so the factor $c + 1$ on the right hand side of~\eqref{2015n2-eq1} can be cancelled out.
+Now the divisibility implies
+\[ (a + 1)(a + 2) \ldots (a + c) < (a - c + 1) \ldots a, \]
+    which is again a contradiction.
+
+Finally, consider the case $a = 2c + 2$.
+Plugging into~\eqref{2015n2-eq1} yields
+\[ 1 + (2c + 3)(2c + 4) \ldots (3c + 2) \mid (c + 1)(c + 2) \ldots (2c + 2). \]
+It is easy to check that $c = 0$ works (with the product on the LHS taken to be $1$).
+It is also easy to check that $c = 1$ works, so it remains to show that $c \leq 1$.
+
+Suppose for the sake of contradiction that $c \geq 2$.
+For $c = 2$, we would have $57 \mid 360$; a contradiction.
+For $c \geq 3$, we claim that $(c + 2)(c + 3)$ divides $(2c + 3)(2c + 4) \ldots (3c + 2)$.
+This can be checked manually for $c = 3$, and both $2c + 4$ and $2c + 6$ appear as factors on the right hand side if $c \geq 4$.
+As a result, the above divisibility reduces to
+\[ 1 + (2c + 3)(2c + 4) \ldots (3c + 2) \mid (c + 1)(c + 4)(c + 5) \ldots (2c + 2). \]
+But the left hand side is greater than the right hand side; contradiction.

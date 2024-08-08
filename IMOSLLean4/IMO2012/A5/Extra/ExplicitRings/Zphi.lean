@@ -7,13 +7,14 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Tactic.Ring
 
 /-!
-# Explicit construction of ℤ[φ]
+# Explicit construction of `ℤφ`
 
-In this file, we explicitly construct the ring `ℤ[φ]`, where `φ = (1 + √5)/2`.
+In this file, we explicitly construct the ring $ℤ[\phi]$,
+  denoted `ℤφ`, where $φ = \frac{1 + \sqrt{5}}{2}$.
 We prove just the necessary properties for the purpose of the main problem.
 
 TODO:
-* Remove the need for `ring` tactic in `mul_assoc` if possible.
+* Remove the need for `ring` tactic in `ℤφ.mul_assoc` if possible.
 -/
 
 namespace IMOSL
@@ -63,20 +64,19 @@ lemma mul_def (a b a' b' : ℤ) :
 /-! ### `ℤ[φ]` is a commutative group -/
 
 protected theorem add_zero : ∀ x : ℤφ, x + 0 = x
-  | ⟨a, b⟩ => ℤφ.ext _ _ a.add_zero b.add_zero
+  | ⟨a, b⟩ => ℤφ.ext a.add_zero b.add_zero
 
 protected theorem zero_add : ∀ x : ℤφ, 0 + x = x
-  | ⟨a, b⟩ => ℤφ.ext _ _ a.zero_add b.zero_add
+  | ⟨a, b⟩ => ℤφ.ext a.zero_add b.zero_add
 
 protected theorem add_comm : ∀ x y : ℤφ, x + y = y + x
-  | ⟨a, b⟩, ⟨a', b'⟩ => ℤφ.ext _ _ (a.add_comm a') (b.add_comm b')
+  | ⟨a, b⟩, ⟨a', b'⟩ => ℤφ.ext (a.add_comm a') (b.add_comm b')
 
 protected theorem add_assoc : ∀ x y z : ℤφ, x + y + z = x + (y + z)
-  | ⟨a, b⟩, ⟨a', b'⟩, ⟨a'', b''⟩ =>
-      ℤφ.ext _ _ (a.add_assoc a' a'') (b.add_assoc b' b'')
+  | ⟨a, b⟩, ⟨a', b'⟩, ⟨a'', b''⟩ => ℤφ.ext (a.add_assoc a' a'') (b.add_assoc b' b'')
 
 protected theorem add_left_neg : ∀ x : ℤφ, -x + x = 0
-  | ⟨a, b⟩ => ℤφ.ext _ _ a.add_left_neg b.add_left_neg
+  | ⟨a, b⟩ => ℤφ.ext a.add_left_neg b.add_left_neg
 
 instance : AddCommGroup ℤφ :=
   { add_assoc := ℤφ.add_assoc

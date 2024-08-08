@@ -88,7 +88,6 @@ theorem final_solution (h : card S = 4) (h0 : S.sum = 6) (h1 : (S.map λ x ↦ x
     rw [hB, hC]; norm_num
   ---- Upper bound
   · have h2 : _ ^ 2 ≤ _ • (_ - _) := final_solution_upper_bound S
-    have h3 : (0 : R) < 4 := zero_lt_four
     rw [hB, hC, h, nsmul_eq_mul, Nat.cast_ofNat, sq,
-      mul_le_mul_iff_of_pos_left h3, le_sub_iff_add_le, ← le_sub_iff_add_le'] at h2
+      mul_le_mul_iff_of_pos_left zero_lt_four, le_sub_iff_add_le, ← le_sub_iff_add_le'] at h2
     apply h2.trans_eq; norm_num

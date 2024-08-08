@@ -11,8 +11,7 @@ import Mathlib.Algebra.Ring.Equiv
 /-!
 # IMO 2010 A1 (P1)
 
-Let $R$ and $S$ be totally ordered rings with floor.
-(See mathlib's `FloorRing`.)
+Let $R$ and $S$ be totally ordered rings with floor. (See `FloorRing`.)
 Find all functions $f : R → S$ such that, for any $x, y ∈ R$,
 $$ f(⌊x⌋ y) = f(x) ⌊f(y)⌋. $$
 -/
