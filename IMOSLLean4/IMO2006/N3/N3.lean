@@ -96,25 +96,25 @@ theorem f_succ_lt_self_of_succ_prime_large (h : 6 ≤ n) (h0 : n.succ.Prime) :
 /-! ### Final solution -/
 
 /-- Final solution, part 1 -/
-theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite :=
-  Set.infinite_of_forall_exists_gt λ N ↦ by
-    obtain ⟨n, h0, h1⟩ : ∃ n : ℕ, N < n ∧
-        ∀ k : ℕ, k < n → k.succ.divisors.card < n.succ.divisors.card := by
-      obtain ⟨K, h0⟩ : ∃ K : ℕ, ∀ k : ℕ, k ≤ N → k.succ.divisors.card ≤ K :=
-        ⟨Extra.seqMax (λ n ↦ n.succ.divisors.card) N,
-        λ _ ↦ Extra.le_seqMax_of_le (λ n ↦ n.succ.divisors.card)⟩
-      have h1 := exists_lt_card_divisor_succ K
-      exact ⟨Nat.find h1,
-        (Nat.lt_find_iff h1 _).mpr λ k h2 ↦ (h0 k h2).not_lt,
-        λ k h2 ↦ (le_of_not_lt (Nat.find_min h1 h2)).trans_lt (Nat.find_spec h1)⟩
-    exact ⟨n, f_self_lt_f_succ_of_divisors_card (Nat.not_eq_zero_of_lt h0) h1, h0⟩
+theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite := by
+  refine Set.infinite_of_forall_exists_gt λ N ↦ ?_
+  obtain ⟨n, h0, h1⟩ : ∃ n : ℕ, N < n ∧
+      ∀ k : ℕ, k < n → k.succ.divisors.card < n.succ.divisors.card := by
+    obtain ⟨K, h0⟩ : ∃ K : ℕ, ∀ k : ℕ, k ≤ N → k.succ.divisors.card ≤ K :=
+      ⟨Extra.seqMax (λ n ↦ n.succ.divisors.card) N,
+      λ _ ↦ Extra.le_seqMax_of_le (λ n ↦ n.succ.divisors.card)⟩
+    have h1 := exists_lt_card_divisor_succ K
+    exact ⟨Nat.find h1,
+      (Nat.lt_find_iff h1 _).mpr λ k h2 ↦ (h0 k h2).not_lt,
+      λ k h2 ↦ (le_of_not_lt (Nat.find_min h1 h2)).trans_lt (Nat.find_spec h1)⟩
+  exact ⟨n, f_self_lt_f_succ_of_divisors_card (Nat.not_eq_zero_of_lt h0) h1, h0⟩
 
 /-- Final solution, part 2 -/
-theorem final_solution_part2 : {n : ℕ | f n.succ < f n}.Infinite :=
-  Set.infinite_of_forall_exists_gt λ N ↦ by
-    obtain ⟨n, h, h0, h1⟩ : ∃ n, 6 ≤ n ∧ n.succ.Prime ∧ N < n := by
-      rcases (max 6 (N + 1) + 1).exists_infinite_primes with ⟨_ | n, h, h0⟩
-      · exact absurd h0 Nat.not_prime_zero
-      · rw [Nat.add_le_add_iff_right, max_le_iff] at h
-        exact ⟨n, h.1, h0, h.2⟩
-    exact ⟨n, f_succ_lt_self_of_succ_prime_large h h0, h1⟩
+theorem final_solution_part2 : {n : ℕ | f n.succ < f n}.Infinite := by
+  refine Set.infinite_of_forall_exists_gt λ N ↦ ?_
+  obtain ⟨n, h, h0, h1⟩ : ∃ n, 6 ≤ n ∧ n.succ.Prime ∧ N < n := by
+    rcases (max 6 (N + 1) + 1).exists_infinite_primes with ⟨_ | n, h, h0⟩
+    · exact absurd h0 Nat.not_prime_zero
+    · rw [Nat.add_le_add_iff_right, max_le_iff] at h
+      exact ⟨n, h.1, h0, h.2⟩
+  exact ⟨n, f_succ_lt_self_of_succ_prime_large h h0, h1⟩
