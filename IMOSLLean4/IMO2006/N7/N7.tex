@@ -1,0 +1,39 @@
+Prove that for any $b \in \N$ and $n \in \N^+$, there exists $m \in \N$ such that $n \mid b^m + m$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2006SL.pdf}
+
+We follow the official solution, which proves something stronger.
+However, considering $d = \gcd(k, n)$ is \emph{not} necessary at all.
+We will not use $d$ in this solution.
+
+We claim that for any $n \in \N^+$ and $N, r \in \N$, there exists $m \geq N$ such that $b^m + m \equiv r \pmod{n}$.
+We proceed by induction on $n$, with the base case $n = 1$ obvious.
+Now fix some $n$ and suppose the result holds for all smaller $n$.
+
+By pigeonhole principle, there exists $0 \leq M < M + k \leq n$ such that $b^{M + k} \equiv b^M \pmod{n}$.
+In fact, $k < n$ is possible; $k = 1$ works if $n$ is a power of $b$.
+Otherwise there are at most $n - 1$ residues to deal with and thus some $k < n$ works by pigeonhole principle.
+
+Now fix $N, r \in \N$.
+By induction hypothesis, there exists $m' \geq \max\{M, N\}$ such that $b^{m'} + m' \equiv r \pmod{k}$.
+Then there exists some $t \in \N$ such that $b^{m'} + m' \equiv r + kt \pmod{n}$.\footnote{
+    This does not require $k \mid n$, which is the reason using $\gcd(k, n)$ is unnecessary.
+    Admittedly, using $\gcd(k, n)$ gives a less confusing proof.}
+Note that $b^{m' + k} \equiv b^{m'} \pmod{n}$ since $m' \geq M$.
+By induction, we get $b^{m' + ks} \equiv b^{m'} \pmod{n}$ for any $s \in \N$.
+Now choose any $s$ such that $k \mid t + s$.
+Taking $m = m' + ks$ gives 
+\[ b^m + m \equiv b^{m'} + (m' + sk) \equiv r + k(t + s) \equiv r \pmod{n}. \]
+Induction step is complete.
+The claim has been proved.
+
+
+
+\subsection*{Extra notes}
+
+The original version only considers $b = 2$.
+However, the proof works for all values of $b$.
