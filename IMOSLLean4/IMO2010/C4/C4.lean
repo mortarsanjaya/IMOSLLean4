@@ -376,27 +376,3 @@ theorem final_solution :
     _ = log2_iter 15 13 := by rw [log2_iter_succ, log2_two_pow]
     _ ≤ log2_iter 15 3 := log2_antitone_iter 15 (Nat.le_add_right 3 10)
     _ = 0 := by rfl
-
-
-
-  /-
-  generalize hK : 2010 ^ 2010 = K -- Avoid computations of overly big numbers
-  have X : 2010 ≤ 2 ^ 11 := Nat.le_add_right 2010 38
-  have X0 : 11 ≤ 2 ^ 4 := Nat.le_add_right 11 5
-  replace hK : (11 * K).log2 ≤ 11 * 2010 := calc
-    _ = (11 * 2010 ^ 2010).log2 := by rw [hK]
-    _ ≤ (2 ^ 4 * 2 ^ (11 * 2010)).log2 := by
-      refine log2_monotone (Nat.mul_le_mul X0 (Nat.pow_le_pow_left ?_ 2010))
-
-    _ ≤ 4 + 11 * 2010 := sorry
-  -/
-  /-
-  calc
-  _ ≤ log2_iter (2010 ^ K / 4) 6 := log2_antitone_iter _ (Nat.le_add_right 6 10)
-  _ ≤ log2_iter ((2 ^ 11) ^ K) 6 :=
-    log2_iter_monotone_seed (Nat.le_trans (Nat.div_le_self _ _) (Nat.pow_le_pow_left X K)) 6
-  _ = log2_iter (11 * K) 5 := by rw [← Nat.pow_mul, log2_iter_succ, log2_two_pow]
-  _ = log2_iter (11 * K).log2 4 := rfl
-  _ ≤
-  _ ≤ 0 := sorry
-  -/
