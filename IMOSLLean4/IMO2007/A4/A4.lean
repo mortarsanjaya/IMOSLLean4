@@ -90,8 +90,7 @@ lemma posSubtypeExt_spec (f : {x : G // 0 < x} → {x : G // 0 < x}) (x : {x : G
     posSubtypeExt f x.1 = f x :=
   dif_pos _
 
-def good (f : {x : G // 0 < x} → {x : G // 0 < x}) :=
-  ∀ x y, f (x + f y) = f (x + y) + f y
+def good [Add G] (f : G → G) := ∀ x y, f (x + f y) = f (x + y) + f y
 
 lemma good_iff_posSubtypeExt_weakGood {f : {x : G // 0 < x} → {x : G // 0 < x}} :
     good f ↔ weakGood (posSubtypeExt f) :=
