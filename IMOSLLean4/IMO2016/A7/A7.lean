@@ -12,7 +12,7 @@ import Mathlib.Algebra.Ring.Commute
 
 Let $R$ be a ring and $S$ be a totally ordered commutative ring.
 Find all functions $f : R → S$ such that, for any $x, y ∈ R$,
-$$ f(x + y)^2 = 2 f(x) f(y) + \max\\{f(x^2) + f(y^2), f(x^2 + y^2)\\}. $$
+$$ f(x + y)^2 = 2 f(x) f(y) + \max\{f(x^2) + f(y^2), f(x^2 + y^2)\}. $$
 -/
 
 namespace IMOSL
