@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Algebra.Order.Ring.Int
 import Mathlib.Data.Int.GCD
 import Mathlib.Tactic.Ring
 
