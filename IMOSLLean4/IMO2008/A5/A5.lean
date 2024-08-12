@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Tactic.Ring
+import Mathlib.Algebra.Order.Field.Defs
+import Mathlib.Algebra.Order.Field.Unbundled.Basic
+import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # IMO 2008 A5
@@ -76,7 +77,14 @@ lemma main_ineq : 4 * (a + b + c + d) ≤
     · rw [mul_comm, ← mul_assoc, ← mul_assoc, h]
     · rw [mul_assoc, mul_comm, ← mul_assoc, h]
     · rw [mul_rotate d, mul_right_comm, h]
-  _ = _ := by ring
+  _ = _ := by
+    rw [add_add_add_comm (2 * _), ← mul_add, add_add_add_comm (2 * _),
+      ← mul_add, add_add_add_comm (2 * _), ← mul_add, add_add_add_comm (b / c),
+      add_add_add_comm (b / c + c / d), add_add_add_comm (_ + _ + _),
+      ← two_add_one_eq_three, add_one_mul, add_assoc (2 * _), add_right_inj]
+    refine congrArg₂ _ ?_ ?_
+    · rw [add_comm, ← add_assoc, ← add_assoc]
+    · rw [add_rotate (a / d), add_right_comm]
 
 /-- Final solution -/
 theorem final_solution (h0 : a / b + b / c + c / d + d / a < a + b + c + d) :
