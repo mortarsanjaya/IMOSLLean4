@@ -1,0 +1,31 @@
+Let $m$ and $n > 1$ be positive integers such that $k \mid m$ for all $k \in \N^+$ with $n \leq k < 2n$.
+Prove that $L - 1$ is not a power of $2$, where
+\[ L = \prod_{k = n}^{2n - 1} \left(\frac{m}{k} + 1\right). \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2015SL.pdf}
+
+We follow the official solution, with slight modification.
+
+Let $S_n = \{n, n + 1, \ldots, 2n - 1\}$.
+The set $S_n$ contains a unique power of $2$, say $2^t$, where $t = \lceil \log_2 n \rceil$.
+For all $k \in S_n$, we have $\nu_2(k) \leq t$, with equality iff $k = 2^t$.
+Let $N = \nu_2(m) - t$, which is non-negative since $2^t \mid m$.
+Then we have $\nu_2(m/k) \geq N$, with equality iff $k = 2^t$.
+In particular, $2^{N + 1}$ divides $m/k$ for all $k \in S_n$ except when $k = 2^t$.
+As a result, $2^{N + 1} \mid L' - 1$, where
+\[ L' := \prod_{\substack{k \in S_n \\ k \neq 2^t}} \left(\frac{m}{k} + 1\right). \]
+Since $L = L' (m/2^t + 1)$ and $2^{N + 1} \nmid m/2^t$, we get $2^{N + 1} \nmid L - 1$.
+
+If $L - 1$ is a power of $2$, then $L - 1 \leq 2^N$.
+On the other hand, $m/2^t \geq 2^N$, and since $n > 1$, we have $L > 2^N$.
+A contradiction, so $L - 1$ is not a power of $2$.
+
+
+
+\subsection*{Extra notes}
+
+The original formulation is equivalent to this formulation by changing $n$ to $n - 1$ and $m$ to $m + n$.
