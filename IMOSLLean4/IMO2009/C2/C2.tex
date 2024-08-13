@@ -1,0 +1,77 @@
+For any $k \in \N$, denote $[k] = \{0, 1, \ldots, k - 1\}$.
+For each $n \in \N$, find the largest integer $k$ such that the following holds: there exists injective functions $a_1, a_2, a_3 : [k] \to \N$ such that $a_1(i) + a_2(i) + a_3(i) = n$ for all $i \in [k]$.
+
+
+
+\subsection*{Answer}
+
+$\lfloor 2n/3 \rfloor + 1$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+The following solution is pretty much a copy of the official solution.
+
+First, fix $k$ and suppose that such $a_1, a_2, a_3$ exists.
+For each $j = 1, 2, 3$, since $a_j$ is injective, the image of $a_j$ is a finite set of non-negative integers of size $k$.
+As a result,
+\[ \sum_{i \in [k]} a_j(i) \geq \sum_{x = 0}^{k - 1} x = \binom{k}{2}. \]
+Adding the equality across all $j = 1, 2, 3$ yields
+\[ kn \geq 3 \binom{k}{2} \iff 2n \geq 3(k - 1) \iff \lfloor 2n/3 \rfloor + 1. \]
+This proves the upper bound.
+The constructions for the equality case are given below.
+
+\begin{table}[H]
+\centering
+\begin{minipage}{.3\linewidth}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{$n = 3k$} \\ \hline
+        $a_1$ & $a_2$ & $a_3$ \\ \hline
+        $0$ & $k$ & $2k$ \\ \hline
+        $1$ & $k + 1$ & $2(k - 1)$ \\ \hline
+        $\vdots$ & $\vdots$ & $\vdots$ \\ \hline
+        $k$ & $2k$ & $0$ \\ \hline
+        $k + 1$ & $0$ & $2k - 1$ \\ \hline
+        $k + 2$ & $1$ & $2k - 3$ \\ \hline
+        $\vdots$ & $\vdots$ & $\vdots$ \\ \hline
+        $2k$ & $k - 1$ & $1$ \\ \hline
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{.3\linewidth}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{$n = 3k + 1$} \\ \hline
+        $a_1$ & $a_2$ & $a_3$ \\ \hline
+        $0$ & $k$ & $2k + 1$ \\ \hline
+        $1$ & $k + 1$ & $2(k - 1) + 1$ \\ \hline
+        $\vdots$ & $\vdots$ & $\vdots$ \\ \hline
+        $k$ & $2k$ & $1$ \\ \hline
+        $k + 1$ & $0$ & $2k$ \\ \hline
+        $k + 2$ & $1$ & $2k - 2$ \\ \hline
+        $\vdots$ & $\vdots$ & $\vdots$ \\ \hline
+        $2k$ & $k - 1$ & $2$ \\ \hline
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{.3\linewidth}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{$n = 3k + 2$} \\ \hline
+        $a_1$ & $a_2$ & $a_3$ \\ \hline
+        $0$ & $k + 2$ & $2k$ \\ \hline
+        $1$ & $k + 3$ & $2(k - 1)$ \\ \hline
+        $\vdots$ & $\vdots$ & $\vdots$ \\ \hline
+        $k$ & $2(k + 1)$ & $0$ \\ \hline
+        $k + 1$ & $0$ & $2k + 1$ \\ \hline
+        $k + 2$ & $1$ & $2k - 1$ \\ \hline
+        $\vdots$ & $\vdots$ & $\vdots$ \\ \hline
+        $2k + 1$ & $k$ & $1$ \\ \hline
+    \end{tabular}
+\end{minipage}
+\end{table}
