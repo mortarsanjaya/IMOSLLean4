@@ -1,0 +1,90 @@
+Fix a domain $R$.
+Find all functions $f : R \to R$ such that, for all $x, y \in R$,
+\[ f(x f(x + y)) = f(f(x) y) + x^2. \tag{*}\label{2009a7-eq0} \]
+
+
+
+\subsection*{Answer}
+
+The identity map ($x \mapsto x$) and $x \mapsto -x$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+For the case $\rchar(R) \neq 2$, the majority of the solution below follows Solution 2 of the official solution.
+However, we will not follow the official solution for proving $f(0) = 0$ and that $f$ is injective.
+We will also proceed with our own solution for the case $\rchar(R) = 2$.
+Note that clearly, $x \mapsto x$ and $x \mapsto -x$ satisfies~\eqref{2009a7-eq0}.
+
+We start by collecting some easy properties to prove.
+First, plugging $(x, y) = (0, f(f(0)))$ into~\eqref{2009a7-eq0} yields $f(f(0) f(f(0))) = f(0)$.
+Then plugging $(x, y) = (f(0), 0)$ into~\eqref{2009a7-eq0} yields $f(0) = f(0) + f(0)^2 \implies f(0) = 0$.
+Next, plugging $y = 0$ into~\eqref{2009a7-eq0}, for any $x \in R$, we have
+\[ f(x f(x)) = x^2. \tag{1}\label{2009a7-eq1} \]
+
+We now prove that $f$ is injective.
+Before that, note that for any $x \in R$, by~\eqref{2009a7-eq1}, $f(x) = 0$ implies $x = 0$.
+Now, suppose that $f(x) = f(y)$ for some $x, y \in R$.
+Then~\eqref{2009a7-eq1} and~\eqref{2009a7-eq0} yields
+\[ x^2 = f(x f(x)) = f(x f(y)) = f(f(x) (y - x)) + x^2 \implies f(x) (y - x) = 0. \]
+Thus, we get either $x = 0$ or $x = y$.
+The former implies $f(y) = f(0) = 0$ and then $y = 0$.
+Either way, we get $x = y$, as desired.
+
+Next, we prove that $f$ is odd and $f(1)^2 = 1$.
+For any $x \in R$, by~\eqref{2009a7-eq1}, we have $f(x f(x)) = x^2 = f(-x f(-x))$, so $x f(x) = -x f(-x)$.
+For $x \neq 0$, cancelling out $x$ gives us $-f(x) = f(-x)$, while for $x = 0$ the same equality holds since $f(0) = 0$.
+To get $f(1)^2 = 1$, first plug $x = 1$ into~\eqref{2009a7-eq1} and obtain $f(f(1)) = 1$.
+Then plugging $x = f(1)$ into~\eqref{2009a7-eq1} yields $f(1)^2 = 1$.
+
+
+\subsubsection*{Case 1: $\rchar(R) \neq 2$.}
+
+We have proved that any $f$ satisfying~\eqref{2009a7-eq0} is odd.
+Thus, it is now immediate to check that, if $f$ satisfies~\eqref{2009a7-eq0}, then $-f$ satisfies~\eqref{2009a7-eq0} as well.
+With the fact that $f(1)^2 = 1$, we can assume WLOG that $f(1) = 1$ and just show that $f(x) = x$ for all $x \in R$.
+
+Plugging $x = 1$ into~\eqref{2009a7-eq0} yields $f(f(y + 1)) = f(y) + 1$ for all $y \in R$.
+Since $f$ is odd, replacing $y$ with $-y$ gives us $f(f(y - 1)) = f(y) - 1$ for all $y \in R$.
+Thus, we get $f(y + 2) = f(f(y + 1)) + 1 = f(y) + 2$ for any $y \in R$.
+In particular, $f(2) = 2$ since $f(0) = 0$.
+
+Now, plugging $x = 2$ into~\eqref{2009a7-eq0} gives us $f(2 f(y + 2)) = f(f(2) y) + 4$ for all $y \in R$.
+Using the previous paragraph, the equality can be rewritten as $f(2 f(y) + 4) = f(2y + 4)$.
+Since $f$ is injective, we get $2 f(y) = 2y$.
+Finally, since we assumed that $\rchar(R) \neq 2$, we get $f(y) = y$ for all $y \in R$.
+
+
+\subsubsection*{Case 2: $\rchar(R) = 2$.}
+
+Now, $f(1)^2 = 1$ immediately gives us $f(1) = 1$.
+Plugging $x = 1$ into~\eqref{2009a7-eq0} yields $f(f(y + 1)) = f(y) + 1$ for all $y \in R$.
+Replacing $y$ with $y + 1$ gives us $f(f(y)) = f(y + 1) + 1$ for all $y \in R$.
+
+\begin{claim}
+Let $c, d \in R$ such that $f(c) = d + 1$ and $f(d) = c + 1$.
+Then either $c = d$ or $c = d + 1$ holds.
+\end{claim}
+\begin{proof}
+Plugging $x = c$ and $y = c + 1$ into $(*)$ yields $d + 1 = f(c) = f((d + 1)(c + 1)) + c^2$.
+That is, we have $f((d + 1)(c + 1)) = c^2 + d + 1$.
+Similarly, we have $f((c + 1)(d + 1)) = d^2 + c + 1$.
+To equate the two expressions, we claim that $c$ and $d$ commute.
+
+Indeed, since $d = f(c) + 1$, it suffices to show that $c$ and $f(c)$ commute.
+Plugging $(x, y) = (c, c)$ into~\eqref{2009a7-eq0} gives us $f(f(c) c) = c^2$.
+But~\eqref{2009a7-eq1} tells us that $f(c f(c)) = c^2$.
+So, injectivity shows that $c f(c) = f(c) c$, as desired.
+
+Now, since $c$ and $d$ commute, so are $c + 1$ and $d + 1$.
+Thus we get $c^2 + d + 1 = d^2 + c + 1 \implies c + d = c^2 + d^2$.
+Since $c$ and $d$ commutes and $\rchar(R) = 2$, we have $c^2 + d^2 = (c + d)^2$.
+As a result, $(c + d)(c + d + 1) = 0$, showing that either we have $c = d$ or $c = d + 1$.
+\end{proof}
+
+The claim yields that, for any $y \in R$, either $f(y + 1) = f(y)$ or $f(y + 1) = f(y) + 1$.
+The former is always impossible since $f$ is injective, so the latter always holds.
+In particular, we get $f(f(y)) = f(y + 1) + 1 = f(y)$, so $f(y) = y$ for all $y \in R$, as desired.
