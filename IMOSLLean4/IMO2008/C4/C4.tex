@@ -1,0 +1,60 @@
+Let $n$ and $d$ be positive integers.
+Consider $2n$ lamps labelled with a pair $(b, m)$ where $b \in \{0, 1\}$ and $m \in [n] = \{0, 1, \ldots, n - 1\}$.
+Initially, all the lamps are off.
+
+Consider sequences of $k = 2d + n$ steps, where at each step, one of the lamps is switched (off to on and vice versa).
+Let $S_N$ be the set of $k$-step sequences ending in a state where the lamps labelled $(b, m)$ are on iff $b = 0$.
+Let $S_M \subseteq S_N$ consist of the sequences that do not touch the lamps labelled $(0, m)$ at all.
+Find $|S_N|/|S_M|$.
+
+
+
+\subsection*{Answer}
+
+$2^{2d}$.
+
+
+
+\subsection*{Solution}
+
+We do not exhibit a direct $2^{2d}$-to-$1$ correspondence between $S_N$ and $S_M$.
+Instead, we consider another type of sequences of steps, say $S_K$, and exhibit correspondences $S_N \iff S_K$ and $S_M \iff S_K$.
+From now on, we say that a sequence is an \emph{$N$-sequence} (resp. \emph{$M$-sequence}) if it belongs in $S_N$ (resp. $S_M$).
+
+Let us denote by $S_K$ the set of $k$-step sequences ending in a state where for each $m \in [n]$, exactly one of the two lamps $(0, m)$ and $(1, m)$ is on.
+We call each such sequence a \emph{$K$-sequence}.
+
+Represent all sequences in $S_K$ by $k$-tuples $\mathbf{s} = ((b_1, m_1), (b_2, m_2), \ldots, (b_k, m_k))$.
+Note that:
+\begin{itemize}
+    \item   The condition $\mathbf{s} \in S_K$ is saying that $\#\{i : m_i = m\}$ is odd for all $m \in [n]$.
+    \item   The condition $\mathbf{s} \in S_N$ is saying that $\#\{i : (b_i, m_i) = (b, m)\}$ is odd if $b = 1$ and even if $b = 0$.
+    \item   The condition $\mathbf{s} \in S_M$ is saying the above on $S_N$ plus $b_i = 1$ for all $i \leq k$.
+\end{itemize}
+
+There is a projection map $\pi : S_K \to S_M$ given by $(b_i, m_i)_{i \leq k} \mapsto (1, m_i)_{i \leq k}$.
+Clearly, the preimage of each $M$-sequence has size $2^k$.
+So, we have a $2^k$-to-$1$ correspondence between $S_K$ and $S_M$, giving $|S_K| = 2^k |S_M|$.
+
+Now, construct the projection map $\phi : S_K \to S_N$, $((b_i, m_i))_{i \leq k} \mapsto ((b_i', m_i))_{i \leq k}$ as follows.
+For each $m \in [n]$, one of the two numbers $\#\{i : (b_i, m_i) = (1, m)\}$ and $\#\{i : (b_i, m_i) = (0, m)\}$ is odd.
+If the former holds, set $b_i' = b_i$ for each $i$ such that $m_i = m$.
+If the latter holds, set $b_i' = 1 - b_i$ for each $i$ such that $m_i = m$.
+One can check that this sequence indeed belongs in $S_N$.
+
+Consider an arbitrary $\mathbf{s} = ((b_i, m_i))_{i \leq k} \in S_K$ and $\mathbf{s}' = ((b_i', m_i))_{i \leq k} \in S_N$.
+Then $\phi(\mathbf{s}) = \mathbf{s}'$ if and only if for each $m \in [n]$, the pairs $(\{i : (b_i, m_i) = (0, m)\}, \{i : (b_i, m_i) = (1, m)\})$ and $(\{i : (b_i', m_i) = (0, m)\}, \{i : (b_i', m_i) = (1, m)\})$ are equal.
+There is an action of the additive group $C_2^[n]$ on $S_K$, where each element $(x_m)_{m \in [n]}$ acts by swapping $\{i : (b_i, m_i) = (0, m)\}$ and $\{i : (b_i, m_i) = (1, m)\}$ if $x_m = 1$ and doing nothing otherwise.
+By construction, this action does not change the value of $\phi(\mathbf{s})$, and is also faithful.
+Conversely, the previous sentence implies that if $\phi(\mathbf{s}) = \phi(\mathbf{t})$, then $\mathbf{s}$ and $\mathbf{t}$ have the same orbit.
+Thus $\phi$ gives a $|C_2^[n]| = 2^n$-to-$1$ correspondence; that is, $|S_K| = 2^n |S_N|$.
+
+Since $|S_K| = 2^k |S_M| = 2^n |S_N|$, this proves that $|S_N| = 2^{2d} |S_K|$.
+
+
+
+\subsection*{Extra notes}
+
+The condition that $k - n = 2d$ is even is there only to make sure that $|S_N|$ and $|S_M|$ are non-zero.
+Generally, we do not need $k - n$ to be even.
+This will be reflected in our implementation of the problem, which is a much more abstract version.
