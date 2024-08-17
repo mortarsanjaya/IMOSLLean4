@@ -1,0 +1,33 @@
+Let $(a_n)_{n \geq 1}$ be a sequence of positive integers such that for $n$ large enough,
+\[ \frac{a_1}{a_2} + \frac{a_2}{a_3} + \ldots + \frac{a_{n - 1}}{a_n} + \frac{a_n}{a_1} \in \Z. \]
+Prove that $(a_n)_{n \geq 1}$ is eventually constant.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2018SL.pdf}
+
+We use a simplified version of Solution 1 the official solution.
+All we need from the given condition is that there exists $k \geq 1$ for which
+\[ \frac{a_n}{a_{n + 1}} + \frac{a_{n + 1} - a_n}{a_1} \in \Z \iff a_1 a_{n + 1} \mid a_1 a_n + a_{n + 1} (a_{n + 1} - a_n) \quad \forall n \geq k. \]
+In fact, we can reduce further; the above means $\gcd(a_1, a_n) a_{n + 1} \mid a_1 a_n + a_{n + 1}^2$ since $\gcd(a_1, a_n) a_{n + 1}$ surely divides $a_{n + 1} a_n$.
+
+\begin{claim}
+Let $a, b, c$ be positive integers such that $\gcd(a, b) c \mid ab + c^2$.
+Then $\gcd(a, b) \mid \gcd(a, c)$, and $c/\gcd(a, c)$ divides $b/\gcd(a, b)$.
+\end{claim}
+\begin{proof}
+The given condition implies that $\gcd(a, b) \gcd(a, b, c)$ divides $ab + c^2$.
+Since the former divides $ab$, it divides $c^2$.
+It also divides $\gcd(a, b) c$, so it divides $\gcd(\gcd(a, b) c, c^2) = \gcd(a, b, c) c$.
+This implies $\gcd(a, b) \mid c$, and thus $\gcd(a, b) \mid \gcd(a, c)$.
+
+Going back to $\gcd(a, b) c \mid ab + c^2$ gives $\gcd(a, b) c \mid ab$.
+But it also divides $bc$, so $\gcd(a, b) c \mid \gcd(a, c) b$.
+Dividing both sides by $\gcd(a, b) \gcd(a, c)$ finishes the proof of the claim.
+\end{proof}
+
+By the claim, the sequences $(a_1/\gcd(a_1, a_n))_{n \geq 1}$ and $(a_n/\gcd(a_1, a_n))_{n \geq 1}$ are non-increasing sequence of positive integers.
+Both has to be eventually constant.
+Thus, $(\gcd(a_1, a_n))_{n \geq 1}$ is eventually constant, and $(a_n)_{n \geq 1}$ is eventually constant as well.
