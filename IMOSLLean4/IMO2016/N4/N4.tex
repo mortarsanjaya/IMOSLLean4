@@ -1,0 +1,47 @@
+Consider some $k, \ell, m, n \in \N^+$ with $n > 1$ such that
+\[ n^k + mn^{\ell} + 1 \mid n^{k + \ell} - 1. \]
+Prove that one of the following holds:
+\begin{itemize}
+    \item   $m = 1$ and $\ell = 2k$; or
+    \item   $k = (t + 1) \ell$ and $m(n^{\ell} - 1) = n^{t \ell} - 1$ for some $t > 0$.
+\end{itemize}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2016SL.pdf}
+
+We follow Solution 2 of the official solution.
+Instead of using the original condition, we replace it with
+\[ n^k + mn^{\ell} + 1 \mid n^{k + \ell} + n^k + mn^{\ell}. \tag{1}\label{2016n4-eq1} \]
+The first case holds when $\ell \geq k$, while the second case holds when $\ell < k$.
+Note that $\gcd(n^k + mn^{\ell} + 1, n) = 1$.
+
+\begin{itemize}
+
+    \item
+    Case 1: $\ell \geq k$.
+
+    Then~\eqref{2016n4-eq1} becomes
+    \[ n^k + mn^{\ell} + 1 \mid n^{\ell} + mn^{\ell - k} + 1. \]
+    On the other hand, we also have
+    \[ 2(n^k + mn^{\ell} + 1) > (m + 1) n^{\ell} + 1 \geq n^{\ell} + mn^{\ell - k} + 1. \]
+    As a result, we have $n^k + mn^{\ell} = n^{\ell} + mn^{\ell - k}$.
+    If $m \geq 2$, then
+    \[ n^k + mn^{\ell} > mn^{\ell} \geq n^{\ell} + 2(m - 1) n^{\ell - k} \geq n^{\ell} + mn^{\ell - k}. \]
+    A contradiction, so $m = 1$ and $n^k + n^{\ell - k} \iff \ell = 2k$.
+
+    \item 
+    Case 2: $\ell < k$.
+
+    Then~\eqref{2016n4-eq1} becomes
+    \[ n^k + mn^{\ell} + 1 \mid n^k + n^{k - \ell} + m. \]
+    On the other hand,
+    \[ 2(n^k + mn^{\ell} + 1) > 2n^k + m \geq n^k + n^{k - \ell} + m. \]
+    Thus, we have
+    \[ mn^{\ell} + 1 = n^{k - \ell} + m \iff m(n^{\ell} - 1) = n^{k - \ell} - 1. \]
+    This also implies $n^{\ell - 1} \mid n^{k - \ell} - 1$ and thus $\ell \mid k$.
+    If we write $k = (t + 1) \ell$, we get the desired conclusion.
+
+\end{itemize}

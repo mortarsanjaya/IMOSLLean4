@@ -1,0 +1,34 @@
+Let $(a_n)_{n \geq 0}$ be a strictly increasing sequence of positive integers with the following property:
+\begin{itemize}
+    \item   $a_k \mid 2(a_0 + a_1 + \ldots + a_{k - 1})$ for all $k \in \N$;
+    \item   for each prime $p$, there exists $k \in \N$ such that $p \mid a_k$.
+\end{itemize}
+
+Prove that for any $n \in \N^+$, there exists $k \in \N$ such that $n \mid a_k$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow the official solution.
+
+Denote $b_k = 2(a_0 + \ldots + a_{k - 1})/a_k$ for each $k \in \N$.
+Then we have
+\[ b_{k + 1} a_{k + 1} = b_k a_k + 2 a_k = (b_k + 2) a_k \quad \forall k \in \N. \tag{1}\label{2023n5-eq1} \]
+Since $(a_n)_{n \geq 0}$ this gives $b_{k + 1} < b_k + 2$ and thus
+\[ b_{k + 1} \leq b_k + 1 \quad \forall k \in \N. \tag{2}\label{2023n5-eq2} \]
+
+Next, we prove that $(b_n)_{n \geq 0}$ is unbounded.
+Indeed, suppose for the sake of contradiction that $(b_n)_{n \geq 0}$ is bounded.
+Take an arbitary prime $p$ such that $p > b_n + 2$ for all $n \in \N$ and $p > a_0$.
+By~\eqref{2023n5-eq1}, $a_{k + 1}$ divides $(b_k + 2) a_k$ for any $k \in \N$.
+Thus, $p \mid a_{k + 1}$ implies $p \mid a_k$.
+By induction, $p \mid a_0$; a contradiction since $p > a_0$.
+
+From unboundedness, for any integer $n > 0$, there exists $k \in \N$ such that $b_k \geq n$.
+Now choose the smallest such $k$; note that $k > 0$ since $b_0 = 0$.
+Then $b_k = n$ and $b_{k - 1} = n - 1$ due to~\eqref{2023n5-eq2}.
+Then~\eqref{2023n5-eq1} yields $n \mid n a_{k + 1} = (n + 1) a_k$.
+Thus, $n \mid a_k$, as desired.

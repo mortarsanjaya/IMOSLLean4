@@ -1,0 +1,30 @@
+Let $f : \N \to \N$ be a strictly increasing function.
+Suppose that there exists $A, B, C, D \in \N$ such that $f(f(n)) = An + B$ and $f(f(n) + 1) = Cn + D$ for all $n \in \N$.
+Prove that there exists $Q, R \in \N$ such that $f(n) = Qn + R$ for all $n \in \N$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We use a mix of methods from Solution 1 and Solution 2.
+From Solution 2, we get $A = C$.
+Then we use Solution 1 to get that $f(n + 1) - f(n)$ is a constant.
+
+First, since $f$ is strictly increasing, we have
+\[ f(f(n)) \leq f(f(n) + 1) \leq f(f(n + 1)) \iff An + B \leq Cn + D \leq An + A + B \quad \forall n \in \N. \]
+Taking $n$ large enough forces $A \leq C$ and $C \leq A$, and so $A = C$.
+We now show that $n \mapsto f(n + 1) - f(n)$ is constant.
+
+Pick some $x_m \in \N$ such that $d_m := f(x_m + 1) - f(x_m) \leq f(n + 1) - f(n)$ for all $n \in \N$.
+Since $f$ is strictly increasing, $f(n + 1) - f(n) \leq f(f(n + 1)) - f(f(n)) = A$ for all $n \in \N$.
+Thus, the difference has a maximum value; that is, there exists $x_M \in \N$ such that $d_M := f(x_M + 1) - f(x_M) \geq f(n + 1) - f(n)$ for all $n \in \N$.
+It now remains to show that $d_m = d_M = D - B$.
+
+By the property of $d_m$ and $d_M$, we have $k d_M \geq f(n + k) - f(n) \geq k d_m$ for any $k, n \in \N$.
+From the first inequality, we get
+\[ A = (f(f(x_m + 1)) - f(f(x_m) + 1)) + (f(f(x_m) + 1) - f(f(x_m))) \leq (d_m - 1) d_M + (D - B). \]
+Similarly, using the second inequality and $x_M$ in place of $x_m$ yields $A \geq (d_M - 1) d_m + (D - B)$.
+However, $(d_M - 1) d_m \geq (d_m - 1) d_M$, so equality occurs in all the inequalities.
+In particular, this inequality being equality yields $d_m = d_M$, as desired.

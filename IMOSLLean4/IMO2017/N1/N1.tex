@@ -1,0 +1,163 @@
+Define the function $f : \N \to \N$ by
+\[ f(n) = \begin{cases} \sqrt{n}, & \text{if $n$ is a square,} \\ n + 3, & \text{otherwise.} \end{cases} \]
+Determine all values of $N$ such that there exists $a \in \N$ such that $f^n(N) = a$ for infinitely many values of $n$.
+
+
+
+\subsection*{Answer}
+
+$1$ and multiples of $3$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2017SL.pdf}
+
+We generalize the official solution by building a more general theory.
+We say that $N \in \N$ is \emph{good} if it satisfies the problem's condition.
+Note that $N$ is good iff the sequence $(f^k(N))_{k \geq 0}$ is eventually periodic.
+For convenience, denote $p = 3$.
+The main lemmas do not assume the value of $p$.
+
+\begin{lemma}\label{2017n1-1}
+For any $N \in \N$, $f(N)$ is good iff $N$ is good.
+In particular, for any $k \in \N$, $f^k(N)$ is good iff $N$ is good.
+\end{lemma}
+\begin{proof}
+Immediate from the definition of good numbers.
+\end{proof}
+
+\begin{lemma}\label{2017n1-2}
+If $p > 0$ and $N$ is good, then $N$ is a square mod $p$.
+\end{lemma}
+\begin{proof}
+Suppose for the sake of contradiction that $N$ is not a square mod $p$.
+Then for any $k \in \N$, $N + kp$ is not a square mod $p$, and thus not a square.
+By induction, we get $f^k(N) = N + kp$ for all $k \in \N$.
+The sequence $(f^k(N))_{k \geq 0}$ is not eventually periodic; a contradiction.
+\end{proof}
+
+\begin{lemma}\label{2017n1-3}
+For any $N, k \in \N$, either $f^k(N) = N + pk$ or $f^m(N) \leq \sqrt{N + pk}$ for some $m \leq n$.
+In particular, if $x^2 \geq N$ and $x^2 \equiv N \pmod{p}$ for some $x$, then $f^m(N) \leq x$ for some $m$.
+\end{lemma}
+\begin{proof}
+For the first statement, induction on $k$; the base case $k = 0$ is clear.
+Now fix $k$ and suppose that either $f^k(N) = N + pk$ or $f^m(N) \leq \sqrt{N + pk}$ for some $m \leq n$.
+In the former case, $f^{k + 1}(N)$ is either equal to $N + p(k + 1)$ or $\sqrt{N + pk} \leq \sqrt{N + p(k + 1)}$.
+In the latter case, $f^m(N) \leq \sqrt{N + p(k + 1)}$.
+Induction step is complete.
+
+For the second statement, we can write $x^2 = N + pk$ for some $x$.
+Then we are done by the first claim with $k = m$.
+(If $f^k(N) = N + pk = x^2$, take $m = k + 1$.)
+\end{proof}
+
+\begin{lemma}\label{2017n1-4}
+Let $p > 0$ and $N$ be a non-negative integer such that $N$ is a square mod $p$.
+\begin{itemize}
+    \item   If $N > 2p$, then there exists $k \in \N$ such that $f^k(N) < N$.
+    \item   If $N \leq 2p$ and $p > 2$, then then there exists $k \in \N$ such that $f^k(N) \leq p$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+For the first part, there exists $x \in \N$ such that $\sqrt{N} \leq x \leq \sqrt{N} + p$ and $x^2 \equiv N \pmod{p}$.
+By Lemma~\ref{2017n1-3}, $f^k(N) \leq x \leq \sqrt{N} + p$ for some $k$.
+Since $N > 2p$, we get $\sqrt{N} + p < N$.
+
+For the second part, we need to find $x \leq p$ such that $x^2 \geq N$ and $x^2 \equiv N \pmod{p}$.
+First pick any $x \leq p$ such that $x^2 \equiv N \pmod{p}$.
+If $N < p$, the mod condition clearly implies $x^2 \geq N$ and we are done.
+If $N = 2p$, then take $x = p$.
+So now, suppose that $p \leq N < 2p$ and $x^2 < N$.
+Since $x^2 < N$ and $x^2 \equiv N \pmod{p}$, we have $x^2 < p$.
+One can show that $p - x > x$, and thus $(p - x)^2 \geq x^2 + p$ since $(p - x)^2 \equiv x^2 \equiv N \pmod{p}$.
+Since $N < 2p$, this already yields $(p - x)^2 \geq N$, as desired.
+\end{proof}
+
+\begin{lemma}\label{2017n1-5}
+If $p > 2$ and $N$ is good, then $f^k(N) \leq p$ for some $k$.
+\end{lemma}
+\begin{proof}
+Immediate by induction on $N$ due to Lemma~\ref{2017n1-4}.
+\end{proof}
+
+\begin{lemma}\label{2017n1-6}
+If $N$ is good and $p \nmid N$, then $p \nmid f(N)$.
+\end{lemma}
+\begin{proof}
+We have either $f(N) = N + p$ or $f(N)^2 = N$.
+The lemma is immediate in both cases.
+\end{proof}
+
+\begin{lemma}\label{2017n1-7}
+We have $f(N) = 0 \iff N = 0$ and $f(N) = 1 \iff N = 1$.
+In particular, for any $k \in \N$, we have $f^k(N) = 0 \iff N = 0$ and $f^k(N) = 1 \iff N = 1$.
+\end{lemma}
+\begin{proof}
+Both results are done by bashing using the fact that either $f(N) = N + p$ or $f(N)^2 = N$.
+\end{proof}
+
+Since $2$ is not a square mod $3$, $2$ is not good for $p = 3$ by Lemma~ref{2017n1-2}.
+If $N$ is good, Lemma~\ref{2017n1-5} says that $f^k(N) \leq 3$ for some $k$.
+If $N > 1$, then Lemma~\ref{2017n1-7} implies $f^k(N) > 1$.
+Since $2$ is not good, this forces $f^k(N) = 3$.
+By Lemma~\ref{2017n1-6}, this forces $3 \mid N$.
+It remains to show the converse.
+
+\begin{lemma}\label{2017n1-8}
+If $p$ is squarefree and $p \mid N$, then $p \mid f(N)$.
+In particular, if $p \mid N$, then $N$ is good.
+\end{lemma}
+\begin{proof}
+We have either $p \mid f(N) = N + p$ or $p \mid N = f(N)^2$.
+Since $p$ is squarefree, the latter still yields $p \mid f(N)$.
+Since $p \mid N$, this yields $N \in \{0, p, 2p\}$.
+Since $0$ is good, we just have to check that $p$ and $2p$ are good.
+The case $p = 1$ can be checked by hand, so now assume that $p > 1$.
+
+Since $p > 1$ is squarefree, $p$ is not a square, we have $f(p) = 2p$ and it remains to show that $p$ is good.
+By induction, $f^k(p) = p(k + 1)$ for all $k < p$.
+Thus, $f^{p - 1}(p) = p^2$ and $f^p(p) = p$.
+\end{proof}
+
+
+
+\subsection*{Extra notes}
+
+It is also possible to prove a strong converse to Lemma~\ref{2017n1-8}.
+If $p$ is not squarefree, and $N$ is a positive multiple of $p$, then $N$ is not good.
+
+\begin{lemma}
+Let $q$ be a prime factor of $p$ and $N \in \N$ such that $\nu_q(N) < \nu_q(p)$.
+Then $N$ is not good.
+\end{lemma}
+\begin{proof}
+If $N$ is good, then $N$ is a square mod $p$.
+However, for any $x \in \N$ such that $x^2 \equiv N \pmod{p}$, we have $\nu_q(x) = \nu_q(N)/2 < \nu_q(N)$.
+So, there exists $k$ such that $\nu_q(f^k(N)) < \nu_q(N)$.
+Repeat the same argument with $f^k(N)$ and so on, and we get a strictly decreasing sequence of non-negative integers.
+A contradiction!
+\end{proof}
+
+\begin{lemma}
+Suppose that $p$ is NOT squarefree.
+Let $N > 0$ be an integer such that $p \mid N$.
+Then $N$ is not good.
+\end{lemma}
+\begin{proof}
+Suppose for the sake of contradiction that $N$ is good.
+By Lemma~\ref{2017n1-5}, there exists $k$ such that $f^k(N) \leq p$.
+Since $p$ is not squarefree, it can be written as $p_1^2 p_2$ with $p_1 > 1$ and $p_2$ squarefree.
+Then one can show that $f^k(p) = p(k + 1)$ for all $k < p_2$ and then $f^{p_2}(p) = p_1 p_2 < p$.
+Thus, there exists $k$ such that $f^k(N) < p$.
+
+Lemma~\ref{2017n1-6} can be generalized to show that if $q \mid p$ and $q \mid f(N)$, then $q \mid N$.
+Thus, any prime divisor of $p$ also divides $f^k(N)$.
+Since $f^k(N) < p$, there exists a prime number $q$ such that $\nu_q(f^k(N)) < \nu_q(p)$.
+By the previous lemma, $f^k(N)$ is not good; a contradiction.
+\end{proof}
+
+In general, it is not true that the only good numbers are $1$ and multiples of $p$, even when $p$ is prime.
+For example, $2$ is good for $p = 127$.

@@ -72,7 +72,7 @@ theorem rootiful_neg_mem_of_one_mem (h0 : (1 : ℤ) ∈ S) (x : ℤ) (h1 : x ∈
       rw [mem_cons, mem_singleton] at h2
       rcases h2 with rfl | rfl; exacts [h1, h0])
     ⟨1, mem_cons_of_mem _ (mem_singleton_self 1), Int.one_ne_zero⟩
-    (by change x + -x * (1 + -x * 0) = 0; rw [mul_zero, add_zero, mul_one, add_neg_self])
+    (by show x + -x * (1 + -x * 0) = 0; rw [mul_zero, add_zero, mul_one, add_neg_self])
 
 theorem rootiful_neg_mem_of_pos {x : ℤ} (h0 : 0 < x) (h1 : x ∈ S) : -x ∈ S :=
   rootiful_neg_mem_of_one_mem h (rootiful_one_mem_of_pos h x h0 h1) x h1
@@ -105,13 +105,13 @@ theorem rootiful_nat_subset (h0 : (0 : ℤ) ∈ S) (h1 : (1 : ℤ) ∈ S)
       exact rootiful_induction_of_nat_dvd_int h (Nat.succ_lt_succ k.succ_pos) h3 N h4 h5 h6
 
 theorem rootiful_eq_univ (h0 : (0 : ℤ) ∈ S) (h1 : (1 : ℤ) ∈ S)
-    (h2 : ∀ k : ℕ, 0 < k → ∃ N : ℤ, N ≠ 0 ∧ (k : ℤ) ∣ N ∧ N ∈ S) : S = Set.univ :=
-  Set.eq_univ_of_forall λ k ↦ by
-    have h3 := rootiful_nat_subset h h0 h1 h2 k.natAbs
-    rcases le_or_lt 0 k with h4 | h4
-    · rwa [Int.natAbs_of_nonneg h4] at h3
-    · apply rootiful_neg_mem_of_pos h (Nat.cast_pos.mpr (Int.natAbs_pos.mpr h4.ne)) at h3
-      rwa [Int.ofNat_natAbs_of_nonpos h4.le, neg_neg] at h3
+    (h2 : ∀ k : ℕ, 0 < k → ∃ N : ℤ, N ≠ 0 ∧ (k : ℤ) ∣ N ∧ N ∈ S) : S = Set.univ := by
+  refine Set.eq_univ_of_forall λ k ↦ ?_
+  have h3 := rootiful_nat_subset h h0 h1 h2 k.natAbs
+  rcases le_or_lt 0 k with h4 | h4
+  · rwa [Int.natAbs_of_nonneg h4] at h3
+  · apply rootiful_neg_mem_of_pos h (Nat.cast_pos.mpr (Int.natAbs_pos.mpr h4.ne)) at h3
+    rwa [Int.ofNat_natAbs_of_nonpos h4.le, neg_neg] at h3
 
 end
 
@@ -119,19 +119,16 @@ end
 
 /-- Final solution -/
 theorem final_solution {N : ℤ} (h : 1 < |N|) {S : Set ℤ} :
-    (rootiful S ∧ ∀ a b : ℕ, N ^ (a + 1) - N ^ (b + 1) ∈ S) ↔ S = Set.univ :=
-  ⟨λ ⟨h0, h1⟩ ↦ rootiful_eq_univ h0
-    -- `0 ∈ S`
-    (sub_self (N ^ 1) ▸ h1 0 0)
-    -- `1 ∈ S`
-    (by refine rootiful_one_mem_of_pos h0 (N ^ 2 - N ^ 1) ?_ (h1 1 0)
-        rw [sub_pos, pow_one, ← sq_abs, sq]
-        exact (le_abs_self _).trans_lt (lt_mul_self h))
-    -- Induction step
-    (λ k h2 ↦ by
-      rcases exists_ne_pow_eq (Nat.cast_pos.mpr h2).ne.symm N with ⟨m, n, h3, h4⟩
-      specialize h1 m n; rw [pow_succ, pow_succ, ← sub_mul] at h1
-      refine ⟨_, mul_ne_zero ?_ (abs_pos.mp (Int.one_pos.trans h)), h4.mul_right N, h1⟩
-      intro h5; refine h3 (Int.pow_right_injective ?_ (sub_eq_zero.mp h5))
-      exact (Int.natAbs_lt_natAbs_of_nonneg_of_lt Int.one_nonneg h).trans_eq N.natAbs_abs),
-  λ h0 ↦ h0 ▸ ⟨univ_rootiful, λ _ _ ↦ Set.mem_univ _⟩⟩
+    (rootiful S ∧ ∀ a b : ℕ, N ^ (a + 1) - N ^ (b + 1) ∈ S) ↔ S = Set.univ := by
+  refine ⟨λ h0 ↦ ?_, λ h0 ↦ h0 ▸ ⟨univ_rootiful, λ _ _ ↦ Set.mem_univ _⟩⟩
+  rcases h0 with ⟨h0, h1⟩; apply rootiful_eq_univ h0 (sub_self (N ^ 1) ▸ h1 0 0)
+  ---- `1 ∈ S`
+  · refine rootiful_one_mem_of_pos h0 (N ^ 2 - N ^ 1) ?_ (h1 1 0)
+    rw [sub_pos, pow_one, ← sq_abs, sq]
+    exact (le_abs_self _).trans_lt (lt_mul_self h)
+  ---- Induction step
+  · intro k h2; rcases exists_ne_pow_eq (Nat.cast_pos.mpr h2).ne.symm N with ⟨m, n, h3, h4⟩
+    specialize h1 m n; rw [pow_succ, pow_succ, ← sub_mul] at h1
+    refine ⟨_, mul_ne_zero ?_ (abs_pos.mp (Int.one_pos.trans h)), h4.mul_right N, h1⟩
+    intro h5; refine h3 (Int.pow_right_injective ?_ (sub_eq_zero.mp h5))
+    exact (Int.natAbs_lt_natAbs_of_nonneg_of_lt Int.one_nonneg h).trans_eq N.natAbs_abs

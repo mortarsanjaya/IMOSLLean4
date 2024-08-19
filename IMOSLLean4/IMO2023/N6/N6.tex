@@ -1,0 +1,69 @@
+A sequence $(a_n)_{n \geq 0}$ is called \emph{kawaii} if $a_0 = 0$, $a_1 = 1$, and
+\[ a_{n + 2} + 2 a_n = 3 a_{n + 1} \text{ or } a_{n + 2} + 3 a_n = 4 a_{n + 1} \quad \forall n \in \N. \]
+A non-negative integer $m$ is said to be \emph{kawaii} if it belongs to some kawaii sequence.
+
+Let $m \in \N$ such that both $m$ and $m + 1$ are kawaii.
+Prove that $3 \mid m$ and $m/3$ belongs to a kawaii sequence.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h3359725p31227826}
+
+The link references to a solution in the AoPS thread for IMO 2023 N6 by \textbf{Awesome3.14} (post \#9).
+We use this solution to state the main claim and then finish.
+To aid with proving the main claim, we use the first observation from Solution 1 of the official solution.
+
+First, consider an arbitrary kawaii sequence $(a_n)_{n \geq 0}$ and $c \in \{2, 3\}$.
+Define $(b_n)_{n \geq 0}$ by $b_0 = 0$ and $b_{n + 1} = c a_n + 1$ for all $n \in \N$.
+One can check that $(b_n)_{n \geq 0}$ is a kawaii sequence.
+
+Conversely, consider an arbitrary kawaii sequence $(b_n)_{n \geq 0}$, and let $c = b_2 - 1$.
+It is easy to check that $b_2 \in \{3, 4\}$, so $c \in \{2, 3\}$.
+In either case, by induction, one can see that $b_{n + 1} \equiv 1 \pmod{c}$ for all $n \in \N$.
+Then one can check that the sequence $(a_n)_{n \geq 0}$ defined by $a_n = (b_{n + 1} - 1)/c$ is also kawaii.
+This observation allows us to prove the following claim.
+
+\begin{claim}
+Let $S \subseteq \N$ be the smallest set such that $0 \in S$ and $2k + 1, 3k + 1 \in S$ for any $k \in S$.
+Then $S$ is precisely the set of all kawaii integers.
+\end{claim}
+\begin{proof}
+The claim is saying that $N \in S$ if and only if $N$ is kawaii.
+We prove the claim by strong induction on $N$.
+Clearly, $0$ is kawaii and belong in $S$, clearing the base case.
+
+Now let $N > 0$ and suppose that for any $k < N$, $k$ is kawaii iff $k \in S$.
+First suppose that $N \in S$.
+By minimality of $S$, we have $N = ck + 1$ for some $k \in S$ and $c \in \{2, 3\}$.
+By induction hypothesis, $k$ is kawaii, so it belongs to some kawaii sequence $(a_n)_{n \geq 0}$, say $k = a_t$.
+Take the kawaii sequence $(b_n)_{n \geq 0}$ defined by $b_0 = 0$ and $b_{n + 1} = c a_n + 1$ for all $n \in \N$.
+Clearly, $N = ck + 1 = c a_t + 1 = b_{t + 1}$, so $N$ is kawaii.
+
+Conversely, suppose that $N$ is kawaii.
+Choose a kawaii sequence $(b_n)_{n \geq 0}$ and $t \in \N$ such that $N = b_t$.
+There exists a kawaii sequence $(a_n)_{n \geq 0}$ and $c \in \{2, 3\}$ such that $b_{n + 1} = c a_n + 1$ for all $n \in \N$.
+Since $N > 0$, we have $t > 0$, so $N = c a_{t - 1} + 1$.
+By induction hypothesis, $a_{t - 1} \in S$, so $N \in S$ as well.
+Induction step is complete; the claim is proved.
+\end{proof}
+
+Now let $m$ be a kawaii integer such that $m + 1$ is kawaii.
+If $m = 0$, we are done, so suppose that $m > 0$.
+By induction, one can check that all kawaii integers are $0$ or $1$ mod $3$.
+Thus, $m$ must be divisible by $3$.
+
+Since $3 \mid m$, we have $m \neq 3k + 1$ for any integer $k$.
+Since $m \in S$, it must hold that $m = 2k + 1$ for some $k \in S$, and thus $m$ is odd.
+Then $m + 1$ is even, so it must be of form $3k + 1$ for some $k \in S$.
+Finally, this means $m = 3k$ and $k = m/3 \in S$, as desired.
+
+
+
+\subsection*{Implementation details}
+
+The kawaii sequences and kawaii integers are generalized to $a_{n + 2} + c a_n = (c + 1) a_{n + 1}$ for some $c \in S$, where $S$ is a predetermined set.
+In the original problem, $S = \{2, 3\}$.

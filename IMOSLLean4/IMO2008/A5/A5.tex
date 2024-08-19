@@ -1,0 +1,28 @@
+Let $F$ be a totally ordered field and $a_1, a_2, a_3, a_4 \in F$ be positive elements.
+Suppose that $a_1 a_2 a_3 a_4 = 1$ and
+\[ a_1 + a_2 + a_3 + a_4 > \frac{a_1}{a_2} + \frac{a_2}{a_3} + \frac{a_3}{a_4} + \frac{a_4}{a_1}. \]
+Prove that
+\[ \sum_{i = 1}^4 a_i < \frac{a_2}{a_1} + \frac{a_3}{a_2} + \frac{a_4}{a_3} + \frac{a_1}{a_4}. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2008SL.pdf}
+
+We follow the official solution, which also proves a stronger result:
+\[ 4(a_1 + a_2 + a_3 + a_4) \leq 3 \left(\frac{a_1}{a_2} + \frac{a_2}{a_3} + \frac{a_3}{a_4} + \frac{a_4}{a_1}\right) + \left(\frac{a_2}{a_1} + \frac{a_3}{a_2} + \frac{a_4}{a_3} + \frac{a_1}{a_4}\right). \] 
+To prove the above inequality, treat the indices modulo $4$.
+By AM-GM inequality, since $a_1 a_2 a_3 a_4 = 1$, for each $i$ we have
+\[ \frac{a_i}{a_{i + 1}} + \frac{a_i}{a_{i + 1}} + \frac{a_{i + 1}}{a_{i + 2}} + \frac{a_i}{a_{i + 3}} \geq 4 a_i. \]
+Now we just sum over all $i = 1, 2, 3, 4$ and we are done.
+
+
+
+\subsection*{Extra notes}
+
+The given statement is false if we replace $4$ with any $n \geq 5$, at least over the real numbers.
+Indeed, let $x$ be large enough, and take
+\[ a_3 = x^{6/5}, \quad a_2 = a_4 = x^{1/5}, \quad a_1 = a_5 = x^{-4/5}, \quad a_i = 1 \forall 5 < i \leq n. \]
+Then $1/x \leq a_i/a_{i + 1} \leq x$ for all $i$, and so the right hand side sums are all bounded by $nx$.
+On the other hand, the left hand side is at least $x^{6/5} > nx$ for $x > n^5$.

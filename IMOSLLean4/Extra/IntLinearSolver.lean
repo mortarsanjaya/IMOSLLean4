@@ -10,12 +10,16 @@ Authors: Gian Cordana Sanjaya
 Let $f : ℕ → ℤ$ be a function and $c ∈ ℤ$.
 Suppose that $f(n + 1) = c + f(n)$ for all $n ∈ ℕ$.
 Then $f(n) = cn + f(0)$ for all $n ∈ ℕ$.
-Similar statement holds for $f : ℤ → ℤ$.
+We prove similar statement for $ℤ → ℤ$ and $ℕ → ℕ$.
 -/
 
 namespace IMOSL
 namespace Extra
 namespace LinearSolver
+
+theorem NatNat {f : Nat → Nat} (h : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0
+  | 0 => by rw [Nat.mul_zero, Nat.zero_add]
+  | n + 1 => by rw [h, Nat.mul_succ, NatNat h, Nat.add_left_comm, Nat.add_assoc]
 
 theorem NatInt {f : Nat → Int} (h : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0
   | 0 => by rw [Int.natCast_zero, c.mul_zero, Int.zero_add]

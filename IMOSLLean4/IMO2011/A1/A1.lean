@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Fintype.Prod
 
-
 /-!
 # IMO 2011 A1 (P1)
 

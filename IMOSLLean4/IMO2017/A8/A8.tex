@@ -1,0 +1,99 @@
+Let $(G, +)$ be a dense totally ordered abelian group.
+Suppose that for any $x, y \in R$, if $f(x) + y < f(y) + x$, then $f(x) + y \leq 0 \leq f(y) + x$.
+Prove that $f(x) + y \leq f(y) + x$ for all $x \geq y$.
+
+\textbf{Extra.} Show that the above statement is false if $G$ is discretely ordered.
+
+
+
+\subsection*{Solution}
+
+Define $g : G \to G$ by $g(x) = x - f(x)$ for all $x \in G$.
+The hypothesis is that for any $x, y \in R$ such that $g(y) < g(x)$, we have $g(y) \leq x + y \leq g(x)$.
+The goal changes to showing that $g$ is non-decreasing.
+
+\begin{claim}
+Let $x, y, z \in G$ such that $x < y$ and $g(y) - y < z < g(x) - x$.
+Then either $g(z) = g(x)$ or $g(z) = g(y)$.
+\end{claim}
+\begin{proof}
+If $g(z) < g(y)$, then $y + z \leq g(y)$, so $z \leq g(y) - y$.
+If $g(z) > g(x)$, then $x + z \geq g(x)$, so $z \geq g(x) - x$.
+If $g(y) < g(z) < g(x)$, then $y + z \leq g(z) \leq x + z$, so $y \leq x$.
+All three cases yield a contradiction, proving the claim.
+\end{proof}
+
+Now we prove that $x < y$ with $g(x) > g(y)$ is impossible.
+Suppose for the sake of contradiction that such $x$ and $y$ exists.
+Since $G$ is dense, there exists $z \in G$ such that $x < z < y$.
+We have $g(y) \leq x + y \leq g(x)$, so
+\[ g(y) - y \leq x < z < y \leq g(x) - x. \]
+By the above claim, we have either $g(z) = g(x)$ or $g(z) = g(y)$.
+We show that both yields a contradiction.
+
+First, suppose that $g(z) = g(x)$.
+Pick some $w \in G$ such that $x < w < z$; then
+\[ g(y) - y < g(z) - z < g(x) - w < g(x) - x. \]
+By the above claim, $g(g(x) - w)$ equals either $g(x)$ or $g(y)$.
+The former yields $g(x) = g(g(x) - w) \geq g(x) - w + y$; a contradiction since $w < y$.
+The latter yields $g(x) - w + z \leq g(z) = g(x)$; a contradiction since $w < z$.
+
+Now suppose that $g(z) = g(y)$.
+Pick since $w \in G$ such that $z < w < y$; then
+\[ g(y) - y < g(y) - w < g(z) - z < g(x) - x. \]
+By the above claim, $g(g(y) - w)$ equals either $g(x)$ or $g(y)$.
+The former yields $g(y) - w + z \geq g(z) = g(y)$; a contradiction since $w > z$.
+The latter yields $g(y) = g(g(y) - w) \leq g(y) - w + x$; a contradiction since $w > x$.
+All cases yield a contradiction, as desired.
+
+
+
+\subsection*{Solution for the extra part}
+
+Since $G$ is discretely ordered, it has a minimal positive element, say $g$.
+That is, $g > 0$, and any $x > 0$ satisfies $x \geq g$.
+The following function is a counter-example:
+\[ f(x) = \begin{cases} -2g, & x = 0, \\ g, & x = g, \\ -x, & \text{otherwise.} \end{cases} \]
+Indeed, $g > 0$ but $f(g) + 0 = g > 0 = f(0) + g$.
+So, it remains to check that $f(x) + y \leq 0 \leq f(y) + x$ whenever $f(x) + y < f(y) + x$.
+This needs bashing in $7$ cases.
+
+\begin{itemize}
+    
+    \item 
+    If $x, y \notin \{0, g\}$, then $f(x) + y < f(y) + x$ means $x - y < y - x$.
+    Clearly, this yields $x - y < 0 < y - x$.
+
+    \item 
+    If $x = 0$ and $y \notin \{0, g\}$, then $f(x) + y = -g + y$ and $f(y) + x = -y$.
+    Then the condition $f(x) + y < f(y) + x$ yields $2y < g \iff y \leq 0$.
+    This shows $f(x) + y \leq 0 \leq f(y) + x$.
+
+    \item 
+    If $x = g$ and $y \notin \{0, g\}$, then $f(x) + y = g + y$ and $f(y) + x = g - y$.
+    Then $f(x) + y < f(y) + x$ yields $y < 0$, so $y \leq -g$ and thus $f(x) + y \leq 0 \leq f(y) + x$.
+
+    \item
+    If $x \notin \{0, g\}$ and $y = 0$, then $f(x) + y = -x$ and $f(y) + x = -g + x$.
+    Then $f(x) + y < f(y) + x$ yields $g < 2x \iff 2g \leq 2x \iff g \leq x$, so $f(x) + y < 0 \leq f(y) + x$.
+
+    \item 
+    If $x = g$ and $y = 0$, then we get a contradiction as we've seen that $f(0) + g \leq 0 \leq f(g) + 0$.
+
+    \item
+    If $x \notin \{0, g\}$ and $y = g$, then $f(x) + y = g - x$ and $f(y) + x = x + g$.
+    Then $f(x) + y < f(y) + x$ yields $x > 0 \iff x \geq g$ and so $f(x) + y \leq 0 \leq f(y) + x$.
+
+    \item
+    If $x = 0$ and $y = g$, then as we've seen, $f(0) + g \leq 0 \leq f(g) + 0$.
+
+\end{itemize}
+
+
+
+\subsection*{Extra notes}
+
+In the original version, $f$ is a function from a totally ordered commutative ring $R = \R$ to itself such that
+\[ (f(x) + y)(f(y) + x) > 0 \implies f(x) + y = f(y) + x. \]
+One can check that this is the same as the above version on totally ordered rings.
+We do not implement the ring version of the problem.

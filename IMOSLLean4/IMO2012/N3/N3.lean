@@ -10,8 +10,7 @@ import Mathlib.Data.Nat.Choose.Basic
 /-!
 # IMO 2012 N3
 
-Determine all integers $m > 1$ such that $n ∣ \binom{n}{m - 2n}$
-  for every $n ∈ ℕ$ with $n ≤ m/2$.
+Determine all integers $m > 1$ such that $n ∣ \binom{n}{m - 2n}$ for every $n ≤ m/2$.
 -/
 
 namespace IMOSL
