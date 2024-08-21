@@ -1,0 +1,27 @@
+Let $a_1, a_2, \ldots, a_n$, and $k$ be positive integers such that $k = \sum_{j \leq n} 1/a_j$.
+Suppose that some of the $a_i$s are not equal to $1$.
+Prove that, for any totally ordered commutative semiring $R$ and $x \in R$ positive,
+\[ a_1 a_2 \ldots a_n (x + 1)^k < (x + a_1) (x + a_2) \ldots (x + a_n). \]
+
+
+
+\section*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2017SL.pdf}
+
+While the wording is different from the original problem, it is an equivalent version.
+As fractional powers do not exist in general rings, we will have to modify Solution 1 to work with it.
+Also, instead of the direct AM-GM inequality, we just use a version Bernoulli's inequality coming from binomial expansion.
+
+Given $x, y \in R$ positive and a positive integer $n$, we have $(x + y)^n \geq y^{n - 1} (nx + y)$.
+Equality holds if and only if $n = 1$.
+
+Now denote $M = a_1 a_2 \ldots a_n$.
+For any $x > 0$ and positive integers $a$, we have $(x + a)^a \geq a^{a - 1} (ax + a) = a^a (x + 1)$.
+Equality holds if and only if $a = 1$.
+In particular, for each $j \leq n$, we have $a_j^M (x + 1)^{M/a_j} \leq (x + a_j)^M$, with equality implying $a_j = 1$.
+By definition of $k$, we have $\sum_{j \leq n} M/a_j = kM$.
+Thus multiplying the inequalities across all $j \leq n$ gives
+\[ (a_1 a_2 \ldots a_n)^M (x + 1)^{kM} \leq (x + a_1)^M (x + a_2)^M \ldots (x + a_n)^M, \]
+    with equality if and only if $a_1 = a_2 = \ldots = a_n = 1$.
+Taking $M$th root finishes the solution.
