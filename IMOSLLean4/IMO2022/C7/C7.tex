@@ -1,0 +1,90 @@
+Let $m$ be a positive integer and let $[m] = \{1, 2, \ldots, m\}$.
+Consider an arbitrary subset $S \subseteq \Z^m$ of $m$-tuples.
+We say that $S$ is \emph{add-sup closed} if $S$ is closed under taking pointwise addition and pointwise maximum.
+That is, for any $\mathbf{v}, \mathbf{w} \in S$, the vectors $\mathbf{v} + \mathbf{w}$ and $\mathbf{v} \vee \mathbf{w}$ (defined by $(\mathbf{v} \vee \mathbf{w})_k = \max\{v_k, w_k\}$ for each $k$) belongs in $S$.
+A set $G \subseteq \Z^m$ is called an \emph{add-sup generator} if the only add-sup closed set containing $G$ is $\Z^m$.
+Find the smallest possible size of an add-sup generator, in terms of $m$.
+
+
+
+\subsection*{Answer}
+
+$2$ if $m < 3$ and $3$ if $m \geq 3$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2022SL.pdf}
+
+The case $m < 3$ can be bashed out manually.
+The solution for the case $m \geq 3$ is taken from the official solution.
+However, we use a slightly different triplets for the add-sup generator for the case $m \geq 3$.
+
+\begin{lemma}\label{2022c7-1}
+Any add-sup generator cannot be a singleton.
+\end{lemma}
+\begin{proof}
+For any $i \in [m]$, the sets $\{\mathbf{v} : v_i \geq 0\}$ and $\{\mathbf{v} : v_i \leq 0\}$ are add-sup closed.
+Any vector belongs to one of them, so a singleton can't be an add-sup generator.
+\end{proof}
+
+\begin{lemma}\label{2022c7-2}
+For $m = 1$, $G = \{-1, 1\}$ is an add-sup generator.
+For $m = 2$, $G = \{(-1, 1), (1, -2)\}$ is an add-sup generator.
+\end{lemma}
+\begin{proof}
+The first part is clear, say by induction.
+Now suppose that $m = 2$ and let $G = \{(-1, 1), (1, -2)\}$.
+Then any add-sup closed set $S$ containing $G$ must contain:
+\begin{align*}
+    (0, -1) &= (-1, 1) + (1, -2) \\
+    (-1, 0) &= (-1, 1) + (0, -1) \\
+    (0, 1) &= (0, -1) \vee (-1, 1) \\
+    (1, 0) &= (-1, 0) \vee (1, -2).
+\end{align*}
+By induction, $S$ contains $(a, b)$ for all $a, b \in \Z$.
+Thus $S$ must be $\Z^m$, as desired.
+\end{proof}
+
+\begin{lemma}\label{2022c7-3}
+If $m \geq 3$, then there is no add-sup generator of size $2$.
+\end{lemma}
+\begin{proof}
+This time, for any $i, j \in [m]$ and positive integers $x$ and $y$, the set $\{\mathbf{w} : x w_i \geq y w_j\}$ is add-sup closed.
+We claim that any subset of $\Z^m$ of size $2$ is contained in either one of these sets or a half-hyperplane of form $\{\mathbf{v} : v_i \geq 0\}$ and $\{\mathbf{v} : v_i \leq 0\}$.
+The claim then proves the lemma.
+
+Let $G = \{\mathbf{v}, \mathbf{w}\}$ be an arbitrary set of two vectors.
+If $v_i, w_i \geq 0$ for some $i \in [m]$, then $G \subseteq \{\mathbf{v} : v_i \geq 0\}$.
+If $v_i, w_i \leq 0$ for some $i \in [m]$, then $G \subseteq \{\mathbf{v} : v_i \leq 0\}$.
+So now, suppose that for any $i \in [m]$, either $v_i > 0 > w_i$ or $w_i > 0 > v_i$.
+By rearrangement and swapping the vectors $\mathbf{v}$ and $\mathbf{w}$, we may assume that $v_1, v_2 > 0$ and $w_1, w_2 < 0$.
+
+Now let $x = -w_1 > 0$ and $y = -w_2 > 0$; note that $x w_2 = y w_1$.
+If $x v_2 \geq y v_1$, then $G \subseteq \{\mathbf{w} : x w_2 \geq y w_1\}$.
+If $x v_2 \leq y v_1$, then $G \subseteq \{\mathbf{w} : y w_1 \geq x w_2\}$.
+The claim is proved.
+\end{proof}
+
+\begin{lemma}\label{2022c7-4}
+Let $G = \{\mathbf{a}, \mathbf{b}, \mathbf{c}\} \subseteq \Z^m$, where
+\[ a_k = 1 - k^2, \quad b_k = k, \quad c_k = -1 \quad \forall k \in [m]. \]
+Then $G$ is an add-sup generator.
+\end{lemma}
+\begin{proof}
+Let $S$ be an arbitary add-sup closed subset containing $G$.
+First, by taking linear combinations, we have $\mathbf{d}_k = \mathbf{a} + 2k \mathbf{b} + k^2 \mathbf{c} \in S$.
+Its entries are
+\[ d_{k, j} = (1 - j^2) + 2kj - k^2 = 1 - (k - j)^2 \quad \forall k, j \in [m]. \]
+In particular, $d_{k, j} = 1$ if $k = j$ and $d_{k, j} \leq 0$ if $k \neq j$.
+The supremum of all the $\mathbf{d}_k$s is $\mathbf{1}$, so $\mathbf{1} \in S$.
+
+Since $\mathbf{c} = -\mathbf{1} \in S$, we get $\mathbf{0} \in S$.
+Next, for each $k \in [m]$, we get $\mathbf{e}_k = \mathbf{0} \vee \mathbf{d}_k \in S$.
+Here, $\mathbf{e}_k$ the standard basis vector with $k$th entry $1$.
+Thus, by by induction, it can be seen that $S$ contains all vectors in $\N^m$.
+All vectors in $\Z^m$ can be expressed as $\mathbf{v} = \mathbf{v} - r \mathbf{1}$ for some $\mathbf{v} \in \N^m$ and $r \in \N$.
+Since $-\mathbf{1} = \mathbf{c} \in S$, this yields $\mathbf{v} \in S$.
+Thus $S = \Z^m$, as desired.
+\end{proof}
