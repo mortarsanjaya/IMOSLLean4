@@ -1,0 +1,45 @@
+Find all pairs $(k, n) \in \N^2$ such that $7^k - 3^n \mid k^4 + n^2$.
+
+
+
+\subsection*{Answer}
+
+$(0, 0)$ and $(2, 4)$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+We follow the official solution, but the cases $a = 2$ and $a = 3$ are dealt with purely by bounding $3^b - 2b^2$ again.
+
+First, $7^k - 3^n$ is always even, so $k^4 + n^2$ is even as well.
+If $k$ and $n$ are odd, then $4 \mid 7^k - 3^n$ and $k^4 + n^2 \equiv 2 \not\equiv 0 \pmod{4}$.
+Thus, $k$ and $n$ are both even.
+
+Write $k = 2a$ and $n = 2b$ for some $a, b \in \N$.
+Then $7^a + 3^b \mid 7^{2a} - 3^{2b} \mid (2a)^4 + (2b)^2$.
+Since $7^a - 3^b$ must be even, we have $7^a + 3^b \mid 8a^4 + 2b^2$.
+
+We check some estimates now.
+For any $b \in \N$, we have $3^b > 2b^2$.
+This can be proved by induction starting at $b = 2$ and checking the cases $b \in \{0, 1\}$ manually.
+Furthermore, we have $7^a > 8a^4 > 0$ for $a \geq 4$.
+Thus, we get a contradiction if $a \geq 4$, so $a < 4$.
+Also, if $a = 0$, then $b = 0$ is forced.
+It remains to consider the cases $a \in \{1, 2, 3\}$.
+
+First suppose that $a = 1$.
+For $b > 3$, we have $3^b > 2b^2 + 1$, so $b \leq 2$.
+Trying all the values $b = 0, 1, 2$ reveal that only $b = 2$ works for the original problem.
+Thus, we get $(k, n) = (2a, 2b) = (2, 4)$.
+
+For $a = 2$, we have $49 + 3^b \mid 128 + 2b^2$.
+For $b \geq 5$, we have $3^b > 128 + 2b^2$; contradiction.
+For $b \leq 4$, checking each cases manually yields a contradiction.
+
+For $a = 3$, we have $343 + 3^b \mid 648 + 2b^2$.
+For $b \geq 6$, we have $3^b > 305 + 2b^2$; contradiction.
+For $b \leq 5$, checking each cases manually yields a contradiction.
+Alternatively, one can check that $2(343 + 3^b) > 648 + 2b^2 > 343 + 3^b$ in this case.
