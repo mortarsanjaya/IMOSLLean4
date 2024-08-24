@@ -15,11 +15,7 @@ Find all pairs $(k, n) ∈ ℕ^2$ such that $7^k - 3^n ∣ k^4 + n^2$.
 namespace IMOSL
 namespace IMO2007N1
 
-def good (k n : ℕ) := (7 : ℤ) ^ k - 3 ^ n ∣ (k ^ 4 + n ^ 2 : ℕ)
-
-lemma good_zero_zero : good 0 0 := ⟨0, rfl⟩
-
-lemma good_two_four : good 2 4 := ⟨-1, by rfl⟩
+/-! ### Extra lemmas -/
 
 lemma sq_mod_four_of_odd (hm : m % 2 = 1) : m ^ 2 % 4 = 1 := by
   rcases Nat.odd_mod_four_iff.mp hm with hm | hm
@@ -29,47 +25,6 @@ lemma two_dvd_seven_pow_sub_three_pow (k n) : (2 : ℤ) ∣ 7 ^ k - 3 ^ n := by
   show ((2 : ℕ) : ℤ) ∣ (7 : ℕ) ^ k - (3 : ℕ) ^ n
   rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.modEq_iff_dvd,
     Nat.ModEq, Nat.pow_mod, Nat.one_pow, Nat.pow_mod, Nat.one_pow]
-
-lemma good_imp_even (h : good k n) : 2 ∣ k ∧ 2 ∣ n := by
-  have h0 : Even (k + n) := by
-    have h0 : 2 ∣ k ^ 4 + n ^ 2 :=
-      Int.natCast_dvd_natCast.mp ((two_dvd_seven_pow_sub_three_pow k n).trans h)
-    rwa [← even_iff_two_dvd, Nat.even_add, Nat.even_pow' (Nat.succ_ne_zero 3),
-      Nat.even_pow' (Nat.succ_ne_zero 1), ← Nat.even_add] at h0
-  suffices ¬k % 2 = 1 by
-    rw [← Nat.odd_iff, ← Nat.even_iff_not_odd] at this
-    exact ⟨even_iff_two_dvd.mp this, even_iff_two_dvd.mp ((Nat.even_add.mp h0).mp this)⟩
-  intro h1; replace h0 : n % 2 = 1 := by
-    rw [← Nat.odd_iff] at h1 ⊢; exact (Nat.even_add'.mp h0).mp h1
-  replace h : 4 ∣ k ^ 4 + n ^ 2 := by
-    refine Int.natCast_dvd_natCast.mp (dvd_trans ?_ h)
-    show ((4 : ℕ) : ℤ) ∣ (7 : ℕ) ^ k - (3 : ℕ) ^ n
-    rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.modEq_iff_dvd, Nat.ModEq]
-    have h2 : 3 ^ n % 4 = 3 := calc
-      _ = 3 ^ (2 * (n / 2) + 1) % 4 := by rw [← h0, Nat.div_add_mod]
-      _ = (3 ^ 2) ^ (n / 2) * 3 % 4 := by rw [Nat.pow_succ, Nat.pow_mul]
-      _ = (3 ^ 2 % 4) ^ (n / 2) % 4 * 3 % 4 := by rw [← Nat.pow_mod, Nat.mod_mul_mod]
-      _ = 1 ^ (n / 2) % 4 * 3 % 4 := rfl
-      _ = 3 := by rw [Nat.one_pow]
-    have h3 : 7 ^ k % 4 = 3 := calc
-      _ = 7 ^ (2 * (k / 2) + 1) % 4 := by rw [← h1, Nat.div_add_mod]
-      _ = (7 ^ 2) ^ (k / 2) * 7 % 4 := by rw [Nat.pow_succ, Nat.pow_mul]
-      _ = (7 ^ 2 % 4) ^ (k / 2) % 4 * 7 % 4 := by rw [← Nat.pow_mod, Nat.mod_mul_mod]
-      _ = 1 ^ (k / 2) % 4 * 7 % 4 := rfl
-      _ = 3 := by rw [Nat.one_pow]
-    exact h2.trans h3.symm
-  rw [Nat.dvd_iff_mod_eq_zero, Nat.add_mod, k.pow_mul 2 2,
-    Nat.pow_mod, sq_mod_four_of_odd h1, sq_mod_four_of_odd h0] at h
-  exact Nat.succ_ne_zero 1 h
-
-lemma good_two_mul_imp₁ (h : good (2 * a) (2 * b)) :
-    7 ^ a + 3 ^ b ∣ 8 * a ^ 4 + 2 * b ^ 2 := by
-  rw [good, mul_pow, mul_pow, Nat.mul_comm, pow_mul, Nat.mul_comm, pow_mul, sq_sub_sq] at h
-  replace h : ((7 : ℕ) ^ a + (3 : ℕ) ^ b : ℤ) * (2 : ℕ) ∣ _ :=
-    (Int.mul_dvd_mul_left _ (two_dvd_seven_pow_sub_three_pow a b)).trans h
-  rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.cast_add, ← Nat.cast_mul, Int.ofNat_dvd,
-    Nat.pow_succ', sq, Nat.mul_assoc, Nat.mul_assoc, ← Nat.mul_add, Nat.mul_comm] at h
-  exact (mul_dvd_mul_iff_left (Nat.succ_ne_zero 1)).mp h
 
 lemma succ_pow_four_lt_seven_mul_pow_four (ha : 2 ≤ a) : (a + 1) ^ 4 < 7 * a ^ 4 := by
   calc (a + 1) ^ 3 * (a + 1)
@@ -128,6 +83,59 @@ lemma b_bound₁ : ∀ b, 2 * b ^ 2 < 3 ^ b
   | 0 => Nat.one_pos
   | 1 => Nat.lt_succ_self 2
   | n + 2 => b_bound₀ (k := 0) (Nat.le_refl 2) (Nat.lt_succ_self 8) _ (Nat.le_add_left 2 n)
+
+
+
+
+
+/-! ### Start of the problem -/
+
+def good (k n : ℕ) := (7 : ℤ) ^ k - 3 ^ n ∣ (k ^ 4 + n ^ 2 : ℕ)
+
+lemma good_zero_zero : good 0 0 := ⟨0, rfl⟩
+
+lemma good_two_four : good 2 4 := ⟨-1, by rfl⟩
+
+lemma good_imp_even (h : good k n) : 2 ∣ k ∧ 2 ∣ n := by
+  have h0 : Even (k + n) := by
+    have h0 : 2 ∣ k ^ 4 + n ^ 2 :=
+      Int.natCast_dvd_natCast.mp ((two_dvd_seven_pow_sub_three_pow k n).trans h)
+    rwa [← even_iff_two_dvd, Nat.even_add, Nat.even_pow' (Nat.succ_ne_zero 3),
+      Nat.even_pow' (Nat.succ_ne_zero 1), ← Nat.even_add] at h0
+  suffices ¬k % 2 = 1 by
+    rw [← Nat.odd_iff, ← Nat.even_iff_not_odd] at this
+    exact ⟨even_iff_two_dvd.mp this, even_iff_two_dvd.mp ((Nat.even_add.mp h0).mp this)⟩
+  intro h1; replace h0 : n % 2 = 1 := by
+    rw [← Nat.odd_iff] at h1 ⊢; exact (Nat.even_add'.mp h0).mp h1
+  replace h : 4 ∣ k ^ 4 + n ^ 2 := by
+    refine Int.natCast_dvd_natCast.mp (dvd_trans ?_ h)
+    show ((4 : ℕ) : ℤ) ∣ (7 : ℕ) ^ k - (3 : ℕ) ^ n
+    rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.modEq_iff_dvd, Nat.ModEq]
+    have h2 : 3 ^ n % 4 = 3 := calc
+      _ = 3 ^ (2 * (n / 2) + 1) % 4 := by rw [← h0, Nat.div_add_mod]
+      _ = (3 ^ 2) ^ (n / 2) * 3 % 4 := by rw [Nat.pow_succ, Nat.pow_mul]
+      _ = (3 ^ 2 % 4) ^ (n / 2) % 4 * 3 % 4 := by rw [← Nat.pow_mod, Nat.mod_mul_mod]
+      _ = 1 ^ (n / 2) % 4 * 3 % 4 := rfl
+      _ = 3 := by rw [Nat.one_pow]
+    have h3 : 7 ^ k % 4 = 3 := calc
+      _ = 7 ^ (2 * (k / 2) + 1) % 4 := by rw [← h1, Nat.div_add_mod]
+      _ = (7 ^ 2) ^ (k / 2) * 7 % 4 := by rw [Nat.pow_succ, Nat.pow_mul]
+      _ = (7 ^ 2 % 4) ^ (k / 2) % 4 * 7 % 4 := by rw [← Nat.pow_mod, Nat.mod_mul_mod]
+      _ = 1 ^ (k / 2) % 4 * 7 % 4 := rfl
+      _ = 3 := by rw [Nat.one_pow]
+    exact h2.trans h3.symm
+  rw [Nat.dvd_iff_mod_eq_zero, Nat.add_mod, k.pow_mul 2 2,
+    Nat.pow_mod, sq_mod_four_of_odd h1, sq_mod_four_of_odd h0] at h
+  exact Nat.succ_ne_zero 1 h
+
+lemma good_two_mul_imp₁ (h : good (2 * a) (2 * b)) :
+    7 ^ a + 3 ^ b ∣ 8 * a ^ 4 + 2 * b ^ 2 := by
+  rw [good, mul_pow, mul_pow, Nat.mul_comm, pow_mul, Nat.mul_comm, pow_mul, sq_sub_sq] at h
+  replace h : ((7 : ℕ) ^ a + (3 : ℕ) ^ b : ℤ) * (2 : ℕ) ∣ _ :=
+    (Int.mul_dvd_mul_left _ (two_dvd_seven_pow_sub_three_pow a b)).trans h
+  rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.cast_add, ← Nat.cast_mul, Int.ofNat_dvd,
+    Nat.pow_succ', sq, Nat.mul_assoc, Nat.mul_assoc, ← Nat.mul_add, Nat.mul_comm] at h
+  exact (mul_dvd_mul_iff_left (Nat.succ_ne_zero 1)).mp h
 
 lemma good_two_mul_imp₂ (h : 7 ^ a + 3 ^ b ∣ 8 * a ^ 4 + 2 * b ^ 2) :
     (a = 0 ∧ b = 0) ∨ (a = 1 ∧ b ≤ 2) := by
