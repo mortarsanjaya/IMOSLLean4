@@ -1,0 +1,24 @@
+For any positive integer $n$ and $k \geq 2$, define $\nu_k(n)$ as the largest exponent $r$ such that $k^r \mid n$.
+Prove the following:
+\begin{enumerate}
+    \item   there are infinitely many $n$ such that $\nu_{10}(n!) > \nu_9(n!)$; and
+    \item   there are infinitely many $n$ such that $\nu_{10}(n!) < \nu_9(n!)$.
+\end{enumerate}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow the official solution in a more general setting.
+
+First, it is clear that
+\[ \nu_k(n) = \min_{\substack{p \text{ prime} \\ p \mid k}} \frac{\nu_p(n)}{\nu_p(k)}. \]
+Second, the Legendre formula tells us that for any $n \in \N$ and $p$ prime,
+\[ \nu_p(n!) = \sum_{i = 1}^{\infty} \left\lfloor \frac{n}{p^i} \right\rfloor = \frac{n - s_p(n)}{p - 1}, \]
+    where $s_p(n)$ is the sum of digits of $n$ in base $p$ representation.
+The sum formula also shows that $\nu_p(n!) \leq \nu_q(n!)$ for any primes $q \leq p$ and $n$.
+As a result, we have the formulas
+\[ \nu_9(n!) = \left\lfloor\frac{\nu_3(n!)}{2}\right\rfloor = \left\lfloor\frac{n - s_3(n)}{4}\right\rfloor, \quad \nu_{10}(n!) = \nu_5(n!) = \frac{n - s_5(n)}{4}. \]
+It is immediate to see that $\nu_{10}(n!) > \nu_9(n!)$ if $n = 5^k$ for some $k > 0$ and $\nu_{10}(n!) > \nu_9(n!)$ if $n = 3^{2k}$ for some $k$ odd.
