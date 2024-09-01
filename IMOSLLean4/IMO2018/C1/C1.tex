@@ -1,0 +1,35 @@
+For any $n \geq 4$, prove that there exists a set $S$ of $n$ positive integers with the following property:
+    for each $m \in \N$ with $2 \leq m \leq n - 2$, there exists $T \subseteq S$ of size $m$ such that the sum of elements in $T$ and in $S \setminus T$ are equal.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2018SL.pdf}
+
+The original problem only asks for $S$ with the given property only for $2 \leq m \leq n/2$ and only when $n$ is even and $n \geq 6$.
+The official solution works whenever $n$ is even (including the case $n = 4$).
+However, slight tweaking gives a working set for odd $n$.
+
+For each $S \subseteq \N$, let $\sigma_S$ be the sum of all elements of $S$.
+Clearly it suffices to find the desired subset $T$ of size $m$ only when $2 \leq m \leq \lfloor n/2 \rfloor$.
+It is also clear that the condition $\sigma_T = \sigma_{S \setminus T}$ is equivalent to $2 \sigma_T = \sigma_S$.
+
+First suppose that $n \geq 4$ is even, and write $n = 2(c + 1)$ for some $c > 0$.
+Take the set $S = S_n$ to be
+\[ S_n = \{2 \cdot 3^k, 4 \cdot 3^k : k < c\} \cup \{1, 3^c + 2\}. \]
+The first set in the union has size $2c$; the elements are distinct by taking magnitude.
+It is also disjoint from the second set, also by magnitude.
+Easy computation shows that $\sigma_{S_n} = 4 \cdot 3^c$.
+
+For each $2 \leq m \leq c + 1$, the desired subset $T_{n, m}$ of size $m$ is
+\[ T_{n, m} = \{4 \cdot 3^{c + 1 - m + k} : k < m - 1\} \cup \{2 \cdot 3^{c + 1 - m}\}. \]
+It is easy to see that $\sigma_{T_{n, m}} = 2 \cdot 3^c$.
+Thus, we are done if $n = 2(c + 1)$.
+
+Now suppose that $n \geq 5$ is odd, and write $n = 2c + 1$ for some $c \geq 2$.
+We just modify $S_n$ slightly and take
+\[ S_n = \{2 \cdot 3^k, 4 \cdot 3^k : k < c\} \cup \{3^c + 3\}. \]
+For each $2 \leq m \leq c + 1$, the desired subset $T_{n, m}$ of size $m$ is the same as above.
+Same computation as before shows that this choice of sets work, except when $c = 2$ because $3^c + 3 = 4 \cdot 3^{c - 1} = 12$.
+But in this case, $S = \{4, 5, 6, 7, 8\}$ works because only the case $m = 2$ needs to be checked and $T = \{7, 8\}$ works with it.
