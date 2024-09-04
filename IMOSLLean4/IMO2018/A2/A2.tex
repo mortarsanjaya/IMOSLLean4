@@ -1,0 +1,29 @@
+Let $R$ be a totally ordered commutative ring.
+Find all periodic sequences $(a_k)_{k \geq 0}$ such that $a_{k + 2} = a_k a_{k + 1} + 1$ for all $k \geq 0$.
+
+Original problem: Find all possible (not necessarily minimal) periods of such sequence.
+
+
+
+\section*{Answer}
+
+The possible periodic sequences are $(-1, -1, 2, -1, -1, 2, \ldots)$ and its permutations.
+In particular, the periods are precisely the multiples of $3$.
+
+
+
+\section*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2018SL.pdf}
+
+We use Solution 2 of the official solution.
+It also gives all the desired periodic sequences.
+
+Let $n$ be a period of $(a_k)_{k \geq 0}$.
+By the recurrence relation, for all $k \geq 0$, we have
+\[ a_{k + 2}^2 + a_k = a_k a_{k + 1} a_{k + 2} + a_{k + 2} + a_k = a_k a_{k + 3} + a_{k + 2}. \]
+Summing cyclically gives
+\[ \sum_{k = 0}^{n - 1} a_k^2 = \sum_{k = 0}^{n - 1} a_{k + 2}^2 = \sum_{k = 0}^{n - 1} a_k a_{k + 3} \iff \sum_{k = 0}^{n - 1} (a_k - a_{k + 3})^2 = 0. \]
+In particular, we get $a_k = a_{k + 3}$ for all $k \geq 0$.
+Thus, $(a_k)_{k \geq 0}$ is $3$-periodic.
+Finally, solving the system $a_{k + 2} = a_{k + 1} a_k + 1$ for $k = 0, 1, 2$ shows that $(a_0, a_1, a_2)$ is a permutation of $(-1, -1, 2)$.

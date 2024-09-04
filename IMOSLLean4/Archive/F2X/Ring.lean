@@ -7,7 +7,7 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Archive.F2X.Defs
 import Mathlib.Algebra.Ring.Defs
 
-/-! # `𝔽₂[X]` is a ring -/
+/-! # `𝔽₂X` is a ring -/
 
 namespace IMOSL
 namespace IMO2012A5

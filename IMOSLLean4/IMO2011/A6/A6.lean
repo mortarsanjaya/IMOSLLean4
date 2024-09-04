@@ -23,7 +23,7 @@ theorem final_solution [LinearOrderedCommRing R]
     {f : R → R} (h : ∀ x y : R, f (x + y) ≤ y * f x + f (f x)) :
     ∀ x : R, x ≤ 0 → f x = 0 := by
   have h0 (t x : R) : f (f t) - f (f x) ≤ (f t - x) * f x :=
-    sub_le_iff_le_add.mpr ((h _ _).trans_eq' <| by rw [add_sub_cancel])
+    sub_le_iff_le_add.mpr ((h _ _).trans_eq' (by rw [add_sub_cancel]))
   replace h0 (t x : R) : 0 ≤ (f t - x) * f x + (f x - t) * f t := by
     rw [← sub_self (f (f t)), ← sub_add_sub_cancel _ (f (f x))]
     exact add_le_add (h0 t x) (h0 x t)

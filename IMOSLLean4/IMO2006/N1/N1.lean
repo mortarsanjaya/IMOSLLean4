@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.RingTheory.Coprime.Lemmas
-import Mathlib.Algebra.Order.Ring.Abs
+import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # IMO 2006 N1 (P4)
@@ -52,17 +52,19 @@ lemma good_zero_iff : good 0 y ↔ y = 2 ∨ y = -2 := by
 lemma good_four_iff : good 4 y ↔ y = 23 ∨ y = -23 := by
   rw [← sq_eq_sq_iff_eq_or_eq_neg, eq_comm]; rfl
 
+lemma good_neg_right (h : good x y) : good x (-y) := h.trans (neg_sq y).symm
+
 lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
-  rw [good, ← sq_abs, two_mul, (x + 1).add_right_comm, pow_add, ← add_one_mul (α := ℤ)] at h
+  wlog hy : 0 ≤ y
+  · exact this (good_neg_right h) (neg_nonneg_of_nonpos (le_of_not_le hy))
+  rw [good, two_mul, (x + 1).add_right_comm, pow_add, ← add_one_mul (α := ℤ)] at h
   rcases x with _ | x
   -- First deal with the case `x = 0`
-  · change (11 : ℕ) = |y| ^ 2 at h
-    rw [Int.abs_eq_natAbs, ← Nat.cast_pow, Nat.cast_inj, sq] at h
-    refine (Nat.not_exists_sq (m := 3) (n := 11) ?_ ?_).elim ⟨y.natAbs, h.symm⟩
-    exacts [Nat.le_add_right 10 1, Nat.le_add_right 12 4]
+  · change (11 : ℕ) = y ^ 2 at h
+    replace h : Int.sqrt 11 * Int.sqrt 11 = 11 :=
+      (Int.exists_mul_self 11).mp ⟨y, (sq y).symm.trans h.symm⟩
+    refine absurd h (ne_of_beq_false ?_); rfl
   -- Now solve for `(2^{x + 3} + 1) 2^{x + 2} = y^2 - 1`
-  have hy : 0 ≤ |y| := abs_nonneg y
-  generalize |y| = y at h hy
   have X : (0 : ℤ) < 2 := two_pos
   have X0 : (2 : ℤ) ≠ 0 := X.ne.symm
   obtain h0 | h0 : 2 ^ (x + 1) ∣ y - 1 ∨ 2 ^ (x + 1) ∣ y + 1 := by

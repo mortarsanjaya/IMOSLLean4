@@ -10,11 +10,11 @@ import Mathlib.Data.Int.Bitwise
 /-!
 # IMO 2010 A4
 
-Define the sequence $(x_n)\_{n ∈ ℕ}$ recursively by $x_0 = 1$,
+Define the sequence $(x_n)_{n ≥ 0}$ recursively by $x_0 = 1$,
   $x_{2k} = (-1)^k x_k$, and $x_{2k + 1} = -x_k$ for all $k ∈ ℕ$.
-Prove that $\sum_{i < n} x_i ≥ 0$ for all $n ∈ ℕ$.
+Prove that for any $n ∈ ℕ$, $$ \sum_{i < n} x_i ≥ 0. $$
 
-**Extra**: Prove that $\sum_{i < n} x_i = 0$ if and only if the
+**Extra**: Prove that equality holds if and only if the
   base $4$ representation of $n$ only contains $0$ and $2$ as a digit.
 
 ### Further directions
@@ -114,7 +114,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
 
 /-! ## Final solution -/
 
-/-- Final solution for the main problem -/
+/-- Final solution -/
 theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   ---- Reduce to showing that `x_k = ff` whenever `S_k = 0`
   suffices ∀ k, S k = 0 → x k = false by

@@ -79,6 +79,8 @@ theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
 
 
 
+/-! ### Solution for rings with `√3` -/
+
 class HasSqrt3 (R) [LinearOrderedCommSemiring R] where
   sqrt3 : R
   sqrt3_nonneg : 0 ≤ sqrt3

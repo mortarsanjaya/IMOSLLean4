@@ -11,9 +11,9 @@ import Mathlib.Order.Basic
 # IMO 2016 A5
 
 1. Prove that, for every $n ∈ ℕ$, there exists some $a, b ∈ ℕ$
-  such that $0 < b ≤ √n + 1$ and $b^2 n ≤ a^2 ≤ b^2 (n + 1)$.
+  such that $0 < b ≤ \sqrt{n} + 1$ and $b^2 n ≤ a^2 ≤ b^2 (n + 1)$.
 2. Prove that, for infinitely many $n ∈ ℕ$, there does not exist $a, b ∈ ℕ$
-  such that $0 < b ≤ √n$ and $b^2 n ≤ a^2 ≤ b^2 (n + 1)$.
+  such that $0 < b ≤ \sqrt{n}$ and $b^2 n ≤ a^2 ≤ b^2 (n + 1)$.
 -/
 
 namespace IMOSL

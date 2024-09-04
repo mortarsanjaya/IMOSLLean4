@@ -6,16 +6,15 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.NatSequence.AntitoneConst
 import IMOSLLean4.Extra.Infinitesimal.Archimedean
-import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Fin.VecNotation
 
 /-!
 # IMO 2006 A1
 
 Let $R$ be an archimedean ring with floor.
-Denote $f(x) = ⌊x⌋ (x - ⌊x⌋)$ for any $x ∈ R$.
-Prove that for any $r ∈ R$, there exists $N ∈ ℕ$ such that
-  $f^{k + 2}(r) = f^k(r)$ for all $k ≥ N$.
+Define the function $f : R → R$ by $$ f(x) = ⌊x⌋ (x - ⌊x⌋). $$
+Prove that for any $r ∈ R$, there exists $N ∈ ℕ$ such that for all $k ≥ N$,
+$$ f^{k + 2}(r) = f^k(r). $$
 -/
 
 namespace IMOSL
@@ -38,11 +37,10 @@ theorem floor_f_natAbs_le (r : R) : ⌊f r⌋.natAbs ≤ ⌊r⌋.natAbs := by
   rw [← Nat.cast_le (α := ℤ), Int.cast_natAbs, Int.cast_natAbs,
     Int.cast_abs, Int.cast_id, Int.cast_abs, Int.cast_id]
   rcases le_total 0 ⌊r⌋ with h | h
-  · rw [abs_eq_self.mpr h, abs_eq_self.mpr (floor_f_nonneg h), ← Int.cast_le (R := R)]
+  · rw [abs_of_nonneg h, abs_of_nonneg (floor_f_nonneg h), ← Int.cast_le (R := R)]
     exact (Int.floor_le _).trans <| mul_le_of_le_one_right
       (Int.cast_nonneg.mpr h) (Int.fract_lt_one r).le
-  · rw [abs_eq_neg_self.mpr (floor_f_nonpos h),
-      abs_eq_neg_self.mpr h, neg_le_neg_iff, Int.le_floor]
+  · rw [abs_of_nonpos (floor_f_nonpos h), abs_of_nonpos h, neg_le_neg_iff, Int.le_floor]
     exact le_mul_of_le_one_right (Int.cast_nonpos.mpr h) (Int.fract_lt_one r).le
 
 theorem floor_f_iter_natAbs_le (r : R) : ∀ k, ⌊f^[k] r⌋.natAbs ≤ ⌊r⌋.natAbs
@@ -65,7 +63,7 @@ theorem floor_f_iter_eventually_const (r : R) : ∃ (C N : ℕ), ∀ n, ⌊f^[n 
   simp only at h h0 ⊢; rcases C.eq_zero_or_pos with rfl | h1; rfl
   specialize h (n + 1); rw [Nat.add_right_comm, f.iterate_succ_apply'] at h
   replace h1 : 0 < ⌊f^[n + N] r⌋ := by rwa [h0, Nat.cast_pos]
-  rw [← h, Int.natCast_natAbs, abs_eq_self.mpr (floor_f_nonneg h1.le)] at h0
+  rw [← h, Int.natCast_natAbs, abs_of_nonneg (floor_f_nonneg h1.le)] at h0
   exact absurd h0.symm (floor_f_lt_of_floor_pos h1).ne
 
 theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
@@ -82,8 +80,11 @@ theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
     exact one_ne_zero (zero_eq_neg.mp h)
   ---- Formula for `f^n(r)`
   · rw [neg_neg]; refine Nat.rec rfl λ n h0 ↦ ?_
+    have X0 : (n.succ : Fin 2) = n + 1 := by
+      rw [Fin.ext_iff, Fin.val_add, Fin.val_natCast,
+        Fin.val_natCast, Fin.val_one, Nat.mod_add_mod]
     rw [f.iterate_succ_apply', f, Int.fract, h, X, h0,
-      neg_one_mul, sub_neg_eq_add, neg_add', Nat.cast_succ]
+      neg_one_mul, sub_neg_eq_add, neg_add', X0]
     exact Fin.cases rfl (λ i ↦ by simp [Fin.fin_one_eq_zero i]) n
 
 theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f^[n] r⌋ = -C) :
@@ -107,7 +108,7 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
   replace h (s : R) : |(C + 1) * Int.fract s - C| < ((C + 1 + C : ℕ) : R) := by
     apply (abs_sub _ _).trans_lt
     rw [Nat.abs_cast, Nat.cast_add, add_lt_add_iff_right, ← Nat.cast_succ,
-      abs_mul, Nat.abs_cast, abs_eq_self.mpr (Int.fract_nonneg s)]
+      abs_mul, Nat.abs_cast, abs_of_nonneg (Int.fract_nonneg s)]
     exact mul_lt_of_lt_one_right (Nat.cast_pos.mpr C.succ_pos) (Int.fract_lt_one _)
   refine Infinitesimal.iff_nsmul_Nat_bdd.mpr ⟨C + 1 + C, λ k ↦ ?_⟩
   apply (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC k).le).trans_lt
@@ -117,14 +118,12 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
 
 
 
-/-! ### Summary -/
+/-! ### Extra predicates -/
 
 /-- Predicate for what the sequence `(f^[n](x))_{n ≥ 0}` looks like eventually. -/
 inductive GeneralGood : (ℕ → R) → Prop
-  | const_zero :
-      GeneralGood λ _ ↦ 0
-  | two_periodic (s : R) (_ : 0 < s) (_ : s < 1) :
-      GeneralGood λ n ↦ ![-s, s - 1] n
+  | const_zero : GeneralGood λ _ ↦ 0
+  | two_period (s : R) (_ : 0 < s) (_ : s < 1) : GeneralGood λ n ↦ ![-s, s - 1] n
   | const_nonzero_add_Infinitesimal (C : ℕ) (_ : 1 < C) (ε : R) (_ : Infinitesimal ε)
         (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2 + (-C) ^ n * ε) :
       GeneralGood a
@@ -132,23 +131,37 @@ inductive GeneralGood : (ℕ → R) → Prop
 /-- Predicate for what the sequence `(f^[n](x))_{n ≥ 0}` looks like eventually,
   in the archimedean case. -/
 inductive ArchimedeanGood : (ℕ → R) → Prop
-  | const_zero :
-      ArchimedeanGood λ _ ↦ 0
-  | two_periodic (s : R) (_ : 0 < s) (_ : s < 1) :
-      ArchimedeanGood λ n ↦ ![-s, s - 1] n
+  | const_zero : ArchimedeanGood λ _ ↦ 0
+  | two_period (s : R) (_ : 0 < s) (_ : s < 1) : ArchimedeanGood λ n ↦ ![-s, s - 1] n
   | const_nonzero (C : ℕ) (_ : 1 < C) (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2) :
       ArchimedeanGood a
 
-theorem ArchimedeanGood_of_GeneralGood [Archimedean R] {a : ℕ → R} (h : GeneralGood a) :
-    ArchimedeanGood a :=
-  h.recOn ArchimedeanGood.const_zero ArchimedeanGood.two_periodic
-    ---- Remaining case: `const_nonzero_add_Infinitesimal`
-    λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ by
-      rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
+theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : GeneralGood a) :
+    ArchimedeanGood a := by
+  refine h.recOn ArchimedeanGood.const_zero ArchimedeanGood.two_period ?_
+  ---- Case `const_nonzero_add_Infinitesimal` remaining
+  refine λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ ?_
+  rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
+
+theorem ArchimedeanGood.two_periodic {a : ℕ → R} (h : ArchimedeanGood a) (n) :
+    a (n + 2) = a n := by
+  refine h.recOn rfl ?_ ?_
+  ---- Case `two_period`
+  · rintro s - -; apply congrArg
+    rw [Fin.ext_iff, Fin.val_natCast, Fin.val_natCast, Nat.add_mod_right]
+  ---- Case `const_nonzero`
+  · rintro C - a ha
+    have hC : 0 < (C : R) + 1 := (Nat.cast_pos.mpr C.succ_pos).trans_eq C.cast_succ
+    rw [← mul_left_cancel_iff_of_pos hC, ha, ha]
 
 
-/-- Final solution, general (non-archimedean) version -/
-theorem final_solution_general (r : R) : ∃ N, GeneralGood (f^[· + N] r) := by
+
+
+
+/-! ### Summary -/
+
+/-- Main result, general (non-archimedean) version -/
+theorem eventually_GeneralGood (r : R) : ∃ N, GeneralGood (f^[· + N] r) := by
   rcases floor_f_iter_eventually_const r with ⟨_ | _ | C, N, h⟩
   ---- Case 1: `C = 0`
   · suffices ∀ n, f^[n + (N + 1)] r = 0
@@ -158,13 +171,20 @@ theorem final_solution_general (r : R) : ∃ N, GeneralGood (f^[· + N] r) := by
   ---- Case 2: `C = 1`
   · simp only [f.iterate_add_apply] at h ⊢
     obtain ⟨s, h0, h1⟩ := case_floor_neg_one h
-    exact ⟨N, funext h1 ▸ GeneralGood.two_periodic s h0.1 h0.2⟩
+    exact ⟨N, funext h1 ▸ GeneralGood.two_period s h0.1 h0.2⟩
   ---- Case 3: `C > 1`
   · simp only [f.iterate_add_apply] at h ⊢
     have h0 := Nat.one_lt_succ_succ C
     obtain ⟨ε, hε, h1⟩ := case_floor_neg_of_one_lt h0 h
     exact ⟨N, GeneralGood.const_nonzero_add_Infinitesimal _ h0 ε hε _ h1⟩
 
+/-- Main result, archimedean version -/
+theorem eventually_ArchimedeanGood [Archimedean R] (r : R) :
+    ∃ N, ArchimedeanGood (f^[· + N] r) :=
+  (eventually_GeneralGood r).imp λ _ ↦ GeneralGood.toArchimedeanGood
+
 /-- Final solution -/
-theorem final_solution [Archimedean R] (r : R) : ∃ N, ArchimedeanGood (f^[· + N] r) :=
-  (final_solution_general r).imp λ _ ↦ ArchimedeanGood_of_GeneralGood
+theorem final_solution [Archimedean R] (r : R) : ∃ N, ∀ n ≥ N, f^[n + 2] r = f^[n] r := by
+  refine (eventually_ArchimedeanGood r).imp λ N hN n hn ↦ ?_
+  have h := hN.two_periodic (n - N)
+  rwa [Nat.add_right_comm, Nat.sub_add_cancel hn] at h

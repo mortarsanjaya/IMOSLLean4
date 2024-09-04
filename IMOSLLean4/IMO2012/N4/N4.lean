@@ -14,7 +14,7 @@ import Mathlib.Tactic.Ring
 
 An integer $a$ is called *friendly* if there exists $m, n ∈ ℕ^+$ such that
 $$ (m^2 + n)(n^2 + m) = a(m - n)^3. $$
-1. Prove that $\\{1, 2, …, 2012\\}$ contains at least $500$ friendly integers.
+1. Prove that $\{1, 2, …, 2012\}$ contains at least $500$ friendly integers.
 2. Is $2$ friendly?
 -/
 
@@ -65,7 +65,7 @@ end
 
 /-! ### Part 2 -/
 
-/- Final solution, part 2 -/
+/-- Final solution, part 2 -/
 theorem final_solution_part2 : ¬friendly 2 := by
   rintro ⟨m, hm, n, hn, h⟩
   have h0 : 0 < m - n := by

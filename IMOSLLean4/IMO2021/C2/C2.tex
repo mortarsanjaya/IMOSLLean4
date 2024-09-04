@@ -1,0 +1,38 @@
+Fix some positive integer $n$, and denote $[n] = \{0, 1, \ldots, n - 1\}$.
+Find all positive integers $m \in \N$ such that there exists a function $f : \Z/m\Z \to [n]$ with the following property:
+    for any $k \in \Z/m\Z$ and $i \in [n]$, there exists $j \leq n$ such that $f(k + j) = i$.
+
+
+
+\subsection*{Answer}
+
+Any $m$ can be uniquely written as $qn + r$ for some $q, r \in \N$ with $r < n$.
+Then $m$ works iff $r \leq q$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2021SL.pdf}
+
+We follow the official solution.
+We choose a different construction of $f$ for the case $r \leq q$.
+
+Write $m = qn + r$ for some $q, r \in \N$ with $r < n$.
+First suppose that such function $f$ exists.
+By pigeonhole principle, $|f^{-1}(i)| \leq q$ for some $i \in [n]$, which implies
+\[ qn + r = m \leq \sum_{k \in \Z/m\Z} \#\{j \leq n : f(k + j) = i\} = (n + 1) \cdot |f^{-1}(i)| \leq (n + 1) q \implies r \leq q. \]
+
+On the other hand, suppose that $r \leq q$.
+Treat $[n]$ as $\Z/n\Z$, define $g(x) = \lfloor qnx/m \rfloor$ for each $x \in \N$, and define $f(i) = g(i) \pmod{n}$ for each $i \in \Z/m\Z$.
+Since $g(x) \leq g(x + 1) \leq g(x) + 1$ for each $x$, we have
+\[ g(\{0, 1, \ldots, k\}) = \{0, 1, \ldots, g(k)\} \quad \forall k \in \N. \]
+As a result, it suffices to check that $g(x + n + 1) \geq g(x) + n$ for all $x \in \N$.
+Indeed, this follows from $qn(n + 1) \geq n(qn + r) = nm$ since $r \leq q$.
+
+
+
+\subsection*{Extra notes}
+
+The original problem only asks to prove that finitely many $m$ does not satisfy the given property, and to find the maximum such $m$.
+The solution above immediately implies a solution to the original problem.

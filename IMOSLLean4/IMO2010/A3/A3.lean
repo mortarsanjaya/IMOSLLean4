@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Algebra.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Data.Nat.Cast.Basic
 
 /-!
 # IMO 2010 A3
@@ -41,7 +40,7 @@ theorem special_ineq {w x y z c : R} (hx : 0 ≤ x) (hy : 0 ≤ y)
      add_mul _ _ x ▸ mul_le_mul_of_nonneg_right h0 hx
   have h1 := add_le_add h h0
   rw [add_comm (w * y), add_add_add_comm, ← mul_add, ← mul_add, add_comm y,
-    mul_comm z, ← sq, add_comm, nsmul_eq_mul, Nat.cast_two] at h1
+    mul_comm z, ← sq, add_comm, two_nsmul, ← two_mul] at h1
   exact le_of_add_le_add_right (h1.trans (two_mul_le_add_sq _ _))
 
 theorem good_targetSum_le {x : ℕ → R} (h : ∀ i, 0 ≤ x i) {c : R} (h0 : good c x) :
@@ -53,7 +52,7 @@ theorem good_targetSum_le {x : ℕ → R} (h : ∀ i, 0 ≤ x i) {c : R} (h0 : g
 
 theorem targetSum_of_Fin2Map (c : R) :
     ∀ n, targetSum (λ n ↦ ![c, 0] n) (2 * n) = n • c ^ 2
-  | 0 => by rw [mul_zero, targetSum, sum_range_zero, zero_nsmul]
+  | 0 => by rw [Nat.mul_zero, targetSum, sum_range_zero, zero_nsmul]
   | n + 1 => by
       have h (n) : ((2 * n : ℕ) : Fin 2) = 0 := Fin.val_injective (Nat.mul_mod_right 2 n)
       have h0 (n) : ((2 * n + 1 : ℕ) : Fin 2) = 1 := Fin.val_injective (Nat.mul_add_mod 2 n 1)

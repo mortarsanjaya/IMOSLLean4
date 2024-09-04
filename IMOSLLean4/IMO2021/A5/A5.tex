@@ -1,0 +1,31 @@
+Let $F$ be a totally ordered field.
+Let $a_1, a_2, \ldots, a_n \in F$ be non-negative elements.
+Let $r \in F$ be any positive element such that $r > a_i$ for each $i \leq n$ and $r \geq a_1 + a_2 + \ldots + a_n$.
+Prove that
+\[ \sum_{k = 1}^n \frac{a_k}{r - a_k} (a_1 + a_2 + \ldots + a_{k - 1})^2 < \frac{r^2}{3}. \tag{*}\label{2021a5-eq0} \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2021SL.pdf}
+
+We just follow Solution 1 of the official solution, modified as necessary.
+
+For convenience, denote $s_k = a_1 + a_2 + \ldots + a_k$ for each $k \leq n$ (and $s_0 = 0$).
+We claim that for each $k$,
+\[ \frac{a_k}{r - a_k} s_{k - 1}^2 \leq \frac{s_k^3 - s_{k - 1}^3}{3r}, \]
+    with equality only if $a_k = 0$.
+If the claim holds and the $a_i$s are not all zero, then~\eqref{2021a5-eq0} immediately holds.
+Otherwise~\eqref{2021a5-eq0} holds simply due to the right hand side being positive.
+It now remains to prove the claim, including the equality case.
+
+Clearly, $a_k = 0$ implies that both sides are equal, since $s_k = a_k + s_{k - 1}$.
+Now suppose that $a_k > 0$.
+The claim reduces to the tighter inequality
+\[ \frac{a_k}{r - a_k} s_{k - 1}^2 \leq \frac{a_k s_{k - 1} s_k}{r}, \]
+    since $s_k^3 - s_{k - 1}^3 = 3 a_k s_{k - 1} s_k + a_k^3$.
+This inequality reduces to
+\[ r s_{k - 1} \leq (r - a_k) s_k \iff 0 \leq a_k (r - s_k), \]
+    which holds since $a_k \geq 0$ and $s_k \leq s_n \leq r$.
+We are done.

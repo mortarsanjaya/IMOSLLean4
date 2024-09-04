@@ -8,9 +8,9 @@ import IMOSLLean4.Archive.F2X.Ring
 import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
-# Ring homomorphisms from `𝔽₂[X]`
+# Ring homomorphisms from `𝔽₂X`
 
-In this file, we construct ring homomorphisms from `𝔽₂[X]`.
+In this file, we construct ring homomorphisms from `𝔽₂X`.
 -/
 
 namespace IMOSL

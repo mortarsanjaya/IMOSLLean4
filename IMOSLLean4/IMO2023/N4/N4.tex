@@ -1,0 +1,43 @@
+Let $a_0, a_1, \ldots, a_{n - 1}, b_0, b_1, \ldots, b_{n - 1} \in \N^+$ and $D$ be a positive integer such that for each $i \leq n$,
+\[ b_0 b_1 \ldots b_i a_{i + 1} \ldots a_{n - 1} = b_0 b_1 \ldots b_{i - 1} a_i \ldots a_{n - 1} + D. \]
+Determine the smallest possible value of $D$.
+
+
+
+\subsection*{Answer}
+
+$n!$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow Solution 3 of the official solution, except that we avoid explicit division.
+
+First note that $b_k > a_k$ for all $k < n$.
+Next, we proceed by induction on $k$ and prove that $a_k > k(b_k - a_k)$ for all $k \in \N$.
+The base case is clear, so assume that $a_k > k(b_k - a_k)$ for some $0 \leq k < n - 1$.
+By the given condition,
+\[ b_0 b_1 \ldots b_{k - 1} (b_k - a_k) a_{k + 1} \ldots a_n = b_0 b_1 \ldots b_k (b_{k + 1} - a_{k + 1}) a_{k + 2} \ldots a_n, \]
+    and thus we get
+\begin{align*}
+    (b_k - a_k) a_{k + 1}
+    &= b_k (b_{k + 1} - a_{k + 1}) \\
+    &= a_k (b_{k + 1} - a_{k + 1}) + (b_k - a_k)(b_{k + 1} - a_{k + 1}) \\
+    &> (k + 1)(b_k - a_k)(b_{k + 1} - a_{k + 1}).
+\end{align*}
+Induction step is complete by clearing the factor $b_k - a_k$ from both sides.
+Thus, we proved that $a_k > k(b_k - a_k)$ for all $k < n$.
+
+Since $b_k > a_k$, we get $a_k > k$ and thus $a_k \geq k + 1$ for all $k < n$.
+As a result,
+\[ D = (b_0 - a_0) a_1 a_2 \ldots a_{n - 1} \geq 1 \cdot 2 \cdot \ldots \cdot n = n!. \]
+
+
+
+\subsection*{Implementation details}
+
+It seems to me that this is impossible to implement using \texttt{Fin}.
+We will implement the $a_i$s and $b_i$s using \texttt{Nat -> Nat} instead, letting $a_i$ be garbage values for $i \geq n$.

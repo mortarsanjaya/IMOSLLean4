@@ -1,0 +1,45 @@
+Let $R$ be a totally ordered commutative ring.
+Let $R^+$ denote the set of positive elements of $R$.
+Find all functions $f : R^+ \to R^+$ such that for all $x \in R^+$, there exists a unique $y \in R^+$ such that
+\[ x f(y) + y f(x) \leq 2. \]
+
+
+
+\subsection*{Answer}
+
+A function $f : R^+ \to R^+$ satisfies the condition if and only if $x f(x) = 1$ for all $x \in R^+$.
+In particular, such a function does not exist if $R$ is not a field, and $x \mapsto x^{-1}$ is the only such function if $R$ is a field.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2022SL.pdf}
+
+We present Solution 1 of the official solution, modified in a way to avoid fractions and square roots.
+
+First, suppose that $x f(x) = 1$ for all $x \in R^+$.
+Then, for any $x, y \in R^+$,
+\[ x f(y) + y f(x) \leq 2 \iff x^2 + y^2 = xy(x f(y) + y f(x)) \leq 2xy \iff x = y. \]
+
+Now we go for the converse.
+Fix a function $f : R^+ \to R^+$ satisfying the problem's condition.
+The main claim is that, given $x \in R^+$, the unique $y \in R^+$ with $x f(y) + y f(x) \leq 2$ is $y = x$.
+That is, we claim that
+\begin{itemize}
+    \item   $x f(x) \leq 1$ for any $x \in R^+$,
+    \item   $x f(y) + y f(x) > 2$ for any $x \neq y \in R^+$.
+\end{itemize}
+
+Suppose for the sake of contradiction that for some $x \in R^+$, the unique $y \in R^+$ with $x f(y) + y f(x) \leq 2$ is different from $x$.
+Then we get $x f(x) > 1$ and $y f(y) > 1$, so
+\[ 2xy \geq xy (x f(y) + y f(x)) > x^2 + y^2 \geq 2xy. \]
+A contradiction; the claim is proved.
+We now proceed to prove that $x f(x) = 1$ for any $x \in R^+$.
+
+Fix $x \in R^+$, and suppose for the sake of contradiction that $x f(x) < 1$.
+We can write $1 = x f(x) + M$ for some $M \in R^+$.
+Then we have $x f((1 + M) x) \leq (1 + M) x f((1 + M) x) \leq 1$ and
+\[ (1 + M) x f(x) \leq (1 + M)(1 - M) = 1 - M^2 \leq 1. \]
+Thus taking $y = (1 + M) x \neq x$ in the second property of the claim yields a contradiction.
+Since $x f(x) \geq 1$, this shows that $x f(x) = 1$.

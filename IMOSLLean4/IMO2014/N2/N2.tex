@@ -1,0 +1,32 @@
+Find all pairs $(x, y)$ of integers such that
+\[ 7x^2 - 13xy + 7y^2 = (|x - y| + 1)^3. \]
+
+
+
+\subsection*{Answer}
+
+$(m^3 + 2m^2 - m - 1, m^3 + m^2 - 2m - 1)$ and its permutation for some integer $m$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2014SL.pdf}
+
+We follow the official solution, simplifying at some parts.
+Note that we solve it more generally.
+For convenience, denote $A(m) = m^3 + 2m^2 - m - 1$ and $B(m) = m^3 + m^2 - 2m - 1$.
+
+Let $d = |x - y|$.
+First, rewrite the original equation as
+\[ 4(d + 1)^3 = 27(x - y)^2 + (x + y)^2 = 27d^2 + (x + y)^2 \iff (x + y)^2 = (d - 2)^2 (4d + 1). \tag{1}\label{2014n2-eq1} \]
+It now suffices to solve~\eqref{2014n2-eq1} in terms of $d = |x - y|$ and $x + y$.
+
+From the above equation, we see that $4d + 1$ must also be a square; or $d = 2$, for which $4d + 1 = 9$ is again a square.
+This holds precisely when $d = m^2 + m$ for some integer $m$.
+Substituting back into~\eqref{2014n2-eq1} gives
+\[ (x + y)^2 = (m^2 + m - 2)^2 (2m + 1)^2 \iff x + y = \pm (m^2 + m - 2)(2m + 1). \]
+WLOG we can assume that $d \geq 0$.
+If the sign is positive, solving yields $(x, y) = (A(m), B(m))$ .
+If the sign is negative, solving yields $(x, y) = (A(-m - 1), B(-m - 1))$.
+Finally, by backtracking, we see that $(A(m), B(m))$ satisfies~\eqref{2014n2-eq1} for any integer $m$.

@@ -73,7 +73,7 @@ theorem ring_ineq3 {a b c : R} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) :
 
 theorem ring_ineq4 (a b c : R) :
     3 * (a * b * c * (a + b + c)) ≤ (a * b + b * c + c * a) ^ 2 := by
-  rw [← sub_nonneg, ← mul_nonneg_iff_of_pos_left (zero_lt_two' R), ring_identity2]
+  rw [← sub_nonneg, ← mul_nonneg_iff_of_pos_left zero_lt_two, ring_identity2]
   exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) (sq_nonneg _)
 
 theorem ring_ineq5 {a b c : R} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
@@ -147,6 +147,12 @@ theorem field_ineq5 (h : a⁻¹ + b⁻¹ + c⁻¹ = a + b + c) : 3 ≤ a * b + b
   have h0 := ring_ineq4 a b c
   rw [← h, field_identity2 ha.ne.symm hb.ne.symm hc.ne.symm, sq] at h0
   exact le_of_mul_le_mul_right h0 (ring_ineq5 ha hb hc)
+
+
+
+
+
+/-! ### Summary -/
 
 /-- Final solution -/
 theorem final_solution (h : a⁻¹ + b⁻¹ + c⁻¹ = a + b + c) :

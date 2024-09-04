@@ -1,0 +1,51 @@
+Find all functions $f : \N \to \N$ such that for any $x, y \in \N$, the non-negative integers $x$, $f(y)$, and $f(y + f(x))$ form the sides of a possibly degenerate triangle.
+
+\emph{Note:}
+Three non-negative real numbers $a$, $b$, and $c$ forms a possibly degenerate triangle if and only if the sum of two of them is greater than the third real number.
+Equivalently, $a + b + c \geq 2 \max\{a, b, c\}$.
+
+
+
+\subsection*{Answer}
+
+$f(x) = x$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2009SL.pdf}
+
+We present the official solution, modified for our version of the problem.
+That is, we show that $f(0) = 0$, $f(f(x)) = x$ for all $x \in \N$, and then $f(x) = x$ for all $x \in \N$.
+However, we do things differently for the final step.
+We prove $f(1) = 1$ and then use induction to prove that $f(x) = x$ for all $x \in \N$.
+
+First, using $x = 0$, we get that $f(y) = f(y + f(0))$ for all $y \in \N$.
+If $f(0) > 0$, this means that $f$ is periodic, and thus bounded, say by $N$.
+Plugging $x = 2N + 1$ gives a contradiction, as then $x > 2N \geq f(y) + f(y + f(x))$.
+This shows that $f(0) = 0$.
+
+By setting $y = 0$, we get $f(f(x)) = x$ for all $x \in \N$.
+In particular, $f$ is bijective.
+Plugging $x = 1$ yields that for all $y \in \N$,
+\[ f(y + f(1)) \leq f(y) + 1. \tag{1}\label{2009a3-eq1} \]
+
+We prove by strong induction that $f(n f(1)) = n$ for all $n \in \N$.
+Indeed, we have $f(0) = 0$ and $f(f(1)) = 1$.
+In particular, $f(1) \neq 0$.
+Now suppose that for some $k \geq 1$, we have $f(n f(1)) = n$ for all $n \leq k$.
+By~\eqref{2009a3-eq1}, $f((k + 1) f(1)) \leq f(k f(1)) + 1 = k + 1$.
+If $f((k + 1) f(1)) = c < k + 1$, then $c \leq k$, so $c = f(c f(1))$.
+By injectivity, then $(k + 1) f(1) = c f(1)$ and then $c = k + 1$, since $f(1) \neq 0$.
+This shows that $f((k + 1) f(1)) = k + 1$.
+
+As a result, $f(f(1)^2) = f(1) \implies f(1)^2 = 1 \implies f(1) = 1$.
+Plugging back into the previous claim yields $f(n) = n$ for all $n \in \N$.
+
+
+
+\subsection*{Extra notes}
+
+The main formulation considers a function $f$ from $\N^+$ to itself such that $x$, $f(y)$, and $f(y + f(x) - 1)$ form the sides of a non-degenerate triangle.
+It is not hard to show that our formulation is equivalent.

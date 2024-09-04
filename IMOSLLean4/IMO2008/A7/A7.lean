@@ -11,11 +11,11 @@ import Mathlib.Tactic.Ring
 /-!
 # IMO 2008 A7
 
-Let $F$ be a totally ordered field, and denote $F_{>0} = \\{x ∈ F : x > 0\\}$.
-Prove that, for any $a, b, c, d ∈ F_{>0}$,
-$$ \frac{(a - b)(a - c)}{a + b + c} + \frac{(b - c)(b - d)}{b + c + d}
-  + \frac{(c - d)(c - a)}{c + d + a} + \frac{(d - a)(d - b)}{d + a + b} ≥ 0. $$
-Find all cases of equality.
+Let $F$ be a totally ordered field.
+1. Prove that, for any $a, b, c, d ∈ F$ positive,
+$$ \frac{(a - b)(a - c)}{a + b + c} + \frac{(b - c)(b - d)}{b + c + d} +
+  \frac{(c - d)(c - a)}{c + d + a} + \frac{(d - a)(d - b)}{d + a + b} ≥ 0. $$
+2. Find all cases of equality.
 -/
 
 namespace IMOSL
@@ -73,7 +73,7 @@ theorem field_ineq3 {a b c d : F} (h : 0 < a + c + b) (h0 : 0 < a + c + d) :
 
 
 
-/-! ### Final solution -/
+/-! ### Start of the problem -/
 
 variable {a b c d : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d)
 
@@ -83,7 +83,7 @@ theorem lower_bound :
       ≤ (a - b) * (a - c) / (a + b + c) + (b - c) * (b - d) / (b + c + d)
         + (c - d) * (c - a) / (c + d + a) + (d - a) * (d - b) / (d + a + b) := by
   have X : (6 : F) = 2 * 3 := by norm_num
-  rw [X, mul_assoc, mul_comm 2, ← div_div, div_le_iff' (zero_lt_two' F),
+  rw [X, mul_assoc, mul_comm 2, ← div_div, div_le_iff' zero_lt_two,
     add_assoc (_ / _ + _), add_add_add_comm (_ / _), mul_add 2]
   have hy : 0 < a + c := add_pos ha hc
   have hz : 0 < b + d := add_pos hb hd
@@ -96,7 +96,7 @@ theorem lower_bound :
     refine mul_le_mul_of_nonneg_left ?_ zero_le_four
     rw [← sq_abs (a - c), ← sq_abs (b - d), add_comm c]
     replace X {u v : F} (h : 0 < u) (h0 : 0 < v) : 0 < 2 * u + v :=
-      add_pos (mul_pos (zero_lt_two' F) h) h0
+      add_pos (mul_pos zero_lt_two h) h0
     refine (field_ineq1 _ _ (X hy hz) (X hz hy)).trans_eq' (congrArg₂ _ rfl ?_)
     rw [add_add_add_comm (2 * _), ← mul_add, add_comm,
       ← add_one_mul (α := F), two_add_one_eq_three]
@@ -130,7 +130,7 @@ theorem lower_bound_weakening (x y : F) :
   have h : 4 * ((x + y) ^ 2 - 3 * (x * y)) = (x + y) ^ 2 + 3 * (x - y) ^ 2 := by ring
   rw [X, ← three_add_one_eq_four, add_one_mul (3 : F),
     add_sub_right_comm, mul_assoc, ← mul_sub, le_add_iff_nonneg_left,
-    ← mul_nonneg_iff_of_pos_left (zero_lt_four' F), mul_left_comm, h]
+    ← mul_nonneg_iff_of_pos_left zero_lt_four, mul_left_comm, h]
   replace X : (0 : F) ≤ 3 := zero_le_three
   exact mul_nonneg X (add_nonneg (sq_nonneg _) (mul_nonneg X (sq_nonneg _)))
 

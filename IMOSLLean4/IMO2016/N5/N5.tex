@@ -1,0 +1,42 @@
+Fix some $k, a \in \Z$ with $k \geq 0$ and $a > 0$.
+A pair $(x, y) \in \Z^2$ is called \emph{nice} if $(k + 1) y^2 - k x^2 = a$.
+Prove that the following two statements are equivalent:
+\begin{itemize}
+    \item   There exists a nice pair $(x, y)$ with $x \geq 0$ and $x^2 > a$;
+    \item   There exists a nice pair $(x, y)$ with $x \geq 0$ and $x^2 \leq a$.
+\end{itemize}
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2016SL.pdf}
+
+We follow Solution 2 of the official solution.
+We show that the two statements are actually equivalent to the existence of an arbitrary nice pair.
+In fact, assuming that a nice pair exists, we can show that for any integer $N$, there exists a nice pair $(x, y)$ with $x \geq 0$ and $x^2 > N$.
+
+The main idea is the following fact.
+For any nice pair $(x, y)$, one can check that $(x', y') = ((2k + 1) x + (2k + 2) y, 2k x + (2k + 1) y)$ is also nice.
+Indeed, by bashing,
+\[ (k + 1) (2k x + (2k + 1) y)^2 - k ((2k + 1) x + (2k + 2) y)^2 = (k + 1) y^2 - k x^2. \]
+
+First, we show that if a nice pair exists, then for any integer $N$, a nice pair $(x, y)$ exists with $x^2 > N$.
+Indeed, choose one of the, say $(x, y)$, and WLOG assume that $x, y > 0$.
+Then $(x', y') = ((2k + 1) x + (2k + 2) y, 2k x + (2k + 1) y)$ is nice and satisfies $x' > x$ and $y' > y$.
+Repeating this process gives a nice pair $(x, y)$ with $x \geq 0$ and $x^2 > N$.
+
+Now we show that if a nice pair exists, then a nice pair $(x, y)$ exists with $x^2 \leq a$.
+Consider one such nice pair with the minimal possible value of $|x|$.\footnote{In implementation, this is done by decreasing induction on $|x|$.}
+We claim that $x^2 \leq a$.
+
+Suppose for the sake of contradiction that $x^2 > a$.
+Let $(x', y') = ((2k + 1) |x| - (2k + 2) |y|, 2k |x| - (2k + 1) |y|)$.
+Note that this is a nice pair since $(|x|, -|y|)$ is also a nice pair.
+The main claim, which immediately gives a contradiction, is
+\[ |x'| < |(2k + 1) |x| - (2k + 2) |y|| \iff 2k |x| < (2k + 2) |y| < (2k + 2) |x| \iff k|x| < (k + 1) |y| \; \wedge \; |y| < |x|. \]
+
+For the first inequality, note that
+\[ kx^2 < kx^2 + a = (k + 1) y^2 \implies k^2 x^2 < (k + 1)^2 y^2 \implies k|x| < (k + 1) |y|. \]
+For the second inequality, note that
+\[ (k + 1)(y^2 - x^2) = a - x^2 < 0 \implies y^2 - x^2 \implies |y| < |x|. \]

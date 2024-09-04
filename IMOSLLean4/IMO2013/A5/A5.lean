@@ -31,7 +31,7 @@ theorem add_four_induction {P : ℕ → Prop}
 
 
 
-/-! ## Start of the problem -/
+/-! ### Start of the problem -/
 
 def good (f : ℕ → ℕ) := ∀ n, f^[3] n = f (n + 1) + 1
 

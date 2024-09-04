@@ -65,9 +65,9 @@ end
 
 /-- Final solution -/
 theorem final_solution {n : ℤ} {f : ι → ι → ℤ} (h : ∀ i ∈ S, ∀ j ∈ S, f i j ≡ 1 [ZMOD n])
-    (h0 : ∀ i ∈ S, S.sum (f i) ≡ S.card [ZMOD n ^ 2])
-    (h1 : ∀ j ∈ S, (S.sum (f · j)) ≡ S.card [ZMOD n ^ 2]) :
-    (S.sum λ i ↦ S.prod (f i)) ≡ S.sum λ j ↦ S.prod λ i => f i j [ZMOD n ^ 4] := by
+    (h0 : ∀ i ∈ S, ∑ j ∈ S, f i j ≡ S.card [ZMOD n ^ 2])
+    (h1 : ∀ j ∈ S, ∑ i ∈ S, f i j ≡ S.card [ZMOD n ^ 2]) :
+    (S.sum λ i ↦ ∏ j ∈ S, f i j) ≡ (S.sum λ j ↦ ∏ i ∈ S, f i j) [ZMOD n ^ 4] := by
   change _ ≡ _ [ZMOD n ^ (2 * 2)]; rw [pow_mul]
   refine ((prod_one_mod_add_card_modeq_sum_add_one ?_).symm.trans ?_).add_right_cancel' 1
   · exact λ i h2 ↦ prod_one_mod_modeq_one_mod_sq (h i h2) (h0 i h2)

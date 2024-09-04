@@ -7,16 +7,16 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Extra.CharTwo.Finset
 
 /-!
-# Explicit construction of `𝔽₂[X]`
+# Explicit construction of `𝔽₂X`
 
-In this file, we explicitly construct the ring `𝔽₂[X]`.
-We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂[X]`.
+In this file, we explicitly construct the ring `𝔽₂[X]`, denoted `𝔽₂X`.
+We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂X`.
 The explicit construction is done so that proof of equality between
   two expressions involving explicit elements can be done with just `rfl`.
 
 ### Implementation details
 
-We implement `𝔽₂[X]` as a wrapper around `Finset ℕ`.
+We implement `𝔽₂X` as a wrapper around `Finset ℕ`.
 Addition is done by symmetric difference.
 Multiplication by `X` is done by adding `1` to every element.
 -/
@@ -26,8 +26,8 @@ namespace IMO2012A5
 
 open Extra
 
-@[ext] structure 𝔽₂X where
-  toFinset : Finset ℕ
+@[ext] structure 𝔽₂X where toFinset : Finset ℕ
+
 
 
 namespace 𝔽₂X
@@ -48,7 +48,7 @@ instance : Neg 𝔽₂X := ⟨id⟩
 def X : 𝔽₂X := ⟨{1}⟩
 
 instance : DecidableEq 𝔽₂X := λ P Q ↦ match decEq P.toFinset Q.toFinset with
-  | isTrue h => isTrue (𝔽₂X.ext _ _ h)
+  | isTrue h => isTrue (𝔽₂X.ext h)
   | isFalse h => isFalse λ h0 ↦ h (congrArg toFinset h0)
 
 
@@ -66,19 +66,19 @@ protected lemma add_toFinset (P Q : 𝔽₂X) :
     (P + Q).toFinset = symmDiff P.toFinset Q.toFinset := rfl
 
 protected lemma zero_add (P : 𝔽₂X) : 0 + P = P :=
-  𝔽₂X.ext _ _ (bot_symmDiff _)
+  𝔽₂X.ext (bot_symmDiff _)
 
 protected lemma add_zero (P : 𝔽₂X) : P + 0 = P :=
-  𝔽₂X.ext _ _ (symmDiff_bot _)
+  𝔽₂X.ext (symmDiff_bot _)
 
 protected lemma add_comm (P Q : 𝔽₂X) : P + Q = Q + P :=
-  𝔽₂X.ext _ _ (symmDiff_comm _ _)
+  𝔽₂X.ext (symmDiff_comm _ _)
 
 protected lemma add_assoc (P Q R : 𝔽₂X) : P + Q + R = P + (Q + R) :=
-  𝔽₂X.ext _ _ (symmDiff_assoc _ _ _)
+  𝔽₂X.ext (symmDiff_assoc _ _ _)
 
 protected lemma add_self_eq_zero (P : 𝔽₂X) : P + P = 0 :=
-  𝔽₂X.ext _ _ (symmDiff_self _)
+  𝔽₂X.ext (symmDiff_self _)
 
 instance : AddCommGroup 𝔽₂X where
   zero_add := 𝔽₂X.zero_add
@@ -113,18 +113,18 @@ protected theorem Xpow_add_induction {p : 𝔽₂X → Prop}
 
 /-! ### Multiplication by powers of `X` -/
 
-/-- Given `n` and `P(X)`, compute `X^n P(X)` -/
+/-- Given `n : ℕ` and `P : 𝔽₂X`, compute `X^n P(X)` -/
 def XpowMul (n : ℕ) (P : 𝔽₂X) : 𝔽₂X :=
   ⟨P.toFinset.image λ k ↦ k + n⟩
 
 lemma XpowMul_nat_zero (P : 𝔽₂X) : P.XpowMul 0 = P :=
-  𝔽₂X.ext _ _ Finset.image_id
+  𝔽₂X.ext Finset.image_id
 
 lemma XpowMul_𝔽₂X_zero (n : ℕ) : XpowMul n 0 = 0 :=
-  𝔽₂X.ext _ _ (Finset.image_empty _)
+  𝔽₂X.ext (Finset.image_empty _)
 
 lemma XpowMul_𝔽₂X_one (n : ℕ) : XpowMul n 1 = Xpow n :=
-  𝔽₂X.ext _ _ ((Finset.image_singleton _ _).trans (congrArg _ n.zero_add))
+  𝔽₂X.ext ((Finset.image_singleton _ _).trans (congrArg _ n.zero_add))
 
 lemma XpowMul_Xpow (m n : ℕ) : (Xpow m).XpowMul n = Xpow (m + n) := rfl
 
@@ -134,7 +134,7 @@ lemma XpowMul_nat_add (m n : ℕ) (P : 𝔽₂X) :
 
 lemma XpowMul_𝔽₂X_add (n : ℕ) (P Q : 𝔽₂X) :
     (P + Q).XpowMul n = P.XpowMul n + Q.XpowMul n :=
-  𝔽₂X.ext _ _ (Finset.image_symmDiff _ _ (add_left_injective n))
+  𝔽₂X.ext (Finset.image_symmDiff _ _ (add_left_injective n))
 
 lemma XpowMul_sum (n : ℕ) [DecidableEq ι] (f : ι → 𝔽₂X) (S : Finset ι) :
     (S.sum f).XpowMul n = S.sum λ i ↦ (f i).XpowMul n :=
@@ -144,7 +144,7 @@ lemma XpowMul_sum (n : ℕ) [DecidableEq ι] (f : ι → 𝔽₂X) (S : Finset �
 lemma sum_Xpow_eq_ofFinset : ∀ S : Finset ℕ, S.sum Xpow = ofFinset S :=
   Finset.induction rfl λ i S h h0 ↦ by
     rw [Finset.sum_insert h, h0]
-    exact 𝔽₂X.ext _ _ (symmDiff_singleton_eq_insert h)
+    exact 𝔽₂X.ext (symmDiff_singleton_eq_insert h)
 
 lemma toFinset_sum_Xpow_eq_self (P : 𝔽₂X) : P.toFinset.sum Xpow = P :=
   𝔽₂X.sum_Xpow_eq_ofFinset P.toFinset
@@ -225,7 +225,7 @@ theorem square_zero : square 0 = 0 := rfl
 theorem square_one : square 1 = 1 := rfl
 
 theorem square_add (P Q : 𝔽₂X) : square (P + Q) = square P + square Q :=
-  𝔽₂X.ext _ _ (Finset.image_symmDiff _ _ λ _ _ ↦ (Nat.mul_right_inj (Nat.succ_ne_zero 1)).mp)
+  𝔽₂X.ext (Finset.image_symmDiff _ _ λ _ _ ↦ (Nat.mul_right_inj (Nat.succ_ne_zero 1)).mp)
 
 theorem square_add_one (P : 𝔽₂X) : square (P + 1) = square P + 1 :=
   P.square_add 1
@@ -240,7 +240,7 @@ theorem square_eq_mul_self : ∀ P : 𝔽₂X, square P = P * P :=
 theorem square_XpowMul (n : ℕ) (P : 𝔽₂X) :
     (P.XpowMul n).square = P.square.XpowMul (2 * n) := by
   unfold square XpowMul; rw [Finset.image_image, Finset.image_image]
-  exact 𝔽₂X.ext _ _ (congrArg P.toFinset.image <| funext λ n ↦ Nat.mul_add 2 _ _)
+  exact 𝔽₂X.ext (congrArg P.toFinset.image <| funext λ n ↦ Nat.mul_add 2 _ _)
 
 theorem square_mul (P : 𝔽₂X) : ∀ Q, square (P * Q) = square P * square Q :=
   𝔽₂X.Xpow_add_induction

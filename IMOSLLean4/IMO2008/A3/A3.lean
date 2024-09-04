@@ -35,7 +35,9 @@ structure SpanishCouple [Preorder α] (f g : α → α) : Prop where
 
 
 
-/-! ## Part 1 -/
+
+
+/-! ### Part 1 -/
 
 theorem f_id_not_spanishCouple [Preorder α] [h : Nonempty α] (f : α → α) :
     ¬SpanishCouple f id :=
@@ -57,7 +59,7 @@ theorem add_iterate_le_of_strictMono_id_lt (h : StrictMono f) (h0 : x < f x) :
       (add_iterate_le_of_strictMono_id_lt h h0 k).trans_lt <| h.iterate k h0
 
 /-- Final solution, part 1 -/
-theorem final_solution_part_1 (f g : ℕ → ℕ) : ¬SpanishCouple f g :=
+theorem final_solution_part1 (f g : ℕ → ℕ) : ¬SpanishCouple f g :=
   (eq_or_ne g id).elim
   -- Case 1: `g = id`
   (λ h0 ↦ h0.symm ▸ f_id_not_spanishCouple f)
@@ -69,14 +71,16 @@ theorem final_solution_part_1 (f g : ℕ → ℕ) : ¬SpanishCouple f g :=
 
 
 
-/-! ## Part 2 -/
+
+
+/-! ### Part 2 -/
 
 theorem prod_lex_lt_iff [Preorder α] [Preorder β] {p q : α ×ₗ β} :
     p < q ↔ p.1 < q.1 ∨ p.1 = q.1 ∧ p.2 < q.2 :=
   Prod.Lex.lt_iff p q
 
 /-- Final solution, part 2 (general version) -/
-theorem final_solution_part_2_general [Preorder β]
+theorem final_solution_part2_general [Preorder β]
     (h : StrictMono φ) (h0 : ∀ x, x < φ x) :
     SpanishCouple (λ p : ℕ ×ₗ β ↦ (p.1.succ, p.2))
       (λ p : ℕ ×ₗ β ↦ (p.1, (φ^[3 ^ p.1]) p.2)) :=
@@ -93,11 +97,11 @@ theorem final_solution_part_2_general [Preorder β]
         (Nat.mul_lt_mul_of_pos_right (Nat.lt_succ_self 2)
           (pow_pos (Nat.succ_pos 2) _)) }
 
-/-- Final solution, part 2 (original version: `ℕ ×ₗ ℕ`) -/
-theorem final_solution_part_2 :
+/-- Final solution, part 2 -/
+theorem final_solution_part2 :
     SpanishCouple (λ p : ℕ ×ₗ ℕ ↦ (p.1.succ, p.2))
       (λ p : ℕ ×ₗ ℕ ↦ (p.1, p.2 + 3 ^ p.1)) :=
   have h (p : ℕ ×ₗ ℕ) : (p.1, (Nat.succ^[3 ^ p.1]) p.2) = (p.1, p.2 + 3 ^ p.1) :=
     Prod.ext rfl (Nat.succ_iterate _ _)
-  (funext h).symm ▸ final_solution_part_2_general
+  (funext h).symm ▸ final_solution_part2_general
     (λ _ _ ↦ Nat.succ_lt_succ) Nat.lt_succ_self

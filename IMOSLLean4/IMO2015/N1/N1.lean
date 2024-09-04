@@ -15,8 +15,8 @@ Find all integers $M$ such that $f^k(M)$ is even for some $k ∈ ℕ$.
 ### Notes
 
 The original formulation is slightly different.
-Instead of $f : ℤ → ℤ$, we define $f : ℚ → ℚ$ by $f(n) = n ⌊n⌋$.
-Then the problem asks for which $M ∈ ℕ⁺$ does there exists
+Instead of $f : ℤ → ℤ$, we define $f : ℚ → ℚ$ by $f(q) = q ⌊q⌋$.
+Then the problem asks for which $M ∈ ℕ^+$ does there exists
   $k ∈ ℕ$ such that $f^k(M + 1/2)$ is an integer.
 -/
 
@@ -32,7 +32,7 @@ theorem main_claim (h : 2 * c ∣ m - 3) (h0 : 2 * c ∣ f m - 3) :
   · rcases h with ⟨d, h⟩
     rw [h, Int.mul_comm]
     apply mul_dvd_mul_left
-    have X : (2 : ℤ) ≠ 0 := two_ne_zero
+    have X : (2 : ℤ) ≠ 0 := ne_of_beq_false rfl
     have X0 : (3 / 2 : ℤ) = 1 := rfl
     rw [f, eq_add_of_sub_eq h, add_mul, add_sub_assoc, mul_assoc, ← mul_sub_one,
       dvd_add_right ⟨_, rfl⟩, mul_assoc, add_comm, Int.add_mul_ediv_left _ _ X,
@@ -51,7 +51,7 @@ theorem final_solution : (∃ k : ℕ, 2 ∣ f^[k] M) ↔ M ≠ 3 := by
   ---- If `2^(n + 1) ∣ f^[k] M - 3` for any `k n : ℕ`, then `M = 3`
   suffices h0 : ∀ n k, 2 ^ (n + 1) ∣ f^[k] M - 3 by
     let K := (M - 3).natAbs
-    refine eq_of_sub_eq_zero <| Int.eq_zero_of_abs_lt_dvd (h0 K 0) <| ?_
+    refine Int.eq_of_sub_eq_zero (Int.eq_zero_of_abs_lt_dvd (h0 K 0) ?_)
     rw [← Int.natCast_natAbs, ← Nat.cast_ofNat (n := 2), ← Int.natCast_pow]
     exact Int.ofNat_lt.mpr (K.lt_succ_self.trans K.succ.lt_two_pow)
   ---- For any `k n : ℕ`, we have `2^(n + 1) ∣ f^[k] M - 3`

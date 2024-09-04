@@ -9,9 +9,9 @@ import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.F4
 import IMOSLLean4.IMO2012.A5.Extra.ExplicitRings.Zphi
 
 /-!
-# IMO 2012 A5 (𝔽₄Map)
+# IMO 2012 A5 (`𝔽₄Map`)
 
-We define `𝔽₄Map : 𝔽₄ → ℤ[φ]` and prove that it is a (non-trivial) good map.
+We define `𝔽₄Map : 𝔽₄ → ℤφ` and prove that it is a (non-trivial) good map.
 -/
 
 namespace IMOSL

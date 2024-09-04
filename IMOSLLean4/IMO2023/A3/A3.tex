@@ -1,0 +1,41 @@
+Let $F$ be a totally ordered field and $N$ be a positive integer.
+Let $x_1, x_2, \ldots, x_N \in F$ be distinct positive elements such that for each $n$, there exists $a_n \in \N$ with
+\[ a_n^2 = \left(\sum_{i = 1}^n x_i\right) \left(\sum_{i = 1}^n \frac{1}{x_i}\right). \]
+Prove that $a_N \geq \lfloor 3N/2 \rfloor$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow the official solution.
+For convenience, set $a_0 = 0$.
+We prove that $a_n \geq \lfloor 3n/2 \rfloor$ for all $0 \leq n \leq N$.
+
+First, it is clear that $a_1 = 1$.
+Thus, it suffices to show that $a_{n + 2} \geq a_n + 3$ for all $n$.
+The result we want then follows by induction on $N$.
+The main claim is as follows:
+
+\begin{claim}
+For any $n \leq N$, we have $a_{n + 1} \geq a_n + 1$ and
+\[ a_{n + 1} = a_n + 1 \iff \frac{1}{x_{n + 1}} \sum_{i = 1}^n x_i = x_{n + 1} \sum_{i = 1}^n \frac{1}{x_i}. \]
+\end{claim}
+\begin{proof}
+Indeed, for convenience, let $A = \sum_{i = 1}^n x_i$ and $B = \sum_{i = 1}^n \frac{1}{x_i}$.
+Then we have $AB = a_n^2$ and by AM-GM inequality,
+\[ (A + x_{n + 1})(B + x_{n + 1}^{-1}) = a_n^2 + 1 + A x_{n + 1}^{-1} + B x_{n + 1} \geq a_n^2 + 1 + 2 a_n = (a_n + 1)^2. \]
+Equality holds iff $A x_{n + 1}^{-1} = B x_{n + 1} = a_n$.
+\end{proof}
+
+Now we go back to proving $a_{n + 2} \geq a_n + 3$.
+By the claim, it suffices to show that $a_{n + 2} = a_{n + 1} + 1 = a_n + 2$ is impossible.
+Suppose for the sake of contradiction that this equality holds.
+Let $A = \sum_{i = 1}^n x_i$ and $B = \sum_{i = 1}^n \frac{1}{x_i}$.
+The claim yields $A/x_{n + 1} = B x_{n + 1} \iff A = B x_{n + 1}^2$ and
+\[ \frac{A + x_{n + 1}}{x_{n + 2}} = \left(B + \frac{1}{x_{n + 1}}\right) x_{n + 2}. \]
+Substituting $A = B x_{n + 1}^2$ and rearranging gives
+\[ (B + x_{n + 1}^{-1}) x_{n + 1}^2 = (B + x_{n + 1}^{-1}) x_{n + 2}^2, \]
+    and thus $x_{n + 1} = x_{n + 2}$, since both are positive and $B + x_{n + 1}^{-1} > 0$.
+A contradiction, since the $x_i$s are assumed to be distinct.

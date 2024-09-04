@@ -1,0 +1,50 @@
+Let $n > 1$ be an integer and denote $[n] = \{0, 1, \ldots, n - 1\}$.
+An $n$-tuple $\mathbf{a} = (a_0, a_1, \ldots, a_{n - 1})$ of integers is called \emph{special} if there exists an indexing function $f : [n] \to [n]$ with
+\[ n \mid \sum_{k = i}^{i + f(i)} a_k = a_i + a_{i + 1} + \ldots + a_{i + f(i)} \quad \forall i \in [n]. \]
+Here, we denote $a_{i + n} = a_i$ for all $i \in \N$.
+
+Determine all $n > 1$ such that any special $n$-tuple $\mathbf{a}$ satisfies
+\[ n \mid a_1 + a_2 + \ldots + a_n. \]
+
+
+
+\subsection*{Answer}
+
+Prime numbers.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2017SL.pdf}
+
+We follow the official solution.
+We say that $n$ is \emph{good} if it satisfies the given condition.
+
+First suppose that $n$ is composite, say $n = km$ for some $k, m > 1$.
+Take $a_0 = a_1 = \ldots = a_{n - 2} = k$ and $a_{n - 1} = m$.
+Set $f(i) = b$ if $i + b < ab$ and $f(i) = b + 1$ if $i + b \geq ab$.
+Then $\mathbf{a}$ is a special $n$-tuple with indexing function $f$.
+However, $a_0 + a_1 + \ldots + a_{n - 1} = k(n - 1)$ is not divisible by $k$.
+
+Let $p$ be a prime number.
+Let $\mathbf{a}$ be an arbitrary special $p$-tuple with indexing function $f : [p] \to [p]$.
+For each $i \in \N$, let $i \% p$ denote the remainder of $i$ divided by $p$.
+For convenience, set $g(i) = i + f(\overline{i}) + 1$ for all $i \in \N$.
+By the property of special $p$-tuples, we have
+\[ p \mid \sum_{j = i}^{g(i) - 1} a_j \quad \forall i \in \N. \]
+By induction on $k$, we get
+\[ p \mid \sum_{j = i}^{g^k(i) - 1} a_j \quad \forall i, k \in \N. \]
+
+We now show that $p$ divides $a_0 + a_1 + \ldots + a_{p - 1}$.
+Note that $g(i) \leq i + p$ for all $i \in \N$.
+If the equality holds for some $i$, Then
+\[ p \mid \sum_{j = i}^{i + p - 1} a_j = \sum_{j = 0}^{p - 1} a_j. \]
+Otherwise, $g(i) \leq i + (p - 1)$ for all $i \in \N$.
+By induction, we have $g^k(i) \leq i + (p - 1)k$ for all $k \in \N$.
+By pigeonhole principle, $g^{k + m}(0) \equiv g^k(0) \pmod{p}$ for some $k < k + m \leq p$.
+By the previous inequality, $g^{k + m}(0) \leq g^k(0) + (p - 1)m \leq g^k(0) + (p - 1)p$.
+Since $m > 0$ and $g(i) > 0$ for all $i$, we have $g^{k + m}(0) = g^k(0) + pt$ for some $0 < t < p$.
+That is, we get
+\[ p \mid \sum_{j = g^k(0)}^{g^{k + m}(0)} a_j = t \sum_{j = 0}^{p - 1} a_j. \]
+Since $0 < t < p$, this forces $p \mid a_0 + \ldots + a_{p - 1}$, as desired.
