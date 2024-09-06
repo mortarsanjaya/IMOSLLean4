@@ -61,7 +61,7 @@ theorem final_solution_lower_bound :
     let L := (4 : R) * (S.map λ x ↦ x ^ 3).sum - (S.map λ x ↦ x ^ 4).sum
     B - C ^ 2 ≤ L := by
   rw [ring_id3, sub_le_sub_iff_left, ← ring_id2]
-  refine (sq_sum_le_sum_sq λ t h ↦ ?_).trans_eq' (by rw [map_map, Function.comp])
+  refine (sq_sum_le_sum_sq λ t h ↦ ?_).trans_eq' (by rw [map_map]; rfl)
   rcases mem_map.mp h with ⟨y, -, rfl⟩; exact sq_nonneg (y - 1)
 
 /-- General upper bound -/
@@ -72,7 +72,7 @@ theorem final_solution_upper_bound :
     C ^ 2 ≤ card S • (B - L) := by
   simp only; rw [ring_id3, sub_sub_cancel, ← ring_id2]
   apply (QM_AM (S.map _)).trans_eq
-  rw [card_map, map_map, Function.comp]
+  rw [card_map, map_map]; rfl
 
 /-- Final solution -/
 theorem final_solution (h : card S = 4) (h0 : S.sum = 6) (h1 : (S.map λ x ↦ x ^ 2).sum = 12) :

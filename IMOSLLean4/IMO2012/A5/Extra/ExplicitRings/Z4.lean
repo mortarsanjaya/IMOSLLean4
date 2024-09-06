@@ -123,7 +123,7 @@ protected theorem add_assoc : ∀ x y z : ℤ₄, x + y + z = x + (y + z)
   | ℤ₄3, ℤ₄3, ℤ₄2 => rfl
   | ℤ₄3, ℤ₄3, ℤ₄3 => rfl
 
-protected theorem add_left_neg : ∀ x : ℤ₄, -x + x = 0
+protected theorem neg_add_cancel : ∀ x : ℤ₄, -x + x = 0
   | ℤ₄0 => rfl
   | ℤ₄1 => rfl
   | ℤ₄2 => rfl
@@ -134,7 +134,7 @@ instance : AddCommGroup ℤ₄ :=
     zero_add := ℤ₄.zero_add
     add_zero := ℤ₄.add_zero
     add_comm := ℤ₄.add_comm
-    add_left_neg := ℤ₄.add_left_neg
+    neg_add_cancel := ℤ₄.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
 
@@ -254,6 +254,7 @@ def cast [AddGroupWithOne R] : ℤ₄ → R
   | ℤ₄3 => -1
 
 variable [NonAssocRing R] (h : (4 : R) = 0)
+include h
 
 theorem cast_add (x y : ℤ₄) : cast (R := R) (x + y) = cast x + cast y :=
   have h : (2 : R) + 2 = 0 := by rw [← h, ← Nat.cast_two, ← Nat.cast_add]; rfl
@@ -264,11 +265,11 @@ theorem cast_add (x y : ℤ₄) : cast (R := R) (x + y) = cast x + cast y :=
     | x, ℤ₄0 => x.add_zero.symm ▸ (add_zero _).symm
     | ℤ₄1, ℤ₄1 => one_add_one_eq_two.symm
     | ℤ₄1, ℤ₄2 => h1
-    | ℤ₄1, ℤ₄3 => (add_neg_self 1).symm
+    | ℤ₄1, ℤ₄3 => (add_neg_cancel 1).symm
     | ℤ₄2, ℤ₄1 => h1.trans (add_comm _ _)
     | ℤ₄2, ℤ₄2 => h.symm
     | ℤ₄2, ℤ₄3 => eq_add_neg_of_add_eq h0
-    | ℤ₄3, ℤ₄1 => (neg_add_self 1).symm
+    | ℤ₄3, ℤ₄1 => (neg_add_cancel 1).symm
     | ℤ₄3, ℤ₄2 => eq_neg_add_of_add_eq h0
     | ℤ₄3, ℤ₄3 => eq_neg_add_of_add_eq h1.symm
 

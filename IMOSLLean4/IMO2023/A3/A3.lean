@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.Order.Field.Defs
 import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Field.Unbundled.Basic
 
 /-!
 # IMO 2023 A3 (P4)
@@ -65,7 +64,7 @@ lemma x_inv_nonneg (hi : i < N) : 0 ≤ (X.x i)⁻¹ :=
   (X.x_inv_pos hi).le
 
 lemma x_mul_inv (h : i < N) : X.x i * (X.x i)⁻¹ = 1 :=
-  mul_inv_cancel (X.x_ne_zero h)
+  mul_inv_cancel₀ (X.x_ne_zero h)
 
 
 

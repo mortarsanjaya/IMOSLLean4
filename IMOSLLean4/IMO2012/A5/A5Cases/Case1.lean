@@ -25,7 +25,9 @@ variable [NonAssocRing R] [NonAssocRing S] [NoZeroDivisors S]
 section
 
 variable {f : R → S} (hf : NontrivialGood f) (h : f (-1) ≠ 0)
+include hf h
 
+omit [NoZeroDivisors S] h in
 /-- (1.1) -/
 theorem Eq1 (x : R) : f (-x) = f (x + 1) * f (-1) + f x := by
   have h0 := hf.is_good (x + 1) (-1)
@@ -42,6 +44,7 @@ theorem Eq2 (x : R) : f (-x) = -f (x + 2) := by
 lemma map_two : f 2 = 1 := by
   rw [← zero_add 2, ← neg_inj, ← Eq2 hf h, neg_zero, hf.map_zero]
 
+omit [NoZeroDivisors S] h in
 /-- (1.3) -/
 theorem Eq3 (x y : R) : f (-x) * f (-y) + f (-(x + y)) = f x * f y + f (x + y) := by
   rw [neg_add, ← hf.is_good, neg_mul_neg, hf.is_good]
@@ -103,7 +106,7 @@ theorem Subcase11_solution (h0 : f (-1) = -2) :
   sub_one_solver hf λ x ↦ by
     rcases Eq5 hf h x with h2 | h2
     -- Case 1: `f(x + 1) = 0`
-    · rw [Eq6 hf h h2, h2, neg_add_self]
+    · rw [Eq6 hf h h2, h2, neg_add_cancel]
     -- Case 2: `f(x) + f(-x) = f(-1)`
     · rw [Eq1 hf, h0, add_left_comm, ← mul_two, mul_neg, ← neg_mul, ← add_mul,
         eq_neg_iff_add_eq_zero, ← add_one_mul _ (2 : S), mul_eq_zero, add_assoc] at h2
@@ -122,7 +125,9 @@ structure GoodSubcase12 (f : R → S) extends ReducedGood f : Prop where
 namespace GoodSubcase12
 
 variable {f : R → S} (hf : GoodSubcase12 f)
+include hf
 
+omit [NoZeroDivisors S] in
 lemma map_neg_one_ne_zero : f (-1) ≠ 0 :=
   λ h ↦ hf.Schar <| by rw [← mul_one (3 : S), ← hf.map_neg_one, h, mul_zero]
 

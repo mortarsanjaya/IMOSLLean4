@@ -58,10 +58,6 @@ end
 
 namespace MonoidGood
 
-section
-
-variable [MulOneClass M] {f : M → R} (hf : MonoidGood f)
-
 /-! ### Transfer via homomorphisms -/
 
 theorem ofMulHom [Mul M] [Mul N] (φ : N →ₙ* M) {f : M → R} (hf : MonoidGood f) :
@@ -75,10 +71,13 @@ theorem ofMonoidEquiv [MulOneClass M] [MulOneClass N] (φ : N ≃* M) {f : M →
     rwa [MulEquiv.self_comp_symm, Function.comp_id] at hf⟩
 
 
-
-
+section
 
 /-! ### Solution -/
+
+variable [MulOneClass M] {f : M → R} (hf : MonoidGood f)
+  (h : ⌊f 1⌋ = 1) (h0 : 0 < Int.fract (f 1))
+include hf
 
 lemma map_eq_map_one_mul_floor (x) : f x = f 1 * ⌊f x⌋ := by
   rw [← hf, one_mul]
@@ -92,7 +91,7 @@ lemma eq_zero_or_floor_map_one_eq_one : f = 0 ∨ ⌊f 1⌋ = 1 := by
     (λ h ↦ Int.cast_eq_one.mp (eq_of_sub_eq_zero h).symm)
   rw [map_eq_map_one_mul_floor hf, h, zero_mul]; rfl
 
-variable (h : ⌊f 1⌋ = 1)
+include h
 
 lemma fract_eq_eps_mul_floor (x) : Int.fract (f x) = Int.fract (f 1) * ⌊f x⌋ := by
   rw [Int.fract, Int.fract, h, Int.cast_one, sub_one_mul, ← map_eq_map_one_mul_floor hf]
@@ -116,7 +115,7 @@ lemma floor_unbounded_of_one_lt {x : M} (h0 : 1 < ⌊f x⌋) : ∀ N : ℕ, ∃ 
       use x * y; rw [floor_map_mul hf h, Nat.cast_succ, ← one_mul ((N : ℤ) + 1)]
       exact mul_lt_mul_of_nonneg_of_pos h0 h1 Int.one_nonneg (N.cast_nonneg.trans_lt h1)
 
-variable (h0 : 0 < Int.fract (f 1))
+include h0
 
 lemma case_fract_map_one_pos : ∃ φ : M →* ℕ, ∀ x, f x = φ x • f 1 := by
   refine ⟨⟨⟨λ x ↦ ⌊f x⌋.natAbs, congrArg _ h⟩, λ x y ↦ ?_⟩, λ x ↦ ?_⟩

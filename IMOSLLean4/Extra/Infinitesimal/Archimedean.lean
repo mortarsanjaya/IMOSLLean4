@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.Infinitesimal.Basic
-import Mathlib.Algebra.Order.Archimedean
+import Mathlib.Algebra.Order.Archimedean.Basic
 
 /-!
 # Infinitesimal elements of an archimedean ring

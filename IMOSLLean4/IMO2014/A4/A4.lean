@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.Extra.IntLinearSolver
 import Mathlib.Data.Finset.Card
-import Mathlib.Algebra.Order.Group.Int
+import Mathlib.Algebra.Order.Group.Unbundled.Int
 
 /-!
 # IMO 2014 A4
@@ -60,6 +60,7 @@ theorem linear_good (k m : ℤ) : good (k + 1) (k * m) (k * · + m) := λ x y �
 section good_lemmas
 
 variable (h : good b c f)
+include h
 
 theorem map_map_zero_add (y : ℤ) : f (y + f 0) = c + f y :=
   by rw [← sub_eq_iff_eq_add, h, Int.mul_zero, sub_self, zero_add]
@@ -77,6 +78,7 @@ theorem map_b_pow_mul_eq_of_map_eq (h0 : f x = f y) :
   rwa [← h1, h, add_left_inj, sub_left_inj, ← mul_assoc, ← mul_assoc, ← pow_succ'] at h2
 
 variable (h0 : 1 < b.natAbs) (h1 : c ≠ 0)
+include h0 h1
 
 theorem map_is_linear : ∀ n : ℤ, f n = (b - 1) * n + f 0 := by
   ---- Solve the problem assuming `f` is injective

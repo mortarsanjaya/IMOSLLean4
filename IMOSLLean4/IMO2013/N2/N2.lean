@@ -37,11 +37,11 @@ abbrev good (k c : ℕ) := ∀ n : ℕ, 0 < n →
 theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := λ n h0 ↦ by
   rcases n.even_or_odd' with ⟨t, rfl | rfl⟩
   ---- Case 1: `n = 2t`
-  · replace h0 := pos_of_mul_pos_right h0 (Nat.zero_le 2)
+  · replace h0 := Nat.pos_of_mul_pos_left h0
     rcases h t h0 with ⟨T, rfl, h1, h2⟩
     have X := t.add_pos_left h0 c
     refine ⟨(2 * (t + c)) ::ₘ T, card_cons _ T,
-      forall_mem_cons.mpr ⟨mul_pos (Nat.succ_pos 1) X, h1⟩, ?_⟩
+      forall_mem_cons.mpr ⟨Nat.mul_pos (Nat.succ_pos 1) X, h1⟩, ?_⟩
     rw [map_cons, prod_cons, ← h2, ← add_assoc, ← mul_add,
       div_mul_div_comm, Nat.cast_mul, Nat.cast_mul, mul_right_comm]
     exact (mul_div_mul_right _ _ <| Nat.cast_ne_zero.mpr X.ne.symm).symm

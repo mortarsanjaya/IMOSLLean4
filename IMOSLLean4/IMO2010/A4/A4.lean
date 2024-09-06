@@ -123,7 +123,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
     rw [S_succ]; rcases h with h | h
     · rw [← h, zero_add, this k h.symm]
       exact Int.zero_lt_one.le
-    · rw [← add_neg_self (1 : ℤ)]
+    · rw [← Int.add_right_neg 1]
       exact add_le_add h ((x k).rec (neg_le_self zero_le_one) (-1).le_refl)
   ---- Now show that `x_k = ff` whenever `S_k = 0`, using strong induction
   intro k h; induction' k using Nat.strong_induction_on with k k_ih

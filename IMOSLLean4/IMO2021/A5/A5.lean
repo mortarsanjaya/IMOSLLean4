@@ -31,6 +31,7 @@ def targetSumPair [Field F] (r : F) (l : List F) : F × F :=
 section
 
 variable [OrderedAddCommMonoid M] {l : List M} (hl : ∀ x ∈ l, 0 ≤ x)
+include hl
 
 lemma foldr_add_nonneg : 0 ≤ l.foldr (· + ·) 0 := by
   induction' l with a l l_ih

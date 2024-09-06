@@ -55,10 +55,11 @@ theorem mul_sub_le_sub_map_of_diff {f : ℕ → ℕ} (hm : ∀ n, f n + m ≤ f 
     exact Nat.zero_le _
   ---- Case 2: `n ≥ k`
   · rw [Nat.add_sub_cancel_left]; apply Nat.le_sub_of_add_le
-    induction' c with c c_ih
-    · rw [Nat.mul_zero, Nat.zero_add, Nat.add_zero]
-    · rw [Nat.mul_succ, Nat.add_right_comm]
-      exact (Nat.add_le_add_right c_ih m).trans (hm _)
+    induction c with
+      | zero => rw [Nat.mul_zero, Nat.zero_add, Nat.add_zero]
+      | succ c c_ih =>
+          rw [Nat.mul_succ, Nat.add_right_comm]
+          exact (Nat.add_le_add_right c_ih m).trans (hm _)
 
 theorem sub_le_sub_map_of_StrictMono {f : ℕ → ℕ} (hf : StrictMono f) (n k) :
     (n - k) ≤ f n - f k :=
@@ -74,10 +75,11 @@ theorem sub_map_le_mul_sub_of_Monotone {f : ℕ → ℕ}
     exact hf h
   ---- Case 2: `n ≥ k`
   · rw [Nat.add_sub_cancel_left]; apply Nat.sub_le_of_le_add
-    induction' c with c c_ih
-    · rw [Nat.mul_zero, Nat.zero_add, Nat.add_zero]
-    · rw [Nat.mul_succ, Nat.add_right_comm]
-      exact (hm _).trans (Nat.add_le_add_right c_ih m)
+    induction c with
+      | zero => rw [Nat.mul_zero, Nat.zero_add, Nat.add_zero]
+      | succ c c_ih =>
+          rw [Nat.mul_succ, Nat.add_right_comm]
+          exact (hm _).trans (Nat.add_le_add_right c_ih m)
 
 /-- Final solution -/
 theorem final_solution {f : ℕ → ℕ} (hf : StrictMono f)

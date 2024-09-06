@@ -25,9 +25,10 @@ structure weakGood [OrderedSemiring R] (f : R → R) : Prop where
   good' : ∀ p > 0, ∀ q > 0, ∀ r > 0, ∀ s > 0, p * q = r * s →
     (f p ^ 2 + f q ^ 2) * (r ^ 2 + s ^ 2) = (p ^ 2 + q ^ 2) * (f (r ^ 2) + f (s ^ 2))
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [LinearOrderedCommSemiring R]
 
-theorem side_ineq {x y : R} (h : (x ^ 2 + 1) * y = (y ^ 2 + 1) * x) : x = y ∨ y * x = 1 := by
+theorem side_ineq [ExistsAddOfLE R] {x y : R} (h : (x ^ 2 + 1) * y = (y ^ 2 + 1) * x) :
+    x = y ∨ y * x = 1 := by
   wlog h0 : ∃ c, y = x + c
   · rw [eq_comm, mul_comm]; apply this h.symm
     exact exists_add_of_le ((le_total x y).resolve_left (mt exists_add_of_le h0))
@@ -45,7 +46,7 @@ theorem side_ineq {x y : R} (h : (x ^ 2 + 1) * y = (y ^ 2 + 1) * x) : x = y ∨ 
   · rw [mul_one_add c, add_right_eq_self, mul_eq_zero] at h
     rwa [add_right_eq_self, or_comm]
 
-theorem weakGood_iff {f : R → R} :
+theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
     weakGood f ↔ (∀ x > 0, f x = x) ∨ (∀ x > 0, x * f x = 1) := by
   refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   ---- `→` direction
@@ -138,7 +139,7 @@ lemma good_iff_posSubtypeExt_weakGood {f : {x : R // 0 < x} → {x : R // 0 < x}
     exact Subtype.coe_inj.mp h
 
 /-- Final solution -/
-theorem final_solution {f : {x : R // 0 < x} → {x : R // 0 < x}} :
+theorem final_solution [ExistsAddOfLE R] {f : {x : R // 0 < x} → {x : R // 0 < x}} :
     good f ↔ f = id ∨ ∀ x, x * f x = 1 := by
   rw [good_iff_posSubtypeExt_weakGood, weakGood_iff, Function.funext_iff]
   refine or_congr ⟨λ h x ↦ ?_, λ h x hx ↦ ?_⟩ ⟨λ h x ↦ ?_, λ h x hx ↦ ?_⟩

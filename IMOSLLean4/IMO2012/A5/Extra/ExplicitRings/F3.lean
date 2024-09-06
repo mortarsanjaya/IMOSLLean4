@@ -85,7 +85,7 @@ protected theorem add_assoc : ∀ x y z : 𝔽₃, x + y + z = x + (y + z)
   | 𝔽₃2, 𝔽₃2, 𝔽₃1 => rfl
   | 𝔽₃2, 𝔽₃2, 𝔽₃2 => rfl
 
-protected theorem add_left_neg : ∀ x : 𝔽₃, -x + x = 0
+protected theorem neg_add_cancel : ∀ x : 𝔽₃, -x + x = 0
   | 𝔽₃0 => rfl
   | 𝔽₃1 => rfl
   | 𝔽₃2 => rfl
@@ -95,7 +95,7 @@ instance : AddCommGroup 𝔽₃ :=
     zero_add := 𝔽₃.zero_add
     add_zero := 𝔽₃.add_zero
     add_comm := 𝔽₃.add_comm
-    add_left_neg := 𝔽₃.add_left_neg
+    neg_add_cancel := 𝔽₃.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
 
@@ -181,8 +181,8 @@ theorem cast_add [AddGroupWithOne R] (h : (3 : R) = 0) (x y : 𝔽₃) :
     | 𝔽₃0, _ => (zero_add _).symm
     | x, 𝔽₃0 => x.add_zero.symm ▸ (add_zero _).symm
     | 𝔽₃1, 𝔽₃1 => h.symm
-    | 𝔽₃1, 𝔽₃2 => (add_neg_self 1).symm
-    | 𝔽₃2, 𝔽₃1 => (neg_add_self 1).symm
+    | 𝔽₃1, 𝔽₃2 => (add_neg_cancel 1).symm
+    | 𝔽₃2, 𝔽₃1 => (neg_add_cancel 1).symm
     | 𝔽₃2, 𝔽₃2 => (neg_eq_iff_eq_neg.mpr h).symm.trans (neg_add_rev _ _)
 
 variable [NonAssocRing R] (h : (3 : R) = 0)

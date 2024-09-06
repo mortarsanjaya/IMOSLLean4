@@ -53,7 +53,7 @@ theorem good_iff_of_DenselyOrdered [DenselyOrdered R]
         rwa [h1, neg_one_zsmul, h0, Int.cast_zero, mul_zero] at h
       funext y; specialize h (-c) (-y)
       have h1 : ⌊-c⌋ = -1 := by
-        rw [Int.floor_eq_iff, Int.cast_neg, Int.cast_one, neg_add_self]
+        rw [Int.floor_eq_iff, Int.cast_neg, Int.cast_one, neg_add_cancel]
         exact ⟨neg_le_neg hc0.le, neg_lt_zero.mpr hc⟩
       rwa [h0, zero_mul, h1, neg_one_zsmul, neg_neg] at h
   ---- `←`

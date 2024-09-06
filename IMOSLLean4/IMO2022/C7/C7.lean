@@ -35,6 +35,7 @@ namespace AddSupClosed
 section
 
 variable [Add α] [Sup α] {S : Set α} (hS : AddSupClosed S) (hv : v ∈ S) (hw : w ∈ S)
+include hS hv hw
 
 theorem mem_of_add_eq (hx : x = v + w) : x ∈ S :=
   hx ▸ hS.add_mem _ hv _ hw
@@ -48,6 +49,7 @@ end
 section
 
 variable [Add α] [SemilatticeSup α] {S : Set α} (hS : AddSupClosed S)
+include hS
 
 theorem Finset_range_sup_mem {f : ℕ → α} (hf : ∀ k, f k ∈ S) :
     ∀ n : ℕ, (Finset.range n.succ).sup' Finset.nonempty_range_succ f ∈ S := by
@@ -79,6 +81,7 @@ end
 section
 
 variable [Sup α] [AddCommMonoid α] {S : Set α} (hS : AddSupClosed S)
+include hS
 
 theorem smul_mem_of_pos (hv : v ∈ S) : ∀ n > 0, n • v ∈ S :=
   Nat.le_induction ((one_nsmul v).symm ▸ hv)
@@ -151,6 +154,7 @@ section
 
 variable [Fintype ι] [DecidableEq ι] {S : Set (ι → ℤ)}
   (hS : AddSupClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, Pi.single i 1 ∈ S)
+include hS hS0 hS1
 
 theorem Nat_mem_of_zero_single_mem (v : ι → ℕ) : Nat.cast ∘ v ∈ S := by
   refine Nat_Finsupp_mem_of_zero_single_mem hS hS0 (λ i ↦ ?_)
@@ -258,7 +262,9 @@ theorem Fin2_AddSupGenerator : AddSupGenerator {![-1, 1], ![1, -2]} := by
 section
 
 variable [Fintype ι] [DecidableEq ι] {v w : ι → ℤ} (h : AddSupGenerator {v, w})
+include h
 
+omit [DecidableEq ι] in
 theorem doubleton_AddSupGenerator_imp₁ (i) : v i * w i < 0 := by
   rw [← not_le, mul_nonneg_iff]
   rintro (⟨h0, h1⟩ | ⟨h0, h1⟩)
@@ -326,7 +332,7 @@ theorem Fin_general_AddSupGenerator (n : ℕ) :
     rw [mul_neg_one, ← sub_eq_add_neg, sub_add, sub_sub, sub_sq, Int.mul_right_comm]
   ---- Next, show that `0 ∈ S`
   have h0 : 0 ∈ S := by
-    refine hS0.mem_of_add_eq hS (hS0.mem_of_Fin_univ_sup_eq h ?_) (neg_add_self _).symm
+    refine hS0.mem_of_add_eq hS (hS0.mem_of_Fin_univ_sup_eq h ?_) (neg_add_cancel _).symm
     funext k; rw [Pi.one_apply, Finset.sup'_apply]
     apply le_antisymm
     exacts [Finset.le_sup'_of_le _ (Finset.mem_univ k) (sub_self (k.1 : ℤ) ▸ Int.le_refl 1),

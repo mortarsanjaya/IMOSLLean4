@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Defs
+import Mathlib.Data.Nat.Sqrt
 
 /-!
 # IMO 2021 N2 (P1)

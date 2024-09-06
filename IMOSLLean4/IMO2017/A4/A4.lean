@@ -84,6 +84,7 @@ section SeqMax
 
 variable {b c : ℕ → G} (h : ∀ n, D ≤ n → b (n + 1) ≤ max (b n) (c n - b n))
   (h0 : ∀ n, D ≤ n → c (n + 1) ≤ max (c n) (2 • b n)) (h1 : Monotone b)
+include h h0 h1
 
 theorem c_bdd (h2 : D ≤ K) (h3 : c K ≤ 2 • b K) :
     b (K + 1) = b K ∧ c (K + 1) ≤ 2 • b (K + 1) := by

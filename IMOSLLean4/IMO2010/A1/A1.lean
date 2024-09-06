@@ -23,6 +23,7 @@ variable [LinearOrderedRing R] [FloorRing R] [LinearOrderedRing S] [FloorRing S]
 
 namespace FloorRing
 
+omit [FloorRing R] in
 theorem DenselyOrdered_of_Ioo01 {x : R} (h : 0 < x) (h0 : x < 1) : DenselyOrdered R :=
   ⟨λ a b h1 ↦ ⟨a + x * (b - a), lt_add_of_pos_right a (mul_pos h (sub_pos_of_lt h1)),
     add_lt_of_lt_sub_left (mul_lt_of_lt_one_left (sub_pos_of_lt h1) h0)⟩⟩
@@ -80,7 +81,7 @@ theorem final_solution_equiv_Int (φ : ℤ ≃+* R) {f : R → S} :
 open scoped Classical
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedRing S] [FloorRing S] {f : R → S} :
+theorem final_solution {f : R → S} :
     good f ↔ if DenselyOrdered R then (∃ C, ⌊C⌋ = 1 ∧ f = λ _ ↦ C) ∨ f = 0
       else MonoidGood.IsAnswer f := by
   split_ifs with h

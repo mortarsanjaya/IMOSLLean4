@@ -112,8 +112,8 @@ theorem weight_T4Filter_SkewT4_mod32 (i q) :
 
 theorem weight_T4Filter_sum_SkewT4_mod32 (i : Fin 4) (P : Multiset (Fin 4 × ℕ × ℕ)) :
     weight (T4Filter i) (P.map SkewT4).sum % 32 = 16 * ((P.map Prod.fst).count i % 2) := by
-  rw [weight_sum, map_map, sum_nat_mod, map_map, Function.comp, Function.comp]
-  simp only [weight_T4Filter_SkewT4_mod32]
+  rw [weight_sum, map_map, sum_nat_mod, map_map]
+  simp only [Function.comp_apply, weight_T4Filter_SkewT4_mod32]
   refine Multiset.induction_on P rfl λ p P h ↦ ?_
   rw [map_cons, sum_cons, ← Nat.add_mod_mod, h, ← Nat.mul_add, add_comm,
     Nat.mul_mod_mul_left 16 _ 2, Nat.mod_add_mod, map_cons, count_cons]

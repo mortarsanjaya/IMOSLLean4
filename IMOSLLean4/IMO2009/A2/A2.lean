@@ -89,6 +89,7 @@ end
 section
 
 variable [Field F] {a b c : F} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
+include ha hb hc
 
 theorem field_identity1 : (a * b)⁻¹ + (b * c)⁻¹ + (c * a)⁻¹ = (a + b + c) / (a * b * c) := by
   have hab : a * b ≠ 0 := mul_ne_zero ha hb
@@ -107,6 +108,7 @@ end
 /-! ### Field inequalities -/
 
 variable [LinearOrderedField F] {a b c : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
+include ha hb hc
 
 theorem field_ineq1 : ((2 * a + b + c) ^ 2)⁻¹ ≤ (2 ^ 2 * ((a + b) * (a + c)))⁻¹ := by
   rw [two_mul, add_assoc, add_add_add_comm]

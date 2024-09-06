@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Tactic.Ring
 
 /-!
@@ -95,7 +95,7 @@ theorem good_lower_bound (hM : 3 ^ 2 * √2 ≤ 2 ^ 5 * M) : good M := good_alt.
     ← pow_mul, ← pow_mul, pow_succ', mul_assoc]
   exact mul_le_mul_of_nonneg_left (ring_ineq3 a b c) h.le
 
-theorem good_upper_bound (hM : good M) : 9 * sqrt2 ≤ 32 * M := by
+theorem good_upper_bound (hM : good M) : 9 * √2 ≤ 32 * M := by
   specialize hM (√2 - 3) (√2 + 3) √2
   rw [ring_id1, add_sub_sub_cancel, sub_add_cancel_left, sub_sub_cancel_left, ← two_mul,
     mul_assoc (2 * 3), ← sq, neg_sq, sub_add_add_cancel, ← two_mul, ← add_one_mul (2 : R),
@@ -105,7 +105,7 @@ theorem good_upper_bound (hM : good M) : 9 * sqrt2 ≤ 32 * M := by
   rw [h, h0, mul_comm M, mul_assoc, mul_assoc, abs_of_nonneg sqrt2_nonneg] at hM
   exact le_of_mul_le_mul_left hM (by norm_num)
 
-theorem good_iff : good M ↔ 9 * sqrt2 ≤ 32 * M :=
+theorem good_iff : good M ↔ 9 * √2 ≤ 32 * M :=
   ⟨good_upper_bound, by
     have h : (9 : R) = 3 ^ 2 := by norm_num
     have h0 : (32 : R) = 2 ^ 5 := by norm_num
@@ -118,6 +118,4 @@ end
 
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedField F] [HasSqrt2 F] {M : F} :
-    good M ↔ 9 * √2 / 32 ≤ M :=
-  good_iff.trans (div_le_iff' (by norm_num : 0 < (32 : F))).symm
+alias final_solution := good_iff

@@ -36,13 +36,13 @@ theorem Fin_sum_shift [AddCommMonoid M] (a : Fin (n + 1) → M) (k) :
 
 /-! ### The big claim on bounding a cyclic sum `∑ x_i x_{i + 1}` -/
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [LinearOrderedCommSemiring R]
 
 /-- Nice temporary definition -/
 abbrev niceTuple (a : Fin (n + 1) → R) :=
   2 ^ 2 * ∑ i, a i * a (i + 1) ≤ (∑ i, a i) ^ 2
 
-theorem niceTuple.of_four (a : Fin 4 → R) : niceTuple a := by
+theorem niceTuple.of_four [ExistsAddOfLE R] (a : Fin 4 → R) : niceTuple a := by
   rw [niceTuple, Fin.sum_univ_four, Fin.sum_univ_four]
   change 2 ^ 2 * (a 0 * a 1 + a 1 * a 2 + a 2 * a 3 + a 3 * a 0) ≤ _
   rw [mul_comm (a 0), ← mul_add, add_assoc, mul_comm (a 2), ← mul_add,
@@ -73,7 +73,7 @@ theorem niceTuple.of_add₁_iff {n} {a : Fin (n + 1) → R} {j} :
   replace h := h.of_add₁ (-j)
   simp only [neg_add_cancel_right] at h; exact h
 
-theorem niceTuple.of_add₂ (hn : 4 ≤ n + 1) (hc : 0 ≤ c)
+theorem niceTuple.of_add₂ [ExistsAddOfLE R] (hn : 4 ≤ n + 1) (hc : 0 ≤ c)
     {a : Fin (n + 1) → R} (ha : niceTuple a) (ha0 : ∀ i, 0 ≤ a i) :
     niceTuple (λ i ↦ a i + c) := by
   rw [niceTuple, cyclic_add_right_formula, sum_sq_add_right_formula, mul_add, mul_add]
@@ -104,7 +104,8 @@ theorem cyclic_cons_zero_formula (a : Fin (n + 1) → R) :
     rcases h with ⟨j, rfl⟩
     rw [Fin.coeSucc_eq_succ, Fin.succ_castSucc, Fin.coeSucc_eq_succ]; rfl
 
-theorem niceTuple.of_zero_cons {a : Fin (n + 1) → R} (ha : niceTuple a) (ha0 : ∀ i, 0 ≤ a i) :
+theorem niceTuple.of_zero_cons [ExistsAddOfLE R]
+    {a : Fin (n + 1) → R} (ha : niceTuple a) (ha0 : ∀ i, 0 ≤ a i) :
     niceTuple (Fin.cons 0 a) := by
   rw [niceTuple, cyclic_cons_zero_formula, Fin.sum_cons, zero_add]
   refine (mul_le_mul_of_nonneg_left ?_ (sq_nonneg _)).trans ha
@@ -115,7 +116,7 @@ theorem Fin_cons_nonneg {a : Fin (n + 1) → R} (ha : ∀ i, 0 ≤ a i) (i) :
   obtain (rfl | ⟨j, rfl⟩) := i.eq_zero_or_eq_succ
   exacts [le_refl 0, ha j]
 
-theorem niceTuple.of_three_le :
+theorem niceTuple.of_three_le [ExistsAddOfLE R] :
     ∀ (n) (hn : 3 ≤ n) {a : Fin n.succ → R} (ha : ∀ i, 0 ≤ a i), niceTuple a := by
   refine Nat.le_induction (λ _ ↦ of_four _) (λ n hn n_ih a ha ↦ ?_)
   wlog h : ∀ i, a 0 ≤ a i
@@ -138,7 +139,8 @@ theorem niceTuple.of_three_le :
     ha (of_zero_cons (n_ih hb) hb) (Fin_cons_nonneg hb)
 
 /-- The main claim -/
-theorem main_claim (hn : 4 ≤ n + 1) {a : Fin (n + 1) → R} (ha : ∀ i, 0 ≤ a i) :
+theorem main_claim [ExistsAddOfLE R]
+    (hn : 4 ≤ n + 1) {a : Fin (n + 1) → R} (ha : ∀ i, 0 ≤ a i) :
     2 ^ 2 * ∑ i, a i * a (i + 1) ≤ (∑ i, a i) ^ 2 :=
   niceTuple.of_three_le n (Nat.succ_le_succ_iff.mp hn) ha
 
@@ -157,13 +159,13 @@ theorem id1 (a : Fin (n + 1) → R) :
   rw [add_assoc, one_add_one_eq_two, mul_assoc, sq,
     mul_left_comm _ 2, ← mul_assoc (a (i + 1))]
 
-theorem id2 (a : Fin (n + 1) → R) :
+theorem id2 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
     (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2
       ≤ (∑ i, a i ^ 2) * ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2 := by
   rw [id1, ← Fin_sum_shift (λ i ↦ a i ^ 2) 1]
   exact CauchySchwarz_squares _ _ _
 
-theorem id3 (a : Fin (n + 1) → R) :
+theorem id3 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
     ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2
       ≤ ∑ i, (a i ^ 2) ^ 2 + 2 * ∑ i, a i ^ 2 * (a (i + 1) ^ 2 + a (i + 2) ^ 2)
         + 2 ^ 2 * ∑ i, a i ^ 2 * a (i + 1) ^ 2 := by
@@ -210,7 +212,7 @@ theorem id5 (hn : 5 ≤ n + 1) {b : Fin (n + 1) → R} (hb : ∀ i, 0 ≤ b i) :
     exact j.2.trans_le hn
 
 /-- Final solution -/
-theorem final_solution (hn : 5 ≤ n + 1) (a : Fin (n + 1) → R) :
+theorem final_solution [ExistsAddOfLE R] (hn : 5 ≤ n + 1) (a : Fin (n + 1) → R) :
     (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2 ≤ 2 * (∑ i, a i ^ 2) ^ 3 := by
   rw [pow_succ' _ 2, mul_left_comm, two_mul]
   have X (i) : 0 ≤ a i ^ 2 := sq_nonneg (a i)

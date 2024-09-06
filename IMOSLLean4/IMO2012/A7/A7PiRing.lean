@@ -29,8 +29,7 @@ namespace IMO2012A7
 
 section LatticeOrderedGroup
 
-variable [DistribLattice G] [AddGroup G] [CovariantClass G G (· + ·) (· ≤ ·)]
-    [CovariantClass G G (Function.swap (· + ·)) (· ≤ ·)]
+variable [DistribLattice G] [AddGroup G]
 
 lemma inf_pos_part (a b : G) : (a ⊓ b)⁺ = a⁺ ⊓ b⁺ :=
   sup_inf_right _ _ _
@@ -89,6 +88,7 @@ instance : CovariantClass ((i : I) → R i) ((i : I) → R i) (Function.swap (·
 section
 
 variable {f : (i : I) → R i} (hf : 0 ≤ f) (a b : (i : I) → R i)
+include hf
 
 lemma Pi_mul_inf_of_nonneg : f * (a ⊓ b) = f * a ⊓ f * b :=
   funext λ i ↦ mul_min_of_nonneg (a i) (b i) (hf i)

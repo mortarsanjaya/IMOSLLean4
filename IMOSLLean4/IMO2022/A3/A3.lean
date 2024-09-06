@@ -18,11 +18,12 @@ Find all functions $f : R_{>0} → R_{>0}$ such that for any $x ∈ R_{>0}$,
 namespace IMOSL
 namespace IMO2022A3
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [LinearOrderedCommSemiring R]
 
 /-! ### Extra lemmas -/
 
-lemma add_sq_le_two_mul_imp {x y : R} (h : x ^ 2 + y ^ 2 ≤ 2 * x * y) : x = y := by
+lemma add_sq_le_two_mul_imp [ExistsAddOfLE R] {x y : R} (h : x ^ 2 + y ^ 2 ≤ 2 * x * y) :
+    x = y := by
   have X {x c : R} (h : x ^ 2 + (x + c) ^ 2 ≤ 2 * x * (x + c)) : c = 0 := by
     rw [add_sq, sq, ← add_assoc, ← add_assoc, ← two_mul,
       ← mul_assoc, ← mul_add, add_le_iff_nonpos_right] at h
@@ -43,7 +44,7 @@ lemma add_sq_le_two_mul_imp {x y : R} (h : x ^ 2 + y ^ 2 ≤ 2 * x * y) : x = y 
   However, as we show below, the functional equation still only has at most one solution. -/
 def weakGood (f : R → R) := ∀ x > 0, ∃! y > 0, x * f y + y * f x ≤ 2
 
-theorem weakGood_iff {f : R → R} : weakGood f ↔ ∀ x > 0, x * f x = 1 := by
+theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} : weakGood f ↔ ∀ x > 0, x * f x = 1 := by
   refine ⟨λ hf ↦ ?_, λ hf x hx ↦ ?_⟩
   ---- `→` direction
   · have hf0 {x} (hx : 0 < x) : x * f x ≤ 1 := by
@@ -136,7 +137,7 @@ lemma good_iff_posSubtypeExt_weakGood {f : {x : R // 0 < x} → {x : R // 0 < x}
       rwa [posSubtypeExt_spec, posSubtypeExt_spec]
 
 /-- Final solution -/
-theorem final_solution {f : {x : R // 0 < x} → {x : R // 0 < x}} :
+theorem final_solution [ExistsAddOfLE R] {f : {x : R // 0 < x} → {x : R // 0 < x}} :
     good f ↔ ∀ x, x * f x = 1 := by
   rw [good_iff_posSubtypeExt_weakGood, weakGood_iff]
   refine ⟨λ h x ↦ ?_, λ h x hx ↦ ?_⟩

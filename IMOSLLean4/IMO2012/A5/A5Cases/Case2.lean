@@ -34,11 +34,13 @@ theorem map_even_of_map_one (hf : good f) (h : f (-1) = 0) (x) : f (-x) = f x :=
     mul_neg_one, neg_add, neg_add_cancel_right] at hf
 
 variable (hf : NontrivialGood f) (h : ∀ x, f (-x) = f x)
+include hf h
 
 /-- (2.1) -/
 theorem Eq1 (x y) : f (x * y - 1) = f x * f y + f (x - y) := by
   rw [← h y, sub_eq_add_neg x, ← hf.is_good, mul_neg, neg_add_eq_sub, ← neg_sub, h]
 
+omit h in
 /-- (2.2) -/
 theorem Eq2 (x) : f (x * 2 - 1) = f (x - 1) * f 2 + f (x + 1) := by
   have h0 := hf.is_good (x - 1) (1 + 1)
@@ -70,7 +72,9 @@ namespace CommCase
 
 variable [Ring R] [CommRing S] [NoZeroDivisors S] {f : R → S}
   (hf : NontrivialGood f) (h : ∀ x, f (-x) = f x)
+include hf h
 
+omit [NoZeroDivisors S] in
 /-- (2.4) (commutative version only) -/
 theorem Eq4 (x) : f x * f (x * 2 - 1) = (f (x - 1) + 1) * f (x * 2 + 1) := by
   have h0 : x * (x + 1) - 1 = (x - 1) * (x + 1 + 1) + 1 := by
@@ -82,6 +86,7 @@ theorem Eq4 (x) : f x * f (x * 2 - 1) = (f (x - 1) + 1) * f (x * 2 + 1) := by
   rw [Eq2 hf, mul_add, h0, ← add_assoc, add_one_mul (f _),
     add_left_inj, mul_left_comm, ← mul_add, ← hf.is_good]
 
+omit [NoZeroDivisors S] in
 /-- (2.4), alternate version -/
 theorem Eq4_alt (x) : f x * f (x * 2 + 1) = (f (x + 1) + 1) * f (x * 2 - 1) := by
   have h0 := Eq4 hf h (-x)
@@ -106,6 +111,7 @@ theorem two_periodic_of_map_two (h0 : f 2 = -1) : ∀ x, f (x + 2) = f x :=
       (λ h5 ↦ by rwa [← neg_eq_zero, ← h2, h1, sub_eq_zero] at h5)
       (λ h5 ↦ by rwa [← h5, add_comm, add_left_inj, add_assoc, one_add_one_eq_two] at h4)
 
+omit [CommRing S] [NoZeroDivisors S] hf h in
 theorem Eq6_ring_id {S} [CommRing S] (a b c d : S) :
     a * (c * d + b) - a * (b * d + c) - ((c + 1) * (b * d + c) - (b + 1) * (c * d + b))
       = (b + c - (a + 1) * (d - 1)) * (b - c) := by ring
@@ -187,14 +193,14 @@ structure RGoodCase2 [NonAssocRing R] [NonAssocRing S] (f : R → S)
 
 namespace GoodCase2
 
-variable [Ring R] [Ring S] [NoZeroDivisors S] {f : R → S} (hf : GoodCase2 f)
+variable {R : Type u} {S : Type v} [Ring R] [Ring S] {f : R → S} (hf : GoodCase2 f)
+include hf
 
 theorem Rtwo_ne_zero : (2 : R) ≠ 0 :=
   λ h ↦ hf.map_two_ne_neg_one <| by rw [h, hf.map_zero]
 
 /-- One-variable lift for the current case -/
-theorem oneVarLift_exists {R : Type u} {S : Type v} [Ring R] [Ring S]
-    [NoZeroDivisors S] {f : R → S} (hf : GoodCase2 f) (c : R) :
+theorem oneVarLift_exists [NoZeroDivisors S] (c : R) :
     ∃ (R' : Type u) (_ : CommRing R')
         (φ : R' →+* R) (_ : Function.Injective φ) (_ : c ∈ Set.range φ)
       (S' : Type v) (_ : CommRing S') (_ : NoZeroDivisors S')
@@ -220,6 +226,8 @@ theorem Eq2 : ∀ x, f (x * 2 - 1) = f (x - 1) * f 2 + f (x + 1) :=
 /-- (2.3) -/
 theorem Eq3 : ∀ x, f (x * 2 + 1) = f (x + 1) * f 2 + f (x - 1) :=
   Case2.Eq3 hf.toNontrivialGood hf.map_even
+
+variable [NoZeroDivisors S]
 
 /-- (2.6) -/
 theorem Eq6 (x) : f (x + 1) + f (x - 1) = (f x + 1) * (f 2 - 1) := by
@@ -306,8 +314,8 @@ theorem RGoodSubcase21.solution [Ring R] [Ring S] [NoZeroDivisors S]
 
 namespace RGoodSubcase22
 
-variable [Ring R] [Ring S] [NoZeroDivisors S]
-  {f : R → S} (hf : RGoodCase2 f) (h : f 2 = 0)
+variable [Ring R] [Ring S] [NoZeroDivisors S] {f : R → S} (hf : RGoodCase2 f) (h : f 2 = 0)
+include hf h
 
 /-- (2.2.1) -/
 theorem Eq1 (x) : f (x + 1) + f (x - 1) + f x = -1 := by
@@ -328,14 +336,14 @@ theorem Eq2 (x) : f (x + 1) * f (x - 1) = (f x + 1) * f x := by
   have h0 : f 2 ≠ 1 := λ h0 ↦ hf.map_two_ne_neg_one <| by rw [h, zero_eq_neg, ← h, ← h0]
   rw [add_one_mul (f x), ← sq, ← hf.toGoodCase2.Eq7 h0, add_one_mul (f _),
     mul_add_one (f _), add_assoc, add_assoc, self_eq_add_right,
-    add_right_comm, ← add_assoc, ← add_assoc, Eq1 hf h, neg_add_self]
+    add_right_comm, ← add_assoc, ← add_assoc, Eq1 hf h, neg_add_cancel]
 
 theorem map_eq_neg_one_imp (h0 : f x = -1) : x = 0 := by
   have h1 : f (x + 1) = 0 ∧ f (x - 1) = 0 := by
     have h1 : f (x + 1) + f (x - 1) = 0 := by
       rw [eq_sub_of_add_eq (Eq1 hf h x), h0, sub_self]
     obtain h2 | h2 : f (x + 1) = 0 ∨ f (x - 1) = 0 := by
-      rw [← mul_eq_zero, Eq2 hf h, h0, neg_add_self, zero_mul]
+      rw [← mul_eq_zero, Eq2 hf h, h0, neg_add_cancel, zero_mul]
     · rw [h2, zero_add] at h1; exact ⟨h2, h1⟩
     · rw [h2, add_zero] at h1; exact ⟨h1, h2⟩
   ---- Grind the rest
@@ -437,6 +445,7 @@ lemma shift_mk_iff {f : R → S} : ShiftGood23 (f + 1) ↔ GoodCase2 f ∧ f 2 =
   exact and_congr_right' (add_left_inj _)
 
 variable {g : R → S} (hg : ShiftGood23 g)
+include hg
 
 lemma map_zero : g 0 = 0 :=
   sub_eq_neg_self.mp hg.shift_good.map_zero
@@ -467,6 +476,7 @@ end
 section
 
 variable [Ring R] [Ring S] [NoZeroDivisors S] {g : R → S} (hg : ShiftGood23 g)
+include hg
 
 /-- (2.3.1) -/
 lemma Eq1 (x) : g (x + 1) + g (x - 1) = 2 * (g x + 1) := by
@@ -475,6 +485,7 @@ lemma Eq1 (x) : g (x + 1) + g (x - 1) = 2 * (g x + 1) := by
     sub_eq_of_eq_add two_add_one_eq_three.symm, sub_add_sub_comm, mul_two,
     sub_eq_iff_eq_add, one_add_one_eq_two, ← two_mul, ← mul_add_one (α := S)] at h
 
+omit [NoZeroDivisors S] in
 /-- (2.3.2) -/
 lemma Eq2 (x y) : g (x * y + 1) - g (x * y - 1) = g (x + y) - g (x - y) := by
   rw [hg.is_good, hg.alt_good, add_sub_add_left_eq_sub]
@@ -487,6 +498,7 @@ lemma Eq3_1 (x) : g (x + 1) * g (x - 1) = (g x - 1) ^ 2 := by
   replace h := hg.shift_good.Eq7 h x
   simp only [Pi.sub_apply, Pi.one_apply, sub_add_cancel] at h; exact h
 
+omit [Ring S] [NoZeroDivisors S] hg in
 lemma CommCase.Eq3_2 {S} [CommRing S] [NoZeroDivisors S]
     {g : R → S} (hg : ShiftGood23 g) (x) :
     (g (x + 1) - g (x - 1)) ^ 2 = 2 ^ 4 * g x := by
@@ -547,6 +559,7 @@ lemma shift_mk_iff {f : R → S} : RShiftGood23 (f + 1) ↔ RGoodCase2 f ∧ f 2
   exact and_congr_right' (add_left_inj _)
 
 variable {g : R → S} (hg : RShiftGood23 g)
+include hg
 
 lemma period_imp_eq₀ (c d) (h : ∀ x, g (x + c) = g (x + d)) : c = d :=
   hg.period_imp_eq c d λ x ↦ congrArg₂ (· - ·) (h x) rfl
@@ -559,8 +572,8 @@ end
 
 section
 
-variable {R : Type u} [Ring R] [Ring S] [NoZeroDivisors S]
-  {g : R → S} (hg : RShiftGood23 g)
+variable {R : Type u} [Ring R] [Ring S] [NoZeroDivisors S] {g : R → S} (hg : RShiftGood23 g)
+include hg
 
 /-- (2.3.6) -/
 lemma Eq6 {x} (h : g x = 0) : x = 0 := by

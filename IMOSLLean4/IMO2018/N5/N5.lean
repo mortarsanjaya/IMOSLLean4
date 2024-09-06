@@ -21,8 +21,8 @@ namespace IMO2018N5
 /-! ### Extra lemmas -/
 
 theorem even_mul_of_odd_add {x y : ℤ} (h : Odd (x + y)) : Even (x * y) := by
-  rw [Int.even_iff_not_odd, Int.odd_mul]
-  rintro ⟨hx, hy⟩; exact Int.odd_iff_not_even.mp h (hx.add_odd hy)
+  rw [← Int.not_odd_iff_even, Int.odd_mul]
+  rintro ⟨hx, hy⟩; exact Int.not_even_iff_odd.mpr h (hx.add_odd hy)
 
 theorem sq_sub_eq_sq_bound {a b : ℤ} (hb : 0 < b) (h : ∃ c, a ^ 2 - b = c ^ 2) :
     2 * a - 1 ≤ b := by
@@ -110,6 +110,7 @@ lemma mkGood_prod (k l) :
 
 
 variable (hv : good v)
+include hv
 
 theorem good.prod_eq_sq_imp' (h : ∃ a, (v 0 * v 1) * (v 2 * v 3) = a ^ 2) :
     (∃ x z, v = ![x, -x, z, -z])

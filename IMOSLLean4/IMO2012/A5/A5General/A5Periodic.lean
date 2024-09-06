@@ -60,6 +60,7 @@ lemma iff_sub [AddCommGroup R] {f : R → S} {c d : R} :
 
 
 variable [Ring R] [NonAssocRing S] [NoZeroDivisors S] {f : R → S} (hf : NontrivialGood f)
+include hf
 
 theorem equiv_zero_iff : PeriodEquiv f c 0 ↔ QuasiPeriodic f c ∧ f c = -1 := by
   rw [zero_right, QuasiPeriodic.iff_right hf]
@@ -84,7 +85,7 @@ theorem mul_left_equiv_zero (h : PeriodEquiv f c 0) : ∀ d, PeriodEquiv f (d * 
   refine (h2 (d - 1) 1).elim (λ h4 ↦ ?_) (λ h4 ↦ ?_)
   · rwa [← h1, ← one_add_mul _ c, add_sub_cancel] at h4
   · rw [mul_one, sub_add_cancel] at h4
-    rw [hf.is_good, h4, zero_mul, zero_add, add_neg_self, hf.map_zero] at h3
+    rw [hf.is_good, h4, zero_mul, zero_add, add_neg_cancel, hf.map_zero] at h3
     rw [h3, ← neg_neg (f _), ← neg_one_mul, h3, zero_mul]
 
 theorem mul_right_equiv_zero (h : PeriodEquiv f c 0) : ∀ d, PeriodEquiv f (c * d) 0 := by
@@ -102,7 +103,7 @@ theorem mul_right_equiv_zero (h : PeriodEquiv f c 0) : ∀ d, PeriodEquiv f (c *
   refine (h2 (d - 1) 1).elim (λ h4 ↦ ?_) (λ h4 ↦ ?_)
   · rwa [← h1, ← mul_add_one c, sub_add_cancel] at h4
   · rw [one_mul, sub_add_cancel] at h4
-    rw [hf.is_good, h4, mul_zero, zero_add, neg_add_self, hf.map_zero] at h3
+    rw [hf.is_good, h4, mul_zero, zero_add, neg_add_cancel, hf.map_zero] at h3
     rw [h3, ← neg_neg (f _), ← neg_one_mul, h3, zero_mul]
 
 theorem mul_left_equiv (h : PeriodEquiv f c d) (a) :

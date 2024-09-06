@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Set.Defs
+import Mathlib.Data.Set.Operations
 import Mathlib.Data.Nat.Defs
 
 /-!
@@ -33,6 +33,7 @@ namespace IMO2023N6
 namespace KawaiiSequence
 
 variable (X : KawaiiSequence S)
+include X
 
 lemma a_le_succ : ∀ n, X.a n ≤ X.a (n + 1) := by
   refine Nat.rec ?_ λ n hn ↦ ?_
@@ -74,6 +75,7 @@ def of_mem (c : S) : KawaiiSequence S where
   a_step := λ n ↦ ⟨c, by rw [Nat.add_right_comm, ← Nat.mul_add, Nat.add_right_comm,
     ← Nat.succ_mul, Nat.mul_succ, Nat.mul_left_comm, Nat.add_assoc, ← Nat.mul_succ]⟩
 
+omit X in
 lemma of_mem_a_succ (c : S) (n) : (of_mem c).a (n + 1) = c * (of_mem c).a n + 1 := rfl
 
 
@@ -239,13 +241,13 @@ theorem isKawaii23_self_and_succ (hm : isKawaii {2, 3} m) (hm0 : isKawaii {2, 3}
   rcases h with ⟨⟨c, hc⟩, n, -, h⟩
   obtain rfl : c = 2 := by
     refine hc.resolve_right λ (hc : c = 3) ↦ absurd (congrArg (· % 3) h) ?_
-    simp only [hc, Nat.mul_mod_right, Nat.mul_add_mod]; exact not_false
+    simp only [hc, Nat.mul_mod_right, Nat.mul_add_mod]; exact Nat.zero_ne_one
   ---- Next, `3k + 1` is of form `2m + 1` or `3m + 1` for some `m` kawaii
   simp only at h; clear hc
   obtain ⟨⟨_, rfl | rfl⟩, m, hm, h0⟩ := hm0.succ_imp
   ---- Case `3k + 1 = 2m + 1`
   · apply absurd (congrArg (· % 2) (h.symm.trans h0))
-    simp only [Nat.mul_mod_right, Nat.mul_add_mod]; exact not_false
+    simp only [Nat.mul_mod_right, Nat.mul_add_mod]; exact Nat.one_ne_zero
   ---- Case `3k + 1 = 3m + 1`
   · rwa [(Nat.mul_right_inj three_ne_zero).mp h0]
 

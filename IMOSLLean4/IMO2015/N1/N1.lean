@@ -57,7 +57,7 @@ theorem final_solution : (∃ k : ℕ, 2 ∣ f^[k] M) ↔ M ≠ 3 := by
   ---- For any `k n : ℕ`, we have `2^(n + 1) ∣ f^[k] M - 3`
   refine Nat.rec (λ k ↦ ?_) (λ n h0 k ↦ ?_)
   · rw [Int.dvd_iff_emod_eq_zero, Nat.zero_add, pow_one,
-      ← Int.even_iff, Int.even_sub', Int.odd_iff_not_even,
+      ← Int.even_iff, Int.even_sub', ← Int.not_even_iff_odd,
       Int.even_iff, ← Int.dvd_iff_emod_eq_zero]
     exact iff_of_true (h k) (Int.odd_iff.mpr rfl)
   · rw [pow_succ', pow_succ']

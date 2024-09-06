@@ -73,7 +73,7 @@ theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
   ---- `0 < r < 1`
   · rw [neg_pos, neg_lt]
     have h0 := Int.floor_eq_iff.mp (h 0)
-    rw [f.iterate_zero_apply, X, neg_add_self, and_comm] at h0
+    rw [f.iterate_zero_apply, X, neg_add_cancel, and_comm] at h0
     revert h0; refine And.imp_right λ h0 ↦ h0.lt_of_ne λ h1 ↦ ?_
     replace h0 : Int.fract (-1 : R) = 0 := Int.fract_neg_eq_zero.mpr Int.fract_one
     specialize h 1; rw [f.iterate_one, ← h1, f, h0, mul_zero, Int.floor_zero] at h
@@ -136,6 +136,7 @@ inductive ArchimedeanGood : (ℕ → R) → Prop
   | const_nonzero (C : ℕ) (_ : 1 < C) (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2) :
       ArchimedeanGood a
 
+omit [FloorRing R] in
 theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : GeneralGood a) :
     ArchimedeanGood a := by
   refine h.recOn ArchimedeanGood.const_zero ArchimedeanGood.two_period ?_
@@ -143,6 +144,7 @@ theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : Gener
   refine λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ ?_
   rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
 
+omit [FloorRing R] in
 theorem ArchimedeanGood.two_periodic {a : ℕ → R} (h : ArchimedeanGood a) (n) :
     a (n + 2) = a n := by
   refine h.recOn rfl ?_ ?_

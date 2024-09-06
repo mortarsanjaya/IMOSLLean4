@@ -41,7 +41,7 @@ theorem range_iter_two_eq_of_exists_iter_eq_self
   rcases Nat.exists_eq_add_of_le h with ⟨k, rfl⟩
   nth_rw 1 [← h0, f.iterate_add]; exact Set.range_comp_subset_range _ _
 
-variable [Fintype S] [DecidableEq S]
+variable [Fintype S]
 
 theorem exists_lt_iterate_eq (f : S → S) : ∃ a b, a < b ∧ f^[a] = f^[b] := by
   obtain ⟨a, b, h, h0⟩ : ∃ a b : ℕ, a ≠ b ∧ f^[a] = f^[b] :=

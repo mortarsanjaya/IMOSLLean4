@@ -22,8 +22,15 @@ namespace IMO2012A7
 
 namespace MetaClosure
 
-variable [Lattice G] [AddGroup G] [CovariantClass G G (· + ·) (· ≤ ·)]
-    [CovariantClass G G (Function.swap (· + ·)) (· ≤ ·)] (S : AddSubgroup G)
+variable [Lattice G] [AddGroup G] (S : AddSubgroup G)
+
+lemma zero_mem : MetaClosure (· ∈ S) 0 := ofMem S.zero_mem
+
+lemma pos_part_mem (ha : MetaClosure (· ∈ S) a) : MetaClosure (· ∈ S) a⁺ :=
+  ofSup ha (zero_mem S)
+
+variable [CovariantClass G G (· + ·) (· ≤ ·)]
+  [CovariantClass G G (Function.swap (· + ·)) (· ≤ ·)]
 
 lemma add_mem (ha : MetaClosure (· ∈ S) a) (hb : MetaClosure (· ∈ S) b) :
     MetaClosure (· ∈ S) (a + b) :=
@@ -35,8 +42,6 @@ lemma add_mem (ha : MetaClosure (· ∈ S) a) (hb : MetaClosure (· ∈ S) b) :
     (λ _ _ ↦ by rw [inf_add]; exact ofInf)
     (λ _ _ ↦ by rw [sup_add]; exact ofSup)
 
-lemma zero_mem : MetaClosure (· ∈ S) 0 := ofMem S.zero_mem
-
 lemma neg_mem (ha : MetaClosure (· ∈ S) a) : MetaClosure (· ∈ S) (-a) :=
   ha.recOn (λ ha ↦ ofMem (S.neg_mem ha))
     (λ _ _ ↦ by rw [neg_inf]; exact ofSup)
@@ -45,9 +50,6 @@ lemma neg_mem (ha : MetaClosure (· ∈ S) a) : MetaClosure (· ∈ S) (-a) :=
 lemma sub_mem (ha : MetaClosure (· ∈ S) a) (hb : MetaClosure (· ∈ S) b) :
     MetaClosure (· ∈ S) (a - b) :=
   (sub_eq_add_neg a b) ▸ add_mem S ha (neg_mem S hb)
-
-lemma pos_part_mem (ha : MetaClosure (· ∈ S) a) : MetaClosure (· ∈ S) a⁺ :=
-  ofSup ha (zero_mem S)
 
 lemma neg_part_mem (ha : MetaClosure (· ∈ S) a) : MetaClosure (· ∈ S) a⁻ :=
   ofSup (neg_mem S ha) (zero_mem S)

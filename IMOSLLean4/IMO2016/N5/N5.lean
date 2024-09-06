@@ -29,6 +29,7 @@ namespace nice
 section
 
 variable (h : nice k a x y)
+include h
 
 theorem neg_left : nice k a (-x) y := by
   rwa [nice, neg_sq]
@@ -71,6 +72,7 @@ end nice
 
 
 variable {k a : ℤ} (hk : 0 ≤ k) (ha : 0 < a)
+include hk ha
 
 /-- Generate a new nice pair `(x', y')` with `x'` arbitrarily big from any nice pair -/
 theorem exists_x_ge_bound_nat (h : ∃ x y, nice k a x y) :

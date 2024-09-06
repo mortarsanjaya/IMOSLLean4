@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.GCDMonoid.Nat
 import Mathlib.Algebra.Order.Ring.Basic
+import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2007 N2
@@ -24,15 +25,15 @@ theorem final_solution_explicit (h : 0 < b) (h0 : ∃ c : ℤ, (b ^ 2 : ℤ) ∣
   obtain ⟨c, h1⟩ : ∃ c, Associated (c ^ n) b := by
     rcases h0 with ⟨c, a, h0⟩
     rw [sub_eq_iff_eq_add, ← sub_eq_iff_eq_add', sq, mul_assoc, ← mul_one_sub] at h0
-    have h1 : gcd b (1 - b * a) = 1 :=
+    have h1 : gcd b (1 - b * a) = 1 := by
       have h1 : b ∣ (1 - b * a) - 1 := ⟨-a, by rw [sub_sub_cancel_left, mul_neg]⟩
-      (gcd_eq_of_dvd_sub_right h1).trans (gcd_one_right b)
+      exact (gcd_eq_of_dvd_sub_right h1).trans (gcd_one_right b)
     exact exists_associated_pow_of_mul_eq_pow (Int.isUnit_iff.mpr (Or.inl h1)) h0
   rw [Int.associated_iff, eq_neg_iff_add_eq_zero, add_comm, ← eq_neg_iff_add_eq_zero] at h1
   rcases h1 with rfl | rfl
   · exact ⟨c, rfl⟩
-  · refine ⟨-c, ((Nat.odd_iff_not_even.mpr λ h1 ↦ h.not_le ?_).neg_pow c).symm⟩
-    exact neg_nonpos_of_nonneg (h1.pow_nonneg c)
+  · refine ⟨-c, ((Nat.not_even_iff_odd.mp λ h1 ↦ h.not_le ?_).neg_pow c).symm⟩
+    exact Int.neg_nonpos_of_nonneg (h1.pow_nonneg c)
 
 /-- Final solution -/
 theorem final_solution (h : 0 < b) (h0 : ∀ k : ℕ, 0 < k → ∃ c : ℤ, (k : ℤ) ∣ b - c ^ n) :

@@ -107,7 +107,7 @@ theorem general_ineq {B : Fin n → Finset κ} [∀ i j, Decidable (j ∈ B i)]
       _ = _ := Fintype.sum_congr _ _ λ i ↦ congrArg (_ * ·) (h i)
 
 /-- Final solution -/
-theorem final_solution [Fintype κ] [DecidableEq κ] {a : κ → ℤ} {B : Fin m → Finset κ}
+theorem final_solution {a : κ → ℤ} {B : Fin m → Finset κ}
     [∀ i j, Decidable (j ∈ B i)] (h : ∀ i : Fin m, (B i).sum a = m ^ (i.1 + 1)) :
     m ≤ 2 * Fintype.card κ := by
   obtain rfl | rfl | h0 : m = 0 ∨ 1 = m ∨ 1 < m :=
