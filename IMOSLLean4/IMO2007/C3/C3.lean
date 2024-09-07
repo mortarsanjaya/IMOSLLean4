@@ -321,7 +321,8 @@ theorem formula5 (h : ∃ c ≤ n, 4 * 2007 = 3 * c ^ 2 + n ^ 2) : n = 69 ∨ n 
   replace h : 892 = 3 * d ^ 2 + k ^ 2 := by
     rw [Nat.mul_pow, Nat.mul_assoc 3 3, ← Nat.mul_add] at h
     exact Nat.eq_of_mul_eq_mul_left X h
-  ---- Now notice `k < 30` and `d < 18`
+  ---- Now notice `k < 30` and `d < 18`, and bash out one-by-one
+  ---- (Note: This could be done much faster, I think, but...)
   replace h0 : k < 30 := Nat.lt_of_not_le λ h0 ↦ h.not_lt <| calc
     892 < 30 ^ 2 := by decide
     _ ≤ k ^ 2 := Nat.pow_le_pow_left h0 2
