@@ -48,6 +48,7 @@ end
 section
 
 variable [Ring R] {a : R} (ha : a * a = 1) (ha0 : ∀ x, a * x = x * a)
+include ha ha0
 
 theorem good_mul_central_involutive {f : R → R} (hf : good f) :
     good (λ x : R ↦ a * f x) := λ x y ↦ by
@@ -95,6 +96,7 @@ lemma map_neg_eq_of_map_eq [NonAssocRing R] {f : R → R} (hf : good f) (h : f a
 
 
 variable [Ring R] {f : R → R} (hf : good f)
+include hf
 
 /-- Periodicity of zeroes of `f` -/
 theorem period_of_map_eq_zero (h : f C = 0) : ∀ x, f (x + C) = f (x + 1) := by
@@ -102,7 +104,7 @@ theorem period_of_map_eq_zero (h : f C = 0) : ∀ x, f (x + C) = f (x + 1) := by
   have h0 : f (C + 1) = -f 0 := by
     have h0 := hC 1; rwa [mul_one, h, eq_comm, add_eq_zero_iff_neg_eq, eq_comm] at h0
   have h1 : f (f 0 * f 0 * 2) = -f 0 := by
-    have h1 : f (C * -C) = f 0 * 2 := by rw [hC, add_right_neg, mul_two]
+    have h1 : f (C * -C) = f 0 * 2 := by rw [hC, add_neg_cancel, mul_two]
     have h2 := hf.map_map_zero_mul_map (C * -C)
     rwa [h1, ← mul_assoc, ← eq_sub_iff_add_eq, mul_two (f 0), sub_add_cancel_right] at h2
   replace h1 : f (C * 2) = -f 0 := by
@@ -110,11 +112,11 @@ theorem period_of_map_eq_zero (h : f C = 0) : ∀ x, f (x + C) = f (x + 1) := by
     have h2 := hf.map_add_one_eq_of_map_eq (hf.map_add_one_eq_of_map_eq (h.trans X.symm))
     rw [add_assoc, add_assoc, one_add_one_eq_two] at h2
     rw [hC, h2, ← h1, ← hf, X, zero_mul]
-  have h2 : f (C * C) = 0 := by rw [hC, ← mul_two, h1, add_right_neg]
+  have h2 : f (C * C) = 0 := by rw [hC, ← mul_two, h1, add_neg_cancel]
   have h3 : f (C * (C * C)) = 0 := by
     rw [hC, ← mul_one_add C, hC, add_left_comm C, ← mul_two,
       add_comm 1, hf.map_add_one_eq_of_map_eq (h1.trans h0.symm),
-      add_assoc, one_add_one_eq_two, ← hC, h1, add_neg_self]
+      add_assoc, one_add_one_eq_two, ← hC, h1, add_neg_cancel]
   ---- Now finish by decomposing `f(C^4 x)` in two ways
   intro y; let x := y - C * C
   have h4 := hf (C * C) (C * C * x)
@@ -142,6 +144,7 @@ theorem map_sub_one (x) : f (x - 1) = f x + f 0 := by
 section
 
 variable (h : f.Injective)
+include h
 
 theorem map_zero_mul_self_of_injective : f 0 * f 0 = 1 :=
   h (hf.map_map_zero_mul_self.trans hf.map_one_eq_zero.symm)
@@ -176,6 +179,7 @@ end good
 namespace ReducedGood
 
 variable [Ring R] {f : R → R} (hf : ReducedGood f)
+include hf
 
 theorem map_eq_zero_iff : f c = 0 ↔ c = 1 :=
   ⟨λ h ↦ hf.period_imp_eq _ _ (hf.is_good.period_of_map_eq_zero h),

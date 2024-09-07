@@ -57,6 +57,7 @@ theorem good_answer2 : good answer2
 section Solution
 
 variable (h : good f)
+include h
 
 theorem iter_four_eq : ∀ n, f^[4] n = f^[4] 0 + n :=
   have h0 n : f^[4] (n + 1) = f^[4] n + 1 := by
