@@ -51,13 +51,8 @@ lemma step1_modeq (ha : a ≡ p ^ (2 * n + 1) [MOD p ^ (2 * n + 2)]) : p ∣ b :
     have h0 : 0 < p ^ (2 * n + 1) := Nat.pow_pos hp.pos
     exact Nat.not_dvd_of_pos_of_lt h0 ((Nat.lt_mul_iff_one_lt_right h0).mpr hp.one_lt)
 
-lemma step1_pow_one (ha : a ≡ p [MOD p ^ 2]) : p ∣ b := by
-  apply step1_general hp h (n := 0)
-  · replace ha : (a % p ^ 2) % p = (p % p ^ 2) % p := congrArg (· % p) ha
-    rw [Nat.pow_two, Nat.mod_mul_right_mod, Nat.mod_mul_right_mod, Nat.mod_self] at ha
-    rw [Nat.pow_one, Nat.dvd_iff_mod_eq_zero, ha]
-  · rw [Nat.dvd_iff_mod_eq_zero, ha, ← Nat.dvd_iff_mod_eq_zero, Nat.pow_two]
-    exact Nat.not_dvd_of_pos_of_lt hp.pos (Nat.lt_mul_self_iff.mpr hp.one_lt)
+lemma step1_pow_one (ha : a ≡ p [MOD p ^ 2]) : p ∣ b :=
+  step1_modeq hp h (n := 0) (p.pow_one.symm ▸ ha)
 
 end
 
