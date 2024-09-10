@@ -36,6 +36,7 @@ variable [DecidableEq ι] {S : Finset ι}
 section
 
 variable {n : ℤ} {f : ι → ℤ} (h : ∀ i ∈ S, f i ≡ 1 [ZMOD n])
+include h
 
 theorem prod_one_modeq_one_mod : S.prod f ≡ 1 [ZMOD n] := by
   induction' S using Finset.induction with i S h0 h1; rfl

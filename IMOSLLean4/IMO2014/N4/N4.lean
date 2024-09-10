@@ -36,8 +36,8 @@ lemma case_odd_succ (hn : 1 < n) (h : Odd n) (k : ℕ) :
     exact ⟨C, h0⟩
   have h1 : Even (n.succ ^ n ^ k.succ) := by
     refine Nat.even_pow.mpr ⟨?_, pow_ne_zero k.succ hn'.ne.symm⟩
-    rwa [Nat.succ_eq_add_one, Nat.even_add_one, ← Nat.odd_iff_not_even]
-  rw [h0, Nat.even_add_one, ← Nat.odd_iff_not_even, Nat.odd_mul] at h1
+    rwa [Nat.succ_eq_add_one, Nat.even_add_one, Nat.not_even_iff_odd]
+  rw [h0, Nat.even_add_one, Nat.not_even_iff_odd, Nat.odd_mul] at h1
   rw [h0, Nat.mul_add_div (Nat.pow_pos hn'),
     Nat.div_eq_of_lt (Nat.one_lt_pow k.succ_ne_zero hn), add_zero]
   exact h1.2
@@ -57,7 +57,7 @@ lemma case_two (k : ℕ) : Odd (2 ^ (2 ^ (2 * k.succ) * 3) / (2 ^ (2 * k.succ) *
   replace h0 : 4 ^ n = 3 * (4 ^ n / 3) + 4 ^ n % 3 := (Nat.div_add_mod (4 ^ n) 3).symm
   rw [Nat.pow_mod, Nat.one_pow, Nat.one_mod] at h0
   replace h : Even (4 ^ n) := (Nat.even_pow' h.ne.symm).mpr ⟨2, rfl⟩
-  rw [h0, Nat.even_add_one, ← Nat.odd_iff_not_even, Nat.odd_mul] at h
+  rw [h0, Nat.even_add_one, Nat.not_even_iff_odd, Nat.odd_mul] at h
   exact h.2
 
 /-- Final solution -/
@@ -76,6 +76,6 @@ theorem final_solution (hn : 1 < n) (N) : ∃ k > N, Odd (n ^ k / k) := by
   · obtain ⟨n, rfl⟩ : ∃ k, n = k + 1 :=
       Nat.exists_eq_succ_of_ne_zero (Nat.one_pos.trans hn).ne.symm
     apply Nat.succ_lt_succ_iff.mp at h
-    rw [Nat.even_add_one, ← Nat.odd_iff_not_even] at h0
+    rw [Nat.even_add_one, Nat.not_even_iff_odd] at h0
     refine ⟨n ^ N.succ, ?_, case_odd_succ h h0 _⟩
     exact N.lt_succ_self.trans (Nat.lt_pow_self h N.succ)

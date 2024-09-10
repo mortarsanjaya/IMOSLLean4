@@ -22,6 +22,7 @@ namespace ReducedGood
 open scoped nonZeroDivisors
 
 variable [Ring R] (hR : 2 ∈ R⁰) {f : R → R} (hf : ReducedGood f)
+include hR hf
 
 theorem eq_zero_of_map_neg_eq_of_map_eq (h : f (-x) = f x) : x = 0 := by
   have h0 : f (-1) = f 0 + f 0 := by rw [← hf.is_good.map_sub_one, zero_sub]
@@ -38,7 +39,7 @@ theorem eq_zero_of_map_neg_eq_of_map_eq (h : f (-x) = f x) : x = 0 := by
   rwa [← sub_eq_zero, ← hf.is_good.map_add_one, hf.map_eq_zero_iff, add_left_eq_self] at h1
 
 theorem NZD2_injective : f.Injective := λ c d h ↦ by
-  rw [← add_right_cancel_iff (a := -d), add_neg_self]
+  rw [← add_right_cancel_iff (a := -d), add_neg_cancel]
   apply hf.eq_zero_of_map_neg_eq_of_map_eq hR
   ---- Now focus on proving that `f(c - d) = f(d - c)`
   have h0 : f (-c) = f (-d) := hf.is_good.map_neg_eq_of_map_eq h

@@ -25,7 +25,7 @@ theorem FiniteField_prime_geom_sum_eq_zero_imp [Field F] [Fintype F] [DecidableE
   rw [geom_sum_eq hx, div_eq_zero_iff, or_iff_left (sub_ne_zero_of_ne hx), sub_eq_zero] at h
   haveI : Fact p.Prime := ⟨hp⟩
   have h0 : x ≠ 0 := λ h0 ↦ absurd h (by rw [h0, zero_pow hp.ne_zero]; exact zero_ne_one' F)
-  let xᵤ : Fˣ := ⟨x, x⁻¹, mul_inv_cancel h0, inv_mul_cancel h0⟩
+  let xᵤ : Fˣ := ⟨x, x⁻¹, mul_inv_cancel₀ h0, inv_mul_cancel₀ h0⟩
   have h1 : orderOf xᵤ = p := orderOf_eq_prime (Units.eq_iff.mp h) (mt Units.eq_iff.mpr hx)
   rw [← h1, ← Fintype.card_units]; exact orderOf_dvd_card
 

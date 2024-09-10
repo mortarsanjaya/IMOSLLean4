@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Data.Nat.GCD.Basic
 
 /-!
 # IMO 2012 N3
@@ -65,7 +66,7 @@ theorem final_solution (h : 1 < m) :
     · exact Nat.dvd_refl 0
     -- `c, n > 0`
     · refine (Nat.Coprime.dvd_mul_right ?_).mp ⟨_, (n.succ_mul_choose_eq c).symm⟩
-      rw [two_mul, add_assoc] at h0
+      rw [Nat.two_mul, Nat.add_assoc] at h0
       rw [← Nat.coprime_self_add_right, ← Nat.coprime_self_add_right,
         Nat.coprime_comm, h0.coprime_iff_not_dvd]
       exact Nat.not_dvd_of_pos_of_lt n.succ_pos (Nat.lt_add_of_pos_right (n.succ + c).succ_pos)

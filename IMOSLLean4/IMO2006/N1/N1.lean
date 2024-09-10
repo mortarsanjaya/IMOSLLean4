@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.RingTheory.Coprime.Lemmas
 import Mathlib.Algebra.Order.Ring.Basic
+import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2006 N1 (P4)
@@ -21,7 +22,7 @@ namespace IMO2006N1
 lemma sq_eq_two_pow_mul_add_one_imp {a : ℤ} (h : 2 ^ (k + 1) ∣ a ^ 2 - 1) :
     2 ^ k ∣ a - 1 ∨ 2 ^ k ∣ a + 1 := by
   have h0 : Odd a := by
-    rw [← Int.odd_pow' (Nat.succ_ne_zero 1), Int.odd_iff_not_even,
+    rw [← Int.odd_pow' (Nat.succ_ne_zero 1), ← Int.not_even_iff_odd,
       ← Int.even_sub_one, even_iff_two_dvd]
     exact dvd_of_mul_left_dvd h
   rw [← one_pow (M := ℤ) 2, sq_sub_sq] at h
@@ -56,8 +57,8 @@ lemma good_neg_right (h : good x y) : good x (-y) := h.trans (neg_sq y).symm
 
 lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
   wlog hy : 0 ≤ y
-  · exact this (good_neg_right h) (neg_nonneg_of_nonpos (le_of_not_le hy))
-  rw [good, two_mul, (x + 1).add_right_comm, pow_add, ← add_one_mul (α := ℤ)] at h
+  · refine this (good_neg_right h) (neg_nonneg_of_nonpos (le_of_not_le hy))
+  rw [good, two_mul, (x + 1).add_right_comm, pow_add, ← add_one_mul] at h
   rcases x with _ | x
   -- First deal with the case `x = 0`
   · change (11 : ℕ) = y ^ 2 at h
@@ -65,7 +66,7 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
       (Int.exists_mul_self 11).mp ⟨y, (sq y).symm.trans h.symm⟩
     refine absurd h (ne_of_beq_false ?_); rfl
   -- Now solve for `(2^{x + 3} + 1) 2^{x + 2} = y^2 - 1`
-  have X : (0 : ℤ) < 2 := two_pos
+  have X : (0 : ℤ) < 2 := by decide
   have X0 : (2 : ℤ) ≠ 0 := X.ne.symm
   obtain h0 | h0 : 2 ^ (x + 1) ∣ y - 1 ∨ 2 ^ (x + 1) ∣ y + 1 := by
     apply sq_eq_two_pow_mul_add_one_imp

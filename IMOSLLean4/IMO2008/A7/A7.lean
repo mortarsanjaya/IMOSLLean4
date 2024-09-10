@@ -41,11 +41,11 @@ theorem field_ineq1 (a b : F) (hc : 0 < c) (hd : 0 < d) :
     (a + b) ^ 2 / (c + d) ≤ a ^ 2 / c + b ^ 2 / d := by
   have hc0 : c ≠ 0 := hc.ne.symm
   have hd0 : d ≠ 0 := hd.ne.symm
-  rw [div_le_iff (add_pos hc hd), add_sq, add_mul, mul_add, mul_add, ← add_assoc,
+  rw [div_le_iff₀ (add_pos hc hd), add_sq, add_mul, mul_add, mul_add, ← add_assoc,
     div_mul_cancel₀ _ hc0, div_mul_cancel₀ _ hd0, add_le_add_iff_right,
     add_assoc, add_le_add_iff_left, ← mul_div_right_comm, ← mul_div_right_comm,
     div_add_div _ _ hc0 hd0, mul_assoc, mul_assoc, ← sq, mul_left_comm c, ← sq,
-    ← mul_pow, ← mul_pow, le_div_iff (mul_pos hc hd), mul_assoc, mul_comm c,
+    ← mul_pow, ← mul_pow, le_div_iff₀ (mul_pos hc hd), mul_assoc, mul_comm c,
     mul_mul_mul_comm, ← mul_assoc]
   exact two_mul_le_add_sq (a * d) (b * c)
 
@@ -76,6 +76,7 @@ theorem field_ineq3 {a b c d : F} (h : 0 < a + c + b) (h0 : 0 < a + c + d) :
 /-! ### Start of the problem -/
 
 variable {a b c d : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d)
+include ha hb hc hd
 
 /-- Non-trivial estimate -/
 theorem lower_bound :
@@ -83,7 +84,7 @@ theorem lower_bound :
       ≤ (a - b) * (a - c) / (a + b + c) + (b - c) * (b - d) / (b + c + d)
         + (c - d) * (c - a) / (c + d + a) + (d - a) * (d - b) / (d + a + b) := by
   have X : (6 : F) = 2 * 3 := by norm_num
-  rw [X, mul_assoc, mul_comm 2, ← div_div, div_le_iff' zero_lt_two,
+  rw [X, mul_assoc, mul_comm 2, ← div_div, div_le_iff₀' zero_lt_two,
     add_assoc (_ / _ + _), add_add_add_comm (_ / _), mul_add 2]
   have hy : 0 < a + c := add_pos ha hc
   have hz : 0 < b + d := add_pos hb hd
@@ -123,6 +124,7 @@ theorem lower_bound :
         ← add_rotate, mul_add, add_mul, add_le_add_iff_left, mul_comm]
       exact mul_le_mul_of_nonneg_left (le_add_of_nonneg_right ha.le) hc.le
 
+omit ha hb hc hd in
 /-- Weakening of the lower bound -/
 theorem lower_bound_weakening (x y : F) :
     (x + y) ^ 2 ≤ 4 * (x + y) ^ 2 - 9 * (x * y) := by
@@ -158,9 +160,9 @@ theorem final_solution_part2 :
   · apply (lower_bound_weaker ha hb hc hd).trans_eq at h
     have X : 0 < 6 * (a + c + (b + d)) :=
       mul_pos (by norm_num) (add_pos (add_pos ha hc) (add_pos hb hd))
-    rw [div_le_iff X, zero_mul] at h
+    rw [div_le_iff₀ X, zero_mul] at h
     apply (sq_nonneg _).antisymm at h
-    rw [eq_comm, sq_eq_zero_iff, add_eq_zero_iff' (abs_nonneg _) (abs_nonneg _)] at h
+    rw [eq_comm, sq_eq_zero_iff, add_eq_zero_iff_of_nonneg (abs_nonneg _) (abs_nonneg _)] at h
     replace X {u v : F} (h : |u - v| = 0) : u = v := by rwa [abs_eq_zero, sub_eq_zero] at h
     exact And.imp X X h
   · rw [h.1, h.2, sub_self, sub_self, mul_zero, mul_zero]

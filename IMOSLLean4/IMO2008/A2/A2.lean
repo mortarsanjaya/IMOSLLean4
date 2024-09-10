@@ -90,6 +90,7 @@ theorem field_eq5 [Field F] {t : F} (h : t ≠ 0) (h0 : t + 1 ≠ 0) (h1 : t * (
 section
 
 variable [LinearOrderedField F] {t : F} (h : 0 < t)
+include h
 
 theorem field_ineq1 : -(t + 1) / t ^ 2 ≠ 1 :=
   div_ne_one_of_ne ((neg_lt_zero.mpr (add_pos h one_pos)).trans (pow_pos h 2)).ne

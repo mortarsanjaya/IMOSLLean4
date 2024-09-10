@@ -45,6 +45,7 @@ variable [NoZeroDivisors R]
 section
 
 variable {f : R → R} (hf : good f)
+include hf
 
 theorem map_zero : f 0 = 0 :=
   sq_eq_zero_iff.mp hf.sq_eq_zero
@@ -88,6 +89,7 @@ theorem map_one_eq : f 1 = 1 ∨ f 1 = -1 :=
 theorem neg_apply : good (λ x ↦ -f x) := λ x y ↦ by
   simp only [mul_neg, neg_mul, hf.map_neg, neg_neg]; exact hf x y
 
+omit [NoZeroDivisors R] in
 theorem map_map_add_one (h : f 1 = 1) (y) : f (f (y + 1)) = f y + 1 := by
   rw [← one_mul (f (y + 1)), add_comm y, hf, h, one_mul, one_pow]
 
@@ -100,6 +102,7 @@ end
 section
 
 variable (hR : (2 : R) ≠ 0) {f : R → R} (hf : good f)
+include hR hf
 
 theorem char_ne2_of_map_one (h : f 1 = 1) : f = (·) := by
   ---- First show that `f(y + 2) = f(y) + 2` for all `y`

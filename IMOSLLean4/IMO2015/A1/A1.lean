@@ -37,7 +37,7 @@ theorem final_solution [LinearOrderedField F]
   ---- First replace the inequality condition on `a`
   replace h0 (k : ℕ) : (k.succ : F) / a k.succ ≤ a k + k / a k := by
     rw [add_div' _ _ _ (h k).ne.symm, div_le_div_iff (h _) (h k), ← sq]
-    exact (div_le_iff' <| add_pos_of_pos_of_nonneg
+    exact (div_le_iff₀' <| add_pos_of_pos_of_nonneg
       (pow_pos (h k) 2) k.cast_nonneg).mp (h0 k)
   ---- Now induct on `n`, clearing the easy cases
   refine Nat.le_induction ?_ ?_
@@ -45,7 +45,7 @@ theorem final_solution [LinearOrderedField F]
     specialize h0 0
     rw [Nat.cast_one, Nat.cast_zero, zero_div, add_zero] at h0
     apply (add_le_add_right h0 _).trans'
-    rw [div_add' _ _ _ (h 1).ne.symm, le_div_iff (h 1), ← sq]
+    rw [div_add' _ _ _ (h 1).ne.symm, le_div_iff₀ (h 1), ← sq]
     have h1 := two_mul_le_add_sq 1 (a 1)
     rwa [mul_one, one_pow] at h1
   · intro n h1 h2
@@ -54,7 +54,7 @@ theorem final_solution [LinearOrderedField F]
     · exact add_le_add h2 h3
     ---- The hard cases
     refine le_trans ?_ (add_le_add_right (?_ : (n : F) / a n ≤ _) _)
-    · rw [div_add' _ _ _ (h n).ne.symm, le_div_iff (h n), add_one_mul (α := F),
+    · rw [div_add' _ _ _ (h n).ne.symm, le_div_iff₀ (h n), add_one_mul (α := F),
         ← sub_le_iff_le_add, add_sub_assoc, ← mul_one_sub,
         ← le_sub_iff_add_le', ← mul_one_sub, ← sub_nonneg, ← sub_mul]
       refine mul_nonneg (sub_nonneg.mpr (h3.trans ?_)) (sub_nonneg.mpr h3)

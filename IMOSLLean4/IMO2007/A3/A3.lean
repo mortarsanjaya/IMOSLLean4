@@ -51,7 +51,7 @@ theorem sum_main_ineq {x : F} (h : 0 < x) (h0 : x < 1) (h1 : 0 < n) :
   _ = (1 - x ^ n) / (x ^ n * (1 - x)) := by
     rw [← sum_mul, geom_sum_eq (λ h2 ↦ h0.ne (inv_eq_one.mp h2)), ← div_eq_mul_inv,
       div_div, sub_one_mul, ← div_div, div_eq_mul_inv _ (x ^ n), one_sub_mul,
-      ← inv_pow, ← mul_pow, mul_comm, mul_inv_cancel h.ne.symm, one_pow]
+      ← inv_pow, ← mul_pow, mul_comm, mul_inv_cancel₀ h.ne.symm, one_pow]
 
 /-- Final solution -/
 theorem final_solution {x y : F} (hx : 0 < x) (hy : 0 < y) (h : x ^ n + y ^ n = 1) :

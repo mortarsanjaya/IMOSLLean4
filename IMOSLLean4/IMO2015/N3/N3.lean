@@ -5,6 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Factorization.Basic
+import Mathlib.Data.Nat.Log
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # IMO 2015 N3

@@ -33,6 +33,7 @@ open scoped nonZeroDivisors
 namespace good
 
 variable [Ring R] [Invertible (2 : R)] {f : R → R} (hf : good f)
+include hf
 
 private local instance : Invertible (2 : hf.toRingCon.Quotient) :=
   ⟨(⅟2 : R), congrArg _ (invOf_mul_self _), congrArg _ (mul_invOf_self _)⟩

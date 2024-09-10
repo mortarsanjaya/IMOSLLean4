@@ -34,22 +34,22 @@ lemma PeriodEquiv_map_eq [NonUnitalNonAssocSemiring R] {f : R → R} (h : Period
   rw [← zero_add c, h, zero_add]
 
 
-variable [NonUnitalSemiring R] [IsCancelAdd R] {f : R → R} (hf : good f)
-
 section
 
-variable (h : PeriodEquiv f c d)
+variable [NonUnitalSemiring R] [IsCancelAdd R] {f : R → R} (hf : good f)
+include hf
 
-lemma PeriodEquiv_mul_left : ∀ x, PeriodEquiv f (x * c) (x * d) :=
+lemma PeriodEquiv_mul_left (h : PeriodEquiv f c d) : ∀ x, PeriodEquiv f (x * c) (x * d) :=
   have h0 (x) : f (x * c) = f (x * d) := by rw [← hf, ← hf x, PeriodEquiv_map_eq h, h]
   λ t x ↦ by rw [← add_right_inj, hf, h0, ← mul_assoc, h0, hf, mul_assoc]
 
-lemma PeriodEquiv_mul_right : ∀ x, PeriodEquiv f (c * x) (d * x) :=
+lemma PeriodEquiv_mul_right (h : PeriodEquiv f c d) : ∀ x, PeriodEquiv f (c * x) (d * x) :=
   have h0 (x) : f (c * x) = f (d * x) := by
     rw [← hf, PeriodEquiv_map_eq h, add_comm c, h, add_comm x, hf]
   λ t x ↦ by rw [add_comm, ← add_right_inj, hf, h0, mul_assoc, h0, add_comm x, hf, mul_assoc]
 
-lemma PeriodEquiv_mul (h0 : PeriodEquiv f x y) : PeriodEquiv f (c * x) (d * y) :=
+lemma PeriodEquiv_mul (h : PeriodEquiv f c d) (h0 : PeriodEquiv f x y) :
+    PeriodEquiv f (c * x) (d * y) :=
   (PeriodEquiv f).trans (PeriodEquiv_mul_right hf h x) (PeriodEquiv_mul_left hf h0 d)
 
 lemma PeriodEquiv_map (h : PeriodEquiv f (f x) (f y)) : f x = f y := by
@@ -67,8 +67,6 @@ lemma apply_eq_of_toRingCon_rel (h : hf.toRingCon c d) : f c = f d :=
 
 lemma apply_eq_of_toRingQuot_eq {c d : R} (h : (c : hf.toRingCon.Quotient) = d) : f c = f d :=
   hf.apply_eq_of_toRingCon_rel ((RingCon.eq hf.toRingCon).mp h)
-
-end
 
 
 
@@ -92,6 +90,9 @@ lemma toQuotientMap_good : good hf.toQuotientMap :=
 lemma toQuotientMap_ReducedGood : ReducedGood hf.toQuotientMap :=
   ⟨hf.toQuotientMap_good, Quotient.ind₂ λ _ _ h ↦
     Quot.sound λ x ↦ hf.PeriodEquiv_map ((RingCon.eq hf.toRingCon).mp (h x))⟩
+
+end
+
 
 /-- `f` factors out through a ring homomorphism and the induced map. -/
 lemma toQuotientMap_factor {R} [Semiring R] [IsCancelAdd R] {f : R → R} (hf : good f) :

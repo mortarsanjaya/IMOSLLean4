@@ -31,6 +31,7 @@ namespace FinChainFn
 section General
 
 variable {f : α → α} (h : FinChainFn f)
+include h
 
 theorem injective : f.Injective := h.injective'
 

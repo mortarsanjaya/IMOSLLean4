@@ -47,7 +47,7 @@ theorem final_solution_part2 (h : ∀ k m : ℕ, k ≤ m → m ≤ n → a k - a
     · rcases exists_map_eq_seqMax (λ i ↦ |seqMax a i - g - a i|) n with ⟨i, h0, h1⟩
       rw [← h1, sub_right_comm, abs_le]
       clear h1; refine ⟨?_, ?_⟩
-      · rw [le_sub_iff_add_le, neg_add_self, sub_nonneg]
+      · rw [le_sub_iff_add_le, neg_add_cancel, sub_nonneg]
         exact le_seqMax_self a i
       · rcases exists_map_eq_seqMax a i with ⟨j, h1, h2⟩
         rw [← h2, sub_le_iff_le_add, ← two_nsmul]

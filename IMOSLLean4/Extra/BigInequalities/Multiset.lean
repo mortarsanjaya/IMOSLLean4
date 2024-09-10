@@ -21,7 +21,7 @@ open Multiset
 
 namespace Multiset
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [LinearOrderedCommSemiring R]
 
 /-- `x_1^2 + x_2^2 + … + x_n^2 ≤ (x_1 + x_2 + … + x_n)^2` -/
 theorem sq_sum_le_sum_sq {S : Multiset R} (hS : ∀ x ∈ S, 0 ≤ x) :
@@ -48,6 +48,9 @@ theorem sq_sum_lt_sum_sq {S : Multiset R} (hS : ∀ x ∈ S, 0 < x) (h : 1 < car
   apply (add_lt_add_of_lt_of_le h (sq_sum_le_sum_sq h0)).trans_le
   rw [add_sq' (a + b), le_add_iff_nonneg_right]
   exact mul_nonneg (mul_nonneg zero_le_two (add_pos hS.1 hS.2.1).le) (sum_nonneg h0)
+
+
+variable [ExistsAddOfLE R]
 
 /-- `QM-AM inequality`: `(x_1 + x_2 + … + x_n)^2 ≤ n(x_1^2 + x_2^2 + … + x_n^2)`. -/
 theorem QM_AM (S : Multiset R) : S.sum ^ 2 ≤ card S • (S.map λ x ↦ x ^ 2).sum := by

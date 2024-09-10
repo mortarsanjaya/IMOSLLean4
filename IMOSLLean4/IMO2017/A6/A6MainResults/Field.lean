@@ -31,6 +31,7 @@ open Extra
 namespace ReducedGood
 
 variable [Field F] [CharTwo F] {f : F → F} (hf : ReducedGood f)
+include hf
 
 theorem CharTwoField_map_zero_eq_one : f 0 = 1 :=
   CharTwo.mul_self_eq_one_iff.mp hf.map_zero_mul_self
@@ -69,7 +70,7 @@ theorem CharTwoField_injective : f.Injective := λ a b h ↦ by
       have h2 {c d : F} (hc : c ≠ 0) (hd : d ≠ 0) : (c * d⁻¹) * (d + c⁻¹) = c + d⁻¹ := by
         rw [mul_add, inv_mul_cancel_right₀ hd, mul_rotate, inv_mul_cancel_right₀ hc]
       refine congrArg₂ _ (congrArg₂ _ ?_ (h2 ha hb)) (congrArg₂ _ ?_ rfl)
-      · rw [mul_assoc, inv_mul_cancel_left₀ hb, mul_inv_cancel ha]
+      · rw [mul_assoc, inv_mul_cancel_left₀ hb, mul_inv_cancel₀ ha]
       · rw [mul_comm, h2 hb ha]
     _ = _ := by rw [mul_one_add (α := F), one_add_mul (α := F)]
   replace h0 : f (a * b⁻¹ + (a + b⁻¹) + (b * a⁻¹ + (b + a⁻¹)))
@@ -86,8 +87,8 @@ theorem CharTwoField_injective : f.Injective := λ a b h ↦ by
         CharTwo.add_add_cancel_right, ← add_assoc (a + b), ← add_assoc]
     _ = (a * b⁻¹ + b * a⁻¹) + ((a + b⁻¹) + (b + a⁻¹)) := by
       refine congrArg₂ _ ?_ (add_add_add_comm _ _ _ _)
-      rw [add_mul, mul_add, mul_add, mul_inv_cancel ha,
-        mul_inv_cancel hb, ← add_assoc, CharTwo.add_add_cancel_right]
+      rw [add_mul, mul_add, mul_add, mul_inv_cancel₀ ha,
+        mul_inv_cancel₀ hb, ← add_assoc, CharTwo.add_add_cancel_right]
     _ = _ := by rw [add_add_add_comm]
   rw [← h, X, add_add_add_comm, add_add_add_comm a, add_add_add_comm, add_comm 1, add_comm 1,
     ← hf.is_good, CharTwo.add_eq_iff_eq_add', add_left_inj, h1, mul_eq_zero] at h0

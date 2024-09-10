@@ -55,7 +55,7 @@ lemma ratSeq_formula :
   refine Nat.rec (by rfl) λ n h ↦ ?_
   rw [ratSeq_add_four, Rat.mul_comm, Rat.mul_assoc, ← (ratSeq n).mul_assoc,
     ← (ratSeq n).mul_assoc, h, one_add_mul (α := ℚ), n.succ.cast_succ,
-    inv_mul_cancel (Nat.cast_ne_zero.mpr n.succ_ne_zero)]
+    inv_mul_cancel₀ (Nat.cast_ne_zero.mpr n.succ_ne_zero)]
 
 
 

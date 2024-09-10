@@ -91,6 +91,7 @@ theorem bernoulli_special2 {x : R} (hx : -1 < x) {n : ℕ} (hx0 : n.succ * x ≠
 open Finset
 
 variable {x : ℕ → R} (hx : ∀ n, 0 < x n)
+include hx
 
 theorem main_ineq {n : ℕ} (hn : ∃ k ∈ range n, (k + 1 : ℕ) * x k ≠ 1) :
     (n + 1 : ℕ) ^ (n + 1) * ∏ i ∈ range n, x i < ∏ i ∈ range n, (1 + x i) ^ (i + 2) := by

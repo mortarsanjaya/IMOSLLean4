@@ -84,8 +84,8 @@ theorem step2 [Ring R] (hR : ∀ x y : R, 2 • x = 2 • y → x = y)
   ---- First plug `y = -2x`
   have h0 (x) : (x * (x * A) + x * B + C) * A + B = x * (x * A) - x * B + C := by
     specialize h x (-(2 • x)); simp only at h
-    rwa [add_right_neg, zero_mul, add_zero, two_nsmul, neg_add, add_neg_cancel_comm_assoc,
-      neg_mul x A, neg_mul_neg, neg_mul, sub_neg_eq_add] at h
+    rwa [add_neg_cancel, zero_mul, add_zero, two_nsmul, neg_add,
+      add_neg_cancel_comm_assoc, neg_mul x A, neg_mul_neg, neg_mul, sub_neg_eq_add] at h
   ---- Now plug `h0` at various values of `x`
   have h1 := h0 0; rw [zero_mul, zero_mul, zero_add, sub_zero, zero_add] at h1
   have h2 := h0 1; rw [one_mul, one_mul, one_mul, add_mul, add_assoc, h1, add_left_inj] at h2

@@ -27,6 +27,7 @@ namespace IMOSL
 namespace IMO2009N3
 
 variable {f : ℕ → ℤ} (h : ∀ a b : ℕ, (a : ℤ) - b ∣ f a - f b)
+include h
 
 lemma const_of_infinite_map_eq_map_zero (h0 : ∀ k, ∃ n, k ≤ n ∧ f n = f 0) :
     ∃ C, f = λ _ ↦ C :=

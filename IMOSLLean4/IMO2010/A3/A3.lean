@@ -50,6 +50,7 @@ theorem good_targetSum_le {x : ℕ → R} (h : ∀ i, 0 ≤ x i) {c : R} (h0 : g
       rw [targetSum, Nat.mul_succ, sum_range_succ, sum_range_succ, add_assoc, succ_nsmul]
       exact add_le_add (good_targetSum_le h h0 n) (special_ineq (h _) (h _) (h0 _) (h0 _))
 
+omit [ExistsAddOfLE R] in
 theorem targetSum_of_Fin2Map (c : R) :
     ∀ n, targetSum (λ n ↦ ![c, 0] n) (2 * n) = n • c ^ 2
   | 0 => by rw [Nat.mul_zero, targetSum, sum_range_zero, zero_nsmul]

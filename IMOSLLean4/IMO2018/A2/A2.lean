@@ -113,6 +113,7 @@ lemma eq3 [CommRing R] {a : ℕ → R} (ha : good a) (hn : a.Periodic (n + 1)) :
 
 
 variable [LinearOrderedCommRing R] {a : ℕ → R} (ha : good a) (hn : a.Periodic (n + 1))
+include ha
 
 theorem exists_eq_stdGoodSeq_of_periodic3 (h : a.Periodic 3) : ∃ d, a = stdGoodSeq R d := by
   have X {x y z : R} (h : x * y + 1 = z) (h0 : y * z + 1 = x) : y = -1 ∨ x = z := by
@@ -146,6 +147,8 @@ theorem exists_eq_stdGoodSeq_of_periodic3 (h : a.Periodic 3) : ∃ d, a = stdGoo
       _ = 4 * (a 0 * a 0 + 1 - a 0) := by ring
       _ = 0 := by rw [← h0, sub_self, mul_zero]
     exact absurd (add_pos_of_nonneg_of_pos (sq_nonneg _) three_pos) h0.not_gt
+
+include hn
 
 lemma periodic3_Fin_of_periodic (k : Fin (n + 1)) : a (k + 3) = a k := by
   have h := (sum_eq_zero_iff_of_nonneg λ k _ ↦ sq_nonneg _).mp (ha.eq3 hn) k (mem_univ k)

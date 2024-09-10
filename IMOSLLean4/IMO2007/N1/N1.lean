@@ -103,7 +103,7 @@ lemma good_imp_even (h : good k n) : 2 ∣ k ∧ 2 ∣ n := by
     rwa [← even_iff_two_dvd, Nat.even_add, Nat.even_pow' (Nat.succ_ne_zero 3),
       Nat.even_pow' (Nat.succ_ne_zero 1), ← Nat.even_add] at h0
   suffices ¬k % 2 = 1 by
-    rw [← Nat.odd_iff, ← Nat.even_iff_not_odd] at this
+    rw [← Nat.odd_iff, Nat.not_odd_iff_even] at this
     exact ⟨even_iff_two_dvd.mp this, even_iff_two_dvd.mp ((Nat.even_add.mp h0).mp this)⟩
   intro h1; replace h0 : n % 2 = 1 := by
     rw [← Nat.odd_iff] at h1 ⊢; exact (Nat.even_add'.mp h0).mp h1
