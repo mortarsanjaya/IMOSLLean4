@@ -24,6 +24,11 @@ Here are the cases with implemented solution:
 
 Case 1 is implemented in `IMOSLLean4/IMO2017/A6/A6MainResults/General.lean`.
 Case 2 and 3 are implemented in `IMOSLLean4/IMO2017/A6/A6MainResults/Field.lean`.
+
+### Further directions
+
+Case 3 might be generalizable to the case where `R` is commutative local with `char(R) = 2`.
+Check if this is possible, and check if the commutativity assumption can be erased.
 -/
 
 namespace IMOSL
