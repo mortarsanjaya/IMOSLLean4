@@ -64,7 +64,7 @@ theorem ReducedGood_mul_central_involutive {f : R → R} (hf : ReducedGood f) :
 theorem mul_one_sub_is_good : good (λ x : R ↦ a * (1 - x)) :=
   good_mul_central_involutive ha ha0 one_sub_is_good
 
-theorem mul_one_sub_is_ReducedGod : ReducedGood (λ x : R ↦ a * (1 - x)) :=
+theorem mul_one_sub_is_ReducedGood : ReducedGood (λ x : R ↦ a * (1 - x)) :=
   ReducedGood_mul_central_involutive ha ha0 one_sub_is_ReducedGood
 
 end
