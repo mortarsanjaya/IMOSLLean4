@@ -116,7 +116,7 @@ theorem final_solution {p : ℕ} (hp : p.Prime) (h : 3 < p) (x y : ℤ) :
   · rw [sub_sub, ← CharP.intCast_eq_zero_iff (ZMod p), Int.cast_sub,
       sub_eq_zero, one_add_one_eq_two, Int.cast_two] at h3
     replace h2 : 0 < y ^ (p - 2) - 1 :=
-      sub_pos_of_lt (one_lt_pow (lt_of_sub_pos h1) X.ne.symm)
+      sub_pos_of_lt (one_lt_pow₀ (lt_of_sub_pos h1) X.ne.symm)
     specialize h0 h2 (dvd_refl _)
     rw [← CharP.intCast_eq_zero_iff (ZMod p), ← CharP.intCast_eq_zero_iff (ZMod p),
       Int.cast_sub, Int.cast_sub, Int.cast_sub, Int.cast_one, Int.cast_pow, h3,

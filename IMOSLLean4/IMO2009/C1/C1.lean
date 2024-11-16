@@ -33,7 +33,8 @@ open Relation Finset
 /-! ### Extra lemmas -/
 
 theorem and_and_or_not_iff (P Q R : Prop) : (P ∧ Q) ∧ (R ∨ ¬Q) ↔ (P ∧ R) ∧ Q := by
-  rw [and_assoc, and_or_left, and_not_self_iff, or_false_iff, and_assoc, and_comm (b := Q)]
+  rw [and_assoc, and_or_left, and_not_self_iff, and_assoc, and_comm (b := Q)]
+  exact and_congr Iff.rfl (or_iff_left id)
 
 theorem Iic_filter_dvd_card (k n : ℕ) :
     ((Icc k (k + n)).filter λ i : ℕ ↦ n + 1 ∣ i + 1).card = 1 := by

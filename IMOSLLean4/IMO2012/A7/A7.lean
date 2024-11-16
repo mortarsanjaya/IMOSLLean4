@@ -39,5 +39,5 @@ abbrev MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → 
 /-- Final solution -/
 theorem final_solution (σ R) [LinearOrderedCommRing R] :
     ∃ T : Subring ((σ → R) → R), T.carrier =
-      setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ MvPolynomial_image σ R))) :=
+      setOf (BinOpClosure Max.max (BinOpClosure Min.min (· ∈ MvPolynomial_image σ R))) :=
   ⟨_, MetaClosure.PiSubring_mk_carrier _⟩

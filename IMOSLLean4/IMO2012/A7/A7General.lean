@@ -24,8 +24,8 @@ namespace IMO2012A7
 /-- The "alternative" lattice closure under infimum and supremum -/
 inductive MetaClosure [Lattice α] (P : α → Prop) : α → Prop where
   | ofMem (_ : P a) : MetaClosure P a
-  | ofInf (_ : MetaClosure P a) (_ : MetaClosure P b) : MetaClosure P (a ⊓ b)
-  | ofSup (_ : MetaClosure P a) (_ : MetaClosure P b) : MetaClosure P (a ⊔ b)
+  | ofMin (_ : MetaClosure P a) (_ : MetaClosure P b) : MetaClosure P (a ⊓ b)
+  | ofMax (_ : MetaClosure P a) (_ : MetaClosure P b) : MetaClosure P (a ⊔ b)
 
 inductive BinOpClosure (op : α → α → α) (P : α → Prop) : α → Prop where
   | ofMem (_ : P a) : BinOpClosure op P a
@@ -37,12 +37,12 @@ section Lattice
 
 variable [Lattice α] (P : α → Prop)
 
-lemma InfClosure_imp_MetaClosure (h : BinOpClosure Inf.inf P a) : MetaClosure P a :=
-  h.recOn MetaClosure.ofMem λ _ _ ↦ MetaClosure.ofInf
+lemma InfClosure_imp_MetaClosure (h : BinOpClosure Min.min P a) : MetaClosure P a :=
+  h.recOn MetaClosure.ofMem λ _ _ ↦ MetaClosure.ofMin
 
 lemma SupInfClosure_imp_MetaClosure
-    (h : BinOpClosure Sup.sup (BinOpClosure Inf.inf P) a) : MetaClosure P a :=
-  h.recOn (InfClosure_imp_MetaClosure P) (λ _ _ ↦ MetaClosure.ofSup)
+    (h : BinOpClosure Max.max (BinOpClosure Min.min P) a) : MetaClosure P a :=
+  h.recOn (InfClosure_imp_MetaClosure P) (λ _ _ ↦ MetaClosure.ofMax)
 
 end Lattice
 
@@ -53,7 +53,7 @@ section Distrib
 variable [DistribLattice α] (P : α → Prop)
 
 lemma MetaClosure_imp_SupInfClosure (h : MetaClosure P a) :
-    BinOpClosure Sup.sup (BinOpClosure Inf.inf P) a :=
+    BinOpClosure Max.max (BinOpClosure Min.min P) a :=
   h.recOn (λ h ↦ BinOpClosure.ofMem (BinOpClosure.ofMem h))
     (λ _ _ ha hb ↦ ha.recOn
       (λ ha ↦ hb.recOn
@@ -63,11 +63,11 @@ lemma MetaClosure_imp_SupInfClosure (h : MetaClosure P a) :
     (λ _ _ ↦ BinOpClosure.ofOp)
 
 lemma SupInfClosure_iff_MetaClosure :
-    BinOpClosure Sup.sup (BinOpClosure Inf.inf P) a ↔ MetaClosure P a :=
+    BinOpClosure Max.max (BinOpClosure Min.min P) a ↔ MetaClosure P a :=
   ⟨SupInfClosure_imp_MetaClosure P, MetaClosure_imp_SupInfClosure P⟩
 
 lemma SupInfClosure_eq_MetaClosure :
-    BinOpClosure Sup.sup (BinOpClosure Inf.inf P) = MetaClosure P :=
+    BinOpClosure Max.max (BinOpClosure Min.min P) = MetaClosure P :=
   funext λ _ ↦ propext (SupInfClosure_iff_MetaClosure P)
 
 end Distrib

@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Extra.BigInequalities.Finset
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-!
 # IMO 2007 A6
@@ -117,11 +118,11 @@ theorem Fin_cons_nonneg {a : Fin (n + 1) → R} (ha : ∀ i, 0 ≤ a i) (i) :
   exacts [le_refl 0, ha j]
 
 theorem niceTuple.of_three_le [ExistsAddOfLE R] :
-    ∀ (n) (hn : 3 ≤ n) {a : Fin n.succ → R} (ha : ∀ i, 0 ≤ a i), niceTuple a := by
+    ∀ (n : ℕ) (_ : 3 ≤ n) {a : Fin n.succ → R} (_ : ∀ i, 0 ≤ a i), niceTuple a := by
   refine Nat.le_induction (λ _ ↦ of_four _) (λ n hn n_ih a ha ↦ ?_)
   wlog h : ∀ i, a 0 ≤ a i
   · obtain ⟨j, hj⟩ : ∃ j, ∀ i, a j ≤ a i := Fin_exists_minimal a
-    exact of_add₁_iff.mp <| this hn n_ih (a := λ i ↦ a (i + j))
+    exact of_add₁_iff.mp <| this _ hn n_ih (a := λ i ↦ a (i + j))
       (λ i ↦ ha _) (λ i ↦ (hj _).trans_eq' (congrArg a j.zero_add))
   specialize ha 0
   obtain ⟨b, hb, h0⟩ : ∃ b : Fin (n + 1) → R,

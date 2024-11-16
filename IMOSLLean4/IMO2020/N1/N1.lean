@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Data.Nat.Prime.Infinite
 import IMOSLLean4.Extra.NatSequence.SeqMax
 
 /-!
@@ -37,10 +38,10 @@ lemma ratSeq_two : ratSeq 2 = -4 := rfl
 lemma ratSeq_three : ratSeq 3 = -4⁻¹ := rfl
 lemma ratSeq_add_four (n) : ratSeq (n + 4) = (1 + (n.succ : ℚ)⁻¹) * ratSeq n := rfl
 
-private lemma one_add_inv_pos (n : ℕ) : 0 < 1 + (n : ℚ)⁻¹ :=
+lemma one_add_inv_pos (n : ℕ) : 0 < 1 + (n : ℚ)⁻¹ :=
   add_pos_of_pos_of_nonneg one_pos (inv_nonneg_of_nonneg n.cast_nonneg)
 
-private lemma one_add_inv_ne_zero (n : ℕ) : 1 + (n : ℚ)⁻¹ ≠ 0 :=
+lemma one_add_inv_ne_zero (n : ℕ) : 1 + (n : ℚ)⁻¹ ≠ 0 :=
   (one_add_inv_pos n).ne.symm
 
 lemma ratSeq_ne_zero : ∀ n, ratSeq n ≠ 0
@@ -52,7 +53,7 @@ lemma ratSeq_ne_zero : ∀ n, ratSeq n ≠ 0
 
 lemma ratSeq_formula :
     ∀ n, ratSeq n * ratSeq (n + 1) * ratSeq (n + 2) * ratSeq (n + 3) = n.succ := by
-  refine Nat.rec (by rfl) λ n h ↦ ?_
+  refine Nat.rec (by unfold ratSeq; norm_num) λ n h ↦ ?_
   rw [ratSeq_add_four, Rat.mul_comm, Rat.mul_assoc, ← (ratSeq n).mul_assoc,
     ← (ratSeq n).mul_assoc, h, one_add_mul (α := ℚ), n.succ.cast_succ,
     inv_mul_cancel₀ (Nat.cast_ne_zero.mpr n.succ_ne_zero)]
@@ -133,7 +134,10 @@ lemma num_odd_of_den_even {q : ℚ} (h : 2 ∣ q.den) : ¬2 ∣ q.num.natAbs :=
   λ h0 ↦ absurd (Nat.eq_one_of_dvd_coprimes q.reduced h0 h) (Nat.succ_ne_self 1)
 
 lemma ratSeq_two_mul_add_one_den (n) : 2 ∣ (ratSeq (2 * n + 1)).den := by
-  match n with | 0 => exact ⟨1, by rfl⟩ | 1 => exact ⟨2, by rfl⟩ | n + 2 => ?_
+  match n with
+    | 0 => exact ⟨1, by rw [ratSeq, Rat.inv_ofNat_den]⟩
+    | 1 => exact ⟨2, by rw [ratSeq, Rat.neg_den, Rat.inv_ofNat_den]⟩
+    | n + 2 => ?_
   rw [Nat.mul_add, ratSeq_add_four, Rat.mul_den, Int.natAbs_mul]
   set q := 1 + ((2 * n + 1).succ : ℚ)⁻¹
   set r := ratSeq (2 * n + 1)
@@ -162,7 +166,7 @@ lemma ratSeq_den_odd_iff : ¬2 ∣ (ratSeq n).den ↔ 2 ∣ n := by
 
 /-! ##### `ratSeq` is injective -/
 
-private lemma mod_two_eq_iff : i % 2 = j % 2 ↔ (2 ∣ i ↔ 2 ∣ j) := by
+lemma mod_two_eq_iff : i % 2 = j % 2 ↔ (2 ∣ i ↔ 2 ∣ j) := by
   rw [Nat.dvd_iff_mod_eq_zero, Nat.dvd_iff_mod_eq_zero]
   obtain h | h : i % 2 = 0 ∨ i % 2 = 1 := i.mod_two_eq_zero_or_one
   all_goals rw [h, eq_comm]; simp

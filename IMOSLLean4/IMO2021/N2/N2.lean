@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Sqrt
+import Mathlib.Tactic.NormNum.NatSqrt
 
 /-!
 # IMO 2021 N2 (P1)
@@ -98,7 +98,7 @@ theorem good_cond2_k_witness :
       _ = _ := by rw [Nat.pow_two, k.two_mul, ← Nat.add_assoc,
         ← k.mul_succ, Nat.add_assoc, ← k.succ_mul, Nat.pow_two]
     replace h : 8 ≤ k + 1 := by
-      have h0 : ((99 + 1) / Nat.succ 1).sqrt = 7 := by rfl
+      have h0 : ((99 + 1) / Nat.succ 1).sqrt = 7 := by norm_num
       rwa [← Nat.add_le_add_iff_right (n := 2), h1, Nat.succ_le_iff, Nat.mul_comm,
         ← Nat.div_lt_iff_lt_mul (Nat.succ_pos 1), ← Nat.sqrt_lt', h0] at h
     apply Nat.le_of_succ_le_succ; calc

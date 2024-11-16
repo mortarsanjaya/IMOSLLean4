@@ -5,8 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.Field.Defs
-import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Data.Nat.Cast.Order.Ring
 
 /-!
 # IMO 2023 A3 (P4)
@@ -103,7 +103,7 @@ lemma special_formula2 (h : i < N) :
 lemma a_add_one_le_a_succ (h : i + 1 ≤ N) : X.a i + 1 ≤ X.a (i + 1) := by
   rw [← Nat.mul_self_le_mul_self_iff, ← sq, ← sq, ← Nat.cast_le (α := F), Nat.cast_pow,
     Nat.cast_pow, Nat.cast_succ, ← sub_nonneg, X.special_formula1 h, sub_nonneg]
-  refine le_of_pow_le_pow_left (Nat.succ_ne_zero 1) ?_
+  refine le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) ?_
     ((le_add_of_nonneg_left (sq_nonneg _)).trans_eq (X.special_formula2 h).symm)
   refine add_nonneg (mul_nonneg (inv_nonneg.mpr (X.x_nonneg h)) (sum_nonneg λ j h1 ↦ ?_))
     (mul_nonneg (X.x_nonneg h) (sum_nonneg λ j h1 ↦ inv_nonneg.mpr ?_))
@@ -119,7 +119,7 @@ lemma a_succ_eq_a_add_one_iff (h : i + 1 ≤ N) :
       = 2 * X.a i := by rw [X.special_formula1 h, sub_eq_zero]
   _ ↔ ((X.x i)⁻¹ * (range i).sum X.x + X.x i * (range i).sum (λ j ↦ (X.x j)⁻¹)) ^ 2
       = (2 * X.a i) ^ 2 := by
-    refine (sq_eq_sq ?_ (mul_nonneg zero_le_two (X.a i).cast_nonneg)).symm
+    refine (sq_eq_sq₀ ?_ (mul_nonneg zero_le_two (X.a i).cast_nonneg)).symm
     have h0 : 0 ≤ X.x i := X.x_nonneg h
     refine add_nonneg (mul_nonneg (inv_nonneg.mpr h0) (sum_nonneg λ j h1 ↦ ?_))
       (mul_nonneg h0 (sum_nonneg λ j h1 ↦ inv_nonneg.mpr ?_))
@@ -144,7 +144,7 @@ lemma three_add_a_le_a_add_two (h : i + 2 ≤ N) : X.a i + 3 ≤ X.a (i + 2) := 
   replace h1 : X.x i ^ 2 = X.x (i + 1) ^ 2 := by
     refine h1.resolve_right (add_pos_of_nonneg_of_pos ?_ (X.x_inv_pos h')).ne.symm
     exact sum_nonneg λ j hj ↦ X.x_inv_nonneg ((mem_range.mp hj).trans h')
-  rw [sq_eq_sq (X.x_nonneg h') (X.x_nonneg h), X.x_inj_iff h' h] at h1
+  rw [sq_eq_sq₀ (X.x_nonneg h') (X.x_nonneg h), X.x_inj_iff h' h] at h1
   exact absurd i.lt_succ_self h1.not_lt
 
 theorem general_a_bound : ∀ {i}, i ≤ N → 3 * i / 2 ≤ X.a i

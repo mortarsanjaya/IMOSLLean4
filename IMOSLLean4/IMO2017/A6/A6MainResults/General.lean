@@ -39,7 +39,7 @@ private local instance : Invertible (2 : hf.toRingCon.Quotient) :=
   ⟨(⅟2 : R), congrArg _ (invOf_mul_self _), congrArg _ (mul_invOf_self _)⟩
 
 private lemma toQuotient_NZD2 : 2 ∈ hf.toRingCon.Quotient⁰ := λ x h ↦ by
-  rw [← mul_mul_invOf_self_cancel x 2, h, zero_mul]
+  rw [← mul_invOf_cancel_right x 2, h, zero_mul]
 
 lemma InvertibleTwo_quotient_map_zero_mul_self : (f 0 : hf.toRingCon.Quotient) * f 0 = 1 :=
   hf.toQuotientMap_ReducedGood.NZD2_map_zero_mul_self hf.toQuotient_NZD2

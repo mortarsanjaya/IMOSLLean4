@@ -19,7 +19,7 @@ theorem two_sq_AM_GM (x y : R) : 2 ^ 2 * (x * y) ≤ (x + y) ^ 2 := by
   exact two_mul_le_add_sq x y
 
 theorem AM_GM_two {a x y : R} (h : 0 ≤ x + y) (ha : a ^ 2 ≤ x * y) : 2 * a ≤ x + y := by
-  refine le_of_pow_le_pow_left (Nat.succ_ne_zero 1) h ((two_sq_AM_GM x y).trans' ?_)
+  refine le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) h ((two_sq_AM_GM x y).trans' ?_)
   rw [mul_pow]; exact mul_le_mul_of_nonneg_left ha (sq_nonneg _)
 
 theorem CauchySchwarz_two {a b x y z w : R} (hx : 0 ≤ x) (hy : 0 ≤ y)

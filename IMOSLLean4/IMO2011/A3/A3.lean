@@ -5,7 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Ring.Prod
-import Mathlib.RingTheory.Ideal.Quotient
+import Mathlib.RingTheory.Ideal.Quotient.Defs
+import Mathlib.RingTheory.Ideal.Span
 
 /-!
 # IMO 2011 A3

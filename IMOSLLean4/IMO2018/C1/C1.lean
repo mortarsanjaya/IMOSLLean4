@@ -157,7 +157,7 @@ def EvenGoodSet (N : ℕ) : Finset ℕ := GoodSetBase N ∪ {1, 3 ^ N + 2}
 
 theorem EvenGoodSet_disjoint (N : ℕ) : Disjoint (GoodSetBase N) {1, 3 ^ N + 2} := by
   refine disjoint_iff_ne.mpr λ a ha b hb h ↦ ?_
-  replace ha : a % 2 = 0 := (Nat.dvd_iff_mod_eq_zero _ _).mp (GoodSetBase_two_dvd_of_mem ha)
+  replace ha : a % 2 = 0 := Nat.dvd_iff_mod_eq_zero.mp (GoodSetBase_two_dvd_of_mem ha)
   rw [mem_insert, mem_singleton] at hb
   subst b; rcases hb with rfl | rfl
   · exact absurd ha Nat.one_ne_zero

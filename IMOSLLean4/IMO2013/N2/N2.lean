@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.BigOperators.Group.Multiset
 import Mathlib.Algebra.Field.Rat
+import Mathlib.Algebra.Ring.Parity
 
 /-!
 # IMO 2013 N2 (P1)

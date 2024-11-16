@@ -48,7 +48,7 @@ variable [LinearOrderedRing R]
 lemma le_max_one_sq (a : R) : a ≤ max 1 (a ^ 2) := by
   apply (le_abs_self a).trans
   rw [← sq_abs, le_max_iff]
-  exact (le_total |a| 1).imp_right λ h ↦ le_self_pow h (Nat.succ_ne_zero 1)
+  exact (le_total |a| 1).imp_right λ h ↦ le_self_pow₀ h (Nat.succ_ne_zero 1)
 
 lemma pos_part_mul_pos_part_main_formula (a b : R) :
     a⁺ * b⁺ = (min (a * b) <| min (max a (a * b ^ 2)) (max b (a ^ 2 * b)))⁺ := by
@@ -143,9 +143,9 @@ lemma Pi_one_mem : MetaClosure (· ∈ S) 1 := ofMem S.one_mem
 theorem Pi_pos_part_mul_pos_part_mem (hf : f ∈ S) (hg : g ∈ S) :
     MetaClosure (· ∈ S) (f⁺ * g⁺) :=
   (Pi_pos_part_mul_pos_part_main_formula f g).symm ▸
-    pos_part_mem S.toAddSubgroup <| ofInf (ofMem <| S.mul_mem hf hg) <| ofInf
-      (ofSup (ofMem hf) (ofMem <| S.mul_mem hf (S.pow_mem hg 2)))
-      (ofSup (ofMem hg) (ofMem <| S.mul_mem (S.pow_mem hf 2) hg))
+    pos_part_mem S.toAddSubgroup <| ofMin (ofMem <| S.mul_mem hf hg) <| ofMin
+      (ofMax (ofMem hf) (ofMem <| S.mul_mem hf (S.pow_mem hg 2)))
+      (ofMax (ofMem hg) (ofMem <| S.mul_mem (S.pow_mem hf 2) hg))
 
 theorem Pi_closure_pos_part_mul_closure_pos_part_mem
     (hf : MetaClosure (· ∈ S) f) (hg : MetaClosure (· ∈ S) g) :
@@ -153,10 +153,10 @@ theorem Pi_closure_pos_part_mul_closure_pos_part_mem
   hg.recOn
     (λ hg ↦ hf.recOn
       (λ hf ↦ Pi_pos_part_mul_pos_part_mem S hf hg)
-      (λ _ _ ↦ by rw [inf_pos_part, Pi_inf_mul_pos_part]; exact ofInf)
-      (λ _ _ ↦ by rw [sup_pos_part, Pi_sup_mul_pos_part]; exact ofSup))
-    (λ _ _ ↦ by rw [inf_pos_part, Pi_pos_part_mul_inf]; exact ofInf)
-    (λ _ _ ↦ by rw [sup_pos_part, Pi_pos_part_mul_sup]; exact ofSup)
+      (λ _ _ ↦ by rw [inf_pos_part, Pi_inf_mul_pos_part]; exact ofMin)
+      (λ _ _ ↦ by rw [sup_pos_part, Pi_sup_mul_pos_part]; exact ofMax))
+    (λ _ _ ↦ by rw [inf_pos_part, Pi_pos_part_mul_inf]; exact ofMin)
+    (λ _ _ ↦ by rw [sup_pos_part, Pi_pos_part_mul_sup]; exact ofMax)
 
 theorem Pi_mul_mem (hf : MetaClosure (· ∈ S) f) (hg : MetaClosure (· ∈ S) g) :
     MetaClosure (· ∈ S) (f * g) := by
@@ -175,5 +175,5 @@ def PiSubring_mk : Subring ((i : I) → R i) :=
     one_mem' := Pi_one_mem S }
 
 theorem PiSubring_mk_carrier :
-    (PiSubring_mk S).carrier = setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ S))) :=
+    (PiSubring_mk S).carrier = setOf (BinOpClosure Max.max (BinOpClosure Min.min (· ∈ S))) :=
   AddGroup_mk_carrrier S.toAddSubgroup

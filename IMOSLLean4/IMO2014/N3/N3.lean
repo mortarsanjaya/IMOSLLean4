@@ -163,7 +163,7 @@ theorem nonempty_of_restricted (hC : 0 ∉ C) (hC0 : ∀ n ≠ 0, C.count n < n)
     replace X : 0 < ((2 * i).succ : ℚ) := Nat.cast_pos.mpr (2 * i).succ_pos
     rw [one_nsmul, ← mul_inv_cancel₀ X.ne.symm,
       ← nsmul_eq_mul, succ_nsmul, add_le_add_iff_left]
-    exact inv_le_inv_of_le X (Nat.cast_le.mpr (2 * i).succ.le_succ)
+    exact inv_anti₀ X (Nat.cast_le.mpr (2 * i).succ.le_succ)
 
 theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C).sum ≤ N + 2⁻¹) :
     Nonempty (CapeTownPartition N C) := by
@@ -185,7 +185,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
     rw [Multiset.map_add, sum_add, sum_replicate_map_inv h0, add_comm] at h
     obtain ⟨N, rfl⟩ : ∃ N' : ℕ, N = N'.succ := by
       apply Nat.exists_eq_succ_of_ne_zero; rintro rfl
-      refine h.not_lt (add_lt_add_of_le_of_lt ?_ (inv_lt_one one_lt_two))
+      refine h.not_lt (add_lt_add_of_le_of_lt ?_ (inv_lt_one_of_one_lt₀ one_lt_two))
       refine sum_nonneg λ x h1 ↦ ?_
       rw [mem_map] at h1; rcases h1 with ⟨y, -, rfl⟩
       exact inv_nonneg.mpr y.cast_nonneg
@@ -220,7 +220,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
       by_contra h0; simp only [not_exists, not_and, not_le] at h0
       have h2 : part' ≠ ∅ := by rw [empty_eq_zero, ← card_pos, card_part']; exact N.succ_pos
       apply (sum_lt_sum_of_nonempty h2 h0).not_le
-      replace h2 : (2 : ℚ)⁻¹ + 2⁻¹ = 1 := by rw [inv_eq_one_div]; rfl
+      replace h2 : (2 : ℚ)⁻¹ + 2⁻¹ = 1 := by rw [inv_eq_one_div, add_halves]
       rw [map_const', sum_replicate, card_part', nsmul_eq_mul, mul_one_sub, Nat.cast_mul,
         mul_inv_rev, mul_inv_cancel_left₀ (Nat.cast_ne_zero.mpr N.succ_ne_zero),
         N.cast_succ, ← h2, add_sub_assoc, Nat.cast_two, add_sub_cancel_right, sum_map_sum]
@@ -234,7 +234,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
     · rw [sum_cons, cons_add, sum_cons]
     · refine forall_mem_cons.mpr ⟨?_, λ G' hG' ↦ total_bound' G' (mem_cons_of_mem hG')⟩
       rw [map_cons, sum_cons, ← le_sub_iff_add_le']
-      refine hG0.trans (sub_le_sub_left (inv_le_inv_of_le ?_ (Nat.cast_le.mpr h1.le)) _)
+      refine hG0.trans (sub_le_sub_left (inv_anti₀ ?_ (Nat.cast_le.mpr h1.le)) _)
       rw [Nat.cast_pos, Nat.mul_pos_iff_of_pos_left Nat.two_pos]; exact N.succ_pos
   simp only [not_exists, not_and, not_lt] at hC2
   ---- 5. Resolve the final case

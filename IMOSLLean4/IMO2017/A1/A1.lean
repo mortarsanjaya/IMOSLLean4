@@ -81,7 +81,7 @@ theorem final_solution [DecidableEq ι] {f : ι → ℕ} {I : Finset ι}
     {k : ℕ} (hk : ∑ i ∈ I, (f i : ℚ)⁻¹ = k) {x : R} (hx : 0 < x) :
     (∏ i ∈ I, f i : ℕ) * (x + 1) ^ k < ∏ i ∈ I, (x + f i) := by
   ---- Reduce to showing the inequality for `Π_i f(i)`th powers of both sides
-  refine lt_of_pow_lt_pow_left (∏ i ∈ I, f i)
+  refine lt_of_pow_lt_pow_left₀ (∏ i ∈ I, f i)
     (prod_nonneg λ i _ ↦ add_nonneg hx.le (Nat.cast_nonneg _)) ?_
   ---- A small product lemma
   have h (i) (hi : i ∈ I) : f i * ∏ j ∈ I.erase i, f j = ∏ j ∈ I, f j := by
@@ -111,5 +111,5 @@ theorem final_solution [DecidableEq ι] {f : ι → ℕ} {I : Finset ι}
   refine prod_lt_prod (λ i hi ↦ pow_pos (h i hi) _) ?_ ?_
   · intro i hi; exact pow_le_pow_left (h i hi).le (bernoulli_ineq_special hx.le (hfI i hi)) _
   · rcases hfI0 with ⟨i, hi, hi0⟩
-    refine ⟨i, hi, pow_lt_pow_left (bernoulli_ineq_special_strict hx hi0) (h i hi).le ?_⟩
+    refine ⟨i, hi, pow_lt_pow_left₀ (bernoulli_ineq_special_strict hx hi0) (h i hi).le ?_⟩
     exact prod_ne_zero_iff.mpr λ j hj ↦ (hfI j (mem_of_mem_erase hj)).ne.symm

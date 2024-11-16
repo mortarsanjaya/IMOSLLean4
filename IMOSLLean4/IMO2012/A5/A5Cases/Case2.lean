@@ -708,11 +708,11 @@ theorem solution :
       exact ⟨AddMonoidHom.mk' ι h3, h1⟩
     suffices ∀ r ∈ R₂, ∃ s, ρ r = 2 • s
       from Classical.axiomOfChoice λ a ↦ this a.1 a.2
-    λ r h2 ↦ AddSubgroup.closure_induction h2
+    λ r ↦ AddSubgroup.closure_induction
       (λ y ⟨x, h3⟩ ↦ ⟨g x, by rw [← h, h0 x, ← sq, ← h3]⟩)
       ⟨0, by rw [ρ.map_zero, nsmul_zero]⟩
-      (λ x y ⟨s, hs⟩ ⟨t, ht⟩ ↦ ⟨s + t, by rw [ρ.map_add, hs, ht, nsmul_add]⟩)
-      (λ x ⟨s, hs⟩ ↦ ⟨-s, by rw [ρ.map_neg, hs, nsmul_eq_mul, ← mul_neg, nsmul_eq_mul]⟩)
+      (λ x y _ _ ⟨s, hs⟩ ⟨t, ht⟩ ↦ ⟨s + t, by rw [ρ.map_add, hs, ht, nsmul_add]⟩)
+      (λ x _ ⟨s, hs⟩ ↦ ⟨-s, by rw [ρ.map_neg, hs, nsmul_eq_mul, ← mul_neg, nsmul_eq_mul]⟩)
   ---- Reduce to multiplicativity of `ι`, then prove it
   suffices ∀ x y, ι (x * y) = ι x * ι y by
     have h2 : ι 1 = 1 := hS _ _ <| by
@@ -727,16 +727,16 @@ theorem solution :
     from λ x y ↦ hS _ _ <| hS _ _ <| by
       rw [← h1, Subring.coe_mul, this _ _ x.2 y.2, h1, h1, X]
   replace h (x) : ρ (x ^ 2) = 2 • g x := by rw [← h, sq, ← h0]
-  intro a b ha hb; refine AddSubgroup.closure_induction₂ ha hb ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · rintro _ ⟨c, rfl⟩ _ ⟨d, rfl⟩; rw [← mul_pow, h, h, h, X, hg.Eq7]
-  · intro x; rw [zero_mul, ρ.map_zero, zero_mul, nsmul_zero]
-  · intro x; rw [mul_zero, ρ.map_zero, mul_zero, nsmul_zero]
-  · intro x₁ x₂ y hx₁ hx₂
+  intro a b; refine AddSubgroup.closure_induction₂ ?_ ?_ ?_ ?_ ?_ ?_ ?_
+  · rintro _ _ ⟨c, rfl⟩ ⟨d, rfl⟩; rw [← mul_pow, h, h, h, X, hg.Eq7]
+  · rintro x -; rw [zero_mul, ρ.map_zero, zero_mul, nsmul_zero]
+  · rintro x -; rw [mul_zero, ρ.map_zero, mul_zero, nsmul_zero]
+  · rintro x₁ x₂ y - - - hx₁ hx₂
     rw [add_mul, ρ.map_add, nsmul_add, hx₁, hx₂, ρ.map_add, add_mul]
-  · intro x y₁ y₂ hy₁ hy₂
+  · rintro x y₁ y₂ - - - hy₁ hy₂
     rw [mul_add, ρ.map_add, nsmul_add, hy₁, hy₂, ρ.map_add, mul_add]
-  · intro x y h2; rw [neg_mul, ρ.map_neg, ρ.map_neg, neg_mul, smul_neg, h2]
-  · intro x y h2; rw [mul_neg, ρ.map_neg, ρ.map_neg, mul_neg, smul_neg, h2]
+  · rintro x y - - h2; rw [neg_mul, ρ.map_neg, ρ.map_neg, neg_mul, smul_neg, h2]
+  · rintro x y - - h2; rw [mul_neg, ρ.map_neg, ρ.map_neg, mul_neg, smul_neg, h2]
 
 end
 

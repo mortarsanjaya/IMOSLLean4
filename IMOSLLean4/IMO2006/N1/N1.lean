@@ -5,8 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.RingTheory.Coprime.Lemmas
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.Ring.Int
+import Mathlib.Tactic.NormNum.NatSqrt
 
 /-!
 # IMO 2006 N1 (P4)
@@ -27,11 +26,13 @@ lemma sq_eq_two_pow_mul_add_one_imp {a : ℤ} (h : 2 ^ (k + 1) ∣ a ^ 2 - 1) :
     exact dvd_of_mul_left_dvd h
   rw [← one_pow (M := ℤ) 2, sq_sub_sq] at h
   refine (Int.four_dvd_add_or_sub_of_odd h0 odd_one).symm.imp (λ h1 ↦ ?_) (λ h1 ↦ ?_)
+  ---- Prove that if `4 ∣ a - 1`, then `2^k ∣ a - 1`
   · rcases h1 with ⟨b, h1⟩
     replace h1 : a + 1 = 2 * 2 * b + 2 := h1 ▸ (sub_add_add_cancel a 1 1).symm
     rw [h1, mul_assoc 2 2 b, ← mul_add_one 2 (2 * b), pow_succ', mul_assoc] at h
     exact (IsCoprime.mul_add_left_right isCoprime_one_right b).pow_left.dvd_of_dvd_mul_left
       (Int.dvd_of_mul_dvd_mul_left (OfNat.ofNat_ne_zero 2) h)
+  ---- Prove that if `4 ∣ a + 1`, then `2^k ∣ a + 1`
   · rcases h1 with ⟨b, h1⟩
     replace h1 : a - 1 = 2 * 2 * b - 2 := h1 ▸ (add_sub_add_right_eq_sub a 1 1).symm
     rw [h1, mul_assoc 2 2 b, ← mul_sub_one, pow_succ', mul_left_comm, sub_eq_add_neg] at h
@@ -61,10 +62,9 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
   rw [good, two_mul, (x + 1).add_right_comm, pow_add, ← add_one_mul] at h
   rcases x with _ | x
   -- First deal with the case `x = 0`
-  · change (11 : ℕ) = y ^ 2 at h
-    replace h : Int.sqrt 11 * Int.sqrt 11 = 11 :=
+  · replace h : Int.sqrt 11 * Int.sqrt 11 = 11 :=
       (Int.exists_mul_self 11).mp ⟨y, (sq y).symm.trans h.symm⟩
-    refine absurd h (ne_of_beq_false ?_); rfl
+    exact absurd h (by norm_num)
   -- Now solve for `(2^{x + 3} + 1) 2^{x + 2} = y^2 - 1`
   have X : (0 : ℤ) < 2 := by decide
   have X0 : (2 : ℤ) ≠ 0 := X.ne.symm
@@ -90,7 +90,7 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
       exact pow_nonneg X.le (x + 3)
     · apply h.not_gt.elim
       rw [mul_one, mul_one, add_lt_add_iff_right]
-      exact pow_right_strictMono one_lt_two (Nat.lt_add_of_pos_right (Nat.succ_pos 2))
+      exact pow_right_strictMono₀ one_lt_two (Nat.lt_add_of_pos_right (Nat.succ_pos 2))
     · rw [pow_succ, ← eq_sub_iff_add_eq', ← sub_mul, mul_comm] at h
       refine absurd ⟨_, h⟩ (?_ : ¬(2 : ℤ) ∣ 1)
       exact Int.two_dvd_ne_zero.mpr rfl
@@ -128,8 +128,8 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
         rw [add_comm 3, mul_one_add m, add_lt_add_iff_left]
         exact mul_lt_mul_of_pos_right h0 three_pos
     change 2 ^ x * 1 = (2 ^ 2 : ℤ) at h
-    rw [mul_one, pow_right_inj X (OfNat.one_ne_ofNat 2).symm] at h
-    subst h; rfl
+    rw [Int.mul_one, pow_right_inj₀ X (OfNat.one_ne_ofNat 2).symm] at h
+    exact congrArg Nat.succ h
 
 /-- Final solution -/
 theorem final_solution :

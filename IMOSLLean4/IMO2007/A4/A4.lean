@@ -108,6 +108,6 @@ lemma good_iff_posSubtypeExt_weakGood {f : {x : G // 0 < x} → {x : G // 0 < x}
 /-- Final solution -/
 theorem final_solution {f : {x : G // 0 < x} → {x : G // 0 < x}} :
     good f ↔ f = λ x ↦ x + x := by
-  rw [good_iff_posSubtypeExt_weakGood, weakGood_iff_two_nsmul, Function.funext_iff]
+  rw [good_iff_posSubtypeExt_weakGood, weakGood_iff_two_nsmul, funext_iff]
   exact ⟨λ h x ↦ Subtype.coe_inj.mp ((posSubtypeExt_spec _ _).symm.trans (h x.1 x.2)),
     λ h x hx ↦ (posSubtypeExt_spec f ⟨x, hx⟩).trans (congrArg _ (h ⟨x, hx⟩))⟩

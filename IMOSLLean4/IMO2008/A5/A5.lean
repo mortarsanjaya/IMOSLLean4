@@ -64,7 +64,7 @@ include h
 lemma ineq2 : 4 * a ≤ 2 * (a / b) + (b / c + a / d) := by
   have h0 := ineq1 ha hb hc hd
   rw [h, div_one] at h0
-  refine le_of_pow_le_pow_left (Nat.succ_ne_zero 3) ?_ h0
+  refine le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 3) ?_ h0
   exact (add_pos (mul_pos two_pos (div_pos ha hb))
     (add_pos (div_pos hb hc) (div_pos ha hd))).le
 

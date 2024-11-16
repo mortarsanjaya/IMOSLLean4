@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Data.Nat.Prime.Infinite
 import Mathlib.Data.Nat.ModEq
 
 /-!
@@ -104,7 +105,8 @@ lemma not_modeq_prime_imp₂ (h : ∀ p, p.Prime → ¬k ≡ l [MOD p]) : l = k 
 lemma step3 {f : ℕ → ℕ} (hf : ∀ {p k l}, p.Prime → f k ≡ f l [MOD p] → k ≡ l [MOD p]) :
     ∃ k, f = (· + k) := by
   have hf0 : f.Injective := λ k l h ↦ by
-    obtain ⟨p, hp0, hp⟩ : ∃ p > max k l, p.Prime := Nat.exists_infinite_primes (max k l).succ
+    obtain ⟨p, hp0, hp⟩ : ∃ p > max k l, p.Prime :=
+      Nat.exists_infinite_primes (max k l).succ
     rw [gt_iff_lt, max_lt_iff] at hp0
     replace hf : k % p = l % p := hf hp (congrArg (· % p) h)
     rwa [Nat.mod_eq_of_lt hp0.1, Nat.mod_eq_of_lt hp0.2] at hf

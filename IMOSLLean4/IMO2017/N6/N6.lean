@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Fib.Basic
+import Mathlib.Algebra.Order.Field.Rat
 
 /-!
 # IMO 2017 N6
@@ -182,7 +183,7 @@ theorem fib_main_formula (n) :
       + (1 + ((2 * n + 3).fib.succ + 1 : ℕ) / (2 * n + 1).fib.succ) := by
     have X (k : ℕ) : (k.fib.succ : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.succ_ne_zero _)
     rw [add_div, div_self (X _), add_div, div_self (X _)]
-  _ = 5 := by rw [add_add_add_comm, fib_formula5]; rfl
+  _ = 5 := by rw [add_add_add_comm, fib_formula5]; norm_num
 
 
 

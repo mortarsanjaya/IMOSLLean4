@@ -5,6 +5,8 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.ModEq
+import Mathlib.Algebra.Ring.Parity
+import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 # IMO 2007 N1
@@ -23,7 +25,7 @@ lemma sq_mod_four_of_odd (hm : m % 2 = 1) : m ^ 2 % 4 = 1 := by
 
 lemma two_dvd_seven_pow_sub_three_pow (k n) : (2 : ℤ) ∣ 7 ^ k - 3 ^ n := by
   show ((2 : ℕ) : ℤ) ∣ (7 : ℕ) ^ k - (3 : ℕ) ^ n
-  rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.modEq_iff_dvd,
+  rw [← Int.natCast_pow, ← Int.natCast_pow, ← Nat.modEq_iff_dvd,
     Nat.ModEq, Nat.pow_mod, Nat.one_pow, Nat.pow_mod, Nat.one_pow]
 
 lemma succ_pow_four_lt_seven_mul_pow_four (ha : 2 ≤ a) : (a + 1) ^ 4 < 7 * a ^ 4 := by
@@ -110,7 +112,7 @@ lemma good_imp_even (h : good k n) : 2 ∣ k ∧ 2 ∣ n := by
   replace h : 4 ∣ k ^ 4 + n ^ 2 := by
     refine Int.natCast_dvd_natCast.mp (dvd_trans ?_ h)
     show ((4 : ℕ) : ℤ) ∣ (7 : ℕ) ^ k - (3 : ℕ) ^ n
-    rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.modEq_iff_dvd, Nat.ModEq]
+    rw [← Int.natCast_pow, ← Int.natCast_pow, ← Nat.modEq_iff_dvd, Nat.ModEq]
     have h2 : 3 ^ n % 4 = 3 := calc
       _ = 3 ^ (2 * (n / 2) + 1) % 4 := by rw [← h0, Nat.div_add_mod]
       _ = (3 ^ 2) ^ (n / 2) * 3 % 4 := by rw [Nat.pow_succ, Nat.pow_mul]
@@ -133,7 +135,7 @@ lemma good_two_mul_imp₁ (h : good (2 * a) (2 * b)) :
   rw [good, mul_pow, mul_pow, Nat.mul_comm, pow_mul, Nat.mul_comm, pow_mul, sq_sub_sq] at h
   replace h : ((7 : ℕ) ^ a + (3 : ℕ) ^ b : ℤ) * (2 : ℕ) ∣ _ :=
     (Int.mul_dvd_mul_left _ (two_dvd_seven_pow_sub_three_pow a b)).trans h
-  rw [← Nat.cast_pow, ← Nat.cast_pow, ← Nat.cast_add, ← Nat.cast_mul, Int.ofNat_dvd,
+  rw [← Int.natCast_pow, ← Int.natCast_pow, ← Nat.cast_add, ← Nat.cast_mul, Int.ofNat_dvd,
     Nat.pow_succ', sq, Nat.mul_assoc, Nat.mul_assoc, ← Nat.mul_add, Nat.mul_comm] at h
   exact (mul_dvd_mul_iff_left (Nat.succ_ne_zero 1)).mp h
 
