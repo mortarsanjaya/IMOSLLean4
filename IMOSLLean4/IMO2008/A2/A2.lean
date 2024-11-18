@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import Mathlib.Algebra.Order.Field.Rat
 import Mathlib.Data.Set.Finite
 import Mathlib.Tactic.Ring
 
@@ -138,8 +139,9 @@ def ratMapSol (k : ℕ) : Fin 3 → ℚ
   | 2 => -(k.succ * (k.succ + 1))
 
 theorem ratMapSol_prod2_strictAnti : StrictAnti (λ k ↦ ratMapSol k 2) := λ k m h ↦ by
-  apply neg_lt_neg
-  rw [← Nat.cast_succ, ← Nat.cast_succ, ← Nat.cast_mul, ← Nat.cast_mul, Nat.cast_lt]
+  unfold ratMapSol; simp only
+  rw [neg_lt_neg_iff, ← Nat.cast_succ, ← Nat.cast_succ,
+    ← Nat.cast_mul, ← Nat.cast_mul, Nat.cast_lt]
   replace h : k.succ < m.succ := Nat.succ_lt_succ h
   exact Nat.mul_lt_mul'' h ( Nat.succ_lt_succ h)
 

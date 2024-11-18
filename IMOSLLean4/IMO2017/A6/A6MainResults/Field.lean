@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2017.A6.A6Lemmas.Field
 import IMOSLLean4.IMO2017.A6.A6Lemmas.ReducedNZD2
 import IMOSLLean4.Extra.CharTwo.Ring
+import Mathlib.Algebra.Ring.Commute
 
 /-!
 # IMO 2017 A6 (P2, Solution to the case: `R` is a field)

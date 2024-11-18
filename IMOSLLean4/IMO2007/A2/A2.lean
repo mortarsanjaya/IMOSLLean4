@@ -147,5 +147,5 @@ theorem final_solution {N k : ℕ+} :
     (∃ f : ℕ+ → ℕ+, goodPNat f ∧ f N = k) ↔ if N = 1 then k = 1 else k ≤ N + 1 := by
   rw [good_correspondence, final_solution_Nat, cond_eq_if]
   have X {n : ℕ+} : n.natPred = 0 ↔ n = 1 := PNat.natPred_inj (n := 1)
-  refine if_congr_prop (Nat.beq_eq ▸ X) X ?_
+  refine iff_of_eq (if_congr (Nat.beq_eq ▸ X) X.eq ?_)
   rw [← PNat.natPred_le_natPred, Nat.succ_eq_add_one, PNat.natPred_add_one]; rfl

@@ -53,7 +53,7 @@ theorem ring_ineq2 {a b c : R} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) :
     2 ^ 3 * (a * b * c) ≤ (a + b) * (b + c) * (c + a) := by
   have X {x y : R} : 0 ≤ x → 0 ≤ y → 0 ≤ x * y := mul_nonneg
   have Y {x y : R} : 0 ≤ x → 0 ≤ y → 0 ≤ x + y := add_nonneg
-  apply le_of_pow_le_pow_left (Nat.succ_ne_zero 1) (X (X (Y ha hb) (Y hb hc)) (Y hc ha))
+  apply le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) (X (X (Y ha hb) (Y hb hc)) (Y hc ha))
   replace Y (x : R) : 0 ≤ x ^ 2 := sq_nonneg x
   let Z := ring_ineq1 (R := R)
   have Y2 := Y 2
@@ -114,7 +114,7 @@ theorem field_ineq1 : ((2 * a + b + c) ^ 2)⁻¹ ≤ (2 ^ 2 * ((a + b) * (a + c)
   rw [two_mul, add_assoc, add_add_add_comm]
   have hab : 0 < a + b := add_pos ha hb
   have hac : 0 < a + c := add_pos ha hc
-  refine (inv_le_inv (pow_pos (add_pos hab hac) 2) ?_).mpr (ring_ineq1 _ _)
+  refine (inv_le_inv₀ (pow_pos (add_pos hab hac) 2) ?_).mpr (ring_ineq1 _ _)
   exact mul_pos (pow_pos (zero_lt_two' F) 2) (mul_pos hab hac)
 
 theorem field_ineq2 :

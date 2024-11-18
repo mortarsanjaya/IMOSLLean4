@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Nat.Periodic
+import Mathlib.Algebra.Ring.Regular
 
 /-!
 # IMO 2018 A2 (P2)

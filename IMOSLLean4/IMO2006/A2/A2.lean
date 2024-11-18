@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Ring
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Algebra.Order.Field.Rat
+import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Field.Rat
 
 /-!
 # IMO 2006 A2
@@ -26,12 +25,14 @@ def a : ℕ → ℚ
   | 0 => -1
   | n + 1 => -(univ : Finset (Fin (n + 1))).sum λ i ↦ a i / (n + 2 - i : ℕ)
 
-lemma a_zero : a 0 = -1 := by rfl
+lemma a_zero : a 0 = -1 := by
+  rw [a]
 
 lemma a_succ (n) : a (n + 1) = -(range (n + 1)).sum λ i ↦ a i / (n + 2 - i : ℕ) := by
   rw [a, ← Fin.sum_univ_eq_sum_range]
 
-lemma a_one : a 1 = mkRat 1 2 := by rfl
+lemma a_one : a 1 = 1 / 2 := by
+  rw [a, Fin.sum_univ_one, Fin.val_zero, a, neg_div, neg_neg]; rfl
 
 lemma a_nonzero (h : n ≠ 0) : a n = -(range n).sum λ i ↦ a i / (n + 1 - i : ℕ) :=
   Nat.succ_pred_eq_of_ne_zero h ▸ a_succ n.pred
@@ -71,9 +72,11 @@ lemma a_formula (h : n ≠ 0) :
 /-- Final solution -/
 theorem final_solution (h : n ≠ 0) : 0 < a n := by
   induction' n using Nat.strong_induction_on with n h0
-  rw [Nat.ne_zero_iff_zero_lt, ← Nat.succ_le, le_iff_exists_add'] at h
-  rcases h with ⟨n, rfl⟩; rcases eq_or_ne n 0 with rfl | h
-  · rw [a_one]; rfl
+  obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero h
+  clear h; rcases eq_or_ne n 0 with rfl | h
+  ---- `a_1 > 0`
+  · exact (div_pos one_pos two_pos).trans_eq a_one.symm
+  ---- If `a_i > 0` for all `0 < i ≤ n`, then `a_{n + 1} > 0`
   · refine pos_of_mul_pos_right ?_ (n + 2).cast_nonneg
     rw [a_formula h, sum_range_succ', Nat.cast_zero, zero_div, mul_zero, add_zero]
     refine sum_pos (λ i h1 ↦ ?_) (nonempty_range_iff.mpr h)

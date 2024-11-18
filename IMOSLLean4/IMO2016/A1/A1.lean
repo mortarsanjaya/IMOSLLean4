@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Multiset
-import Mathlib.Algebra.Order.BigOperators.Ring.Multiset
+import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Multiset
 
 /-!
 # IMO 2016 A1
@@ -59,7 +59,7 @@ theorem main_claim {x y z w c : R} (h : x + y = z + w) (h0 : c ≤ x * y) (h1 : 
 
 /-- Final solution -/
 theorem final_solution {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) :
-    ∀ {c} (hc : 0 ≤ c) (hc0 : ∀ x y, {x, y} ≤ M → c ≤ x * y) {r} (hr : M.sum ≤ card M • r),
+    ∀ {c} (_ : 0 ≤ c) (_ : ∀ x y, {x, y} ≤ M → c ≤ x * y) {r} (_ : M.sum ≤ card M • r),
     (M.map (· ^ 2 + c)).prod ≤ (r ^ 2 + c) ^ (card M) := by
   ---- Proceed by structural induction on `|M|`, clearing the base case first
   generalize hn : card M = n

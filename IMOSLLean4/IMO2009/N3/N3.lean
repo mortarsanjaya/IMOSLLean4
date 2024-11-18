@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Data.Nat.Prime.Infinite
 
 /-!
 # IMO 2009 N3

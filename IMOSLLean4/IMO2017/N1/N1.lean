@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Logic.Function.Iterate
-import Mathlib.Data.Nat.Sqrt
+import Mathlib.Tactic.NormNum.NatSqrt
 
 /-!
 # IMO 2017 N1 (P1)
@@ -275,7 +275,8 @@ theorem not_good_of_not_sq_mod (hp : 0 < p) (h : ∀ x, x ^ 2 % p ≠ k % p) : �
 /-- A version of `not_good_of_not_sq_mod` that allows testing non-good numbers by `decide` -/
 theorem not_good_of_not_sq_mod_fin (hp : 0 < p) (h : ∀ x : Fin p, x ^ 2 % p ≠ k % p) :
     ¬good p k := by
-  refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat' x hp) ?_
+  haveI : NeZero p := ⟨Nat.not_eq_zero_of_lt hp⟩
+  refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat' p x) ?_
   rw [Fin.val_ofNat', ← Nat.pow_mod, hx]
 
 theorem good.exists_mod_eq_sq (hp : 0 < p) (h : good p k) : ∃ x, x ^ 2 % p = k % p := by
@@ -328,7 +329,7 @@ theorem good_one_left (k) : good 1 k := by
   rcases h with (rfl | rfl) | rfl
   · exact good_zero_right 1
   · exact good_one_right 1
-  · replace h0 : (f 1)^[3] 2 = 2 := by rfl
+  · replace h0 : (f 1)^[3] 2 = 2 := by unfold f; norm_num
     refine ⟨2, λ m ↦ ⟨3 * m, Nat.le_mul_of_pos_left m (Nat.succ_pos 2), ?_⟩⟩
     rw [(f 1).iterate_mul, Function.iterate_fixed h0]
 
@@ -348,7 +349,7 @@ lemma squarefree.of_dvd (hn : squarefree n) (hk : k ∣ n) : squarefree k :=
 lemma three_is_squarefree : squarefree 3 := λ x hx ↦ by
   have X : 0 < 3 := Nat.succ_pos 2
   have h : x = 0 ∨ x = 1 := by
-    have h : Nat.sqrt 3 = 1 := by rfl
+    have h : Nat.sqrt 3 = 1 := by norm_num
     rw [← Nat.le_one_iff_eq_zero_or_eq_one, ← h, Nat.le_sqrt']
     exact Nat.le_of_dvd X hx
   exact h.resolve_left (Nat.ne_of_gt (Nat.pos_of_mul_pos_left (Nat.pos_of_dvd_of_pos hx X)))

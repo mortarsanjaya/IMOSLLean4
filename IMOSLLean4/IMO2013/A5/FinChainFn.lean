@@ -44,7 +44,7 @@ theorem mem_rangeCompl_iff : a ∈ h.rangeCompl ↔ a ∉ Set.range f :=
   Set.ext_iff.mp h.rangeCompl_spec a
 
 theorem surjective_iff : f.Surjective ↔ h.rangeCompl = ∅ := by
-  rw [← Set.range_iff_surjective, ← compl_inj_iff,
+  rw [← Set.range_eq_univ, ← compl_inj_iff,
     ← h.rangeCompl_spec, Set.compl_univ, coe_eq_empty]
 
 theorem iter_apply_ne_of_mem_rangeCompl_iter_ne (h0 : m ≠ n)

@@ -26,8 +26,7 @@ open ArithmeticFunction
 /-! ### Part 1 -/
 
 lemma Even_iff_bodd {k : ℕ} : Even k ↔ k.bodd = false := by
-  rw [Nat.even_iff, Nat.mod_two_of_bodd, Bool.cond_eq_ite,
-    Nat.one_ne_zero.ite_eq_right_iff, Bool.bool_iff_false]
+  rw [Nat.even_iff, Nat.mod_two_of_bodd, Bool.toNat_eq_zero]
 
 /-- Final solution, part 1 -/
 theorem final_solution_part1 (N) : ∃ a b, a ≠ b ∧ ∀ k < N, Even (Ω ((a + k) * (b + k))) := by

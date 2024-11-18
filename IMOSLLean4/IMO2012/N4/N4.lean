@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Data.Int.GCD
 import Mathlib.Data.Int.Interval
 import Mathlib.Algebra.Order.Ring.Basic
+import Mathlib.Data.Nat.Cast.Order.Ring
 import Mathlib.Tactic.Ring
 
 /-!
@@ -88,11 +89,11 @@ theorem final_solution_part2 : ¬friendly 2 := by
       rw [h2, mul_pow, mul_eq_mul_left_iff, or_iff_left (pow_ne_zero 2 h0.ne.symm)] at h1
       refine ⟨t - (m + n - 1), ?_, by rwa [add_sub_cancel]⟩
       -- It remains to show that `t > m + n - 1`
-      refine Int.sub_pos.mpr (lt_of_pow_lt_pow_left 2 ?_ ?_)
+      refine Int.sub_pos.mpr (lt_of_pow_lt_pow_left₀ 2 ?_ ?_)
       · rw [← mul_nonneg_iff_right_nonneg_of_pos h0, ← h2]
         exact add_nonneg (add_nonneg (add_nonneg (sq_nonneg _) hn.le) (sq_nonneg _)) hm.le
       · rw [h1, lt_add_iff_pos_right]
-        exact mul_pos ((Int.sign_eq_one_iff_pos 8).mp rfl) h0
+        exact mul_pos (by decide) h0
     -- Now we rearrange to `(2(m + n - 1) + s)s = 8(m - n)`
     rw [← sub_eq_iff_eq_add', sq_sub_sq, add_right_comm, add_sub_cancel_left, ← two_mul] at h2
     -- Now prove that `s` is even

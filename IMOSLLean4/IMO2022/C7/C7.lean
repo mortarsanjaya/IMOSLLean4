@@ -25,16 +25,16 @@ namespace IMO2022C7
 
 /-! ### General theory of closed sets -/
 
-class AddSupClosed [Add α] [Sup α] (S : Set α) : Prop where
+class AddMaxClosed [Add α] [Max α] (S : Set α) : Prop where
   add_mem : ∀ v ∈ S, ∀ w ∈ S, v + w ∈ S
   sup_mem : ∀ v ∈ S, ∀ w ∈ S, v ⊔ w ∈ S
 
 
-namespace AddSupClosed
+namespace AddMaxClosed
 
 section
 
-variable [Add α] [Sup α] {S : Set α} (hS : AddSupClosed S) (hv : v ∈ S) (hw : w ∈ S)
+variable [Add α] [Max α] {S : Set α} (hS : AddMaxClosed S) (hv : v ∈ S) (hw : w ∈ S)
 include hS hv hw
 
 theorem mem_of_add_eq (hx : x = v + w) : x ∈ S :=
@@ -48,7 +48,7 @@ end
 
 section
 
-variable [Add α] [SemilatticeSup α] {S : Set α} (hS : AddSupClosed S)
+variable [Add α] [SemilatticeSup α] {S : Set α} (hS : AddMaxClosed S)
 include hS
 
 theorem Finset_range_sup_mem {f : ℕ → α} (hf : ∀ k, f k ∈ S) :
@@ -80,7 +80,7 @@ end
 
 section
 
-variable [Sup α] [AddCommMonoid α] {S : Set α} (hS : AddSupClosed S)
+variable [Max α] [AddCommMonoid α] {S : Set α} (hS : AddMaxClosed S)
 include hS
 
 theorem smul_mem_of_pos (hv : v ∈ S) : ∀ n > 0, n • v ∈ S :=
@@ -100,34 +100,34 @@ end
 
 /-! ##### Some non-trivial examples of closed sets -/
 
-theorem univ [Add α] [Sup α] : AddSupClosed (Set.univ : Set α) where
+theorem univ [Add α] [Max α] : AddMaxClosed (Set.univ : Set α) where
   add_mem := λ _ _ _ _ ↦ Set.mem_univ _
   sup_mem := λ _ _ _ _ ↦ Set.mem_univ _
 
-theorem empty [Add α] [Sup α] : AddSupClosed (∅ : Set α) where
+theorem empty [Add α] [Max α] : AddMaxClosed (∅ : Set α) where
   add_mem := λ _ _ _ ↦ id
   sup_mem := λ _ _ _ ↦ id
 
-theorem ofNonnegHalf (i : ι) : AddSupClosed {v : ι → ℤ | 0 ≤ v i} where
+theorem ofNonnegHalf (i : ι) : AddMaxClosed {v : ι → ℤ | 0 ≤ v i} where
   add_mem := λ _ hv _ hw ↦ Int.add_nonneg hv hw
   sup_mem := λ _ hv _ _ ↦ hv.trans (Int.le_max_left _ _)
 
-theorem ofNonposHalf (i : ι) : AddSupClosed {v : ι → ℤ | v i ≤ 0} where
+theorem ofNonposHalf (i : ι) : AddMaxClosed {v : ι → ℤ | v i ≤ 0} where
   add_mem := λ _ hv _ hw ↦ Int.add_nonpos hv hw
   sup_mem := λ _ hv _ hw ↦ Set.mem_setOf_eq.mpr (sup_le_iff.mpr ⟨hv, hw⟩)
 
 theorem ofSlopedHalf {x y : ℤ} (hx : 0 ≤ x) (hy : 0 ≤ y) (i j : ι) :
-    AddSupClosed {v : ι → ℤ | x * v i ≤ y * v j} where
+    AddMaxClosed {v : ι → ℤ | x * v i ≤ y * v j} where
   add_mem := λ v hv w hw ↦ by
     simp only [Set.mem_setOf_eq, Pi.add_apply, Int.mul_add]
     exact Int.add_le_add hv hw
   sup_mem := λ v hv w hw ↦ by
-    simp only [Set.mem_setOf_eq, Pi.sup_apply, sup_eq_max]
+    simp only [Set.mem_setOf_eq, Pi.sup_apply]
     rw [mul_max_of_nonneg _ _ hx, mul_max_of_nonneg _ _ hy]
     exact max_le_max hv hw
 
-theorem ofPreimage {S : Set (α → ℤ)} (hS : AddSupClosed S) (i : α → β) :
-    AddSupClosed ((· ∘ i) ⁻¹' S) where
+theorem ofPreimage {S : Set (α → ℤ)} (hS : AddMaxClosed S) (i : α → β) :
+    AddMaxClosed ((· ∘ i) ⁻¹' S) where
   add_mem := λ _ hv _ hw ↦ hS.add_mem _ hv _ hw
   sup_mem := λ _ hv _ hw ↦ hS.sup_mem _ hv _ hw
 
@@ -136,7 +136,7 @@ theorem ofPreimage {S : Set (α → ℤ)} (hS : AddSupClosed S) (i : α → β) 
 /-! ##### Closed sets satisfying certain conditions -/
 
 theorem Nat_Finsupp_mem_of_zero_single_mem [DecidableEq ι] {S : Set (ι → ℤ)}
-    (hS : AddSupClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, ⇑(Finsupp.single i 1) ∈ S) :
+    (hS : AddMaxClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, ⇑(Finsupp.single i 1) ∈ S) :
     ∀ v : ι →₀ ℕ, Nat.cast ∘ v ∈ S := by
   intro v; apply v.induction_linear hS0
   · intro f g hf hg; exact hS.add_mem _ hf _ hg
@@ -153,7 +153,7 @@ theorem Nat_Finsupp_mem_of_zero_single_mem [DecidableEq ι] {S : Set (ι → ℤ
 section
 
 variable [Fintype ι] [DecidableEq ι] {S : Set (ι → ℤ)}
-  (hS : AddSupClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, Pi.single i 1 ∈ S)
+  (hS : AddMaxClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, Pi.single i 1 ∈ S)
 include hS hS0 hS1
 
 theorem Nat_mem_of_zero_single_mem (v : ι → ℕ) : Nat.cast ∘ v ∈ S := by
@@ -183,7 +183,7 @@ theorem eq_univ_of_neg_one_and_single_mem (hS2 : -1 ∈ S) : S = Set.univ := by
 
 end
 
-end AddSupClosed
+end AddMaxClosed
 
 
 
@@ -191,16 +191,16 @@ end AddSupClosed
 
 /-! ### Add-sup generators -/
 
-def AddSupGenerator [Add α] [Sup α] (A : Finset α) :=
-  ∀ S : Set α, (A : Set α) ⊆ S → AddSupClosed S → S = Set.univ
+def AddSupGenerator [Add α] [Max α] (A : Finset α) :=
+  ∀ S : Set α, (A : Set α) ⊆ S → AddMaxClosed S → S = Set.univ
 
 
 namespace AddSupGenerator
 
-lemma univ [Fintype α] [Add α] [Sup α] : AddSupGenerator (Finset.univ : Finset α) :=
+lemma univ [Fintype α] [Add α] [Max α] : AddSupGenerator (Finset.univ : Finset α) :=
   λ S hS _ ↦ by rwa [Finset.coe_univ, Set.univ_subset_iff] at hS
 
-lemma ofSubset [Add α] [Sup α] {A B : Finset α} (hA : AddSupGenerator A) (hAB : A ⊆ B) :
+lemma ofSubset [Add α] [Max α] {A B : Finset α} (hA : AddSupGenerator A) (hAB : A ⊆ B) :
     AddSupGenerator B :=
   λ S hS ↦ hA S λ _ h ↦ hS (hAB h)
 
@@ -211,7 +211,7 @@ lemma ofEmbedding [DecidableEq α] [Fintype β] [DecidableEq β]
   rw [Finset.coe_image, Set.image_subset_iff] at hS
   specialize hA _ hS (hS0.ofPreimage _)
   have h : (λ f : α → ℤ ↦ f ∘ ι).Surjective := ι.2.surjective_comp_right
-  rwa [Set.preimage_eq_univ_iff, Set.range_iff_surjective.mpr h, Set.univ_subset_iff] at hA
+  rwa [Set.preimage_eq_univ_iff, Set.range_eq_univ.mpr h, Set.univ_subset_iff] at hA
 
 end AddSupGenerator
 
@@ -219,22 +219,22 @@ end AddSupGenerator
 
 /-! ##### Instances of add-sup generators -/
 
-theorem empty_not_AddSupGenerator [Add α] [Sup α] [Nonempty α] :
+theorem empty_not_AddSupGenerator [Add α] [Max α] [Nonempty α] :
     ¬AddSupGenerator (∅ : Finset α) :=
-  λ h ↦ Set.empty_ne_univ (h ∅ (λ _ hf ↦ Set.mem_toFinset.mp hf) AddSupClosed.empty)
+  λ h ↦ Set.empty_ne_univ (h ∅ (λ _ hf ↦ Set.mem_toFinset.mp hf) AddMaxClosed.empty)
 
 theorem not_AddSupGenerator_of_subset_NonnegHalf
     {S : Finset (ι → ℤ)} (hS : (S : Set (ι → ℤ)) ⊆ {v | 0 ≤ v i}) :
     ¬AddSupGenerator S := by
   intro h; have h0 : -1 ∈ {v : ι → ℤ | 0 ≤ v i} :=
-    h _ hS (AddSupClosed.ofNonnegHalf i) ▸ Set.mem_univ _
+    h _ hS (AddMaxClosed.ofNonnegHalf i) ▸ Set.mem_univ _
   exact (Int.negSucc_not_nonneg 0).mp h0
 
 theorem not_AddSupGenerator_of_subset_NonposHalf
     {S : Finset (ι → ℤ)} (hS : (S : Set (ι → ℤ)) ⊆ {v | v i ≤ 0}) :
     ¬AddSupGenerator S := by
   intro h; have h0 : 1 ∈ {v : ι → ℤ | v i ≤ 0} :=
-    h _ hS (AddSupClosed.ofNonposHalf i) ▸ Set.mem_univ _
+    h _ hS (AddMaxClosed.ofNonposHalf i) ▸ Set.mem_univ _
   exact (Int.negSucc_not_nonneg 0).mp h0
 
 theorem singleton_not_AddSupGenerator [hι : Nonempty ι] (v : ι → ℤ) :
@@ -256,7 +256,7 @@ theorem Fin2_AddSupGenerator : AddSupGenerator {![-1, 1], ![1, -2]} := by
   replace h : -1 ∈ S := hS0.mem_of_add_eq h h0 (by decide)
   replace h0 : 1 ∈ S := hS0.mem_of_add_eq (hS 0) (hS 1) (by decide)
   replace h1 : 0 ∈ S := hS0.mem_of_add_eq h h0 (by decide)
-  exact AddSupClosed.eq_univ_of_neg_one_and_single_mem hS0 h1 hS h
+  exact AddMaxClosed.eq_univ_of_neg_one_and_single_mem hS0 h1 hS h
 
 
 section
@@ -299,7 +299,7 @@ theorem doubleton_AddSupGenerator_imp₂ (h0 : i ≠ j) : v i * v j < 0 := by
   ---- Show contradiction by showing that `{v, w}` is contained in a sloped set
   have h2 : {x : ι → ℤ | v j * x i ≤ v i * x j} = Set.univ := by
     unfold AddSupGenerator at h
-    refine h _ ?_ (AddSupClosed.ofSlopedHalf hvj.le hvi.le i j)
+    refine h _ ?_ (AddMaxClosed.ofSlopedHalf hvj.le hvi.le i j)
     simp only [Finset.coe_insert, Finset.coe_singleton]
     rintro _ (rfl | rfl)
     exacts [Int.le_of_eq (mul_comm _ _), h1]
@@ -347,7 +347,7 @@ theorem Fin_general_AddSupGenerator (n : ℕ) :
       refine Int.add_one_le_of_lt (a := 0) (Int.natAbs_sq _ ▸ pow_pos ?_ 2)
       rw [Int.natCast_natAbs, abs_pos, sub_ne_zero, ne_eq, Int.ofNat_inj, Fin.val_inj]
       exact h1.symm
-  exact AddSupClosed.eq_univ_of_neg_one_and_single_mem hS0 h0 h hS
+  exact AddMaxClosed.eq_univ_of_neg_one_and_single_mem hS0 h0 h hS
 
 
 

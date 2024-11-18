@@ -59,7 +59,7 @@ theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
   rw [targetVal, add_assoc, add_add_add_comm, X]
   replace X (i) : 0 < x i / x (i + 1) + x (i + 2) / x (i + 3) :=
     add_pos (div_pos (h i) (h (i + 1))) (div_pos (h (i + 2)) (h (i + 3)))
-  apply le_of_pow_le_pow_left (Nat.succ_ne_zero 1) (add_pos (X 0) (X 1)).le
+  apply le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) (add_pos (X 0) (X 1)).le
   ---- Reduce to `LHS ≥ 4(x_0 x_2/x_1 x_3 + x_1 x_3/x_0 x_2 + 2)`
   rw [← pow_mul, pow_add 2 2 4]
   apply (mul_le_mul_of_nonneg_left (good_ineq2 h h0) (sq_nonneg 2)).trans
@@ -70,7 +70,7 @@ theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
   rw [add_sq', mul_add, mul_add, mul_comm _ 2, mul_assoc 2]
   refine add_le_add (add_le_add h1 h2) (mul_le_mul_of_nonneg_left ?_ zero_le_two)
   ---- Prove `(x_0/x_1 + x_2/x_3)(x_1/x_2 + x_3/x_0) ≥ 4`
-  refine le_of_pow_le_pow_left (Nat.succ_ne_zero 1) (mul_pos (X 0) (X 1)).le ?_
+  refine le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) (mul_pos (X 0) (X 1)).le ?_
   have h3 : 0 < x 1 * x 3 / (x 0 * x 2) :=
     div_pos (mul_pos (h 1) (h 3)) (mul_pos (h 0) (h 2))
   rw [sq, mul_pow]

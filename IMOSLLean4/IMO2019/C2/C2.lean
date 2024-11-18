@@ -62,8 +62,8 @@ theorem LinearOrder_induction {P : Multiset α → Prop}
 
 /-- Final solution -/
 theorem final_solution [LinearOrderedAddCommGroup G] (g : G) :
-    ∀ (S : Multiset G) (h : ∀ x : G, x ∈ S → g ≤ x) (h0 : S.sum ≤ (2 * card S) • g)
-      {r : G} (hr : -(2 • g) ≤ r) (hr0 : r ≤ S.sum),
+    ∀ (S : Multiset G) (_ : ∀ x : G, x ∈ S → g ≤ x) (_ : S.sum ≤ (2 * card S) • g)
+      {r : G} (_ : -(2 • g) ≤ r) (_ : r ≤ S.sum),
         ∃ T : Multiset G, T ≤ S ∧ r ≤ T.sum ∧ T.sum ≤ r + 2 • g :=
   LinearOrder_induction
     ---- Base case: `S = 0`

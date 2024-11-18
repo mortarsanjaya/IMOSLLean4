@@ -70,7 +70,7 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
       specialize h1 hx one_pos
       rw [h0, one_pow, mul_one, pow_mul _ 2 2, pow_mul _ 2 2] at h1
       have hfx : 0 < f x := hf.map_pos_of_pos x hx
-      refine (side_ineq h1).imp (sq_eq_sq hfx.le hx.le).mp λ h2 ↦ ?_
+      refine (side_ineq h1).imp (sq_eq_sq₀ hfx.le hx.le).mp λ h2 ↦ ?_
       rwa [← mul_pow, pow_eq_one_iff_of_nonneg (mul_pos hx hfx).le (Nat.succ_ne_zero 1)] at h2
     have h3 {x y} (hx : 0 < x) (hy : 0 < y) (hx' : x * f x ≠ 1) : f y = y := by
       specialize h1 hx hy
@@ -79,13 +79,13 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
       refine (h2 hy).elim id λ hy0 ↦ (h2 hxy).elim (λ h3 ↦ ?_) (λ h3 ↦ ?_)
       -- Case 1: `f(xy) = xy`
       · rw [h3, mul_right_cancel_iff_of_pos (pow_pos hxy 2), hx0, add_right_inj] at h1
-        exact (pow_left_inj (hf.map_pos_of_pos y hy).le hy.le four_ne_zero).mp h1
+        exact (pow_left_inj₀ (hf.map_pos_of_pos y hy).le hy.le four_ne_zero).mp h1
       -- Case 2: `f(xy) = 1/(xy)`
       · have hx'' : 0 < x * f x := mul_pos hx (hf.map_pos_of_pos x hx)
         rw [← mul_right_cancel_iff_of_pos (pow_pos hxy 2), mul_assoc, ← pow_add, mul_assoc,
           mul_comm (f _ ^ 2), ← mul_pow, h3, one_pow, mul_one, add_mul, ← mul_pow, ← mul_pow,
           ← mul_assoc, mul_left_comm, mul_comm (f y), hy0, mul_one, add_comm, add_right_inj,
-          mul_comm (f x), pow_left_inj (mul_pos hx'' hy).le hy.le four_ne_zero] at h1
+          mul_comm (f x), pow_left_inj₀ (mul_pos hx'' hy).le hy.le four_ne_zero] at h1
         refine absurd ?_ hx'; rwa [← mul_right_cancel_iff_of_pos hy, one_mul]
     refine (em' (∀ x > 0, x * f x = 1)).imp_left λ h4 ↦ ?_
     simp only [not_forall, Classical.not_imp] at h4; rcases h4 with ⟨c, hc, h4⟩
@@ -141,7 +141,7 @@ lemma good_iff_posSubtypeExt_weakGood {f : {x : R // 0 < x} → {x : R // 0 < x}
 /-- Final solution -/
 theorem final_solution [ExistsAddOfLE R] {f : {x : R // 0 < x} → {x : R // 0 < x}} :
     good f ↔ f = id ∨ ∀ x, x * f x = 1 := by
-  rw [good_iff_posSubtypeExt_weakGood, weakGood_iff, Function.funext_iff]
+  rw [good_iff_posSubtypeExt_weakGood, weakGood_iff, funext_iff]
   refine or_congr ⟨λ h x ↦ ?_, λ h x hx ↦ ?_⟩ ⟨λ h x ↦ ?_, λ h x hx ↦ ?_⟩
   · rw [← Subtype.coe_inj, ← posSubtypeExt_spec, h x.1 x.2]; rfl
   · rw [posSubtypeExt_spec f ⟨x, hx⟩, h ⟨x, hx⟩]; rfl
