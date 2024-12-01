@@ -17,11 +17,11 @@ Here, `R⁰` is the set of non-zero-divisors of `R`.
 
 namespace IMOSL
 namespace IMO2017A6
-namespace ReducedGood
+namespace NonperiodicGood
 
 open scoped nonZeroDivisors
 
-variable [Ring R] (hR : 2 ∈ R⁰) {f : R → R} (hf : ReducedGood f)
+variable [Ring R] (hR : 2 ∈ R⁰) {f : R → R} (hf : NonperiodicGood f)
 include hR hf
 
 theorem eq_zero_of_map_neg_eq_of_map_eq (h : f (-x) = f x) : x = 0 := by

@@ -32,14 +32,14 @@ theorem one_sub_is_good : good (λ x : R ↦ 1 - x) := λ x y ↦ by
   simp only; rw [mul_one_sub, one_sub_mul, sub_sub,
     sub_sub_cancel, ← add_sub_assoc x, sub_add_sub_cancel']
 
-theorem one_sub_is_ReducedGood : ReducedGood (λ x : R ↦ 1 - x) :=
+theorem one_sub_is_NonperiodicGood : NonperiodicGood (λ x : R ↦ 1 - x) :=
   ⟨one_sub_is_good, λ _ _ h ↦ add_right_injective 0 (sub_right_injective (h 0))⟩
 
 theorem sub_one_is_good : good (λ x : R ↦ x - 1) := λ x y ↦ by
   simp only; rw [sub_one_mul, mul_sub_one, sub_sub,
     sub_add_cancel, sub_sub, sub_add_sub_cancel]
 
-theorem sub_one_is_ReducedGood : ReducedGood (λ x : R ↦ x - 1) :=
+theorem sub_one_is_NonperiodicGood : NonperiodicGood (λ x : R ↦ x - 1) :=
   ⟨sub_one_is_good, λ _ _ h ↦ add_right_injective 0 (sub_left_injective (h 0))⟩
 
 end
@@ -54,8 +54,8 @@ theorem good_mul_central_involutive {f : R → R} (hf : good f) :
     good (λ x : R ↦ a * f x) := λ x y ↦ by
   rw [mul_assoc, ← mul_assoc _ a, ← ha0, mul_assoc, ← mul_assoc, ha, one_mul, ← mul_add, hf]
 
-theorem ReducedGood_mul_central_involutive {f : R → R} (hf : ReducedGood f) :
-    ReducedGood (λ x : R ↦ a * f x) :=
+theorem NonperiodicGood_mul_central_involutive {f : R → R} (hf : NonperiodicGood f) :
+    NonperiodicGood (λ x : R ↦ a * f x) :=
   ⟨good_mul_central_involutive ha ha0 hf.is_good,
   λ c d h ↦ hf.period_imp_eq c d λ x ↦ by
     replace h : a * _ = a * _ := congrArg (a * ·) (h x)
@@ -64,8 +64,8 @@ theorem ReducedGood_mul_central_involutive {f : R → R} (hf : ReducedGood f) :
 theorem mul_one_sub_is_good : good (λ x : R ↦ a * (1 - x)) :=
   good_mul_central_involutive ha ha0 one_sub_is_good
 
-theorem mul_one_sub_is_ReducedGood : ReducedGood (λ x : R ↦ a * (1 - x)) :=
-  ReducedGood_mul_central_involutive ha ha0 one_sub_is_ReducedGood
+theorem mul_one_sub_is_NonperiodicGood : NonperiodicGood (λ x : R ↦ a * (1 - x)) :=
+  NonperiodicGood_mul_central_involutive ha ha0 one_sub_is_NonperiodicGood
 
 end
 
@@ -176,9 +176,9 @@ end good
 
 /-! ### Properties of reduced good function -/
 
-namespace ReducedGood
+namespace NonperiodicGood
 
-variable [Ring R] {f : R → R} (hf : ReducedGood f)
+variable [Ring R] {f : R → R} (hf : NonperiodicGood f)
 include hf
 
 theorem map_eq_zero_iff : f c = 0 ↔ c = 1 :=
@@ -188,4 +188,4 @@ theorem map_eq_zero_iff : f c = 0 ↔ c = 1 :=
 theorem map_zero_mul_self : f 0 * f 0 = 1 :=
   hf.map_eq_zero_iff.mp hf.is_good.map_map_zero_mul_self
 
-end ReducedGood
+end NonperiodicGood

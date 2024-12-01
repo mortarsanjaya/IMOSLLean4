@@ -42,14 +42,14 @@ private lemma toQuotient_NZD2 : 2 ∈ hf.toRingCon.Quotient⁰ := λ x h ↦ by
   rw [← mul_invOf_cancel_right x 2, h, zero_mul]
 
 lemma InvertibleTwo_quotient_map_zero_mul_self : (f 0 : hf.toRingCon.Quotient) * f 0 = 1 :=
-  hf.toQuotientMap_ReducedGood.NZD2_map_zero_mul_self hf.toQuotient_NZD2
+  hf.toQuotientMap_NonperiodicGood.NZD2_map_zero_mul_self hf.toQuotient_NZD2
 
 lemma InvertibleTwo_quotient_eq (x) : (f x : hf.toRingCon.Quotient) = f 0 * (1 - x) :=
-  hf.toQuotientMap_ReducedGood.NZD2_solution hf.toQuotient_NZD2 x
+  hf.toQuotientMap_NonperiodicGood.NZD2_solution hf.toQuotient_NZD2 x
 
 lemma InvertibleTwo_quotient_map_zero_comm (x) :
     (f 0 : hf.toRingCon.Quotient) * x = x * f 0 :=
-  hf.toQuotientMap_ReducedGood.NZD2_map_zero_comm hf.toQuotient_NZD2 x
+  hf.toQuotientMap_NonperiodicGood.NZD2_map_zero_comm hf.toQuotient_NZD2 x
 
 lemma InvertibleTwo_altFE' (x y : R) : f ((1 - x) * (1 - y)) + f (x + y) = f (x * y) := by
   rw [← hf x, add_left_inj]

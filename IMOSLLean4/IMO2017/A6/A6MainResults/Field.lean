@@ -29,9 +29,9 @@ open Extra
 
 /-! ### Reduced good functions on fields of characteristic 2 -/
 
-namespace ReducedGood
+namespace NonperiodicGood
 
-variable [Field F] [CharTwo F] {f : F → F} (hf : ReducedGood f)
+variable [Field F] [CharTwo F] {f : F → F} (hf : NonperiodicGood f)
 include hf
 
 theorem CharTwoField_map_zero_eq_one : f 0 = 1 :=
@@ -101,7 +101,7 @@ theorem CharTwoField_solution : f = (· + 1) :=
   funext λ x ↦ by rw [hf.is_good.solution_of_injective hf.CharTwoField_injective,
     hf.CharTwoField_map_zero_eq_one, one_mul, CharTwo.sub_eq_add, add_comm]
 
-end ReducedGood
+end NonperiodicGood
 
 
 
@@ -112,7 +112,7 @@ end ReducedGood
 /-- Final solution for fields of characteristic `2` -/
 theorem CharTwoField_good_iff [Field F] [CharTwo F] {f : F → F} :
     good f ↔ f = 0 ∨ f = (· + 1) :=
-  ⟨λ hf ↦ hf.DivRing_zero_or_reduced.imp_right ReducedGood.CharTwoField_solution,
+  ⟨λ hf ↦ hf.DivRing_zero_or_reduced.imp_right NonperiodicGood.CharTwoField_solution,
   λ h ↦ h.elim (λ h ↦ h ▸ zero_is_good) λ h ↦ by
     simp only [h, add_comm _ (1 : F), ← CharTwo.sub_eq_add]; exact one_sub_is_good⟩
 
@@ -125,7 +125,7 @@ theorem CharNeTwoDivRing_good_iff [DivisionRing F] [hR : NeZero (2 : F)] {f : F 
     refine (mul_self_eq_one_iff.mp (hf.map_zero_mul_self)).imp (λ h0 ↦ ?_) (λ h0 ↦ ?_)
     · funext x; rw [h, h0, one_mul]
     · funext x; rw [h, h0, neg_one_mul, neg_sub]
-  · rintro (rfl | rfl); exacts [one_sub_is_ReducedGood, sub_one_is_ReducedGood]
+  · rintro (rfl | rfl); exacts [one_sub_is_NonperiodicGood, sub_one_is_NonperiodicGood]
 
 /-- Final solution for arbitrary fields -/
 theorem Field_good_iff [Field F] {f : F → F} :

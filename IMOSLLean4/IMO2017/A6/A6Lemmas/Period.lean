@@ -87,7 +87,7 @@ lemma toQuotientMap_apply_mk (x : R) : hf.toQuotientMap x = f x := rfl
 lemma toQuotientMap_good : good hf.toQuotientMap :=
   Quotient.ind₂ λ a b ↦ congrArg (Quotient.mk _) (hf a b)
 
-lemma toQuotientMap_ReducedGood : ReducedGood hf.toQuotientMap :=
+lemma toQuotientMap_NonperiodicGood : NonperiodicGood hf.toQuotientMap :=
   ⟨hf.toQuotientMap_good, Quotient.ind₂ λ _ _ h ↦
     Quot.sound λ x ↦ hf.PeriodEquiv_map ((RingCon.eq hf.toRingCon).mp (h x))⟩
 

@@ -1,292 +1,334 @@
 Let $R$ be a ring.
-We say that a function $f : R \to R$ is \emph{good} if for any $x, y \in R$,
+We say that a function $f : R \to R$ is \emph{good (over $R$)} if for any $x, y \in R$,
 \[ f(f(x) f(y)) + f(x + y) = f(xy). \tag{*}\label{2017a6-eq0} \]
-We are interested in finding all good functions.
-Unfortunately, this is too hard to solve in general.
-We present a complete solution for three subcases.
+Find all good functions over any ring.
 
-\begin{theorem}\label{2017a6-1}
-Let $R$ be a ring such that $2 \in R^{\times}$ and $3$ is not a zero divisor in $R$.
-Let $(S, \phi, \iota, a)$ be a $4$-tuple with the following data:
+
+
+
+
+\section{Main Results}
+
+Unfortunately, we still don't know the complete answer to the above general question.
+However, we have one main conjecture, saying what would the answer be.
+For any ring $R$, double-sided ideal $I$, and $x \in R$, we denote by $[x]$ the image of $x$ in $R/I$ whenever the context is clear.
+The main conjecture is as follows.
+
+\begin{conjecture}\label{2017a6-s1-conj-main}
+Let $R$ be a ring.
+Consider triples $(I, \iota, a)$, where
 \begin{itemize}
-    \item   $S$ is a ring;
-    \item   $\phi : R \to S$ is a ring homomorphism;
-    \item   $\iota : S \to R$ is a group homomorphism with $\phi \circ \iota = \id_S$;
-    \item   $a$ is an element of $Z(S)$ such that $a^2 = 1$.
+    \item   $I$ is a double-sided ideal of $R$;
+    \item   $\iota : R/I \to R$ is a homomorphism of additive group;
+    \item   $\iota$ is a right inverse to the natural projection map $R \to R/I$, i.e. $[\iota(y)] = y$ for any $y \in R/I$;
+    \item   $a$ is an element of $Z(R/I)$ such that $a^2 = 1$.
 \end{itemize}
-Then $f(x) = \iota(a(1 - \phi(x)))$ works, and all good functions on $R$ arise from some $4$-tuple of the above form.
+Then the good functions over $R$ are precisely those of form $f(x) = \iota(a(1 - [x]))$ for some triple $(I, \iota, a)$.
+\end{conjecture}
+
+We prove the conjecture in some subcases.
+The results we prove are as follows.
+
+\begin{theorem}\label{2017a6-s1-general}
+Conjecture~\ref{2017a6-s1-conj-main} holds when $2$ is a unit in $R$ and $3$ is not a zero divisor in $R$.
 \end{theorem}
 
-\begin{theorem}\label{2017a6-2}
-Let $F$ be a division ring with $\rchar(F) \neq 2$.
-Then the only good functions on $F$ are $0$, $x \mapsto 1 - x$, and $x \mapsto x - 1$.
+\begin{theorem}\label{2017a6-s1-simple-ring-char-ne-two}
+Conjecture~\ref{2017a6-s1-conj-main} holds when $R$ is a simple ring with $\rchar(R) \neq 2$.
+That is, for any simple ring $R$ of characteristic $\neq 2$, the only good functions over $R$ are $0$, $x \mapsto x - 1$, and $x \mapsto 1 - x$.
 \end{theorem}
 
-\begin{theorem}\label{2017a6-3}
-Let $F$ be a field with $\rchar(F) = 2$.
-Then the only good functions on $F$ are $0$ and $x \mapsto x + 1$.
+\begin{theorem}\label{2017a6-s1-field-char-two}
+Conjecture~\ref{2017a6-s1-conj-main} holds when $R$ is a field with $\rchar(R) = 2$.
+That is, for any field $F$ of characteristic $2$, the only good functions on $F$ are $0$ and $x \mapsto x + 1$.
 \end{theorem}
 
-An example of "weird" good function that falls into the description in Theorem~\ref{2017a6-1} is
-\[ R = R'[X], \quad f(P) = (1 - P(1)) X^k \;\; \forall P \in R'[X], \]
-    where $R'$ is an arbitrary ring and $k \in \N$ is arbitrary.
-Here, Theorem~\ref{2017a6-1} holds with $S = R'[X]/\langle X - 1\rangle \cong R'$, $\iota(r) = rX^k$, and $a = 1$.
-The image of $f$ is the subgroup $\{rX^k : r \in R'\} \subseteq R'[X]$.
-By changing it to another subgroup and also changing $S$ to another quotient of $R$, we could generate other good functions.
-This should explain why the theorem is a reasonable guess in the first place in the general case.
+As usual, it is relatively easier to verify if a function is good with sufficient explicit description.
+The bulk of the work is to prove that no other functions are good.
+To check that $f(x) = \iota(a(1 - [x]))$ is good, we just plug in directly to~\eqref{2017a6-eq0}.
+First note that since $\phi$ is a ring homomorphism, for any $x, y \in R$,
+\[ [f(x) f(y)] = [\iota(a(1 - [x]))] [\iota(a(1 - [y]))] = a(1 - [x]) a(1 - [y]). \]
+Since $a \in Z(R/I)$ and $a^2 = 1$, the right hand side is equal to $(1 - [x])(1 - [y])$.
+This implies
+\[ f(f(x) f(y)) = \iota(a(1 - (1 - [x])(1 - [y]))) = \iota(a[x + y - xy]) = \iota(a(1 - [xy])) - \iota(a(1 - [x + y])), \]
+    where the last equality holds since $\iota$ is additive.
+But the right hand side is $f(xy) - f(x + y)$ by definition, so we are done.
+It now remains to prove that these are all the good functions.
+
+Some functions that obviously work are $x \mapsto 0$, $x \mapsto 1 - x$, $x \mapsto 0$, and $x \mapsto x - 1$.
+The following example shows a more convoluted good function and also illustrate why Conjecture~\ref{2017a6-s1-conj-main} cannot be simplified.
+
+\begin{example}
+Let $R$ be a ring.
+Define $f : R[X] \to R[X]$ by $f(P) = (1 - P(1)) X^k$ for all $P \in R[X]$, where $k$ is an arbitrary non-negative integer.
+Then one can check by hand that $f$ is a good function over $R$.
+This example corresponds to $S = R$, with the projection $\phi$ defined mod $X - 1$, the lift $\iota$ defined by $P \mapsto X^k P$, and $a = 1$.    
+\end{example}
 
 
 
 
 
-\subsection*{Solution}
+\section{General Steps of Proof}
 
-References:
-\begin{itemize}
-    
-    \item
-    \url{https://artofproblemsolving.com/community/c6h1480146p8693244}.
-    
-    Solution in AoPS by \textbf{anantmudgal09} (post \#75).
+We now describe the major general steps we use to attempt proving Conjecture~\ref{2017a6-s1-conj-main}.
+In the original problem, $f(1) = 0$ is easy to obtain.
+This is not the case in general, but we will still prove it.
+The method we use to prove $f(1) = 0$ tells us something more about good functions in general.
 
-    \item
-    \url{https://artofproblemsolving.com/community/c6h1480146p29214012}
+We start by obtaining basic equalities.
+First, plugging $x = y = 0$ into~\eqref{2017a6-eq0} yields $f(f(0)^2) = 0$.
+Plugging $y = 1$ into~\eqref{2017a6-eq0} yields $f(x + 1) = f(x) - f(f(x) f(1))$ for any $x \in R$.
+In particular, this yields that for any $a, b \in R$,
+\[ f(a) = f(b) \implies f(a + 1) = f(b + 1). \tag{2.1}\label{2017a6-eq2-1} \]
 
-    Solution in AoPS by \textbf{BlazingMuddy} (author of this project, post \#176).
+We now prove some main results.
+Denote the set of periods of $f$ by
+\[ I_f := \{c \in R : \forall x \in R, f(x + c) = f(x)\}. \tag{2.2}\label{2017a6-eq2-2} \]
+In general, if $I$ is a double-sided ideal contained in $I_f$, then we obtain an induced function $\tilde{f} : R/I \to R/I$ defined by
+\[ \tilde{f}(x + I) = f(x) + I \quad \forall x \in R. \]
+Then one can check by hand that $\tilde{f}$ is in fact a good function.
+Furthermore, for any $c \in R$, we have $c + I \in I_{\tilde{f}}$ if and only if $c \in I_f$.
+This means that $\tilde{f}$ potentially has one additional nice properties compared to $f$.
+It would be nice if $I_f$ is already a double-sided ideal.
+The following theorem says that it is indeed the case.
 
-\end{itemize}
-
-The two references prove Theorem~\ref{2017a6-2} and Theorem~\ref{2017a6-3}, respectively.
-Here, we build up the necessary theory of good functions and use it to prove all three main results.
-Our proof of Theorem~\ref{2017a6-2} and Theorem~\ref{2017a6-3} uses this theory to simplify some arguments.
-
-First, it is clear that $x \mapsto 1 - x$ is a good function.
-For any good function $f : R \to R$ and $a \in Z(R)$ such that $a^2 = 1$, it can be checked that $x \mapsto a f(x)$ is also a good function.
-To prove the easy direction of Theorem~\ref{2017a6-1}, it remains to show:
-
-\begin{lemma}\label{2017a6-good-hom}
-Let $\phi : R \to S$ is a ring homomorphism and $\iota : S \to R$ be a group homomorphism with $\phi \circ \iota = \id_S$.
-For any $f : S \to S$, the function $\iota \circ f \circ \phi$ is good iff $f$ is good.
-\end{lemma}
+\begin{theorem}\label{2017a6-s2-period-quot}
+The set $I_f$ is in fact a double-sided ideal.
+The induced function from $R/I_f$ to itself defined by $[x] \mapsto [f(x)]$ is good with no non-zero period.
+\end{theorem}
 \begin{proof}
-Since $\phi \circ \iota = \id_S$, we know that $\iota$ is injective and $\phi$ is surjective.
-Thus, $\iota \circ f \circ \phi$ is good iff
-\begin{align*}
-    &\forall x, y \in R, \; \iota(f(f(\phi(x)) f(\phi(y)))) + \iota(f(\phi(x) + \phi(y))) = \iota(f(\phi(x) \phi(y))) \\
-    \iff& \forall x, y \in R, \; f(f(\phi(x)) f(\phi(y))) + f(\phi(x) + \phi(y)) = f(\phi(x) \phi(y)) \\
-    \iff& \forall x, y \in S, \; f(f(x) f(y)) + f(x + y) = f(xy),
-\end{align*}
-    iff $f$ is good.
-\end{proof}
-
-In all three main results, it remains to do the harder direction.
-We start with the following big observation.
-
-\begin{lemma}\label{2017a6-period-quot}
-The period set $I = \{c \in R : \forall x \in R, f(x + c) = f(x)\}$ is a double-sided ideal.
-The induced function $\tilde{f} : R/I \to R/I$ defined by $[x] \mapsto [f(x)]$ is good with no non-zero period.
-\end{lemma}
-\begin{proof}
-Fix any $c \in I$.
+By the previous discussion, it only remains to prove that $I_f$ is a double-sided ideal.
+Clearly $I_f$ is closed under addition and additive inverse.
+Now fix any $c \in I_f$.
 Comparing~\eqref{2017a6-eq0} using $y = c$ and $y = 0$ gives $f(xc) = f(0)$ for all $x \in R$.
 Then replacing $y$ with $yc$ yields
 \[ f(x) + f(f(x) f(0)) = f(0) = f(xyc) = f(x + yc) + f(f(x) f(yc)) = f(x + yc) + f(f(x) f(0)), \]
     so $f(x + yc) = f(x)$ for all $x, y \in R$.
-That is, $yc \in I$ for any $y \in R$.
-Similarly, we also get $cy \in I$ for any $y \in R$.
-
-Since $I$ is a double-sided ideal, there is an induced function $\tilde{f} : R/I \to R/I$ such that $\tilde{f}([x]) = [f(x)]$ for any $x \in R$.
-Here, $[x]$ denotes the projection of $x \in R$ to $R/I$.
-Now it is easy to check that $\tilde{f}$ is good.
-
-Finally, we check that $\tilde{f}$ has no non-zero period.
-For any $x, y \in R$, if $[f(x)] = [f(y)]$, then we get
-\[ f(0) - f(x) = f(f(0) f(x)) = f(f(0) f(y)) = f(0) - f(y) \implies f(x) = f(y). \]
-Now for any period $c \in R/I$, lift it arbitrarily to $\tilde{c} \in R$.
-Then $\tilde{f}([x] + c) = \tilde{f}([x]) \iff f(x + \tilde{c}) = f(x)$ for any $x \in R$.
-The latter yields $\tilde{c} \in I$ and thus $c = 0$.
+That is, $yc \in I_f$ for any $y \in R$.
+Similarly, we also get $cy \in I_f$ for any $y \in R$.
+This shows that $I_f$ is a double-sided ideal.
 \end{proof}
 
-From now on, we say that $f : R \to R$ is \emph{reduced good} if $f$ is good and has no non-zero periods.
-The above lemma means that in order to study good functions, we should study the reduced good ones.
-We continue with easier observations.
+We can now show that $f(1) = 0$.
+More generally, we prove:
 
-First, plugging $x = y = 0$ into~\eqref{2017a6-eq0} yields $f(f(0)^2) = 0$.
-Next, we prove:
-
-\begin{lemma}\label{2017a6-map-eq-add-one-and-neg}
-For any $a, b \in R$, if $f(a) = f(b)$, then $f(a + 1) = f(b + 1)$ and $f(-a) = f(-b)$.
-\end{lemma}
+\begin{theorem}\label{2017a6-s2-preimage-zero}
+For any $C \in R$, if $f(C) = 0$, then $C \equiv 1 \pmod{I_f}$.
+\end{theorem}
 \begin{proof}
-Plugging $y = 1$ into~\eqref{2017a6-eq0} yields $f(x + 1) = f(x) - f(f(x) f(1))$ for any $x \in R$.
-This clearly implies $f(a + 1) = f(b + 1)$.
-Next, plugging $y = -1$ into~\eqref{2017a6-eq0} yields $f(-x) = f(x - 1) - f(f(x) f(-1))$ for any $x \in R$.
-Since $f(a) = f(b)$ and $f(a + 1) = f(b + 1)$, we get $f(-(a + 1)) = f(-(b + 1))$.
-Repeating the previous process once gives $f(-a) = f(-b)$.
-\end{proof}
-
-\begin{lemma}\label{2017a6-reduced-good-map-eq-zero}
-If $f$ is reduced good, then $f(C) = 0 \iff C = 1$.
-\end{lemma}
-\begin{proof}
-Since $f^{-1}(0)$ is non-empty, it suffices to show that for any $C \in R$, $f(C) = 0$ implies $C = 1$.
-We start with $f(Cx) = f(0) + f(C + x)$ for all $x \in R$, obtained from~\eqref{2017a6-eq0}.
+From~\eqref{2017a6-eq0}, we have $f(Cx) = f(0) + f(C + x)$ for all $x \in R$.
 Then we get $f(C + 1) = -f(0)$ and $f(-C^2) = 2 f(0)$.
 Plugging $x = 0$ and $y = -C^2$ into~\eqref{2017a6-eq0} yields $f(2 f(0)^2) = -f(0)$.
-By Lemma~\ref{2017a6-map-eq-add-one-and-neg}, since $f(C) = f(f(0)^2) = 0$, we get $f(2C) = -f(0)$.
 
-Now plugging $x = y = C$ into~\eqref{2017a6-eq0} yields $f(C^2) = 0$.
+On the other hand, note that $f(C) = f(f(0)^2) = 0$.
+Applying~\eqref{2017a6-eq2-1} twice yields $f(C + 2) = f(f(0)^2 + 2)$.
+Now plug in~\eqref{2017a6-eq0} with $y = 2$ and with $x = C$ vs. $x = f(0)^2$.
+This yields $f(2C) = f(2 f(0)^2) = -f(0)$.
+
+Plugging $x = y = C$ into~\eqref{2017a6-eq0} yields $f(C^2) = 0$.
 Plugging $x = C$ and $y = C^2$ yields $f(0) + f(C^2 + C) = f(C^3)$.
 On the other hand, since $f(C) = 0$, we get $f(C^2 + C) = f(2C + 1) + f(0)$.
-Since $f(C + 1) = f(2C) = -f(0)$, Lemma~\ref{2017a6-map-eq-add-one-and-neg} gives
-\[ f(2C + 1) = f(C + 2) = f(2C) - f(0) = -2 f(0) \implies f(C^2 + C) = -f(0) \implies f(C^3) = 0. \]
+Since $f(C + 1) = f(2C) = -f(0)$,~\eqref{2017a6-eq2-1} yields
+\[ f(2C + 1) = f(C + 2) = f(2C) - f(0) = -2 f(0). \]
+By~\eqref{2017a6-eq0} with $x = C$ and $y = C + 1$, we get $f(C^2 + C) = -f(0)$.
+By~\eqref{2017a6-eq0} with $x = C$ and $y = C^2$, we get $f(C^3) = 0$.
 
 Now we are ready for the final step.
 For any $x \in R$, we write $f(C^4 x)$ in two ways, using the fact that $f(C) = f(C^2) = f(C^3) = 0$.
 \[ f(C^4 x) = f(C^2 + C^2 x) + f(0) = f(C^2 (x + 1)) + f(0) = f(C^2 + x + 1) + 2 f(0), \]
 \[ f(C^4 x) = f(C^3 + Cx) + f(0) = f(C (C^2 + x)) + f(0) = f(C^2 + x + C) + 2 f(0). \]
 Replacing $x$ with $x - C^2$ gives $f(x + C) = f(x + 1)$ for any $x \in R$.
-Since $f$ is reduced good, this forces $C = 1$, as desired.
+This proves that $C \equiv 1 \pmod{I_f}$.
 \end{proof}
 
-The proof alone implies that for any $f : R \to R$ good and $C \in f^{-1}(0)$, $C - 1$ is a period of $f$.
-In particular, $f(1) = 0$ holds and $f(0)^2 - 1$ is a period of $f$.
-Plugging $y = 1$ yields
-\[ f(x + 1) + f(0) = f(x) \quad \forall x \in R. \tag{1}\label{2017a6-eq1} \]
-For any ring $R$, let $Z(R) = \{c \in R : cx = xc \; \forall x \in R\}$ denote the centre of $R$.
+Since $f(f(0)^2) = 0$, Theorem~\ref{2017a6-s2-preimage-zero} yields $f(0)^2 \equiv 1 \pmod{I_f}$.
+Thus $f(1) = f(f(0)^2) = 0$.
+We prove some more properties that allow further reductions.
 
-\begin{lemma}\label{2017a6-good-injective}
-Let $f : R \to R$ be an injective good function.
-Then $f(0) \in Z(R)$, $f(0)^2 = 1$, and $f(x) = f(0) (1 - x)$ for any $x \in R$.
-\end{lemma}
+Plugging $y = 1$ into~\eqref{2017a6-eq0} now yields $f(x + 1) = f(x) - f(0)$ for all $x \in R$.
+Next,~\eqref{2017a6-eq0} with $y = 0$ or $x = 0$ yields
+\[ f(f(x) f(0)) = f(f(0) f(x)) = f(0) - f(x) \quad \forall x \in R. \tag{2.3}\label{2017a6-eq2-3} \]
+Replacing $x$ with $f(x) f(0)$ in~\eqref{2017a6-eq2-3} yields
+\[ f(x) = f((f(0) - f(x)) f(0)) = f(1 - f(x) f(0)) = f(-f(x) f(0)) - f(0). \]
+Thus $f(-f(x) f(0)) = f(x) + f(0) = f(x - 1)$.
+On the other hand, plugging $y = -1$ yields
+\[ f(f(x) f(-1)) + f(x) + f(0) = f(-x) \quad \forall x \in R. \]
+In particular, for any $x, y \in R$ such that $f(x) = f(y)$, we have $f(-x) = f(-y)$.
+Thus the previous equality and~\eqref{2017a6-eq2-3} yields
+\[ f(f(x) f(0)) = f(-(x - 1)) = f(1 - x). \tag{2.4}\label{2017a6-eq2-4} \]
+By~\eqref{2017a6-eq2-3}, we get
+\[ f(x) + f(-x) = 2 f(0). \tag{2.5}\label{2017a6-eq2-5} \]
+
+\begin{theorem}\label{2017a6-s2-map-zero-reduction}
+Suppose that $f : R \to R$ is good with $I_f = \{0\}$.
+Then $f(0) f(x) = f(x) f(0)$ for any $x \in R$.
+The function $g : R \to R$ defined by $g(x) = f(0) f(x)$ is good with $I_g = \{0\}$ and $g(0) = 1$.
+\end{theorem}
 \begin{proof}
-Since $f(1) = f(f(0)^2) = 0$, injectivity yields $f(0)^2 = 1$.
-For any $x \in R$, we have $f(f(0) f(x)) = f(0) - f(x)$.
-So $f(0) - f(x) \in f(R)$, and applying that to the same equation yields
-\[ f(1 - f(0) f(x)) = f(f(0) (f(0) - f(x))) = f(x) \implies 1 - f(0) f(x) = x \iff f(x) = f(0) (1 - x). \]
-Finally, note that $f(f(0) f(x)) = f(f(x) f(0)) = f(0) - f(x)$, so $f(0) f(x) = f(x) f(0)$ for any $x \in R$.
-Thus $f(1 - x) = f(0) x = x f(0)$ for any $x \in R$, proving that $f(0) \in Z(R)$.
+For the first sentence, we first substitute $(f(x) f(0), f(0) f(1 - x))$ for $(x, y)$ in~\eqref{2017a6-eq0}.
+Since $I_f = \{0\}$, we get $f(0)^2 = 1$.
+Applying~\eqref{2017a6-eq2-4} gives
+\[ f(f(1 - x) f(x)) + f(f(x) f(0) + f(0) f(1 - x)) = f(f(x) f(0)^2 f(1 - x)) = f(f(x) f(1 - x)). \]
+Now apply~\eqref{2017a6-eq0} on two of the terms:
+\[ f((1 - x) x) - f(1) + f(f(x) f(0) + f(0) f(1 - x)) = f(x (1 - x)) - f(1). \]
+Since $(1 - x)x = x(1 - x)$, we get $f(f(x) f(0) + f(0) f(1 - x)) = 0$.
+By Theorem~\ref{2017a6-s2-preimage-zero} and $I_f = \{0\}$,
+\[ f(x) f(0) + f(0) f(1 - x) = 1. \]
+By~\eqref{2017a6-eq2-5} and $f(x + 1) = f(x) - f(0)$, we get $f(1 - x) = f(0) - f(x)$.
+Since $f(0)^2 = 1$, this yields $f(0) f(1 - x) = 1 - f(0) f(x)$.
+Thus we get $f(x) f(0) = f(0) f(x)$, as desired.
+
+Now we prove the second sentence.
+Clearly $g(0) = 1$, so we just check that $g$ is good with $I_g = \{0\}$.
+Indeed, we have
+\[ g(g(x) g(y)) = f(0) f(f(0) f(x) f(0) f(y)) = f(0) f(f(x) f(y)). \]
+By~\eqref{2017a6-eq0}, $f(0) f(f(x) f(y)) = f(0) f(xy) - f(0) f(x + y) = g(xy) - g(x + y)$.
+This proves that $g$ is good.
+Finally, it is straightforward to check that $I_g = I_f = \{0\}$.
 \end{proof}
 
-\begin{lemma}\label{2017a6-reduced-good-NZD-two}
-Let $R$ be a ring such that $2$ is not a zero divisor in $R$.
+
+
+From now on, we say that a good function $f : R \to R$ is \emph{reduced good} if $I_f = \{0\}$ and $f(0) = 1$.
+By Theorem~\ref{2017a6-s2-preimage-zero}, $I_f = \{0\}$ is equivalent to saying that $f(C) = 0$ if and only if $C = 1$.
+To summarize the progress above, we have the following results:
+
+\begin{theorem}\label{2017a6-s2-good-to-reduced-good}
+Let $f : R \to R$ be a good function, and define $\tilde{f} : R/I_f \to R$ by $\tilde{f}([x]) = f(x)$ for all $x \in R$.
+Then there exists $a \in Z(R/I_f)$ with $a^2 = 1$ and a reduced good function $h : R/I_f \to R/I_f$ such that
+\begin{itemize}
+    \item   $[\tilde{f}(y)] = a h(y)$ for any $y \in R/I_f$;
+    \item   $\tilde{f}(h(x) h(y)) + \tilde{f}(x + y) = \tilde{f}(xy)$ for all $x, y \in R/I_f$.
+\end{itemize}
+\end{theorem}
+\begin{proof}
+Take $a = [f(0)] = [\tilde{f}(0)]$, which satisfies $[f(0)]^2 = 1$ by Theorem~\ref{2017a6-s2-preimage-zero}.
+The map $y \mapsto [\tilde{f}(y)]$ is good with no non-zero period by Theorem~\ref{2017a6-s2-period-quot}.
+Thus, the function $h(y) = a [\tilde{f}(y)]$ is reduced good by Theorem~\ref{2017a6-s2-map-zero-reduction}.
+It also satisfies $a h(y) = a^2 [\tilde{f}(y)] = [\tilde{f}(y)]$ for any $y \in R/I_f$.
+Finally,~\eqref{2017a6-eq0} yields that for any $x, y \in R$,
+\[ \tilde{f}([f(x) f(y)]) + \tilde{f}([x] + [y]) = \tilde{f}([x][y]). \]
+However, \[ [f(x) f(y)] = [\tilde{f}([x]) \tilde{f}([y])] = [\tilde{f}([x])] a^2 [\tilde{f}([y])]
+    = a [\tilde{f}([x])] a [\tilde{f}([y])] = h([x]) h([y]). \]
+This proves the second bullet; we are done.
+\end{proof}
+
+\begin{theorem}\label{2017a6-s2-reduced-good-prop}
 Let $f : R \to R$ be a reduced good function.
-Then $f(0) \in Z(R)$, $f(0)^2 = 1$, and $f(x) = f(0) (1 - x)$ for any $x \in R$.
-\end{lemma}
+Then $f(x + 1) = f(x) - 1$, $f(f(x)) = 1 - f(x)$, and $f(-x) = 2 - f(x)$ for any $x \in R$.
+\end{theorem}
 \begin{proof}
-By Lemma~\ref{2017a6-good-injective}, it suffices to show that $f$ is injective.
-Indeed, consider any $a, b \in R$ and suppose that $f(a) = f(b)$.
-Then $f(a)$ and $f(b)$ commute, so $f(ab) = f(ba) = f(a + b) + f(f(a) f(b))$.
-By Lemma~\ref{2017a6-map-eq-add-one-and-neg}, we get $f(-a) = f(-b)$ and $f(-ab) = f(-ba)$.
-Hence, we get
-\[ f(a - b) = f(-ab) - f(f(a) f(-b)) = f(-ba) - f(f(b) f(-a)) = f(b - a). \]
-
-It now remains to show more generally that $f(-c) = f(c)$ implies $c = 0$.
-Indeed, plugging $x = -1$ and $y = c$ into~\eqref{2017a6-eq0} yields
-\[ f(f(-1) f(c)) + f(c - 1) = f(-c) \implies f(f(-1) f(c)) + f(c) + f(0) = f(c) \implies f(f(-1) f(c) - 1) = 0. \]
-By Lemma~\ref{2017a6-reduced-good-map-eq-zero}, this yields $f(-1) f(c) = 2$.
-However, $f(-1) = f(0) + f(0) = 2 f(0)$.
-Since $2$ is not a zero divisor in $R$, we get $f(0) f(c) = 1$.
-Since $f(0)^2 = 1$, this yields $f(c) = f(0) \iff f(c + 1) = 0 \iff c = 0$.
+For the first equality, plug $y = 1$ and note that $f(1) = 0$ and $f(0) = 1$.
+The other two equalities follow from~\eqref{2017a6-eq2-3} and~\eqref{2017a6-eq2-5}.
 \end{proof}
 
-At this point, Theorem~\ref{2017a6-2} has already been proved.
-Indeed, if $F$ is a division ring, then the only double-sided ideals of $F$ are $(0)$ and $F$.
-So, the good functions on $F$ are either zero or reduced good.
-If $\rchar(F) \neq 2$, then $2$ is not a zero divisor in $F$ and $f(0)^2 = 1 \iff f(0) = \pm 1$.
+We close this section with some conjectures that, if true, proves Theorem~\ref{2017a6-s1-conj-main}.
+Ideally, we hope that the conjecture is true.
+Later, we prove these conjectures in some subcases.
 
+\begin{conjecture}\label{2017a6-s2-conj1}
+The only reduced good function over a fixed ring is $x \mapsto 1 - x$.
+\end{conjecture}
 
-
-\subsubsection*{Proof of Theorem~\ref{2017a6-1}}
-
-Again, let $I$ be the set of periods of $f$.
-We take $S = R/I$ and $\phi : R \to R/I$ to be the natural quotient map.
-From now on, for any $x \in R$, we denote $[x] = \phi(x)$.
-
-By Lemma~\ref{2017a6-period-quot}, the induced map $\tilde{f} : R/I \to R/I$ is reduced good.
-Since $2 \in R^{\times}$, it is guaranteed that $2$ is not a zero divisor in $R/I$.
-Thus, by Lemma~\ref{2017a6-reduced-good-NZD-two}, there exists $a \in Z(R/I)$ with $a^2 = 1$ such that $\tilde{f}(x) = a(1 - x)$ for any $x \in R/I$.
-Equivalently, $[f(x)] = a(1 - [x])$ for any $x \in R$.
-It remains to find the desired $\iota : S \to R$.
-
-For any $x, y \in R$, we have $[f(x) f(y)] = [a (1 - x) a (1 - y)] = [(1 - x)(1 - y)]$.
-Thus, $f(f(x) f(y)) = f((1 - x)(1 - y))$, and the original functional equation changes to
-\[ f((1 - x) (1 - y)) + f(x + y) = f(xy). \]
-We start by proving that the function $g(x) = f(1 - x)$ is a group homomorphism.
-That is, $g$ is additive.
-
-\begin{lemma}\label{2017a6-side-FE-solution}
+\begin{conjecture}\label{2017a6-s2-conj2}
 Let $R$ be a ring and $(G, +)$ be an abelian group.
-Suppose that $G$ is $2$- and $3$-torsion free.
-Let $g : R \to G$ be a function such that
-\[ g(x + y - xy) + g(1 - (x + y)) = g(1 - xy) \quad \forall x, y \in R. \tag{1.1}\label{2017a6-eq-thm1-1} \]
-Then $g$ is a group homomorphism.
-\end{lemma}
-\begin{proof}
-Plugging $x = y = 0$ yields $g(0) = 0$.
-Next, plugging $y = 1$ and replacing $x$ with $-x$ yields $g(x + 1) = g(x) + g(1)$.
-By induction on $n \in \N$, we get
-\[ g(x + n) = g(x) + n g(1) \quad \forall x \in R, n \in \N. \tag{1.2}\label{2017a6-eq-thm1-2} \]
-Plugging $y = 0$ and then using~\eqref{2017a6-eq-thm1-2} yields
-\[ g(-x) = -g(x) \quad \forall x \in R. \tag{1.3}\label{2017a6-eq-thm1-3} \]
-After some rearrangement,~\eqref{2017a6-eq-thm1-1} now yields
-\[ g((x + 1)(y + 1)) = g(xy) + g(x + y) + g(1) \quad \forall x, y \in R. \]
-By induction on $n \in \N$,
-\[ g((x + n)(y + n)) = g(xy) + n g(x + y) + n^2 g(1) \quad \forall x, y \in R, n \in \N. \tag{1.4}\label{2017a6-eq-thm1-4} \]
-Plugging $y = 0$ and replacing $x$ with $x - n$ yields
-\[ g(nx) = n g(x) \quad \forall x \in R, n \in \N. \tag{1.5}\label{2017a6-eq-thm1-5} \]
+Let $f : R \to G$ be a function such that for any $x, y \in R$,
+\[ f((1 - x)(1 - y)) + f(x + y) = f(xy). \]
+Then the function $g(x) = f(1 - x)$ is additive, i.e. a group homomorphism.
+\end{conjecture}
 
-Now consider that by~\eqref{2017a6-eq-thm1-4}, for any $x, y \in R$,
-\[ g((x + 2)(2y + 2)) = g(2xy) + 2 g(x + 2y) + 4 g(1). \]
-Since $G$ is $2$-torsion free, we get
-\[ g((x + 2)(y + 1)) = g(xy) + g(x + 2y) + 2 g(1). \]
-Similarly, for any $x, y \in R$,
-\[ g((x + 1)(y + 2)) = g(xy) + g(2x + y) + 2 g(1). \]
-Combining the two, it can be shown that
-\[ g((x + 3)(y + 3)) = g(xy) + g(x + 2y) + g(2x + y) + 9 g(1). \]
-Then~\eqref{2017a6-eq-thm1-4} yields
-\[ g(x + 2y) + g(2x + y) = 3 g(x + y) \quad \forall x, y \in R. \]
-Replace $x$ and $y$ with $2x - y$ and $2y - x$, and we get
-\[ 3 (g(x) + g(y)) = 3 g(x + y). \]
-Finally, we are done, since $G$ is $3$-torsion free.
+We now see why these conjectures imply the desired result.
+
+\begin{theorem}
+Conjecture~\ref{2017a6-s2-conj1} and Conjecture~\ref{2017a6-s2-conj2} implies Conjecture~\ref{2017a6-s1-conj-main}.
+\end{theorem}
+\begin{proof}
+Let $f$ be a good function.
+Let $\tilde{f}$, $a$, and $h$ be as in Theorem~\ref{2017a6-s2-good-to-reduced-good}.
+We get the desired $a$, and we can take $I = I_f$.
+So, it remains to find $\iota$ and the formula for $f$ in terms of $\iota$ and $a$.
+
+Conjecture~\ref{2017a6-s2-conj1} yields $h(x) = 1 - x$ for all $x \in R$.
+Then Conjecture~\ref{2017a6-s2-conj2} would imply that $x \mapsto \tilde{f}(1 - x)$ is a group homomorphism.
+So we can write $\tilde{f}(x) = \iota'(1 - x)$ for some group homomorphism $\iota' : R/I_f \to R$.
+Then we get the formula
+\[ f(x) = \tilde{f}([x]) = \iota'(1 - [x]). \]
+
+Now take $\iota(x) = \iota'(ax)$.
+Then $a^2 = 1$ yields $\iota'(x) = \iota(ax)$ and $f(x) = \iota(a(1 - [x]))$ for all $x \in R$.
+Finally, recall from Theorem~\ref{2017a6-s2-good-to-reduced-good} that $[\tilde{f}(x)] = a h(x) = a(1 - x)$ for all $x \in R/I_f$.
+Thus we get
+\[ [\iota(x)] = [\iota'(ax)] = [\tilde{f}(1 - ax)] = [a(1 - (1 - ax))] = [a^2 x] = [x]. \]
+This proves the theorem.
 \end{proof}
 
-Now, the function $x \mapsto g(f(0) x)$ is a group homomorphism.
-One can check that the kernel contains $I$ since $g(0) = 0$.
-Thus there is an induced group homomorphism $\iota : S \to R$ with $\iota([x]) = g(f(0) x) = f(1 - f(0) x)$ for all $x \in R$.
-We claim that this $\iota$ indeed works.
-
-We first verify the form $f$ takes.
-We have $[f(0)] = \tilde{f}(0) = a$.
-Since $f(0)^2 - 1 \in I$, for any $x \in R$, we have
-\[ \iota(a(1 - [x])) = f(1 - f(0) \cdot f(0) (1 - x)) = f(1 - (1 - x)) = f(x). \]
-Finally, we check that $\phi \circ \iota = \id_S$.
-Indeed, for any $x \in R$,
-\[ [\iota([x])] = [f(1 - f(0) x)] = a(1 - [1 - f(0) x]) = a [f(0) x] = a^2 [x] = [x]. \]
-This proves Theorem~\ref{2017a6-1}.
 
 
 
-\subsubsection*{Proof of Theorem~\ref{2017a6-3}}
 
-Let $F$ be a field of characteristic $2$.
-As argued before, the good functions on $F$ are either zero or reduced good.
-By Lemma~\ref{2017a6-good-injective}, it then suffices to show that reduced good functions over $F$ are injective.
+\section{Progress towards Conjecture~\ref{2017a6-s2-conj1}}
 
-Let $f : F \to F$ be a reduced good function.
-Fix some $a, b \in F$ such that $f(a) = f(b)$.
-By Lemma~\ref{2017a6-map-eq-add-one-and-neg}, we get $f(a + 1) = f(b + 1)$.
-By Lemma~\ref{2017a6-reduced-good-map-eq-zero}, we have $a = 0 \iff b = 0$.
-The remaining case is when $a$ and $b$ are non-zero.
+In this section, we solve Conjecture~\ref{2017a6-s2-conj1} partially.
+That is, we characterize reduced good functions.
+We take the three equations from Theorem~\ref{2017a6-s2-reduced-good-prop}.
+Here we are also able to prove Theorem~\ref{2017a6-s1-simple-ring-char-ne-two} and Theorem~\ref{2017a6-s1-field-char-two}.
 
-We start with the following observation.
+\begin{theorem}\label{2017a6-s3-main1}
+Let $R$ be a ring such that $2$ is not a zero divisor in $R$.
+Then the only reduced good functions over $R$ is $x \mapsto 1 - x$.
+\end{theorem}
+\begin{proof}
+From $f(f(x)) = 1 - f(x)$, we have $f(f(f(x))) = f(x)$ for all $x \in R$.
+From the two equalities, it remains to show that $f$ is injective.
+
+Let $a, b \in R$ such that $f(a) = f(b)$.
+Then $f(f(a) f(b)) = f(f(b) f(a))$, so~\eqref{2017a6-eq0} yields $f(ab) = f(ba)$.
+Next, $f(-a) = 2 - f(a) = 2 - f(b) = f(-b)$, so $f(f(-a) f(b)) = f(f(-b) f(a))$.
+Then~\eqref{2017a6-eq0} yields $f(-ab) - f(b - a) = f(-ba) - f(a - b)$.
+But we've seen that $f(ab) = f(ba)$, so $f(-ab) = f(-ba)$ and thus $f(b - a) = f(a - b)$.
+By the equation $f(-x) = 2 - f(x)$, we get $2 f(a - b) = 2$.
+Since $2$ is not a zero divisor in $R$, this yields
+\[ f(a - b) = 1 \implies f(a - b + 1) = 1 - 1 = 0 \implies a - b + 1 = 1 \implies a = b. \]
+This proves that $f$ is injective; we are done.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{2017a6-s1-simple-ring-char-ne-two}]
+Let $R$ be a simple ring with $\rchar(R) \neq 2$, and let $f : R \to R$ be a good function.
+The only two-sided ideals of $R$ are $\{0\}$ and $R$, so $I_f \in \{\{0\}, R\}$.
+If $I_f = R$, then clearly $f \equiv 0$.
+So now, assume that $I_f = \{0\}$.
+
+By Theorem~\ref{2017a6-s2-map-zero-reduction}, $f(0)$ commutes with $f(x)$ for all $x \in R$.
+Also, the function $x \mapsto f(0) f(x)$ is reduced good.
+Then Theorem~\ref{2017a6-s3-main1} implies that $f(0) f(x) = 1 - x$ for all $x \in R$.
+Since Theorem~\ref{2017a6-s2-preimage-zero} implies $f(0)^2 = 1$, we get $f(x) = f(0)(1 - x)$ for all $x \in R$.
+In particular, $f$ is bijetive and $f(0) \in Z(R)$.
+Since $R$ is simple, this and $f(0)^2 = 1$ yields $f(0) = \pm 1$.
+We are done.
+\end{proof}
+
+To prove Theorem~\ref{2017a6-s1-field-char-two}, we focus on what happens with the units of $R$.
+
+\begin{theorem}\label{2017a6-s3-main2}
+Let $R$ be an integral domain of characteristic $2$ and $f : R \to R$ be a reduced good function.
+Then $f(x) = x + 1$ for any $x \in R^{\times}$.
+\end{theorem}
+\begin{proof}
+First note that if $x \in R^{\times}$, then
+\[ f(f(x + 1) f(x^{-1} + 1)) = f((x + 1)(x^{-1} + 1)) - f(x + x^{-1} + 2) = 0 \iff f(x + 1) f(x^{-1} + 1) = 1. \]
+Similarly $f(x^{-1} + 1) f(x + 1) = 1$.
+Thus $f(x + 1) \in R^{\times}$ as well and $f(x^{-1} + 1) = f(x + 1)^{-1}$.
+Notice that $f(f(x + 1)) = 1 - f(x + 1) = f(-x)$ and both $f(x + 1)$ and $-x$ are units of $R$.
+It remains to show the following: if $a, b \in R^{\times}$ and $f(a) = f(b)$, then $a = b$.
+
 Consider~\eqref{2017a6-eq0} with $(x, y) = (a + 1, b^{-1} + 1)$.
-Since $f(a + 1) = f(b + 1)$, applying~\eqref{2017a6-eq1} yields
-\[ f((a + 1)(b^{-1} + 1)) = f((a + 1) + (b^{-1} + 1)) \implies f(ab^{-1} + a + b^{-1} + 1) = f(a + b^{-1}). \]
-Then, by~\eqref{2017a6-map-eq-add-one-and-neg}, we get
-\[ f(ab^{-1} + a + b^{-1}) = f(1 + a + b^{-1}). \]
-By symmetry, we have
-\[ f(ba^{-1} + b + a^{-1}) = f(1 + b + a^{-1}). \]
+Since $f(a + 1) = f(b + 1)$, we get
+\begin{align*}
+    f((a + 1)(b^{-1} + 1)) &= f((a + 1) + (b^{-1} + 1)) \\
+    f(ab^{-1} + a + b^{-1} + 1) &= f(a + b^{-1}) \\
+    f(ab^{-1} + a + b^{-1}) &= f(1 + a + b^{-1})
+\end{align*}
 Now notice the identity
 \[ (1 + a + b^{-1})(1 + b + a^{-1}) = (ab^{-1} + a + b^{-1})(ba^{-1} + b + a^{-1}). \]
 As a result, by plugging the appropriate values into~\eqref{2017a6-eq0}, we get
@@ -295,18 +337,116 @@ Letting $C = a + b + 1$ and $D = a^{-1} + b^{-1} + 1$, the above equation is equ
 \[ f(C + D) = f(CD + 1) = f(CD) + 1. \]
 But then plugging $(x, y) = (C, D)$ into~\eqref{2017a6-eq0} yields
 \[ f(f(C) f(D)) = 1 \iff f(C) f(D) = 0 \iff f(C) = 0 \vee f(D) = 0 \iff C = 1 \vee D = 1. \]
-By definition of $C$ and $D$, and by $\rchar(F) = 2$, this is equivalent to
+By definition of $C$ and $D$, and by $\rchar(R) = 2$, this is equivalent to
 \[ a + b + 1 = 1 \vee a^{-1} + b^{-1} + 1 = 1 \iff a = b \vee a^{-1} = b^{-1}. \]
 But $a^{-1} = b^{-1}$ yields $a = b$.
 So, regardless, we have obtained $a = b$.
 This proves that $f$ is injective.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{2017a6-s1-field-char-two}]
+Let $F$ be a field of characteristic $2$ and $f : F \to F$ be a good function.
+Then $I_f \in \{\{0\}, F\}$, and $I_f = F$ yields $f \equiv 0$.
+Otherwise, if $I_f = \{0\}$, then $f(0)^2 = 1 \iff f(0) = \pm 1$.
+Since $\rchar(F) = 2$, this gives $f(0) = 1$, so $f$ is reduced good.
+By Theorem~\ref{2017a6-s3-main2}, $f(x) = x + 1$ for all $x \neq 0$.
+Since $f(0) = 1$, we get $f(x) = x + 1$ for all $x \in F$, as desired.
+\end{proof}
 
 
 
 
 
-\subsection*{Further directions}
+\section{Progress towards Conjecture~\ref{2017a6-s2-conj2}}
 
-It seems that the above proof of Theorem~\ref{2017a6-3} can be generalized a bit, to the case where $F$ is a commutative local ring of characteristic $2$.
-Check if the characteristic assumption can be lifted to residue characteristic (i.e. only that $R/\mathfrak{m}$ has characteristic $2$).
-While hard, you might also want to check if commutativity is needed.
+Here we write down some progress towards proving Conjecture~\ref{2017a6-s2-conj2}.
+This, along with Theorem~\ref{2017a6-s3-main1}, proves Theorem~\ref{2017a6-s1-general}.
+
+\begin{theorem}\label{2017a6-s4-main}
+Let $R$ be a ring and $(G, +)$ be an abelian group.
+Let $f : R \to G$ be a function such that for any $x, y \in R$,
+\[ f((1 - x)(1 - y)) + f(x + y) = f(xy). \]
+Then $h(x) = 6 f(1 - x)$ is a group homomorphism.
+\end{theorem}
+\begin{proof}
+Plugging $x = y = 0$ yields $g(0) = 0$.
+Next, plugging $y = 1$ and replacing $x$ with $-x$ yields $g(x + 1) = g(x) + g(1)$.
+By induction on $n \in \N$, we get
+\[ g(x + n) = g(x) + n g(1) \quad \forall x \in R, n \in \N. \tag{4.1}\label{2017a6-s4-main-eq1} \]
+Plugging $y = 0$ and then using~\eqref{2017a6-s4-main-eq1} yields
+\[ g(-x) = -g(x) \quad \forall x \in R. \tag{4.2}\label{2017a6-s4-main-eq2} \]
+After some rearrangement,~\eqref{2017a6-s4-main-eq1} now yields
+\[ g((x + 1)(y + 1)) = g(xy) + g(x + y) + g(1) \quad \forall x, y \in R. \]
+By induction on $n \in \N$,
+\[ g((x + n)(y + n)) = g(xy) + n g(x + y) + n^2 g(1) \quad \forall x, y \in R, n \in \N. \tag{4.3}\label{2017a6-s4-main-eq3} \]
+Plugging $y = 0$ and replacing $x$ with $x - n$ yields
+\[ g(nx) = n g(x) \quad \forall x \in R, n \in \N. \tag{4.4}\label{2017a6-s4-main-eq4} \]
+
+Now consider that by~\eqref{2017a6-s4-main-eq3}, for any $x, y \in R$,
+\begin{align*}
+    g((x + 2)(2y + 2)) &= g(2xy) + 2 g(x + 2y) + 4 g(1) \\
+    2 g((x + 2)(y + 1)) &= 2 (g(xy) + g(x + 2y) + 2 g(1)).
+\end{align*}
+Similarly, for any $x, y \in R$,
+\[ 2 g((x + 1)(y + 2)) = 2 (g(xy) + g(2x + y) + 2 g(1)). \]
+Combining the two, it can be shown that
+\[ 2 g((x + 3)(y + 3)) = 2 (g(xy) + g(x + 2y) + g(2x + y) + 9 g(1)). \]
+Then~\eqref{2017a6-s4-main-eq3} yields
+\[ 2 (g(x + 2y) + g(2x + y)) = 6 g(x + y) \quad \forall x, y \in R. \]
+Replace $x$ and $y$ with $2x - y$ and $2y - x$, and we get
+\[ 6 (g(x) + g(y)) = 6 g(x + y). \]
+Since $h(x) = 6 f(1 - x) = 6 g(x)$ for all $x \in R$, we get the desired result.
+\end{proof}
+
+\begin{corollary}\label{2017a6-s4-23-nzd}
+Let $R$ be a ring such that $2$ and $3$ are not zero divisors of $R$ and let $(G, +)$ be an abelian group.
+Let $f : R \to G$ be a function such that for any $x, y \in R$,
+\[ f((1 - x)(1 - y)) + f(x + y) = f(xy). \]
+Then $g(x) = f(1 - x)$ is a group homomorphism.
+\end{corollary}
+
+\begin{proof}[Proof of Theorem~\ref{2017a6-s1-general}]
+Let $R$ be a ring, and first assume only that $2$ is a unit.
+Then $2$ is not a zero divisor in $R/I_f$ no matter what the ideal $I_f$ is.
+By Theorem~\ref{2017a6-s3-main1}, the only reduced good function over $R$ is $x \mapsto 1 - x$.
+By Theorem~\ref{2017a6-s2-good-to-reduced-good}, there exists $a \in Z(R/I_f)$ with $a^2 = 1$ such that
+\begin{itemize}
+    \item   $[\tilde{f}(y)] = a(1 - y)$ for any $y \in R/I_f$;
+    \item   $\tilde{f}((1 - x)(1 - y)) + \tilde{f}(x + y) = \tilde{f}(xy)$ for any $x, y \in R/I_f$.
+\end{itemize}
+
+Now assume that $3$ is not a zero divisor in $R$.
+Then by the above corollary, the map $\iota' : R/I_f \to R$ defined by $\iota'(x) = \tilde{f}(1 - x)$ is a group homomorphism.
+By direct computation, $[\iota'(y)] = ay$ for all $y \in R/I_f$.
+Setting $\iota(y) = \iota'(ay)$. we get that $\iota$ is a homomorphism of additive group and $[\iota(y)] = y$ for all $y \in R/I_f$.
+Finally, we compute and get $f(x) = \tilde{f}([x]) = \iota'(1 - [x]) = \iota(a(1 - [x]))$ for all $x \in R$.
+\end{proof}
+
+
+
+
+
+\section*{Further directions}
+
+The set of functions $f : R \to G$ satisfying $f((1 - x)(1 - y)) + f(x + y) = f(xy)$ is a group under addition, say $H(R, G)$.
+It contains $\Hom(R, G)$, so let's consider $H_0(R, G) = H(R, G)/\Hom(R, G)$.
+If $R$ surjects to $S$, then $H(S, G)$ injects to $H(R, G)$ and $H_0(S, G)$ injects to $H_0(R, G)$.
+That means if you want to show that $H_0(R, G) = 1$ for all $R$ and $G$, it suffices to consider the case where $R$ is a free $\Z$-algebra.
+
+Suppose that $R = \Z \langle \Sigma \rangle$ for some set $\Sigma$.
+Then $H_0(R, G)$ is isomorphic to a subset of $H(R, G)$ consisting of the functions $f$ taking value zero on the monomials.
+We proved a result saying that $H_0(R, G)$ is $6$-torsion in general.
+Thus we can split it into the $2$-torsion part $H_{0, 2}(R, G)$ and the $3$-torsion part $H_{0, 3}(R, G)$.
+Back to the monomial case, the functions in $H_{0, k}(R, G)$ are $k$-torsion for $k = 2, 3$.
+Thus we can assume that $G$ is an $\F_k$-vector space.
+Furthermore, we can quotient down $R$ and assume that $R$ is a free $\F_3$-algebra for $k = 3$.
+
+If $R = R' \oplus M$ for some $R$-module $M$ (multiplication on $M$ is defined by $m_1 m_2 = 0$), then one can show that $H_0(R, G) = H_0(R', G)$.
+If $R = R_1 \times R_2$, then $H_0(R, G) \cong H_0(R_1, G) \times H_0(R_2, G)$.
+I think this also generalizes to infinite product.
+
+One possible way to approach the problem: "find a triangle".
+That is, for any $a_1, a_2, a_3 \in R$, find $x_1, x_2, x_3, y_1, y_2, y_3 \in R$ such that:
+\[ a_i = x_i y_i = (x_{i + 1} + 1)(y_{i + 1} + 1) - 1, \quad \forall i \leq 3. \]
+Well, this notation assumes $\rchar(R) = 2$, I think.
+But this should be adaptable to deal with the characteristic $3$ case.

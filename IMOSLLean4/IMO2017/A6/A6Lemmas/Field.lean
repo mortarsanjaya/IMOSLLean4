@@ -26,7 +26,7 @@ theorem DivRing_inv_formula {c : F} (h : c ≠ 0) : f (f (c + 1) * f (c⁻¹ + 1
     mul_add_one c, mul_inv_cancel₀ h, add_comm 1]
 
 /-- Good functions on division rings: either `0` or reduced -/
-theorem DivRing_zero_or_reduced : f = (λ _ ↦ 0) ∨ ReducedGood f := by
+theorem DivRing_zero_or_reduced : f = (λ _ ↦ 0) ∨ NonperiodicGood f := by
   apply (em (∃ c, c ≠ 0 ∧ f (c + 1) = 0)).imp
   -- Case 1: `f(c + 1) = 0` for some `c ≠ 0`
   · rintro ⟨c, h, h0⟩
@@ -40,5 +40,5 @@ theorem DivRing_zero_or_reduced : f = (λ _ ↦ 0) ∨ ReducedGood f := by
 
 omit hf in
 /-- The `↔` version of `DivRing_zero_or_reduced` -/
-theorem DivRing_iff_zero_or_reduced : good f ↔ (f = λ _ ↦ 0) ∨ ReducedGood f :=
-  ⟨DivRing_zero_or_reduced, λ h ↦ h.elim (λ hf ↦ hf ▸ zero_is_good) ReducedGood.is_good⟩
+theorem DivRing_iff_zero_or_reduced : good f ↔ (f = λ _ ↦ 0) ∨ NonperiodicGood f :=
+  ⟨DivRing_zero_or_reduced, λ h ↦ h.elim (λ hf ↦ hf ▸ zero_is_good) NonperiodicGood.is_good⟩
