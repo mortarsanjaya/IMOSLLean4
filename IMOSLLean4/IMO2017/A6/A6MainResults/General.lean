@@ -30,41 +30,41 @@ open scoped nonZeroDivisors
 
 /-! ### Results on the quotient map by period -/
 
-namespace good
+section
 
-variable [Ring R] [Invertible (2 : R)] {f : R → R} (hf : good f)
-include hf
+variable [Ring R] [Invertible (2 : R)] [FunLike F R R] [GoodFunClass F R] (f : F)
 
-private local instance : Invertible (2 : hf.toRingCon.Quotient) :=
+private local instance : Invertible (2 : (toRingCon f).Quotient) :=
   ⟨(⅟2 : R), congrArg _ (invOf_mul_self _), congrArg _ (mul_invOf_self _)⟩
 
-private lemma toQuotient_NZD2 : 2 ∈ hf.toRingCon.Quotient⁰ := λ x h ↦ by
+private lemma toQuotient_NZD2 : 2 ∈ (toRingCon f).Quotient⁰ := λ x h ↦ by
   rw [← mul_invOf_cancel_right x 2, h, zero_mul]
 
-lemma InvertibleTwo_quotient_map_zero_mul_self : (f 0 : hf.toRingCon.Quotient) * f 0 = 1 :=
-  hf.toQuotientMap_NonperiodicGood.NZD2_map_zero_mul_self hf.toQuotient_NZD2
+lemma InvertibleTwo_quotient_map_zero_mul_self :
+    (f 0 : (toRingCon f).Quotient) * f 0 = 1 :=
+  NZD2_map_zero_mul_self (toQuotient_NZD2 f) (toQuotientMap f)
 
-lemma InvertibleTwo_quotient_eq (x) : (f x : hf.toRingCon.Quotient) = f 0 * (1 - x) :=
-  hf.toQuotientMap_NonperiodicGood.NZD2_solution hf.toQuotient_NZD2 x
+lemma InvertibleTwo_quotient_eq (x) : (f x : (toRingCon f).Quotient) = f 0 * (1 - x) :=
+  NZD2_solution (toQuotient_NZD2 f) (toQuotientMap f) x
 
 lemma InvertibleTwo_quotient_map_zero_comm (x) :
-    (f 0 : hf.toRingCon.Quotient) * x = x * f 0 :=
-  hf.toQuotientMap_NonperiodicGood.NZD2_map_zero_comm hf.toQuotient_NZD2 x
+    (f 0 : (toRingCon f).Quotient) * x = x * f 0 :=
+  NZD2_map_zero_comm (toQuotient_NZD2 f) (toQuotientMap f) x
 
 lemma InvertibleTwo_altFE' (x y : R) : f ((1 - x) * (1 - y)) + f (x + y) = f (x * y) := by
-  rw [← hf x, add_left_inj]
-  apply hf.apply_eq_of_toRingQuot_eq
-  have h := hf.InvertibleTwo_quotient_eq
-  rw [RingCon.coe_mul, RingCon.coe_mul, h, h y, hf.InvertibleTwo_quotient_map_zero_comm,
-    mul_assoc, ← mul_assoc (f 0 : hf.toRingCon.Quotient), RingCon.coe_sub, RingCon.coe_sub,
-    hf.InvertibleTwo_quotient_map_zero_mul_self, one_mul, RingCon.coe_one]
+  rw [← good_def f x, add_left_inj]
+  apply apply_eq_of_toRingQuot_eq
+  have h := InvertibleTwo_quotient_eq f
+  rw [RingCon.coe_mul, RingCon.coe_mul, h, h y, InvertibleTwo_quotient_map_zero_comm,
+    mul_assoc, ← mul_assoc (f 0 : (toRingCon f).Quotient), RingCon.coe_sub, RingCon.coe_sub,
+    InvertibleTwo_quotient_map_zero_mul_self, one_mul, RingCon.coe_one]
 
 lemma InvertibleTwo_altFE :
-    ∀ x y, hf.toPartialQuotientMap ((1 - x) * (1 - y))
-      + hf.toPartialQuotientMap (x + y) = hf.toPartialQuotientMap (x * y) :=
-  Quotient.ind₂ hf.InvertibleTwo_altFE'
+    ∀ x y, toPartialQuotientMap f ((1 - x) * (1 - y))
+      + toPartialQuotientMap f (x + y) = toPartialQuotientMap f (x * y) :=
+  Quotient.ind₂ (InvertibleTwo_altFE' f)
 
-end good
+end
 
 
 
@@ -154,28 +154,29 @@ theorem altFE_solution [Ring R] [AddCommGroup G]
 
 open Function
 
-theorem general_good_iff {R : Type u} [Ring R] [Invertible (2 : R)] (hR : 3 ∈ R⁰) {f : R → R} :
-    good f ↔ ∃ (S : Type u) (_ : Ring S) (φ : R →+* S) (ι : S →+ R) (_ : LeftInverse φ ι)
-      (a : S) (_ : a * a = 1) (_ : ∀ x, a * x = x * a), f = λ x ↦ ι (a * (1 - φ x)) :=
-  ⟨λ hf ↦ by
-    obtain ⟨ι, h0⟩ : ∃ ι : hf.toRingCon.Quotient →+ R,
-        ι = λ x ↦ hf.toPartialQuotientMap (1 - x) := by
-      refine altFE_solution ?_ ?_ hf.InvertibleTwo_altFE
+theorem general_good_iff [Ring R] [Invertible (2 : R)] (hR : 3 ∈ R⁰) {f : R → R} :
+    good f ↔ ∃ (rc : RingCon R) (ι : rc.Quotient →+ R) (_ : LeftInverse rc.toQuotient ι)
+      (a : {a : rc.Quotient // a * a = 1 ∧ ∀ x, a * x = x * a}),
+      f = λ x ↦ ι (a * (1 - rc.toQuotient x)) := by
+  refine ⟨?_, ?_⟩
+  · rintro ⟨f, rfl⟩
+    obtain ⟨ι, h0⟩ : ∃ ι : (toRingCon f).Quotient →+ R,
+        (ι : _ → R) = λ x ↦ toPartialQuotientMap f (1 - x) := by
+      refine altFE_solution ?_ ?_ (InvertibleTwo_altFE f)
       · intro x y h; rw [two_nsmul, ← two_mul, two_nsmul, ← two_mul] at h
         exact (mul_left_inj_of_invertible 2).mp h
       · intro x y h; rw [nsmul_eq_mul', nsmul_eq_mul', Nat.cast_ofNat] at h
         exact (mul_cancel_right_mem_nonZeroDivisors hR).mp h
-    have h1 := hf.InvertibleTwo_quotient_map_zero_mul_self
-    refine ⟨hf.toRingCon.Quotient, hf.toRingCon.instRingQuotient,
-      hf.toRingCon.mk', ι.comp (AddMonoidHom.mulLeft (f 0)), ?_, f 0,
-      h1, hf.InvertibleTwo_quotient_map_zero_comm, funext λ x ↦ ?_⟩
+    have h1 := InvertibleTwo_quotient_map_zero_mul_self f
+    refine ⟨toRingCon f, ι.comp (AddMonoidHom.mulLeft (f 0)), ?_,
+      ⟨f 0, h1, InvertibleTwo_quotient_map_zero_comm f⟩, funext λ x ↦ ?_⟩
     · refine Quotient.ind λ x ↦ ?_
       rw [AddMonoidHom.coe_comp, comp_apply, h0]
-      change (f (1 - f 0 * x)) = (x : hf.toRingCon.Quotient)
-      rw [hf.InvertibleTwo_quotient_eq, RingCon.coe_sub, RingCon.coe_one,
+      change (f (1 - f 0 * x)) = (x : (toRingCon f).Quotient)
+      rw [InvertibleTwo_quotient_eq, RingCon.coe_sub, RingCon.coe_one,
         sub_sub_cancel, RingCon.coe_mul, ← mul_assoc, h1, one_mul]
     · rw [AddMonoidHom.coe_comp, comp_apply, h0]
-      change f x = hf.toPartialQuotientMap (1 - f 0 * _)
-      rw [← mul_assoc, h1, one_mul, sub_sub_cancel]; rfl,
-  λ ⟨S, _, φ, ι, h, a, ha, ha0, hf⟩ ↦
-    hf ▸ good.to_hom_pair φ ι h (mul_one_sub_is_good ha ha0)⟩
+      change f x = toPartialQuotientMap f (1 - f 0 * _ : (toRingCon f).Quotient)
+      rw [← mul_assoc, h1, one_mul, sub_sub_cancel]; rfl
+  · rintro ⟨rc, ι, h, a, rfl⟩
+    exact ⟨mk_of_HomPair rc.mk' ι h ((GoodFun_one_sub _).mul_central_involutive a), rfl⟩

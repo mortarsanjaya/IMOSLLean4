@@ -17,22 +17,11 @@ Then for any `f : S → S`, `ι ∘ f ∘ φ` is a good function iff `f` is a go
 
 namespace IMOSL
 namespace IMO2017A6
-namespace good
 
-open Function
-
-variable [Ring R] [Ring S] (φ : R →+* S) (ι : S →+ R) (h : LeftInverse φ ι) {f : S → S}
+variable [Ring R] [Ring S] (φ : R →+* S) (ι : S →+ R) (h : Function.LeftInverse φ ι)
 include h
 
-theorem to_hom_pair (hf : good f) : good (ι ∘ f ∘ φ) := λ x y ↦ by
-  simp only [comp_apply]
-  rw [φ.map_mul, h, h, φ.map_add, φ.map_mul, ← ι.map_add]
-  exact congrArg _ (hf (φ x) (φ y))
-
-theorem of_hom_pair (hf : good (ι ∘ f ∘ φ)) : good f := λ x y ↦ by
-  specialize hf (ι x) (ι y); simp only [comp_apply] at hf
-  rw [h, h, φ.map_mul, φ.map_add, φ.map_mul, h, h, h, h, ← ι.map_add] at hf
-  exact h.injective hf
-
-theorem iff_hom_pair : good (ι ∘ f ∘ φ) ↔ good f :=
-  ⟨of_hom_pair φ ι h, to_hom_pair φ ι h⟩
+def mk_of_HomPair (f : GoodFun S) : GoodFun R where
+  toFun := λ x ↦ ι (f (φ x))
+  good_def' := λ x y ↦ by
+    simp only; rw [φ.map_mul, h, h, φ.map_add, φ.map_mul, ← ι.map_add, good_def]
