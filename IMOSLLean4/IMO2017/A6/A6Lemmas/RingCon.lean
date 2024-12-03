@@ -8,10 +8,12 @@ import IMOSLLean4.IMO2017.A6.A6Defs
 import Mathlib.RingTheory.Congruence.Basic
 
 /-!
-# IMO 2017 A6 (P2, Periodic elements)
+# IMO 2017 A6 (P2, Good functions and congruence with respect to periods)
 
 Let `f : R → R` be a good function and `I = {c : R | f(x + c) = f(x)}`.
 Then `I` is a double-sided ideal, and the induced function `R/I → R/I` is reduced good.
+Conversely, a good function over `R/I` can be lifted to a
+  good function over `R` by a group homomorphism `R/I → R`.
 
 ### Implementation details
 
@@ -21,6 +23,21 @@ The `RingCon` relation is implemented as `good.toRingCon`.
 
 namespace IMOSL
 namespace IMO2017A6
+
+/-! ### Lift of good functions from quotient ring -/
+
+def GoodFun.quotient_lift [NonUnitalNonAssocSemiring R]
+    (rc : RingCon R) (ι : rc.Quotient →+ R) (h : Function.LeftInverse rc.toQuotient ι)
+    (f : GoodFun rc.Quotient) : GoodFun R where
+  toFun := λ x ↦ ι (f x)
+  good_def' := λ x y ↦ by
+    simp only [rc.coe_mul]; rw [h, h, rc.coe_add, ← ι.map_add, good_def]
+
+
+
+
+
+/-! ### Congruence induced by periods -/
 
 /-- The equivalence relation representing the set `I`, as an `AddCon`. -/
 def PeriodEquiv [NonUnitalNonAssocSemiring R] (f : R → R) : AddCon R where
@@ -53,7 +70,7 @@ lemma PeriodEquiv_mul (h : PeriodEquiv f c d) (h0 : PeriodEquiv f x y) :
   (PeriodEquiv f).trans (PeriodEquiv_mul_right f h x) (PeriodEquiv_mul_left f h0 d)
 
 lemma PeriodEquiv_map (h : PeriodEquiv f (f x) (f y)) : f x = f y := by
-  have h0 := (good_map_map_zero_mul_map f x).trans (good_map_map_zero_mul_map f y).symm
+  have h0 := (map_map_zero_mul_map f x).trans (map_map_zero_mul_map f y).symm
   rwa [PeriodEquiv_map_eq (PeriodEquiv_mul_left f h (f 0)), add_right_inj] at h0
 
 
@@ -73,7 +90,7 @@ lemma apply_eq_of_toRingQuot_eq {c d : R} (h : (c : (toRingCon f).Quotient) = d)
 
 
 
-/-! ### The induced quotient map -/
+/-! ### The induced map on quotient rings -/
 
 /-- "Partial" quotient map `R/I → R` -/
 def toPartialQuotientMap : (toRingCon f).Quotient → R :=
@@ -89,9 +106,3 @@ def toQuotientMap : NonperiodicGoodFun (toRingCon f).Quotient where
 lemma toQuotientMap_apply_mk (x : R) : toQuotientMap f x = f x := rfl
 
 end
-
-
-/-- `f` factors out through a ring homomorphism and the induced map. -/
-lemma toQuotientMap_factor {R} [Semiring R] [IsCancelAdd R]
-    [FunLike F R R] [GoodFunClass F R] (f : F) :
-    (toRingCon f).mk' ∘ f = toQuotientMap f ∘ (toRingCon f).mk' := rfl

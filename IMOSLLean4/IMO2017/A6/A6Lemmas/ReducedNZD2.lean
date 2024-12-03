@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2017.A6.A6Lemmas.Basic
 import Mathlib.Algebra.GroupWithZero.NonZeroDivisors
 
-
 /-!
 # IMO 2017 A6 (P2, Solution to reduced version with `2 ∈ R⁰`)
 

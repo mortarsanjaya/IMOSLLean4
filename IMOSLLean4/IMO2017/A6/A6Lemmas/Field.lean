@@ -34,7 +34,7 @@ theorem DivRing_zero_or_reduced : (∀ x, f x = 0) ∨ nonperiodicGood f := by
   · rintro ⟨c, h, h0⟩
     have h1 := DivRing_inv_formula f h
     rw [h0, zero_mul] at h1
-    intro x; have h2 := good_map_map_zero_mul_map f x
+    intro x; have h2 := map_map_zero_mul_map f x
     rwa [h1, zero_mul, h1, zero_add] at h2
   -- Case 2: `f(c + 1) = 0 ↔ c = 0`
   · intro h; refine ⟨⟨GoodFunClass.toGoodFun f,
@@ -51,5 +51,5 @@ theorem DivRing_iff_zero_or_reduced {f : R → R} :
   refine ⟨?_, ?_⟩
   · rintro ⟨f, rfl⟩; exact (DivRing_zero_or_reduced f).imp_left funext
   · rintro (rfl | ⟨f, rfl⟩)
-    · exact ⟨GoodFun_zero, rfl⟩
+    · exact ⟨GoodFun_zero R, rfl⟩
     · exact ⟨f.toGoodFun, rfl⟩

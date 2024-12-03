@@ -20,12 +20,6 @@ namespace IMO2017A6
 
 /-! ### Construction of some good functions -/
 
-def GoodFun_zero [NonUnitalNonAssocSemiring R] : GoodFun R where
-  toFun := λ _ ↦ 0
-  good_def' := λ _ _ ↦ zero_add 0
-
-
-
 section
 
 variable (R) [NonAssocRing R]
@@ -39,11 +33,13 @@ def NonperiodicGoodFun_one_sub : NonperiodicGoodFun R :=
   { GoodFun_one_sub R with
     period_imp_eq' := λ _ _ h ↦ add_right_injective 0 (sub_right_injective (h 0)) }
 
+@[deprecated]
 def GoodFun_sub_one : GoodFun R where
   toFun := λ x ↦ x - 1
   good_def' := λ x y ↦ by simp only; rw [sub_one_mul, mul_sub_one,
     sub_sub, sub_add_cancel, sub_sub, sub_add_sub_cancel]
 
+@[deprecated]
 def NonperiodicGoodFun_sub_one : NonperiodicGoodFun R :=
   { GoodFun_sub_one R with
     period_imp_eq' := λ _ _ h ↦ add_right_injective 0 (sub_left_injective (h 0)) }
@@ -53,7 +49,7 @@ end
 
 section
 
-variable [Ring R] (a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a})
+variable [Semiring R] (a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a})
 
 def GoodFun.mul_central_involutive (f : GoodFun R) : GoodFun R where
   toFun := λ x ↦ a * f x
@@ -80,6 +76,7 @@ lemma map_add_one_eq_of_map_eq [NonAssocSemiring R] [IsCancelAdd R]
     f (a + 1) = f (b + 1) := by
   rw [← add_right_inj, good_def, mul_one, h, good_def, mul_one]
 
+@[deprecated]
 lemma map_neg_eq_of_map_eq [NonAssocRing R] [FunLike F R R] [GoodFunClass F R]
     {f : F} (h : f a = f b) : f (-a) = f (-b) := by
   have h0 : f ((a + 1) * -1) = f ((b + 1) * -1) := by
@@ -94,17 +91,17 @@ section
 
 variable [Ring R] [FunLike F R R] [GoodFunClass F R]
 
-/-- Periodicity of zeroes of `f` -/
+/-- Periodicity of zeroes of `f`. -/
 theorem period_of_map_eq_zero {f : F} (h : f C = 0) : ∀ x, f (x + C) = f (x + 1) := by
   have hC (x) : f (C * x) = f 0 + f (C + x) := by rw [← good_def, h, zero_mul]
   have h0 : f (C + 1) = -f 0 := by
     have h0 := hC 1; rwa [mul_one, h, eq_comm, add_eq_zero_iff_neg_eq, eq_comm] at h0
   have h1 : f (f 0 * f 0 * 2) = -f 0 := by
     have h1 : f (C * -C) = f 0 * 2 := by rw [hC, add_neg_cancel, mul_two]
-    have h2 := good_map_map_zero_mul_map f (C * -C)
+    have h2 := map_map_zero_mul_map f (C * -C)
     rwa [h1, ← mul_assoc, ← eq_sub_iff_add_eq, mul_two (f 0), sub_add_cancel_right] at h2
   replace h1 : f (C * 2) = -f 0 := by
-    have X := good_map_map_zero_mul_self f
+    have X := map_map_zero_mul_self f
     have h2 := map_add_one_eq_of_map_eq (map_add_one_eq_of_map_eq (h.trans X.symm))
     rw [add_assoc, add_assoc, one_add_one_eq_two] at h2
     rw [hC, h2, ← h1, ← good_def, X, zero_mul]
@@ -127,7 +124,7 @@ section
 variable (f : F)
 
 theorem map_one_eq_zero : f 1 = 0 := by
-  have X := good_map_map_zero_mul_self f
+  have X := map_map_zero_mul_self f
   rw [← zero_add 1, ← period_of_map_eq_zero X, zero_add, X]
 
 theorem map_add_one' (x) : f 0 + f (x + 1) = f x := by
@@ -153,10 +150,10 @@ variable {f : F} (h : (f : R → R).Injective)
 include h
 
 theorem map_zero_mul_self_of_injective : f 0 * f 0 = 1 :=
-  h ((good_map_map_zero_mul_self f).trans (map_one_eq_zero f).symm)
+  h ((map_map_zero_mul_self f).trans (map_one_eq_zero f).symm)
 
 theorem solution_of_injective (x) : f x = f 0 * (1 - x) := by
-  have X := good_map_map_zero_mul_map f
+  have X := map_map_zero_mul_map f
   have h0 := X (f 0 * f x)
   rw [eq_sub_of_add_eq (X x), mul_sub, add_sub_left_comm, add_right_eq_self] at h0
   replace X := map_zero_mul_self_of_injective h
@@ -180,7 +177,7 @@ end
 
 
 
-/-! ### Properties of reduced good function -/
+/-! ### Properties of non-periodic good function -/
 
 variable [Ring R] [FunLike F R R] [NonperiodicGoodFunClass F R]
 
@@ -188,4 +185,4 @@ theorem map_eq_zero_iff {f : F} : f c = 0 ↔ c = 1 :=
   ⟨λ h ↦ period_imp_eq (period_of_map_eq_zero h), λ h ↦ h ▸ map_one_eq_zero f⟩
 
 theorem map_zero_mul_self (f : F) : f 0 * f 0 = 1 :=
-  map_eq_zero_iff.mp (good_map_map_zero_mul_self f)
+  map_eq_zero_iff.mp (map_map_zero_mul_self f)

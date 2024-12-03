@@ -16,8 +16,9 @@ $$ f(f(x) f(y)) + f(x + y) = f(xy). $$
 
 This file defines the functional equation and prove the most basic properties.
 We say that $f$ is
-* `good` if it satisfies the above functional equation;
-* `NonperiodicGood` if in addition, $f$ has no non-zero period.
+* `good` if $f$ satisfies the above functional equation;
+* `non-periodic` if $f$ has no non-zero period;
+* `reduced` if $f$ is non-periodic good and $f(0) = 1$.
 
 The `good` functions are characterized for a decent amount of subcases on $R$.
 The file `IMOSLLean4/IMO2017/A6/A6.lean` collects all the main results.
@@ -39,6 +40,10 @@ class GoodFunClass (F) (R : outParam Type*)
 @[deprecated]
 abbrev good [NonUnitalNonAssocSemiring R] (f : R → R) := ∃ f₀ : GoodFun R, f = f₀.toFun
 
+/-- The zero function as a good function. -/
+def GoodFun_zero (R) [NonUnitalNonAssocSemiring R] : GoodFun R :=
+  ⟨λ _ ↦ 0, λ _ _ ↦ zero_add 0⟩
+
 
 section
 
@@ -58,18 +63,30 @@ instance : GoodFunClass (GoodFun R) R where
 theorem good_def (f : F) : ∀ x y, f (f x * f y) + f (x + y) = f (x * y) :=
   GoodFunClass.good_def f
 
-theorem good_map_map_zero_mul_map (f : F) (x) : f (f 0 * f x) + f x = f 0 := by
+theorem map_map_zero_mul_map (f : F) (x) : f (f 0 * f x) + f x = f 0 := by
   have h := good_def f 0 x; rwa [zero_add, zero_mul] at h
 
-theorem good_map_map_mul_map_zero (f : F) (x) : f (f x * f 0) + f x = f 0 := by
+theorem map_map_mul_map_zero (f : F) (x) : f (f x * f 0) + f x = f 0 := by
   have h := good_def f x 0; rwa [add_zero, mul_zero] at h
 
 end
 
 
-theorem good_map_map_zero_mul_self [NonUnitalNonAssocSemiring R] [IsCancelAdd R]
-    [FunLike F R R] [GoodFunClass F R] (f : F) : f (f 0 * f 0) = 0 := by
-  rw [← add_right_cancel_iff, good_map_map_zero_mul_map, zero_add]
+section
+
+variable [NonUnitalNonAssocSemiring R] [IsCancelAdd R] [FunLike F R R] [GoodFunClass F R]
+
+theorem map_map_zero_mul_self (f : F) : f (f 0 * f 0) = 0 := by
+  rw [← add_right_cancel_iff, map_map_zero_mul_map, zero_add]
+
+theorem map_map_mul_comm_of_comm (f : F) {x y : R} (h : x * y = y * x) :
+    f (f x * f y) = f (f y * f x) := by
+  rw [← add_right_cancel_iff, good_def, add_comm x, good_def, h]
+
+theorem map_map_mul_map_zero_comm (f : F) (x : R) : f (f x * f 0) = f (f 0 * f x) :=
+  map_map_mul_comm_of_comm f ((mul_zero x).trans (zero_mul x).symm)
+
+end
 
 
 
@@ -103,7 +120,7 @@ def NonperiodicGoodFunClass.toNonperiodicGoodFun (f : F) : NonperiodicGoodFun R 
 
 instance : FunLike (NonperiodicGoodFun R) R R where
   coe f := f.toFun
-  coe_injective' := λ f g h ↦ by rwa [NonperiodicGoodFun.mk.injEq, GoodFun.mk.injEq]
+  coe_injective' := λ f g h ↦ by rwa [NonperiodicGoodFun.mk.injEq, ← DFunLike.coe_fn_eq]
 
 instance : NonperiodicGoodFunClass (NonperiodicGoodFun R) R where
   good_def f := f.good_def'
@@ -114,5 +131,48 @@ theorem period_imp_eq {f : F} : (∀ x, f (x + c) = f (x + d)) → c = d :=
 
 theorem period_imp_zero {f : F} (h : ∀ x, f (x + c) = f x) : c = 0 :=
   period_imp_eq (f := f) λ x ↦ by rw [h, add_zero]
+
+end
+
+
+
+
+
+/-! ### Reduced good functions -/
+
+@[ext] structure ReducedGoodFun (R) [NonAssocSemiring R]
+    extends NonperiodicGoodFun R where
+  map_zero_eq_one' : toFun 0 = 1
+
+def ReducedGoodFun.mk' [NonAssocSemiring R] (f : R → R)
+    (good_def' : ∀ x y : R, f (f x * f y) + f (x + y) = f (x * y))
+    (period_imp_eq' : ∀ c d, (∀ x, f (x + c) = f (x + d)) → c = d)
+    (map_zero_eq_one' : f 0 = 1) : ReducedGoodFun R :=
+  ⟨⟨⟨f, good_def'⟩, period_imp_eq'⟩, map_zero_eq_one'⟩
+
+class ReducedGoodFunClass (F) (R : outParam Type*) [NonAssocSemiring R] [FunLike F R R]
+    extends NonperiodicGoodFunClass F R where
+  map_zero_eq_one : ∀ f : F, f 0 = 1
+
+
+section
+
+variable [NonAssocSemiring R] [FunLike F R R] [ReducedGoodFunClass F R]
+
+def ReducedGoodFunClass.toReducedGoodFun (f : F) : ReducedGoodFun R :=
+  { NonperiodicGoodFunClass.toNonperiodicGoodFun f with
+    map_zero_eq_one' := map_zero_eq_one f }
+
+instance : FunLike (ReducedGoodFun R) R R where
+  coe f := f.toFun
+  coe_injective' := λ f g h ↦ by rwa [ReducedGoodFun.mk.injEq, ← DFunLike.coe_fn_eq]
+
+instance : ReducedGoodFunClass (ReducedGoodFun R) R where
+  good_def f := f.good_def'
+  period_imp_eq f := f.period_imp_eq'
+  map_zero_eq_one f := f.map_zero_eq_one'
+
+theorem map_zero_eq_one (f : F) : f 0 = 1 :=
+  ReducedGoodFunClass.map_zero_eq_one f
 
 end

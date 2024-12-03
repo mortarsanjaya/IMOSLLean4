@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A6.A6Lemmas.Hom
-import IMOSLLean4.IMO2017.A6.A6Lemmas.Period
+import IMOSLLean4.IMO2017.A6.A6Lemmas.RingCon
 import IMOSLLean4.IMO2017.A6.A6Lemmas.ReducedNZD2
 import Mathlib.Algebra.Group.Invertible.Defs
 
@@ -179,4 +178,4 @@ theorem general_good_iff [Ring R] [Invertible (2 : R)] (hR : 3 ∈ R⁰) {f : R 
       change f x = toPartialQuotientMap f (1 - f 0 * _ : (toRingCon f).Quotient)
       rw [← mul_assoc, h1, one_mul, sub_sub_cancel]; rfl
   · rintro ⟨rc, ι, h, a, rfl⟩
-    exact ⟨mk_of_HomPair rc.mk' ι h ((GoodFun_one_sub _).mul_central_involutive a), rfl⟩
+    refine ⟨((GoodFun_one_sub _).mul_central_involutive a).quotient_lift rc ι h, rfl⟩
