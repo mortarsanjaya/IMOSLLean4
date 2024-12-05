@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.Nat.Size
 import Mathlib.Order.Bounds.Basic
+import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Algebra.BigOperators.Group.List
 
 /-!
@@ -64,16 +65,17 @@ def lowerBoundMk : ℕ → List ℕ :=
     | false, k + 1 => (iota k).map (k + 1).add ++ (2 * k + 2) :: l
     | true, n => (iota n).map n.add ++ (2 * n + 1) :: l
 
-lemma lowerBoundMk_zero : lowerBoundMk 0 = [] := by rfl
+lemma lowerBoundMk_zero : lowerBoundMk 0 = [] :=
+  Nat.binaryRec_zero _ _
 
 lemma lowerBoundMk_bit0_succ (k : ℕ) :
     lowerBoundMk ((k + 1).bit false)
       = (iota k).map (k + 1).add ++ (2 * k + 2) :: lowerBoundMk (k + 1) :=
-  Nat.binaryRec_eq rfl _ _
+  Nat.binaryRec_eq _ _ (by simp)
 
 lemma lowerBoundMk_bit1 (n : ℕ) :
     lowerBoundMk (n.bit true) = (iota n).map n.add ++ (2 * n + 1) :: lowerBoundMk n :=
-  Nat.binaryRec_eq rfl _ _
+  Nat.binaryRec_eq _ _ (by simp)
 
 theorem iota_map_add_append_iota_eq_iota (n : ℕ) :
     ∀ k, (iota k).map n.add ++ iota n = iota (n + k)
@@ -110,7 +112,7 @@ lemma targetSum_map_add_iota_length_succ (h : l.length = Nat.succ n) :
 theorem lowerBoundMk_targetSum : ∀ n : ℕ, targetSum (lowerBoundMk n) = n.size :=
   have X := Nat.succ_pos 1
   have X0 m : m ≤ 2 * m := Nat.le_mul_of_pos_left m X
-  Nat.binaryRec (by rfl) λ b n ↦ match b, n with
+  Nat.binaryRec (by rw [lowerBoundMk_zero, targetSum, Nat.size_zero]) λ b n ↦ match b, n with
     | false, 0 => id
     | false, k + 1 => λ h ↦ by
         have h0 : ((2 * k + 2) :: lowerBoundMk (k + 1)).length = (k + 1).succ :=

@@ -29,6 +29,7 @@ namespace nice
 section
 
 variable (h : nice k a x y)
+include h
 
 theorem neg_left : nice k a (-x) y := by
   rwa [nice, neg_sq]
@@ -71,6 +72,7 @@ end nice
 
 
 variable {k a : ℤ} (hk : 0 ≤ k) (ha : 0 < a)
+include hk ha
 
 /-- Generate a new nice pair `(x', y')` with `x'` arbitrarily big from any nice pair -/
 theorem exists_x_ge_bound_nat (h : ∃ x y, nice k a x y) :
@@ -89,7 +91,7 @@ theorem exists_x_ge_bound_nat (h : ∃ x y, nice k a x y) :
     ?_, h.abs_right.linear_transform⟩
   ---- `0 ≤ x'` and `nice k a x' y'` are immediately resolved; left with `N + 1 ≤ x' ^ 2`
   rw [Nat.cast_succ, Int.add_one_le_iff]
-  refine hx0.trans_lt (pow_lt_pow_left ?_ hx (Nat.succ_ne_zero 1))
+  refine hx0.trans_lt (pow_lt_pow_left₀ ?_ hx (Nat.succ_ne_zero 1))
   rw [add_one_mul (2 * k), add_right_comm, lt_add_iff_pos_left]
   exact add_pos_of_nonneg_of_pos (mul_nonneg X1 hx)
     (mul_pos X2 (abs_pos.mpr (h.y_ne_zero hk ha)))

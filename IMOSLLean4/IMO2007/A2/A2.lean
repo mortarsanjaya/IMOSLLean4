@@ -50,7 +50,7 @@ theorem add_cond_modeq_zero_is_good (h : K ≠ 1) :
   | true =>
       have h1 : n.succ % K = 0 := Nat.beq_eq ▸ h0
       rw [cond_true, n.succ.succ_eq_add_one, n.succ.add_mod, h1, Nat.zero_add, Nat.mod_mod,
-        Nat.one_mod_of_ne_one h, m.add_add_add_comm, m.add_assoc n, Nat.add_le_add_iff_left]
+        Nat.one_mod_eq_one.mpr h, m.add_add_add_comm, m.add_assoc n, Nat.add_le_add_iff_left]
       refine (congrFun₂ (congrArg cond ?_) 1 0).le
       rw [← Nat.succ_add, m.succ.add_mod n.succ, h1, Nat.add_zero, Nat.mod_mod]
 
@@ -59,6 +59,7 @@ theorem add_cond_modeq_zero_is_good (h : K ≠ 1) :
 section
 
 variable {f : ℕ → ℕ} (h : good f)
+include h
 
 theorem good_monotone (h0 : x ≤ y) : f x ≤ f y := by
   obtain ⟨_ | c, rfl⟩ : ∃ c, y = x + c := Nat.exists_eq_add_of_le h0
@@ -146,5 +147,5 @@ theorem final_solution {N k : ℕ+} :
     (∃ f : ℕ+ → ℕ+, goodPNat f ∧ f N = k) ↔ if N = 1 then k = 1 else k ≤ N + 1 := by
   rw [good_correspondence, final_solution_Nat, cond_eq_if]
   have X {n : ℕ+} : n.natPred = 0 ↔ n = 1 := PNat.natPred_inj (n := 1)
-  refine if_congr_prop (Nat.beq_eq ▸ X) X ?_
+  refine iff_of_eq (if_congr (Nat.beq_eq ▸ X) X.eq ?_)
   rw [← PNat.natPred_le_natPred, Nat.succ_eq_add_one, PNat.natPred_add_one]; rfl

@@ -37,7 +37,9 @@ section
 
 variable [NonAssocRing R] [NonAssocRing S] [NoZeroDivisors S]
   {f : R → S} (hf : NontrivialGood f) {c} (h : QuasiPeriodic f c)
+include hf h
 
+omit [NoZeroDivisors S] in
 theorem map_neg : f (-c) = f c := by
   have h0 : f (c + 1) = 0 := by cases h with
   | Left h => rw [h, hf.map_one, mul_zero]
@@ -46,11 +48,12 @@ theorem map_neg : f (-c) = f c := by
   rwa [h0, zero_mul, zero_add, add_neg_cancel_right,
     mul_neg_one, neg_add_rev, neg_add_cancel_comm] at h1
 
+omit [NoZeroDivisors S] in
 theorem map_mul_self_eq_one : f c * f c = 1 :=
   have h0 : f (-c) = f c := map_neg hf h
   have h1 : f 0 = -(f c * f c) := by cases h with
-  | Left h => specialize h (-c); rwa [add_neg_self, h0, neg_mul] at h
-  | Right h => specialize h (-c); rwa [neg_add_self, h0, mul_neg] at h
+  | Left h => specialize h (-c); rwa [add_neg_cancel, h0, neg_mul] at h
+  | Right h => specialize h (-c); rwa [neg_add_cancel, h0, mul_neg] at h
   by rwa [hf.map_zero, neg_inj, eq_comm] at h1
 
 theorem map_eq_one_or_neg_one : f c = 1 ∨ f c = -1 :=
@@ -67,16 +70,20 @@ theorem imp_left : ∀ x, f (c + x) = -f c * f x :=
 theorem imp_right : ∀ x, f (x + c) = f x * -f c :=
   h.casesOn (λ h0 x ↦ by rw [add_comm, h0, map_commute hf h]) id
 
+omit h in
 theorem iff_left : QuasiPeriodic f c ↔ ∀ x, f (c + x) = -f c * f x :=
   ⟨QuasiPeriodic.imp_left hf, QuasiPeriodic.Left⟩
 
+omit h in
 theorem iff_right : QuasiPeriodic f c ↔ ∀ x, f (x + c) = f x * -f c :=
   ⟨QuasiPeriodic.imp_right hf, QuasiPeriodic.Right⟩
 
+omit h in
 theorem iff_left2 : QuasiPeriodic f c ↔ ∀ x, f (c * x + 1) = 0 :=
   (iff_left hf).trans <| forall_congr' λ x ↦ by
     rw [neg_mul, hf.is_good, eq_neg_iff_add_eq_zero, add_comm]
 
+omit h in
 theorem iff_right2 : QuasiPeriodic f c ↔ ∀ x, f (x * c + 1) = 0 :=
   (iff_right hf).trans <| forall_congr' λ x ↦ by
     rw [mul_neg, hf.is_good, eq_neg_iff_add_eq_zero, add_comm]
@@ -89,6 +96,7 @@ section
 
 variable [Ring R] [NonAssocRing S] [NoZeroDivisors S]
   {f : R → S} (hf : NontrivialGood f) {c} (h : QuasiPeriodic f c)
+include hf h
 
 theorem mul_left (d : R) : QuasiPeriodic f (d * c) := by
   rw [iff_right2 hf] at h ⊢
@@ -110,7 +118,9 @@ section
 
 variable [NonAssocRing R] [NonAssocRing S] [NoZeroDivisors S]
   {f : R → S} (hf : ReducedGood f) {c} (h : QuasiPeriodic f c) (h0 : c ≠ 0)
+include hf h h0
 
+omit h0 in
 theorem reduced_eq_zero_iff : c = 0 ↔ f c = -1 :=
   ⟨λ h0 ↦ h0 ▸ hf.map_zero, λ h0 ↦ hf.period_imp_eq c 0 λ x ↦ by
     rw [add_zero, (iff_right hf.toNontrivialGood).mp h, h0, neg_neg, mul_one]⟩
@@ -118,6 +128,7 @@ theorem reduced_eq_zero_iff : c = 0 ↔ f c = -1 :=
 theorem reduced_map_eq_one : f c = 1 :=
   (map_eq_one_or_neg_one hf.toNontrivialGood h).resolve_right <|
     mt (reduced_eq_zero_iff hf h).mpr h0
+
 
 theorem reduced_QuasiPeriodic_eq (h1 : QuasiPeriodic f d) : d = 0 ∨ d = c :=
   (map_eq_one_or_neg_one hf.toNontrivialGood h1).symm.imp
@@ -146,6 +157,7 @@ section
 
 variable [Ring R] [NonAssocRing S] [NoZeroDivisors S]
   {f : R → S} (hf : ReducedGood f) {c} (h : QuasiPeriodic f c) (h0 : c ≠ 0)
+include hf h h0
 
 theorem reduced_QuasiPeriod_equiv_cases (d) :
     QuasiPeriodic f d ∨ QuasiPeriodic f (d - 1) :=

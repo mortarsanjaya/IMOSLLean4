@@ -25,6 +25,7 @@ class CancelCommDistribMonoid (M) extends CancelCommMonoid M, Distrib M
 
 variable [CancelCommDistribMonoid M] [IsCancelAdd M] {f : M → M}
 
+omit [IsCancelAdd M] in
 lemma inv'_is_good (h : ∀ x, x * f x = 1) : good f := λ x y ↦ by
   have h0 (y) : f (f y) = y := by rw [← mul_left_cancel_iff, h, mul_comm, h]
   rw [h0, h0, h0, mul_add]; apply congrArg₂

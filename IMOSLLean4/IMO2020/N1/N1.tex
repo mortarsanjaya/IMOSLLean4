@@ -1,0 +1,33 @@
+Prove that, for any positive integer $k$, there exists a prime $p$ and distinct elements $x_1, x_2, \ldots, x_{k + 3} \in \F_p^{\times}$ such that
+\[ x_i x_{i + 1} x_{i + 2} x_{i + 3} = i \quad \forall i = 1, 2, \ldots, k. \tag{*}\label{2020n1-eq0} \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2020SL.pdf}
+
+We follow the official solution, except that we go for a step further.
+Namely, we prove that there exists a sequence $(q_n)_{n \geq 1}$ of distinct rational numbers such that
+\[ q_n q_{n + 1} q_{n + 2} q_{n + 3} = n \quad \forall n \in \N^+. \tag{1}\label{2020n1-eq1} \]
+First, set $q_1 = 2$, $q_2 = 1/2$, $q_3 = -4$ and $q_4 = -1/4$.
+This sets up the base case for~\eqref{2020n1-eq1}: $q_1 q_2 q_3 q_4 = 1$.
+Recursively, set $q_{n + 4} = (1 + n^{-1}) q_n$ for all $n \in \N^+$.
+By induction, it is easy to prove~\eqref{2020n1-eq1}.
+
+Now we show that the sequence $(q_n)_{n \geq 1}$ consists of distinct rational numbers.
+Work with three parameters: sign, parity of numerator, and magnitude.
+By induction, $q_n$ is positive iff $n \equiv 1, 2 \pmod{4}$.
+On the other hand, the numerator of $q_n$ is even iff $n$ is odd.
+Thus, $q_i \equiv q_j \pmod{4}$ implies $i \equiv j \pmod{4}$.
+Finally, we have $|q_{n + 4}| = (1 + n^{-1}) |q_n| > |q_n|$ for all $n \in \N^+$.
+So $q_i \equiv q_j \pmod{4}$ necessarily implies $i \equiv j \pmod{4}$.
+
+For each $n$, write $q_n = r_n/s_n$, where $r_n$ and $s_n > 0$ are coprime non-zero integers.
+Now fix some $k \in \N^+$, and let $M$ be a positive integer greater than the $|r_n|$s and $|s_n|$s across all $n \leq k + 3$.
+Choose an arbitrary prime $p > 2M^2$, and set $x_n = s_n^{-1} r_n$ in $\F_p^{\times}$.
+Then we get~\eqref{2020n1-eq0}, so it remains to show that the $x_k$s are pairwise distinct.
+Indeed, if $x_i = x_j$ for some $i, j \leq k + 3$, then $r_i s_j = r_j s_i$ in $\F_p^{\times}$, so $p \mid r_i s_j - r_j s_i$.
+By the choice of $M$ and $p$, we have $|r_i s_j - r_j s_i| \leq M^2 + M^2 < p$.
+This forces $r_i s_j = r_j s_i \implies q_i = q_j \implies i = j$.
+We are done.

@@ -22,6 +22,7 @@ namespace good
 open Function
 
 variable [Ring R] [Ring S] (φ : R →+* S) (ι : S →+ R) (h : LeftInverse φ ι) {f : S → S}
+include h
 
 theorem to_hom_pair (hf : good f) : good (ι ∘ f ∘ φ) := λ x y ↦ by
   simp only [comp_apply]

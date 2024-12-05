@@ -18,11 +18,12 @@ namespace IMO2017A6
 namespace good
 
 variable [DivisionRing F] {f : F → F} (hf : good f)
+include hf
 
 /-- Good functions on division rings: a formula -/
 theorem DivRing_inv_formula {c : F} (h : c ≠ 0) : f (f (c + 1) * f (c⁻¹ + 1)) = 0 := by
   rw [eq_sub_of_add_eq (hf _ _), sub_eq_zero, add_one_mul c,
-    mul_add_one c, mul_inv_cancel h, add_comm 1]
+    mul_add_one c, mul_inv_cancel₀ h, add_comm 1]
 
 /-- Good functions on division rings: either `0` or reduced -/
 theorem DivRing_zero_or_reduced : f = (λ _ ↦ 0) ∨ ReducedGood f := by
@@ -37,6 +38,7 @@ theorem DivRing_zero_or_reduced : f = (λ _ ↦ 0) ∨ ReducedGood f := by
   · refine λ h ↦ ⟨hf, λ c d h0 ↦ eq_of_sub_eq_zero (by_contra λ h1 ↦ h ⟨_, h1, ?_⟩)⟩
     rw [sub_add_comm, h0, sub_add_cancel, hf.map_one_eq_zero]
 
+omit hf in
 /-- The `↔` version of `DivRing_zero_or_reduced` -/
 theorem DivRing_iff_zero_or_reduced : good f ↔ (f = λ _ ↦ 0) ∨ ReducedGood f :=
   ⟨DivRing_zero_or_reduced, λ h ↦ h.elim (λ hf ↦ hf ▸ zero_is_good) ReducedGood.is_good⟩

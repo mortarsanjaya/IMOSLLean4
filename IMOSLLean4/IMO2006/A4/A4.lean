@@ -119,7 +119,7 @@ theorem final_solution_unordered [LinearOrderedField F] [DecidableEq ι]
   · rw [offDiag_empty, sum_empty, card_empty, zero_nsmul, zero_div]
   ---- Next manipulate and reduce to `(a_i - a_j)^2 ≤ (a_i - a_j)^2 S/(a_i + a_j)`
   have h : (0 : F) < 2 := two_pos
-  rw [le_div_iff' (mul_pos two_pos (sum_pos hS hS0)), ← mul_le_mul_left h,
+  rw [le_div_iff₀' (mul_pos two_pos (sum_pos hS hS0)), ← mul_le_mul_left h,
     mul_right_comm, ← mul_assoc, ← mul_assoc, ← sq, field_id3, sub_one_mul,
     mul_sub, sub_sub, sub_mul, mul_assoc, mul_assoc, ← sq, ← nsmul_eq_mul,
     field_id5, nsmul_sub, mul_sub, sub_le_sub_iff_left, add_mul,
@@ -127,7 +127,7 @@ theorem final_solution_unordered [LinearOrderedField F] [DecidableEq ι]
   refine sum_le_sum λ (i, j) h0 ↦ ?_
   ---- Prove `(a_i - a_j)^2 ≤ (a_i - a_j)^2 S/(a_i + a_j)` for `i ≠ j`
   rw [mem_offDiag] at h0; rcases h0 with ⟨hi, hj, h⟩
-  rw [← mul_div_right_comm, le_div_iff (add_pos (hS i hi) (hS j hj))]
+  rw [← mul_div_right_comm, le_div_iff₀ (add_pos (hS i hi) (hS j hj))]
   exact mul_le_mul_of_nonneg_left (add_le_sum (λ k hk ↦ (hS k hk).le) hi hj h) (sq_nonneg _)
 
 /-- Final solution -/

@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Logic.Function.Iterate
-import Mathlib.Data.Nat.Defs
+import Mathlib.Tactic.NormNum.NatSqrt
 
 /-!
 # IMO 2017 N1 (P1)
@@ -47,13 +47,13 @@ theorem exists_add_mul_eq_sqrt_add_sq_of_sq_mod (hp : 0 < p) (hk : ∃ x, x ^ 2 
   rwa [← Nat.sqrt_lt', Nat.lt_add_right_iff_pos]
 
 theorem sqrt_add_lt_of_two_mul_lt (h : 0 < p) (h0 : 2 * p < k) : k.sqrt + p < k := by
-  induction' k, h0 using Nat.le_induction with k _ hk0
+  revert h0; revert k; apply Nat.le_induction
   ---- Base case: `k = 2p + 1`
   · rw [Nat.two_mul, ← Nat.succ_add, Nat.add_lt_add_iff_right, Nat.sqrt_lt, Nat.mul_succ,
       Nat.add_comm, Nat.add_lt_add_iff_right, Nat.succ_mul, Nat.lt_add_left_iff_pos]
     exact Nat.mul_pos h h
   ---- Induction step
-  · refine Nat.lt_of_le_of_lt ?_ (Nat.succ_lt_succ hk0)
+  · rintro k - hk0; refine Nat.lt_of_le_of_lt ?_ (Nat.succ_lt_succ hk0)
     rw [← Nat.succ_add, Nat.add_le_add_iff_right]
     exact k.sqrt_succ_le_succ_sqrt
 
@@ -228,7 +228,7 @@ theorem f_zero_left_le_self (k) : f 0 k ≤ k := by
 
 theorem exists_f_one_iterate_le_two (k) : ∃ n, (f 1)^[n] k ≤ 2 := by
   ---- Strong induction on `k`, clearing the base case `k ≤ 2` immediately
-  induction' k using Nat.strongInductionOn with k k_ih
+  induction k using Nat.strongRecOn with | ind k k_ih => ?_
   obtain h | h : k ≤ 2 ∨ 2 < k := le_or_lt k 2
   · exact ⟨0, h⟩
   ---- For `k > 2`, first find `m` such that `f^m(k) < k`
@@ -275,7 +275,8 @@ theorem not_good_of_not_sq_mod (hp : 0 < p) (h : ∀ x, x ^ 2 % p ≠ k % p) : �
 /-- A version of `not_good_of_not_sq_mod` that allows testing non-good numbers by `decide` -/
 theorem not_good_of_not_sq_mod_fin (hp : 0 < p) (h : ∀ x : Fin p, x ^ 2 % p ≠ k % p) :
     ¬good p k := by
-  refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat' x hp) ?_
+  haveI : NeZero p := ⟨Nat.not_eq_zero_of_lt hp⟩
+  refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat' p x) ?_
   rw [Fin.val_ofNat', ← Nat.pow_mod, hx]
 
 theorem good.exists_mod_eq_sq (hp : 0 < p) (h : good p k) : ∃ x, x ^ 2 % p = k % p := by
@@ -284,7 +285,7 @@ theorem good.exists_mod_eq_sq (hp : 0 < p) (h : good p k) : ∃ x, x ^ 2 % p = k
 theorem good.exists_iterate_le_two_mul (hp : 0 < p) (h : good p N) :
     ∃ k, (f p)^[k] N ≤ 2 * p := by
   ---- Strong induction on `N`, with base case `N ≤ 2p`
-  induction' N using Nat.strongInductionOn with N N_ih
+  induction N using Nat.strongRecOn with | ind N N_ih => ?_
   have hp0 : 0 < p := Nat.zero_lt_of_lt hp
   have hN0 : ∃ x, x ^ 2 % p = N % p := h.exists_mod_eq_sq hp0
   obtain hN | hN : N ≤ 2 * p ∨ 2 * p < N := le_or_lt N (2 * p)
@@ -297,7 +298,7 @@ theorem good.exists_iterate_le_two_mul (hp : 0 < p) (h : good p N) :
 theorem good.exists_iterate_le_p (hp : 2 < p) (h : good p N) :
     ∃ k, (f p)^[k] N ≤ p := by
   ---- Strong induction on `N`, with base case `N ≤ 2p`
-  induction' N using Nat.strongInductionOn with N N_ih
+  induction N using Nat.strongRecOn with | ind N N_ih => ?_
   have hp0 : 0 < p := Nat.zero_lt_of_lt hp
   have hN0 : ∃ x, x ^ 2 % p = N % p := h.exists_mod_eq_sq hp0
   obtain hN | hN : N ≤ 2 * p ∨ 2 * p < N := le_or_lt N (2 * p)
@@ -312,13 +313,13 @@ theorem good.exists_iterate_le_p (hp : 2 < p) (h : good p N) :
 /-! ##### Every number is good for `p = 0` and `p = 1` -/
 
 theorem good_zero_left (k) : good 0 k := by
-  induction' k using Nat.strongInductionOn with k k_ih
+  induction k using Nat.strongRecOn with | ind k k_ih => ?_
   obtain h | h : f 0 k < k ∨ f 0 k = k := Nat.lt_or_eq_of_le (f_zero_left_le_self k)
   exacts [good_f_iff.mp (k_ih (f 0 k) h), ⟨k, λ m ↦ ⟨m, m.le_refl, (f 0).iterate_fixed h m⟩⟩]
 
 theorem good_one_left (k) : good 1 k := by
   ---- Strong induction on `k`
-  induction' k using Nat.strongInductionOn with k h0
+  induction k using Nat.strongRecOn with | ind k h0 => ?_
   obtain h | h : 2 < k ∨ k ≤ 2 := lt_or_le 2 k
   ---- First clear the induction step
   · obtain ⟨m, h1⟩ : ∃ m, (f 1)^[m] k ≤ 2 := exists_f_one_iterate_le_two k
@@ -328,7 +329,7 @@ theorem good_one_left (k) : good 1 k := by
   rcases h with (rfl | rfl) | rfl
   · exact good_zero_right 1
   · exact good_one_right 1
-  · replace h0 : (f 1)^[3] 2 = 2 := by rfl
+  · replace h0 : (f 1)^[3] 2 = 2 := by unfold f; norm_num
     refine ⟨2, λ m ↦ ⟨3 * m, Nat.le_mul_of_pos_left m (Nat.succ_pos 2), ?_⟩⟩
     rw [(f 1).iterate_mul, Function.iterate_fixed h0]
 
@@ -348,7 +349,7 @@ lemma squarefree.of_dvd (hn : squarefree n) (hk : k ∣ n) : squarefree k :=
 lemma three_is_squarefree : squarefree 3 := λ x hx ↦ by
   have X : 0 < 3 := Nat.succ_pos 2
   have h : x = 0 ∨ x = 1 := by
-    have h : Nat.sqrt 3 = 1 := by rfl
+    have h : Nat.sqrt 3 = 1 := by norm_num
     rw [← Nat.le_one_iff_eq_zero_or_eq_one, ← h, Nat.le_sqrt']
     exact Nat.le_of_dvd X hx
   exact h.resolve_left (Nat.ne_of_gt (Nat.pos_of_mul_pos_left (Nat.pos_of_dvd_of_pos hx X)))
@@ -360,6 +361,7 @@ lemma zero_is_not_squarefree : ¬squarefree 0 :=
 section
 
 variable (hp : squarefree p)
+include hp
 
 lemma squarefree.ne_zero : p ≠ 0 :=
   λ h ↦ zero_is_not_squarefree (h ▸ hp)
@@ -397,10 +399,9 @@ lemma squarefree.f_self (h : p ≠ 1) : f p p = 2 * p := by
   · rwa [h1, Nat.one_pow, eq_comm] at h0
 
 lemma squarefree.f_iterate_self (h : k < p) : (f p)^[k] p = p * (k + 1) := by
-  induction' k with k k_ih
-  · exact p.mul_one.symm
-  · rw [(f p).iterate_succ_apply', k_ih (Nat.lt_of_succ_lt h), p.mul_succ (k + 1)]
-    exact if_neg λ h0 ↦ Nat.not_dvd_of_pos_of_lt k.succ_pos h (hp.dvd_of_mul_eq_sq h0.symm)
+  induction k with | zero => exact p.mul_one.symm | succ k hk => ?_
+  rw [(f p).iterate_succ_apply', hk (Nat.lt_of_succ_lt h), p.mul_succ (k + 1)]
+  exact if_neg λ h0 ↦ Nat.not_dvd_of_pos_of_lt k.succ_pos h (hp.dvd_of_mul_eq_sq h0.symm)
 
 lemma squarefree.f_iterate_self_self : (f p)^[p] p = p := by
   have h := congrArg (f p) (hp.f_iterate_self (Nat.pred_lt hp.ne_zero))
@@ -427,7 +428,7 @@ lemma squarefree.dvd_f_iterate_of_dvd (h : p ∣ N) : ∀ k, p ∣ (f p)^[k] N :
 theorem squarefree.good_of_dvd (hN : p ∣ N) : good p N := by
   ---- We will instead induct to show that `pN` is good for all `N`
   rcases hN with ⟨N, rfl⟩
-  induction' N using Nat.strongInductionOn with N N_ih
+  induction N using Nat.strongRecOn with | ind N N_ih => ?_
   obtain h | h : 2 < N ∨ N ≤ 2 := lt_or_le 2 N
   ---- First clear the induction step
   · obtain ⟨m, h0⟩ : ∃ m, (f p)^[m] (p * N) < p * N := by

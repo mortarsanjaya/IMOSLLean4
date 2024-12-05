@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Int.ModEq
 import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 # IMO 2018 N2
@@ -26,7 +27,8 @@ open Finset
 
 theorem add_modeq_mul_add_one (h : a ≡ 1 [ZMOD n]) (h0 : b ≡ 1 [ZMOD n]) :
     a + b ≡ a * b + 1 [ZMOD n ^ 2] := by
-  rw [Int.modEq_iff_dvd, sq, add_comm, ← sub_sub_sub_eq, ← one_sub_mul, ← mul_one_sub]
+  rw [Int.modEq_iff_dvd, sq, add_comm, ← sub_sub_sub_eq,
+    ← one_sub_mul (α := ℤ), ← mul_one_sub]
   exact mul_dvd_mul h.dvd h0.dvd
 
 variable [DecidableEq ι] {S : Finset ι}
@@ -36,6 +38,7 @@ variable [DecidableEq ι] {S : Finset ι}
 section
 
 variable {n : ℤ} {f : ι → ℤ} (h : ∀ i ∈ S, f i ≡ 1 [ZMOD n])
+include h
 
 theorem prod_one_modeq_one_mod : S.prod f ≡ 1 [ZMOD n] := by
   induction' S using Finset.induction with i S h0 h1; rfl

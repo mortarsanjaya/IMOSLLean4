@@ -60,6 +60,7 @@ theorem good_zero : good (λ _ ↦ 0) := λ a b ↦ by
 namespace good
 
 variable (h : good f)
+include h
 
 theorem map_iterate_sq (a : ℤ) : f^[a.natAbs ^ 2] a = a * f a := by
   have h := h a 0; rwa [Int.zero_mul, Int.add_zero, Int.add_zero] at h

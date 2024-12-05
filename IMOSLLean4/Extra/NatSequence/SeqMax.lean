@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Init.Order.LinearOrder
+import Mathlib.Order.Defs
 
 /-!
 # Maximum element in a sequence

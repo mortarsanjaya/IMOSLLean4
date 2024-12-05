@@ -62,7 +62,8 @@ theorem final_solution_general (hN : N % 60 = 5) (h : 5 ^ n ≡ 3 ^ n [MOD 2 ^ n
         rw [← Int.ModEq, Int.modEq_iff_dvd, Nat.cast_add, Nat.cast_pow, Nat.cast_ofNat,
           sub_add_cancel_left, dvd_neg, Int.dvd_iff_emod_eq_zero, ← Nat.cast_ofNat,
           ← Int.natCast_mod, Nat.cast_eq_zero, ← Nat.mod_mod_of_dvd N ⟨12, rfl⟩, hN]
-      rw [jacobiSym.mod_left' hN5, jacobiSym_pow_left_odd'_eq_self]; rfl
+      rw [jacobiSym.mod_left' hN5, jacobiSym_pow_left_odd'_eq_self]
+      exact jacobiSym.at_two (⟨2, rfl⟩ : Odd 5)
     have hN3 : jacobiSym D 3 = 1 := by
       have hN3 : (D : ℤ) % 3 = 1 % 3 := by
         have h0 : 2 ^ 2 % 3 = 1 := by rfl

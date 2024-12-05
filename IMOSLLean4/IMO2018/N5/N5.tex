@@ -1,0 +1,64 @@
+Determine whether there exists $x, y, z, t \in \N^+$ such that $xy - zt = x + y = z + t$ and both $xy$ and $zt$ are perfect squares.
+
+
+
+\subsection*{Answer}
+
+No.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2018SL.pdf}
+
+We use Solution 2 of the official solution.
+In fact, we do more; we characterize all $(x, y, z, t) \in \Z^4$ satisfying the given condition.
+We say that $(x, y, z, t) \in \Z^4$ is \emph{good} if $xy - zt = x + y = z + t$.
+
+\begin{claim}
+A quadruple $(x, y, z, t) \in \Z^4$ is good if and only if there exists $k, \ell \in \Z$ such that
+\[ (x, y, z, t) = (2k \ell - k + \ell, 2k \ell + k - \ell, 2k \ell + k + \ell, 2k \ell - k - \ell). \]
+\end{claim}
+\begin{proof}
+By tedious calculation, one can show that the given quadruples are all good.
+For the converse, first notice that $xy - zt = x + y = z + t$ cannot be odd.
+Indeed, if $x + y = z + t$ is odd, then $xy$ and $zt$ are even, so $xy - zt$ is even.
+
+Now write $x + y = z + t = xy - zt = 2s$ for some integer $s$.
+Both $x - y$ and $z - t$ are also even, so we can write $x - y = 2p$ and $z - t = 2q$ for some integers $p$ and $q$.
+Then $xy = s^2 - p^2$ and $zt = s^2 - q^2$, so $2s = q^2 - p^2$.
+This means $q + p$ and $q - p$ are both even, so we can write
+\[ q + p = 2k, \quad q - p = 2 \ell, \quad s = 2k \ell \]
+    for some $k, \ell \in \Z$.
+Plugging back the equations for $x, y, z, t$ proves the claim.
+\end{proof}
+
+\begin{claim}
+Given a good quadruple $(x, y, z, t) \in \Z^4$, $xyzt$ is a square iff either one of the following holds:
+\begin{itemize}
+    \item   $y = -x$ and $t = -z$; or
+    \item   $(x, y, z, t)$ is equal to $(2, 2, 4, 0)$, $(2, 2, 0, 4)$, $(-4, 0, -2, -2)$, or $(0, -4, -2, -2)$.
+\end{itemize}
+\end{claim}
+\begin{proof}
+By the previous claim, there exists $k, \ell \in \Z$ such that
+\[ (x, y, z, t) = (2k \ell - k + \ell, 2k \ell + k - \ell, 2k \ell + k + \ell, 2k \ell - k - \ell). \]
+Then $xyzt = ((2k \ell)^2 - (k^2 + \ell^2))^2 - (2k \ell)^2$.
+Since $(2k \ell)^2 \geq k^2 + \ell^2 \geq 0$, this forces either $2 k \ell = 0$ or
+\[ (2k \ell)^2 \geq 2((2k \ell)^2 - (k^2 + \ell^2)) - 1 \iff 2 k^2 \ell^2 + 1/2 \geq 4 k^2 \ell^2 - (k^2 + \ell^2) \iff 2 k^2 \ell^2 \leq k^2 + \ell^2 + 1. \]
+The latter forces $(k^2, \ell^2) = (1, 1)$.
+Bashing all four cases gives the four possible quadruples on the second option.
+\end{proof}
+
+Now we go back to the main problem.
+In the first case, one of $x$ or $y$ is non-positive.
+In the second case, one of $x$, $y$, $z$, or $t$ equals zero.
+In both cases, the four integers cannot be all positive.
+
+
+
+\subsection*{Extra notes}
+
+In fact, the claim shows that if $xy$ and $zt$ are both squares, then $(x, y, z, t)$ is either $(0, 0, 0, 0)$ or one of the four special quadruplets.
+In all cases, we also have $xyzt = 0$.

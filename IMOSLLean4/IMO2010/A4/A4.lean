@@ -38,10 +38,11 @@ theorem x_zero : x 0 = false :=
   Nat.binaryRec_zero false λ bit k ↦ xor (bit || k.bodd)
 
 theorem x_mul2 (k : ℕ) : x (2 * k) = xor k.bodd (x k) :=
-  k.binaryRec_eq rfl false
+  Nat.binaryRec_eq false k (Or.inl rfl)
 
-theorem x_mul2_add1 (k : ℕ) : x (2 * k + 1) = !x k :=
-  (k.binaryRec_eq rfl true).trans (x k).true_xor
+theorem x_mul2_add1 (k : ℕ) : x (2 * k + 1) = !x k := by
+  apply (Nat.binaryRec_eq true k (Or.inl rfl)).trans
+  rw [Bool.true_or, Bool.true_xor]
 
 theorem x_mul4 (k : ℕ) : x (4 * k) = xor k.bodd (x k) := by
   rw [Nat.mul_assoc 2 2, x_mul2, x_mul2, Nat.bodd_mul,
@@ -123,7 +124,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
     rw [S_succ]; rcases h with h | h
     · rw [← h, zero_add, this k h.symm]
       exact Int.zero_lt_one.le
-    · rw [← add_neg_self (1 : ℤ)]
+    · rw [← Int.add_right_neg 1]
       exact add_le_add h ((x k).rec (neg_le_self zero_le_one) (-1).le_refl)
   ---- Now show that `x_k = ff` whenever `S_k = 0`, using strong induction
   intro k h; induction' k using Nat.strong_induction_on with k k_ih
@@ -148,16 +149,15 @@ theorem final_solution_extra (k : ℕ) :
   rw [S_four_mul_add_eq_zero_iff q h]
   rcases q.eq_zero_or_pos with (rfl | h0)
   ---- Case 1: `q = 0`
-  rw [S_zero, eq_self_iff_true, true_and_iff, MulZeroClass.mul_zero, zero_add]
-  rcases r.eq_zero_or_pos with (rfl | h0)
-  rw [eq_self_iff_true, true_or_iff, true_iff_iff, Nat.digits_zero]
-  intro c h0; exact absurd h0 (by exact List.not_mem_nil c)
-  rw [Nat.digits_def' (Nat.succ_lt_succ <| Nat.succ_pos 2) h0,
-    Nat.mod_eq_of_lt h, Nat.div_eq_of_lt h, Nat.digits_zero]
-  simp_rw [List.mem_singleton]; rw [forall_eq]
+  · rw [S_zero, eq_self_iff_true, true_and, MulZeroClass.mul_zero, zero_add]
+    rcases r.eq_zero_or_pos with (rfl | h0)
+    rw [eq_self_iff_true, true_or, true_iff, Nat.digits_zero]
+    intro c h0; exact absurd h0 (by exact List.not_mem_nil c)
+    rw [Nat.digits_def' (Nat.succ_lt_succ <| Nat.succ_pos 2) h0,
+      Nat.mod_eq_of_lt h, Nat.div_eq_of_lt h, Nat.digits_zero]
+    simp only [List.mem_singleton]; rw [forall_eq]
   ---- Case 2: `0 < q`
-  replace k_ih :=
-    k_ih q (Nat.lt_add_right _ <| lt_mul_left h0 <| Nat.succ_lt_succ <| Nat.succ_pos 2)
-  rw [k_ih, add_comm,
-    Nat.digits_add 4 (Nat.succ_lt_succ <| Nat.succ_pos 2) r q h <| Or.inr h0.ne.symm]
-  simp only [List.mem_cons]; rw [forall_eq_or_imp, and_comm]
+  · have h1 : 1 < 4 := Nat.succ_lt_succ (Nat.succ_pos 2)
+    specialize k_ih q (Nat.lt_add_right _ (lt_mul_left h0 h1))
+    rw [k_ih, add_comm, Nat.digits_add 4 h1 r q h (Or.inr h0.ne.symm)]
+    simp only [List.mem_cons]; rw [forall_eq_or_imp, and_comm]

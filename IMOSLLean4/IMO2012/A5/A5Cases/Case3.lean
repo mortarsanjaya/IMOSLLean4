@@ -32,8 +32,8 @@ open Extra Extra.CharTwo
 
 section
 
-variable [Semiring R] [CharTwo R] [Ring S] [NoZeroDivisors S]
-   {f : R → S} (hf : NontrivialGood f)
+variable [Semiring R] [CharTwo R] [Ring S] {f : R → S} (hf : NontrivialGood f)
+include hf
 
 /-- (3.1) -/
 lemma Eq1 (x) : f (x * (x + 1) + 1) = f x * f (x + 1) := by
@@ -68,8 +68,7 @@ end
 
 namespace CommCase
 
-variable [CommSemiring R] [CharTwo R] [CommRing S] [NoZeroDivisors S]
-  {f : R → S} (hf : NontrivialGood f)
+variable [CommSemiring R] [CharTwo R] [CommRing S]
 
 /-- Big ring identity 1 used in `Thm1` -/
 lemma Thm1_ring_id1 (a b : S) :
@@ -80,6 +79,9 @@ lemma Thm1_ring_id1 (a b : S) :
 lemma Thm1_ring_id2 (a : S) :
     a ^ 2 * ((a ^ 2 - 1) ^ 2 + 1) - ((a ^ 2 - 1) * (a - 1) + a * a) ^ 2
       = (1 - 2 * a) * (a ^ 2 - 1) := by ring
+
+variable [NoZeroDivisors S] {f : R → S} (hf : NontrivialGood f)
+include hf
 
 /-- (3.4) -/
 theorem Thm1 (x) : f x ^ 2 + f (x + 1) ^ 2 = 1 ∨ f x + f (x + 1) = 1 := by
@@ -108,12 +110,15 @@ theorem SCharTwo_map_add_one [CharTwo S] (x) : f (x + 1) = f x + 1 := by
   have h := Thm1 hf x
   rwa [← CharTwo.add_sq, CharTwo.sq_eq_one_iff, or_self, add_eq_iff_eq_add''] at h
 
+omit [NoZeroDivisors S] in
 lemma pow_four_Eq1 (x) : f ((x ^ 2) ^ 2) = (f x ^ 2 - 1) ^ 2 - 1 := by
   rw [← add_add_cancel_right (x ^ 2) 1, add_one_sq, sq, sq, Eq2 hf, Eq2 hf]
 
+omit [NoZeroDivisors S] in
 lemma pow_four_Eq2 (x) : f ((x ^ 2) ^ 2 + 1) = (f (x + 1) ^ 2 - 1) ^ 2 - 1 := by
   rw [← pow_four_Eq1 hf, add_one_sq, add_one_sq]
 
+omit [CommSemiring R] [CharTwo R] hf [NoZeroDivisors S] in
 /-- Big ring identity used in `SCharNeTwo_main` -/
 lemma SCharNeTwo_main_ring_id (a b : S) :
     ((a - 1) ^ 2 - 1) * ((b - 1) ^ 2 - 1) - ((a * b - 1) ^ 2 - 1)
@@ -164,6 +169,7 @@ namespace SCharNeTwo
 section
 
 variable (hS : (2 : S) ≠ 0) {f : R → S} (hf : NontrivialGood f)
+include hS hf
 
 /-- (3.5) -/
 lemma main_cases (x) :
@@ -190,7 +196,7 @@ lemma map_add_one_eq_zero_iff_map_eq {x} : f (x + 1) = 0 ↔ f x ^ 2 = 1 := by
     · exact h1
     · apply congrArg (f x * ·) at h2
       rw [← mul_assoc, ← sq, h0, one_mul, mul_neg_one] at h2
-      rw [h2, add_neg_self] at h1
+      rw [h2, add_neg_cancel] at h1
       rw [← mul_one (f _), ← h1, mul_zero]
 
 lemma map_eq_neg_one_imp_map_add_one {x} (h : f x = -1) : f (x + 1) = 0 :=
@@ -205,6 +211,7 @@ lemma map_eq_neg_one_imp_map_add_one {x} (h : f x = -1) : f (x + 1) = 0 :=
 namespace ReductionLemmas
 
 variable (h : f r = -1)
+include h
 
 lemma Lem1 : f (r * r) = -1 := by
   rw [Eq2_v2 hf, map_eq_neg_one_imp_map_add_one hS hf h, sq, zero_mul, zero_sub]
@@ -214,9 +221,11 @@ lemma Lem2 : f (r * r + r) = -1 := by
   rwa [map_eq_neg_one_imp_map_add_one hS hf h, mul_zero, add_zero,
     sq, mul_zero, zero_sub, mul_neg_one, h, neg_one_mul, neg_inj] at h0
 
+omit [CharTwo R] [NoZeroDivisors S] hS in
 lemma Lem3 (x) : f (r * x + 1) = f (r + x) - f x := by
   rw [hf.is_good, h, neg_one_mul, neg_add_eq_sub]
 
+ omit [NoZeroDivisors S] hS in
 lemma Lem4 {x} (h0 : ∃ y, x = r * y + 1) : f (r * r + x) = -f x := by
   rcases h0 with ⟨x, rfl⟩
   rw [Lem3 hf h, ← add_assoc, ← mul_add, Lem3 hf h, add_add_cancel_left, neg_sub]
@@ -254,6 +263,7 @@ end
 /-! ### Characterization of elements of `R` -/
 
 variable (hS : (2 : S) ≠ 0) {f : R → S} (hf : ReducedGood f)
+include hS hf
 
 theorem map_eq_neg_one_reduced_imp (h : f r = -1) : r = 0 := by
   let hf' := hf.toNontrivialGood
@@ -379,6 +389,7 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
       rwa [mul_zero, mul_add_one r, ← mul_assoc, ← h0,
         mul_add_one r, ← h0, add_add_cancel_right] at hs
 
+omit [NoZeroDivisors S] in
 theorem 𝔽₂_solution (hR : ∀ r : R, r = 0 ∨ r = 1) :
     ∃ φ : R →+* 𝔽₂, ∀ x, f x = 𝔽₂Map (φ x) :=
   have h : (𝔽₂.cast : 𝔽₂ → R).Bijective :=

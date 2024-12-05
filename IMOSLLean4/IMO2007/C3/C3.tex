@@ -1,0 +1,45 @@
+Find all finite groups $G$ such that there exists a subset $S \subseteq G$ with the following property:
+    the number of triples $(x, y, z) \in S^3 \cup (G \setminus S)^3$ such that $xyz = 1$ is exactly $2007$.
+
+
+
+\subsection*{Answer}
+
+Groups of size $69$ and $84$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2007SL.pdf}
+
+We follow the official solution.
+In fact, we show that the number of such triples do not depend on the structure of $S$ itself, only on the size of $S$ and $G$.
+
+\begin{claim}
+Let $G$ be a finite group and $S \subseteq G$.
+Then the number of triples $(x, y, z) \in S^3 \cup (G \setminus S)^3$ such that $xyz = 1$ is $a^2 + b^2 - ab$, where $a = |S|$ and $b = |G \setminus S|$.
+\end{claim}
+\begin{proof}
+Write $T = G \setminus S$ for convenience.
+The complement of $S^3 \cup T^3$ is the disjoint union of three sets $S \times T \times G$, $G \times S \times T$, and $T \times G \times S$.
+For any pair $(x, y) \in S \times T$, there exists a unique $z \in G$ such that $xyz = 1$.
+Thus, the number of triplets $(x, y, z) \in S \times T \times G$ such that $xyz = 1$ is exactly $|S| \cdot |T| = ab$.
+The same statement holds with $S \times T \times G$ replaced by $G \times S \times T$ and $T \times G \times S$.
+Thus, there are $3ab$ triplets $(x, y, z) \in G^3 \setminus (S^3 \cup T^3)$ such that $xyz = 1$.
+The total number of triplets $(x, y, z) \in G^3$ with $xyz = 1$ is clearly $(a + b)^2$.
+The claim holds, since $(a + b)^2 - 3ab = a^2 + b^2 - ab$.
+\end{proof}
+
+Thus, the group has the desired properties iff there exists $a, b \in \N$ such that $a + b = |G|$ and $a^2 + b^2 - ab = 2007$.
+Now we solve for $a$ and $b$; WLOG let $a \geq b$.
+The latter equation changes to
+\[ 4 \cdot 2007 = 4a^2 + 4b^2 - 4ab = 3(a - b)^2 + (a + b)^2. \]
+Working mod $3$ yields $3 \mid a + b$.
+Working mod $9$ then yields $9 \mid 3(a - b)^2$, and thus $3 \mid a - b$.
+The two equations yield $3 \mid a$ and $3 \mid b$.
+
+Now write $a = 3c$ and $b = 3d$; the above equation becomes
+\[ 4 \cdot 223 = 3(c - d)^2 + (c + d)^2. \]
+Checking all possible values of $c - d \leq \lfloor \sqrt{(4 \cdot 223)/3} \rfloor = 17$ shows that $(c - d, c + d) \in \{(11, 23), (6, 28)\}$.
+Thus, we get $(c, d) \in \{(17, 6), (17, 11)\}$, which gives either $|G| = 3 \cdot (17 + 6) = 69$ or $|G| = 3 \cdot (17 + 11) = 84$.

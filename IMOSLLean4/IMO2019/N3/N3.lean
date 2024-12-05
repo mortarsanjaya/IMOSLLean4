@@ -46,12 +46,13 @@ theorem univ_rootiful : rootiful Set.univ := λ x _ _ _ _ ↦ Set.mem_univ x
 section
 
 variable {S : Set ℤ} (h : rootiful S)
+include h
 
 theorem rootiful_neg_one_mem (x : ℤ) (h0 : x ≠ 0) (h1 : x ∈ S) : (-1 : ℤ) ∈ S :=
   h (-1) (replicate 2 x)
     (λ _ h2 ↦ Set.mem_of_eq_of_mem (eq_of_mem_replicate h2) h1)
     ⟨x, mem_replicate.mpr ⟨Nat.succ_ne_zero 1, rfl⟩, h0⟩
-    (by change x + -1 * (x + 0) = 0; rw [add_zero, neg_one_mul, add_neg_self])
+    (by change x + -1 * (x + 0) = 0; rw [add_zero, neg_one_mul, add_neg_cancel])
 
 theorem rootiful_one_mem_of_nat (n : ℕ) (h0 : n ≠ 0) (h1 : (n : ℤ) ∈ S) : (1 : ℤ) ∈ S :=
   let h0 : (n : ℤ) ≠ 0 := Nat.cast_ne_zero.mpr h0
@@ -60,7 +61,7 @@ theorem rootiful_one_mem_of_nat (n : ℕ) (h0 : n ≠ 0) (h1 : (n : ℤ) ∈ S) 
       ⟨h1, λ x h2 ↦ (mem_replicate.mp h2).2 ▸ rootiful_neg_one_mem h n h0 h1⟩)
     ⟨n, mem_cons_self _ _, h0⟩
     (by simp only [one_mul]; rw [← sum_eq_foldr, sum_cons,
-      sum_replicate, nsmul_eq_mul, mul_neg_one, add_neg_self])
+      sum_replicate, nsmul_eq_mul, mul_neg_one, add_neg_cancel])
 
 theorem rootiful_one_mem_of_pos (n : ℤ) (h0 : 0 < n) (h1 : n ∈ S) : (1 : ℤ) ∈ S :=
   rootiful_one_mem_of_nat h n.natAbs (Int.natAbs_ne_zero.mpr h0.ne.symm)
@@ -72,7 +73,7 @@ theorem rootiful_neg_mem_of_one_mem (h0 : (1 : ℤ) ∈ S) (x : ℤ) (h1 : x ∈
       rw [mem_cons, mem_singleton] at h2
       rcases h2 with rfl | rfl; exacts [h1, h0])
     ⟨1, mem_cons_of_mem _ (mem_singleton_self 1), Int.one_ne_zero⟩
-    (by show x + -x * (1 + -x * 0) = 0; rw [mul_zero, add_zero, mul_one, add_neg_self])
+    (by show x + -x * (1 + -x * 0) = 0; rw [mul_zero, add_zero, mul_one, add_neg_cancel])
 
 theorem rootiful_neg_mem_of_pos {x : ℤ} (h0 : 0 < x) (h1 : x ∈ S) : -x ∈ S :=
   rootiful_neg_mem_of_one_mem h (rootiful_one_mem_of_pos h x h0 h1) x h1
@@ -85,7 +86,7 @@ theorem rootiful_induction_of_nat_dvd_nat (h0 : 1 < n) (h1 : ∀ k : ℕ, k < n 
       exact h1 d (Nat.digits_lt_base h0 h5)⟩)
     ⟨-N, mem_cons_self _ _, by rw [Int.neg_ne_zero, Nat.cast_ne_zero]; exact h2.ne.symm⟩
     (by rw [List.foldr, foldr_map, ← Nat.ofDigits_eq_foldr, ← Nat.coe_int_ofDigits,
-      Nat.ofDigits_digits, h3, Nat.cast_mul, add_left_neg])
+      Nat.ofDigits_digits, h3, Nat.cast_mul, neg_add_cancel])
 
 theorem rootiful_induction_of_nat_dvd_int (h0 : 1 < n) (h1 : ∀ k : ℕ, k < n → (k : ℤ) ∈ S)
     (N : ℤ) (h2 : N ≠ 0) (h3 : (n : ℤ) ∣ N) (h4 : N ∈ S) : (n : ℤ) ∈ S :=

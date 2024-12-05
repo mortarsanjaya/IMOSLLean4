@@ -375,4 +375,6 @@ theorem final_solution :
         _ ≤ 2 ^ 15 := Nat.le_add_right 22532 10236
     _ = log2_iter 15 13 := by rw [log2_iter_succ, log2_two_pow]
     _ ≤ log2_iter 15 3 := log2_antitone_iter 15 (Nat.le_add_right 3 10)
-    _ = 0 := by rfl
+    _ = log2_iter 3 2 := congrArg (log2_iter · 2) (by iterate 4 rw [Nat.log2]; simp)
+    _ = log2_iter 1 1 := congrArg (log2_iter · 1) (by iterate 2 rw [Nat.log2]; simp)
+    _ = 0 := by rw [log2_iter, log2_iter, Nat.log2]; rfl
