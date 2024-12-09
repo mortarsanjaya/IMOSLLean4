@@ -38,27 +38,25 @@ structure GoodFun [Add R] [Mul R] [Add S] (ι : S → R) where
 class GoodFunClass (F) [Add R] [Mul R] [Add S] (ι : S → R) [FunLike F R S] where
   good_def : ∀ (f : F) (x y : R), f (ι (f x) * ι (f y)) + f (x + y) = f (x * y)
 
-
-namespace GoodFun
-
-variable [Add R] [Mul R]
-
-instance [Add S] (ι : S → R) : FunLike (GoodFun ι) R S where
-  coe f := f.toFun
-  coe_injective' f g h := by rwa [GoodFun.mk.injEq]
-
-instance [Add S] (ι : S → R) : GoodFunClass (GoodFun ι) ι where
-  good_def f := f.good_def'
-
-@[ext] theorem ext [Add S] {ι : S → R} {f g : GoodFun ι} : (∀ x, f x = g x) → f = g :=
-  DFunLike.ext _ _
-
 /-- The zero function as a good function. -/
-protected def zero [AddZeroClass S] (ι : S → R) : GoodFun ι where
+def GoodFun_zero [Add R] [Mul R] [AddZeroClass S] (ι : S → R) : GoodFun ι where
   toFun _ := 0
   good_def' _ _ := zero_add 0
 
-instance [AddZeroClass S] (ι : S → R) : Zero (GoodFun ι) := ⟨GoodFun.zero ι⟩
+
+namespace GoodFun
+
+variable [Add R] [Mul R] [Add S]
+
+instance (ι : S → R) : FunLike (GoodFun ι) R S where
+  coe f := f.toFun
+  coe_injective' f g h := by rwa [GoodFun.mk.injEq f.toFun _ g.toFun]
+
+instance (ι : S → R) : GoodFunClass (GoodFun ι) ι where
+  good_def f := f.good_def'
+
+@[ext] theorem ext {ι : S → R} {f g : GoodFun ι} : (∀ x, f x = g x) → f = g :=
+  DFunLike.ext _ _
 
 end GoodFun
 
