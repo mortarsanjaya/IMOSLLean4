@@ -36,19 +36,6 @@ def NonperiodicGoodFun.one_sub : NonperiodicGoodFun (id : R → R) :=
   { GoodFun.one_sub R with
     period_imp_eq' := λ _ _ h ↦ add_right_injective 0 (sub_right_injective (h 0)) }
 
-@[deprecated]
-def GoodFun.sub_one : GoodFun (id : R → R) where
-  toFun x := x - 1
-  good_def' x y := by
-    simp only [id]
-    rw [sub_one_mul, mul_sub_one, sub_sub,
-      sub_add_cancel, sub_sub, sub_add_sub_cancel]
-
-@[deprecated]
-def NonperiodicGoodFun.sub_one : NonperiodicGoodFun (id : R → R) :=
-  { GoodFun.sub_one R with
-    period_imp_eq' := λ _ _ h ↦ add_right_injective 0 (sub_left_injective (h 0)) }
-
 end
 
 
@@ -242,33 +229,28 @@ end
 
 /-! ##### If `f` is injective, we are done -/
 
-section
-
-variable [Ring R] [AddCommGroup S] (ι : S →+ R)
-  [FunLike F R S] [GoodFunClass F ι] {f : F} (h : (f : R → S).Injective)
-include h
-
-theorem incl_map_zero_mul_self_of_injective : ι (f 0) * ι (f 0) = 1 :=
-  h ((map_map_zero_mul_self ι f).trans (map_one_eq_zero ι f).symm)
-
-theorem solution_of_injective (x) : ι (f x) = ι (f 0) * (1 - x) := by
-  have X := map_map_zero_mul_map ι f
-  have h0 := X (ι (f 0) * ι (f x))
-  rw [eq_sub_of_add_eq (X x), ι.map_sub, mul_sub, add_sub_left_comm, add_right_eq_self] at h0
-  replace X := incl_map_zero_mul_self_of_injective ι h
-  replace h0 := h (eq_of_sub_eq_zero h0)
-  rw [sub_eq_iff_eq_add, ← sub_eq_iff_eq_add', X] at h0
-  rw [h0, ← mul_assoc, X, one_mul]
-
-theorem incl_map_zero_comm_of_injective (x) : ι (f 0) * x = x * ι (f 0) := by
-  have h0 : ι (f 0) * ι (f (1 - x)) = ι (f (1 - x)) * ι (f 0) := by
-    apply h; rw [← add_left_inj, good_def, zero_mul, add_comm 0, good_def, mul_zero]
-  rw [solution_of_injective ι h (1 - x), sub_sub_cancel, mul_assoc] at h0
-  replace h0 : (ι (f 0) * ι (f 0)) * (ι (f 0) * x) = (ι (f 0) * ι (f 0)) * (x * ι (f 0)) := by
-    rw [mul_assoc, h0, mul_assoc]
-  rwa [incl_map_zero_mul_self_of_injective ι h, one_mul, one_mul] at h0
-
-end
+theorem solution_of_injective [Ring R] [AddCommGroup S] (ι : S →+ R)
+    [FunLike F R S] [GoodFunClass F ι] {f : F} (h : (f : R → S).Injective) :
+    ∃ a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a}, ∀ x, ι (f x) = a * (1 - x) := by
+  have h0 : ι (f 0) * ι (f 0) = 1 :=
+    h ((map_map_zero_mul_self ι f).trans (map_one_eq_zero ι f).symm)
+  have h1 (x) : ι (f x) = ι (f 0) * (1 - x) := by
+    have X := map_map_zero_mul_map ι f
+    have h1 := X (ι (f 0) * ι (f x))
+    rw [eq_sub_of_add_eq (X x), ι.map_sub, mul_sub,
+      add_sub_left_comm, add_right_eq_self] at h1
+    replace h1 := h (eq_of_sub_eq_zero h1)
+    rw [sub_eq_iff_eq_add, ← sub_eq_iff_eq_add', h0] at h1
+    rw [h1, ← mul_assoc, h0, one_mul]
+  have h2 (x) : ι (f 0) * x = x * ι (f 0) := by
+    have h2 : ι (f 0) * ι (f (1 - x)) = ι (f (1 - x)) * ι (f 0) := by
+      apply h; rw [← add_left_inj, good_def, zero_mul, add_comm 0, good_def, mul_zero]
+    rw [h1 (1 - x), sub_sub_cancel, mul_assoc] at h2
+    replace h2 : (ι (f 0) * ι (f 0)) * (ι (f 0) * x)
+        = (ι (f 0) * ι (f 0)) * (x * ι (f 0)) := by
+      rw [mul_assoc, h2, mul_assoc]
+    rwa [h0, one_mul, one_mul] at h2
+  exact ⟨⟨ι (f 0), h0, h2⟩, h1⟩
 
 
 

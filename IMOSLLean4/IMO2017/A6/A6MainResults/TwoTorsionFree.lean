@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A6.A6Lemmas.Basic
-import IMOSLLean4.IMO2017.A6.A6Lemmas.RingCon
 import Mathlib.Data.Nat.Cast.Basic
 
 /-!
@@ -44,19 +43,15 @@ theorem TwoTorsionFree_injective : (f : R → S).Injective := λ c d h ↦ by
   rw [mul_neg, h1, h, ← h0, ← mul_neg, ← good_def ι f d, add_right_inj] at h2
   rw [h2, neg_add_rev, neg_neg]
 
-theorem TwoTorsionFree_map_zero_mul_self : ι (f 0) * ι (f 0) = 1 :=
-  incl_map_zero_mul_self_of_injective ι (TwoTorsionFree_injective hS2 ι f)
-
-theorem TwoTorsionFree_solution : ∀ x, ι (f x) = ι (f 0) * (1 - x) :=
+theorem TwoTorsionFree_solution :
+    ∃ a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a}, ∀ x, ι (f x) = a * (1 - x) :=
   solution_of_injective ι (TwoTorsionFree_injective hS2 ι f)
 
-theorem TwoTorsionFree_map_zero_comm : ∀ x, ι (f 0) * x = x * ι (f 0) :=
-  incl_map_zero_comm_of_injective ι (TwoTorsionFree_injective hS2 ι f)
-
 theorem TwoTorsionFree_altFE (x y : R) : f ((1 - x) * (1 - y)) + f (x + y) = f (x * y) := by
-  rw [← good_def ι f x, add_left_inj, TwoTorsionFree_solution hS2,
-    TwoTorsionFree_map_zero_comm hS2, TwoTorsionFree_solution hS2 ι f y,
-    mul_assoc, ← mul_assoc (ι (f 0)), TwoTorsionFree_map_zero_mul_self hS2, one_mul]
+  obtain ⟨⟨a, ha, ha0⟩, h⟩ := TwoTorsionFree_solution hS2 ι f
+  have h0 : ι (f x) * ι (f y) = (1 - x) * (1 - y) := by
+    rw [h, h, ha0, mul_assoc, ← mul_assoc a, ha, one_mul]
+  rw [← h0, good_def]
 
 end
 

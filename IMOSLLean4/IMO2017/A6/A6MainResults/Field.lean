@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A6.A6Lemmas.Field
+import IMOSLLean4.IMO2017.A6.A6Lemmas.Basic
 import IMOSLLean4.Extra.CharTwo.Ring
+import Mathlib.Algebra.Field.Defs
 import Mathlib.Algebra.Ring.Commute
 
 /-!
@@ -22,6 +23,13 @@ That is, given $char(R) = 2$ and $f : R → S$ non-periodic good,
 
 namespace IMOSL
 namespace IMO2017A6
+
+/-- Good functions on division rings: a formula -/
+theorem DivRing_inv_formula [DivisionRing R] [AddGroup S] (ι : S → R)
+    [FunLike F R S] [GoodFunClass F ι] (f : F) {c : R} (h : c ≠ 0) :
+    f (ι (f (c + 1)) * ι (f (c⁻¹ + 1))) = 0 := by
+  rw [eq_sub_of_add_eq (good_def ι f _ _), sub_eq_zero,
+    add_one_mul c, mul_add_one c, mul_inv_cancel₀ h, add_comm 1]
 
 open Extra
 
@@ -95,8 +103,9 @@ theorem CharTwoField_injective : (f : R → R).Injective := λ a b h ↦ by
   · rwa [X0, add_left_eq_self, CharTwo.add_eq_zero_iff_eq, inv_inj, eq_comm] at h0
 
 theorem CharTwoField_solution (f : F) (x) : f x = x + 1 := by
-  refine (solution_of_injective (AddMonoidHom.id R) (CharTwoField_injective f) x).trans ?_
-  rw [CharTwoField_map_zero_eq_one, AddMonoidHom.id_apply,
-    one_mul, CharTwo.sub_eq_add, add_comm]
+  obtain ⟨⟨a, ha, ha0⟩, h⟩ : ∃ a : {a : R // _}, ∀ x, f x = a.1 * (1 - x) :=
+    solution_of_injective (AddMonoidHom.id R) (CharTwoField_injective f)
+  simp only at h; rw [CharTwo.mul_self_eq_one_iff] at ha
+  rw [h, ha, one_mul, CharTwo.sub_eq_add, add_comm]
 
 end
