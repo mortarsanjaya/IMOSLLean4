@@ -10,17 +10,17 @@ import Mathlib.Data.FunLike.Basic
 /-!
 # IMO 2017 A6 (P2, Definitions)
 
-Let $R$ be a ring, $S$ be an abelian group, and $ι : R → S$ be a function.
-Determine all functions $f : R → S$ such that, for any $x, y ∈ R$,
-$$ f(ι(f(x)) ι(f(y))) + f(x + y) = f(xy). $$
+Let $R$ be a ring.
+Determine all functions $f : R → R$ such that, for any $x, y ∈ R$,
+$$ f(f(x) f(y)) + f(x + y) = f(xy). $$
 
 This file defines the functional equation and prove the most basic properties.
 We say that $f$ is
-* *$ι$-good* if $f$ satisfies the above functional equation;
-* *non-periodic $ι$-good* if $f$ is $ι$-good and has no non-zero period;
-* *reduced $ι$-good* if $f$ is non-periodic $ι$-good and $ι(f(0)) = 1$.
+* `good` if $f$ satisfies the above functional equation;
+* `non-periodic` if $f$ has no non-zero period;
+* `reduced` if $f$ is non-periodic good and $f(0) = 1$.
 
-The $\text{id}$-good functions are characterized for a decent amount of subcases on $R$.
+The `good` functions are characterized for a decent amount of subcases on $R$.
 The file `IMOSLLean4/IMO2017/A6/A6.lean` collects all the main results.
 -/
 
@@ -29,63 +29,62 @@ namespace IMO2017A6
 
 /-! ### Good functions -/
 
-/-- Good function. -/
-structure GoodFun [Add R] [Mul R] [Add S] (ι : S → R) where
-  toFun : R → S
-  good_def' : ∀ x y, toFun (ι (toFun x) * ι (toFun y)) + toFun (x + y) = toFun (x * y)
+@[ext] structure GoodFun (R) [NonUnitalNonAssocSemiring R] where
+  toFun : R → R
+  good_def' : ∀ x y, toFun (toFun x * toFun y) + toFun (x + y) = toFun (x * y)
 
-/-- Class of good functions; see mathlib's `DFunLike` design. -/
-class GoodFunClass (F) [Add R] [Mul R] [Add S] (ι : S → R) [FunLike F R S] where
-  good_def : ∀ (f : F) (x y : R), f (ι (f x) * ι (f y)) + f (x + y) = f (x * y)
+class GoodFunClass (F) (R : outParam Type*)
+    [NonUnitalNonAssocSemiring R] [FunLike F R R] where
+  good_def : ∀ (f : F) (x y : R), f (f x * f y) + f (x + y) = f (x * y)
+
+@[deprecated]
+abbrev good [NonUnitalNonAssocSemiring R] (f : R → R) := ∃ f₀ : GoodFun R, f = f₀.toFun
 
 /-- The zero function as a good function. -/
-def GoodFun_zero [Add R] [Mul R] [AddZeroClass S] (ι : S → R) : GoodFun ι where
-  toFun _ := 0
-  good_def' _ _ := zero_add 0
-
-
-namespace GoodFun
-
-variable [Add R] [Mul R] [Add S]
-
-instance (ι : S → R) : FunLike (GoodFun ι) R S where
-  coe f := f.toFun
-  coe_injective' f g h := by rwa [GoodFun.mk.injEq f.toFun _ g.toFun]
-
-instance (ι : S → R) : GoodFunClass (GoodFun ι) ι where
-  good_def f := f.good_def'
-
-@[ext] theorem ext {ι : S → R} {f g : GoodFun ι} : (∀ x, f x = g x) → f = g :=
-  DFunLike.ext _ _
-
-end GoodFun
+def GoodFun_zero (R) [NonUnitalNonAssocSemiring R] : GoodFun R :=
+  ⟨λ _ ↦ 0, λ _ _ ↦ zero_add 0⟩
 
 
 section
 
-variable [Add R] [Mul R] [Add S] (ι : S → R) [FunLike F R S] [GoodFunClass F ι] (f : F)
+variable [NonUnitalNonAssocSemiring R] [FunLike F R R] [GoodFunClass F R]
 
-/-- Coercion from `GoodFunClass` to `GoodFun`. -/
-def GoodFunClass.toGoodFun : GoodFun ι where
+def GoodFunClass.toGoodFun (f : F) : GoodFun R where
   toFun := f
   good_def' := good_def f
 
-theorem good_def : ∀ x y, f (ι (f x) * ι (f y)) + f (x + y) = f (x * y) :=
+instance : FunLike (GoodFun R) R R where
+  coe f := f.toFun
+  coe_injective' := λ f g ↦ GoodFun.mk.injEq f.toFun _ g.toFun _ ▸ id
+
+instance : GoodFunClass (GoodFun R) R where
+  good_def f := f.good_def'
+
+theorem good_def (f : F) : ∀ x y, f (f x * f y) + f (x + y) = f (x * y) :=
   GoodFunClass.good_def f
+
+theorem map_map_zero_mul_map (f : F) (x) : f (f 0 * f x) + f x = f 0 := by
+  have h := good_def f 0 x; rwa [zero_add, zero_mul] at h
+
+theorem map_map_mul_map_zero (f : F) (x) : f (f x * f 0) + f x = f 0 := by
+  have h := good_def f x 0; rwa [add_zero, mul_zero] at h
 
 end
 
 
 section
 
-variable [NonUnitalNonAssocSemiring R] [Add S] (ι : S → R)
-  [FunLike F R S] [GoodFunClass F ι] (f : F)
+variable [NonUnitalNonAssocSemiring R] [IsCancelAdd R] [FunLike F R R] [GoodFunClass F R]
 
-theorem map_map_zero_mul_map (x) : f (ι (f 0) * ι (f x)) + f x = f 0 := by
-  have h := good_def ι f 0 x; rwa [zero_add, zero_mul] at h
+theorem map_map_zero_mul_self (f : F) : f (f 0 * f 0) = 0 := by
+  rw [← add_right_cancel_iff, map_map_zero_mul_map, zero_add]
 
-theorem map_map_mul_map_zero (x) : f (ι (f x) * ι (f 0)) + f x = f 0 := by
-  have h := good_def ι f x 0; rwa [add_zero, mul_zero] at h
+theorem map_map_mul_comm_of_comm (f : F) {x y : R} (h : x * y = y * x) :
+    f (f x * f y) = f (f y * f x) := by
+  rw [← add_right_cancel_iff, good_def, add_comm x, good_def, h]
+
+theorem map_map_mul_map_zero_comm (f : F) (x : R) : f (f x * f 0) = f (f 0 * f x) :=
+  map_map_mul_comm_of_comm f ((mul_zero x).trans (zero_mul x).symm)
 
 end
 
@@ -95,71 +94,43 @@ end
 
 /-! ### Non-periodic good functions -/
 
-/-- Non-periodic good functions. -/
-structure NonperiodicGoodFun [Add R] [Mul R] [Add S] (ι : S → R)
-    extends GoodFun ι where
+@[ext] structure NonperiodicGoodFun (R) [NonUnitalNonAssocSemiring R] extends GoodFun R where
   period_imp_eq' (c d) (_ : ∀ x, toFun (x + c) = toFun (x + d)) : c = d
 
-/-- Alternative constructor for non-periodic good functions. -/
-def NonperiodicGoodFun.mk' [Add R] [Mul R] [Add S] (ι : S → R) (f : R → S)
-    (good_def' : ∀ x y : R, f (ι (f x) * ι (f y)) + f (x + y) = f (x * y))
-    (period_imp_eq' : ∀ c d, (∀ x, f (x + c) = f (x + d)) → c = d) :
-    NonperiodicGoodFun ι :=
+def NonperiodicGoodFun.mk' [NonUnitalNonAssocSemiring R] (f : R → R)
+    (good_def' : ∀ x y : R, f (f x * f y) + f (x + y) = f (x * y))
+    (period_imp_eq' : ∀ c d, (∀ x, f (x + c) = f (x + d)) → c = d) : NonperiodicGoodFun R :=
   ⟨⟨f, good_def'⟩, period_imp_eq'⟩
 
-/-- Class of non-periodic good functions; see mathlib's `DFunLike` design. -/
-class NonperiodicGoodFunClass (F) [Add R] [Mul R] [Add S] (ι : S → R) [FunLike F R S]
-    extends GoodFunClass F ι where
+class NonperiodicGoodFunClass (F) (R : outParam Type*)
+    [NonUnitalNonAssocSemiring R] [FunLike F R R] extends GoodFunClass F R where
   period_imp_eq (f : F) (c d) (_ : ∀ x, f (x + c) = f (x + d)) : c = d
 
+@[deprecated]
+abbrev nonperiodicGood [NonUnitalNonAssocSemiring R] (f : R → R) :=
+  ∃ f₀ : NonperiodicGoodFun R, f = f₀.toFun
 
-namespace NonperiodicGoodFun
 
-variable [Add R] [Mul R] [Add S]
+section
 
-instance (ι : S → R) : FunLike (NonperiodicGoodFun ι) R S where
+variable [NonUnitalNonAssocSemiring R] [FunLike F R R] [NonperiodicGoodFunClass F R]
+
+def NonperiodicGoodFunClass.toNonperiodicGoodFun (f : F) : NonperiodicGoodFun R :=
+  { GoodFunClass.toGoodFun f with period_imp_eq' := period_imp_eq f }
+
+instance : FunLike (NonperiodicGoodFun R) R R where
   coe f := f.toFun
-  coe_injective' f g h := by rwa [NonperiodicGoodFun.mk.injEq, ← DFunLike.coe_fn_eq]
+  coe_injective' := λ f g h ↦ by rwa [NonperiodicGoodFun.mk.injEq, ← DFunLike.coe_fn_eq]
 
-instance (ι : S → R) : NonperiodicGoodFunClass (NonperiodicGoodFun ι) ι where
+instance : NonperiodicGoodFunClass (NonperiodicGoodFun R) R where
   good_def f := f.good_def'
   period_imp_eq f := f.period_imp_eq'
 
-@[ext] theorem ext {ι : S → R} {f g : NonperiodicGoodFun ι} : (∀ x, f x = g x) → f = g :=
-  DFunLike.ext _ _
-
-end NonperiodicGoodFun
-
-
-section
-
-variable [Add R] [Mul R] [Add S] (ι : S → R) [FunLike F R S] [NonperiodicGoodFunClass F ι]
-include ι
-
-/-- Coercion from `NonperiodicGoodFunClass` to `NonperiodicGoodFun`. -/
-def NonperiodicGoodFunClass.toNonperiodicGoodFun (f : F) : NonperiodicGoodFun ι :=
-  { GoodFunClass.toGoodFun ι f with period_imp_eq' := period_imp_eq ι f }
-
 theorem period_imp_eq {f : F} : (∀ x, f (x + c) = f (x + d)) → c = d :=
-  NonperiodicGoodFunClass.period_imp_eq ι f _ _
+  NonperiodicGoodFunClass.period_imp_eq f _ _
 
-theorem period_iff_eq {f : F} : (∀ x, f (x + c) = f (x + d)) ↔ c = d :=
-  ⟨period_imp_eq ι, λ h _ ↦ by rw [h]⟩
-
-end
-
-
-section
-
-variable [AddZeroClass R] [Mul R] [Add S] (ι : S → R)
-  [FunLike F R S] [NonperiodicGoodFunClass F ι] {f : F}
-include ι
-
-theorem period_imp_zero (h : ∀ x, f (x + c) = f x) : c = 0 :=
-  period_imp_eq ι (f := f) λ x ↦ by rw [h, add_zero]
-
-theorem period_iff_zero : (∀ x, f (x + c) = f x) ↔ c = 0 :=
-  ⟨period_imp_zero ι, λ h _ ↦ by rw [h, add_zero]⟩
+theorem period_imp_zero {f : F} (h : ∀ x, f (x + c) = f x) : c = 0 :=
+  period_imp_eq (f := f) λ x ↦ by rw [h, add_zero]
 
 end
 
@@ -169,55 +140,39 @@ end
 
 /-! ### Reduced good functions -/
 
-/-- Reduced good functions. -/
-structure ReducedGoodFun [NonAssocSemiring R] [Add S] (ι : S → R)
-    extends NonperiodicGoodFun ι where
-  map_zero_eq_one' : ι (toFun 0) = 1
+@[ext] structure ReducedGoodFun (R) [NonAssocSemiring R]
+    extends NonperiodicGoodFun R where
+  map_zero_eq_one' : toFun 0 = 1
 
-/-- Alternative constructor for reduced good functions. -/
-def ReducedGoodFun.mk' [NonAssocSemiring R] [Add S] (ι : S → R) (f : R → S)
-    (good_def' : ∀ x y : R, f (ι (f x) * ι (f y)) + f (x + y) = f (x * y))
+def ReducedGoodFun.mk' [NonAssocSemiring R] (f : R → R)
+    (good_def' : ∀ x y : R, f (f x * f y) + f (x + y) = f (x * y))
     (period_imp_eq' : ∀ c d, (∀ x, f (x + c) = f (x + d)) → c = d)
-    (map_zero_eq_one' : ι (f 0) = 1) :
-    ReducedGoodFun ι :=
+    (map_zero_eq_one' : f 0 = 1) : ReducedGoodFun R :=
   ⟨⟨⟨f, good_def'⟩, period_imp_eq'⟩, map_zero_eq_one'⟩
 
-/-- Class of reduced good functions; see mathlib's `DFunLike` design. -/
-class ReducedGoodFunClass (F) [NonAssocSemiring R] [Add S] (ι : S → R) [FunLike F R S]
-    extends NonperiodicGoodFunClass F ι where
-  map_zero_eq_one : ∀ f : F, ι (f 0) = 1
-
-
-namespace ReducedGoodFun
-
-variable [NonAssocSemiring R] [Add S] (ι : S → R)
-
-instance : FunLike (ReducedGoodFun ι) R S where
-  coe f := f.toFun
-  coe_injective' := λ f g h ↦ by rwa [ReducedGoodFun.mk.injEq, ← DFunLike.coe_fn_eq]
-
-instance : ReducedGoodFunClass (ReducedGoodFun ι) ι where
-  good_def f := f.good_def'
-  period_imp_eq f := f.period_imp_eq'
-  map_zero_eq_one f := f.map_zero_eq_one'
-
-@[ext] theorem ext {ι : S → R} {f g : ReducedGoodFun ι} : (∀ x, f x = g x) → f = g :=
-  DFunLike.ext _ _
-
-end ReducedGoodFun
+class ReducedGoodFunClass (F) (R : outParam Type*) [NonAssocSemiring R] [FunLike F R R]
+    extends NonperiodicGoodFunClass F R where
+  map_zero_eq_one : ∀ f : F, f 0 = 1
 
 
 section
 
-variable [NonAssocSemiring R] [Add S] (ι : S → R)
-  [FunLike F R S] [ReducedGoodFunClass F ι] (f : F)
+variable [NonAssocSemiring R] [FunLike F R R] [ReducedGoodFunClass F R]
 
-/-- Coercion from `ReducedGoodFunClass` to `ReducedGoodFun`. -/
-def ReducedGoodFunClass.toReducedGoodFun : ReducedGoodFun ι :=
-  { NonperiodicGoodFunClass.toNonperiodicGoodFun ι f with
+def ReducedGoodFunClass.toReducedGoodFun (f : F) : ReducedGoodFun R :=
+  { NonperiodicGoodFunClass.toNonperiodicGoodFun f with
     map_zero_eq_one' := map_zero_eq_one f }
 
-theorem map_zero_eq_one : ι (f 0) = 1 :=
+instance : FunLike (ReducedGoodFun R) R R where
+  coe f := f.toFun
+  coe_injective' := λ f g h ↦ by rwa [ReducedGoodFun.mk.injEq, ← DFunLike.coe_fn_eq]
+
+instance : ReducedGoodFunClass (ReducedGoodFun R) R where
+  good_def f := f.good_def'
+  period_imp_eq f := f.period_imp_eq'
+  map_zero_eq_one f := f.map_zero_eq_one'
+
+theorem map_zero_eq_one (f : F) : f 0 = 1 :=
   ReducedGoodFunClass.map_zero_eq_one f
 
 end
