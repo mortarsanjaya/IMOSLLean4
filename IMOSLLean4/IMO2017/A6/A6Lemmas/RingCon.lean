@@ -143,9 +143,12 @@ theorem NonperiodicGoodFun.inducedRingCon_lift_eq
   rw [← rc.eq, ← period_iff_eq (rc.toQuotient ∘ ι) (f := f)]
   exact Iff.symm Quotient.forall
 
+
+namespace GoodFun
+
 /-- Explicit correspondence between good functions with specified ring congruence
   and non-periodic good functions on the quotient of the congruence. -/
-def GoodFun.fixedRingConCorrespondence (ι : S → R) (rc : RingCon R) :
+def FixedRingConCorrespondence (ι : S → R) (rc : RingCon R) :
     {f : GoodFun ι | f.inducedRingCon = rc} ≃ NonperiodicGoodFun (rc.toQuotient ∘ ι) where
   toFun f := f.1.Quotient' rc f.2
   invFun f := ⟨f.Lift, f.inducedRingCon_lift_eq⟩
@@ -153,21 +156,24 @@ def GoodFun.fixedRingConCorrespondence (ι : S → R) (rc : RingCon R) :
   right_inv _ := NonperiodicGoodFun.ext (Quotient.ind λ _ ↦ rfl)
 
 /-- Explicit correspondence between `ι`-good functions and non-periodic good functions. -/
-def GoodFun.NonperiodicCorrespondence (ι : S → R) :
+def NonperiodicCorrespondence (ι : S → R) :
     GoodFun ι ≃ (rc : RingCon R) × NonperiodicGoodFun (rc.toQuotient ∘ ι) := calc
   _ ≃ (rc : RingCon R) × {f : GoodFun ι | f.inducedRingCon = rc} :=
     (Equiv.sigmaFiberEquiv inducedRingCon).symm
   _ ≃ (rc : RingCon R) × NonperiodicGoodFun (rc.toQuotient ∘ ι) :=
-    Equiv.sigmaCongrRight (fixedRingConCorrespondence ι)
+    Equiv.sigmaCongrRight (FixedRingConCorrespondence ι)
 
 /-- Specification of `GoodFun.NonperiodicCorrespondence`. -/
-theorem GoodFun.NonperiodicCorrespondence_def (ι : S → R) (f : GoodFun ι) :
+theorem NonperiodicCorrespondence_def (ι : S → R) (f : GoodFun ι) :
     NonperiodicCorrespondence ι f = ⟨f.inducedRingCon, f.Quotient⟩ := rfl
 
 /-- Specification of the inverse of `GoodFun.NonperiodicCorrespondence`. -/
-theorem GoodFun.NonperiodicCorrespondence_symm_def (ι : S → R)
+theorem NonperiodicCorrespondence_symm_def (ι : S → R)
     {rc : RingCon R} (f : NonperiodicGoodFun (rc.toQuotient ∘ ι)) :
     (NonperiodicCorrespondence ι).symm ⟨rc, f⟩ = f.Lift := rfl
+
+end GoodFun
+
 
 @[deprecated]
 theorem good_iff_exists_nonperiodicGood {ι : S → R} {f : R → S} :
