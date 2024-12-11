@@ -22,9 +22,17 @@ class IsOfAddMonoidHomSurjective (R G) [NonAssocRing R] [AddZeroClass G] : Prop 
   ofAddMonoidHom_surjective : (ofAddMonoidHom (R := R) (G := G)).Surjective
 
 
+variable [NonAssocRing R] [AddZeroClass G]
+
+theorem IsOfAddMonoidHomSurjective.mk' [IsCancelAdd G]
+    (h : ∀ (f : ExcellentFun R G) (x y : R), f (x + y) = f x + f y) :
+    IsOfAddMonoidHomSurjective R G where
+  ofAddMonoidHom_surjective f := ⟨⟨⟨f, excellent_map_zero f⟩, h f⟩, rfl⟩
+
+
 section
 
-variable [NonAssocRing R] [AddZeroClass G] [IsOfAddMonoidHomSurjective R G]
+variable [IsOfAddMonoidHomSurjective R G]
 
 theorem ofAddMonoidHom_surjective : (ofAddMonoidHom (R := R) (G := G)).Surjective :=
   IsOfAddMonoidHomSurjective.ofAddMonoidHom_surjective

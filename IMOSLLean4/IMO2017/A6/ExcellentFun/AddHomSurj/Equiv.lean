@@ -18,9 +18,10 @@ namespace IMOSL
 namespace IMO2017A6
 namespace ExcellentFun
 
+variable [NonAssocRing R]
+
 /-- Choice-independent bijection between excellent functions and group homomorphisms. -/
-def equiv_AddMonoidHom
-    [NonAssocRing R] [AddZeroClass G] [IsOfAddMonoidHomSurjective R G] :
+def equiv_AddMonoidHom [AddZeroClass G] [IsOfAddMonoidHomSurjective R G] :
     ExcellentFun R G ≃ (R →+ G) where
   toFun := toAddMonoidHom
   invFun := ofAddMonoidHom
@@ -28,7 +29,6 @@ def equiv_AddMonoidHom
   right_inv := toAddMonoidHom_ofAddMonoidHom
 
 /-- Choice-independent homomorphism between excellent functions and group homomorphisms. -/
-def AddEquiv_AddMonoidHom
-    [NonAssocRing R] [AddCommMonoid G] [IsOfAddMonoidHomSurjective R G] :
+def AddEquiv_AddMonoidHom [AddCommMonoid G] [IsOfAddMonoidHomSurjective R G] :
     ExcellentFun R G ≃+ (R →+ G) :=
   { equiv_AddMonoidHom with map_add' := λ _ _ ↦ rfl }
