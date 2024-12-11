@@ -78,3 +78,7 @@ theorem IsOfAddMonoidHomSurjective.mk' [AddZeroClass G] [IsCancelAdd G]
     (h : ∀ (f : ExcellentFun R G) (x y : R), f (x + y) = f x + f y) :
     IsOfAddMonoidHomSurjective R G where
   ofAddMonoidHom_surjective f := ⟨⟨⟨f, excellent_map_zero f⟩, h f⟩, rfl⟩
+
+theorem ofAddMonoidHom_surjective [AddZeroClass G] [IsOfAddMonoidHomSurjective R G] :
+    (ofAddMonoidHom (R := R) (G := G)).Surjective :=
+  IsOfAddMonoidHomSurjective.ofAddMonoidHom_surjective

@@ -20,9 +20,6 @@ namespace ExcellentFun
 
 variable [NonAssocRing R] [AddZeroClass G] [IsOfAddMonoidHomSurjective R G]
 
-theorem ofAddMonoidHom_surjective : (ofAddMonoidHom (R := R) (G := G)).Surjective :=
-  IsOfAddMonoidHomSurjective.ofAddMonoidHom_surjective
-
 /-- Choice-independent inverse of `ofAddMonoidHom` -/
 def toAddMonoidHom (f : ExcellentFun R G) : R →+ G where
   toFun := f.toFun
