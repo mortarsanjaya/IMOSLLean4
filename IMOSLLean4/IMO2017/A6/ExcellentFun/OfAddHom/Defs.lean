@@ -12,6 +12,10 @@ import Mathlib.Algebra.Group.Hom.Instances
 
 Every (additive) group homomorphism from $R$ to $G$ is an excellent function.
 Thus, we have a map from $\text{Hom}(R, G)$ to the set of group homomorphisms.
+We are mainly interested in the converse: when are there no other excellent functions?
+We provide the typeclass `IsOfAddMonoidHomSurjective`, which states that
+  for a given ring $R$ and abelian group $G$, the only excellent functions
+  from $R$ to $G$ are group homomorphisms.
 -/
 
 namespace IMOSL
@@ -58,3 +62,17 @@ def HomOfAddMonoidHom [AddCommMonoid G] : (R →+ G) →+ ExcellentFun R G where
 theorem HomOfAddMonoidHom_injective [AddCommMonoid G] :
     Function.Injective (HomOfAddMonoidHom (R := R) (G := G)) :=
   ofAddMonoidHom_injective
+
+
+
+
+
+/-! ### When does excellent functions consists only of group homomorphisms? -/
+
+class IsOfAddMonoidHomSurjective (R G) [NonAssocRing R] [AddZeroClass G] : Prop where
+  ofAddMonoidHom_surjective : (ofAddMonoidHom (R := R) (G := G)).Surjective
+
+theorem IsOfAddMonoidHomSurjective.mk' [AddZeroClass G] [IsCancelAdd G]
+    (h : ∀ (f : ExcellentFun R G) (x y : R), f (x + y) = f x + f y) :
+    IsOfAddMonoidHomSurjective R G where
+  ofAddMonoidHom_surjective f := ⟨⟨⟨f, excellent_map_zero f⟩, h f⟩, rfl⟩

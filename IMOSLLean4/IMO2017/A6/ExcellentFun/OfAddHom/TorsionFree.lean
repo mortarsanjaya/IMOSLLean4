@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A6.ExcellentFun.AddHomSurj.Defs
+import IMOSLLean4.IMO2017.A6.ExcellentFun.OfAddHom.Defs
 import IMOSLLean4.IMO2017.A6.ExcellentFun.Basic
 
 /-!
 # Excellent functions = Homomorphism (Case G (2, 3)-torsion free)
 
-We prove that excellent functions from $R$ to $G$ are all group homomorphisms
-  when $G$ is $2$-torsion-free and $3$-torsion-free.
+We prove `IsOfAddMonoidHomSurjective R G` instance when
+  $G$ is $2$-torsion free and $3$-torsion free.
 -/
 
 namespace IMOSL
