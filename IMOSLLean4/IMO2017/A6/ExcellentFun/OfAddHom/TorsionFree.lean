@@ -18,7 +18,8 @@ namespace IMOSL
 namespace IMO2017A6
 namespace ExcellentFun
 
-instance [NonAssocRing R] [AddCancelCommMonoid G]
+instance instIsOfAddMonoidHomSurjectiveOfTorsionFree
+    [NonAssocRing R] [AddCancelCommMonoid G]
     (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y)
     (hG3 : ∀ x y : G, 3 • x = 3 • y → x = y) :
     IsOfAddMonoidHomSurjective R G :=

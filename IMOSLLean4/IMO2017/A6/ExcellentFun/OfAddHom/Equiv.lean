@@ -10,7 +10,7 @@ import Mathlib.Algebra.Group.Equiv.Basic
 /-!
 # Equivalence between excellent functions and group homomorphisms
 
-We provide equivalence between `ExcellentFun R G` and `R →+ G`.
+We provide an explicit equivalence between `ExcellentFun R G` and `R →+ G`.
 Certainly, this assumes `IsOfAddMonoidHomSurjective R G`.
 -/
 

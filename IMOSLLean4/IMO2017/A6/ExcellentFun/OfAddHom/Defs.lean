@@ -11,11 +11,13 @@ import Mathlib.Algebra.Group.Hom.Instances
 # Group homomorphism as excellent function
 
 Every (additive) group homomorphism from $R$ to $G$ is an excellent function.
-Thus, we have a map from $\text{Hom}(R, G)$ to the set of group homomorphisms.
-We are mainly interested in the converse: when are there no other excellent functions?
-We provide the typeclass `IsOfAddMonoidHomSurjective`, which states that
-  for a given ring $R$ and abelian group $G$, the only excellent functions
-  from $R$ to $G$ are group homomorphisms.
+Thus, we have a map from $\text{Hom}(R, G)$ to the set of exellent functions.
+We are mainly interested in classifying pairs $(R, G)$ such that the converse holds:
+  the only excellent functions from $R$ to $G$ are group homomorphisms.
+
+The function `ofAddMonoidHom` provides an inclusion from $\text{Hom}(R, G)$
+  to the set of exellent functions from $R$ and $G$.
+The typeclass `IsOfAddMonoidHomSurjective R G` indicates that this map is surjective.
 -/
 
 namespace IMOSL
