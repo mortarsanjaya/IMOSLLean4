@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A6.A6Lemmas.Basic
+import IMOSLLean4.IMO2017.A6.A6Basic
 import IMOSLLean4.Extra.CharTwo.Ring
 import Mathlib.Algebra.Field.Defs
 import Mathlib.Algebra.Ring.Commute
