@@ -18,6 +18,7 @@ We are mainly interested in classifying pairs $(R, G)$ such that the converse ho
 The function `ofAddMonoidHom` provides an inclusion from $\text{Hom}(R, G)$
   to the set of exellent functions from $R$ and $G$.
 The typeclass `IsOfAddMonoidHomSurjective R G` indicates that this map is surjective.
+When this holds, `toAddMonoidHom` gives an explicit inverse of `ofAddMonoidHom`.
 -/
 
 namespace IMOSL
@@ -50,7 +51,7 @@ theorem HomOfAddHom_injective [AddCommSemigroup G] :
 /-! ### Excellent functions from group homomorphisms -/
 
 def ofAddMonoidHom [AddZeroClass G] (φ : R →+ G) : ExcellentFun R G :=
-  ExcellentFun.ofAddHom φ
+  ofAddHom φ
 
 theorem ofAddMonoidHom_injective [AddZeroClass G] :
     (ofAddMonoidHom (R := R) (G := G)).Injective :=
@@ -79,6 +80,24 @@ theorem IsOfAddMonoidHomSurjective.mk' [AddZeroClass G] [IsCancelAdd G]
     IsOfAddMonoidHomSurjective R G where
   ofAddMonoidHom_surjective f := ⟨⟨⟨f, excellent_map_zero f⟩, h f⟩, rfl⟩
 
-theorem ofAddMonoidHom_surjective [AddZeroClass G] [IsOfAddMonoidHomSurjective R G] :
-    (ofAddMonoidHom (R := R) (G := G)).Surjective :=
+
+section
+
+variable [AddZeroClass G] [IsOfAddMonoidHomSurjective R G]
+
+theorem ofAddMonoidHom_surjective : (ofAddMonoidHom (R := R) (G := G)).Surjective :=
   IsOfAddMonoidHomSurjective.ofAddMonoidHom_surjective
+
+/-- Choice-independent inverse of `ofAddMonoidHom` -/
+def toAddMonoidHom (f : ExcellentFun R G) : R →+ G where
+  toFun := f.toFun
+  map_zero' := by obtain ⟨φ, rfl⟩ := ofAddMonoidHom_surjective f; exact φ.map_zero
+  map_add' := by obtain ⟨φ, rfl⟩ := ofAddMonoidHom_surjective f; exact φ.map_add
+
+theorem toAddMonoidHom_ofAddMonoidHom (φ : R →+ G) :
+    toAddMonoidHom (ofAddMonoidHom φ) = φ := rfl
+
+theorem ofAddMonoidHom_toAddMonoidHom (f : ExcellentFun R G) :
+    ofAddMonoidHom (toAddMonoidHom f) = f := rfl
+
+end

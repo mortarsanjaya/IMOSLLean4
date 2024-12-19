@@ -16,25 +16,24 @@ variable [NonAssocRing R] [AddCancelCommMonoid G]
   [FunLike F R G] [ExcellentFunClass F R G] (f : F)
 
 lemma excellent_alt1 (x y : R) : f (x + y - x * y) + f (x * y) = f (x + y) := by
-  refine add_right_cancel (b := f (1 - (x + y))) ?_
-  rw [add_right_comm, excellent_def, excellent_map_self_add_map_one_sub,
-    add_comm, excellent_map_self_add_map_one_sub]
+  rw [← add_left_inj, excellent_map_self_add_map_one_sub, add_right_comm,
+    excellent_def, excellent_map_one_sub_add_map_self]
 
 lemma excellent_alt2 (x y : R) : f (x * y + (x + y)) = f (x * y) + f (x + y) := by
-  refine add_right_cancel (b := f (-x + -y - (-x) * (-y))) ?_
-  rw [← neg_mul_neg, ← add_rotate, excellent_alt1, ← neg_add, ← neg_add', add_comm (x + y),
-    excellent_map_self_add_map_neg, add_comm, excellent_map_self_add_map_neg]
+  rw [← add_right_inj, excellent_map_neg_add_map_self, neg_add_rev,
+    ← sub_eq_add_neg, neg_add, ← neg_mul_neg, ← add_assoc,
+    excellent_alt1, ← neg_add, excellent_map_neg_add_map_self]
 
 lemma excellent_map_add_one_mul_add_one (x y : R) :
     f ((x + 1) * (y + 1)) = f (x * y) + f (x + y) + f 1 := by
   rw [← excellent_alt2, ← excellent_map_add_one,
     add_one_mul, mul_add_one, ← add_assoc, ← add_assoc]
 
+/-- TODO: Simplify the proof, if possible -/
 lemma excellent_map_add_nat_mul_add_nat (x y : R) (n : ℕ) :
     f ((x + n) * (y + n)) = f (x * y) + n • f (x + y) + (n * n) • f 1 := by
   induction n with
-  | zero => rw [Nat.cast_zero, add_zero, add_zero,
-      zero_nsmul, zero_nsmul, add_zero, add_zero]
+  | zero => simp [zero_nsmul]
   | succ n n_ih => rw [Nat.cast_succ, ← add_assoc, ← add_assoc, Nat.mul_succ,
       excellent_map_add_one_mul_add_one, n_ih, add_add_add_comm, ← Nat.cast_add,
       excellent_map_add_nat, add_add_add_comm, add_assoc (f _), ← succ_nsmul, add_assoc,
@@ -42,15 +41,15 @@ lemma excellent_map_add_nat_mul_add_nat (x y : R) (n : ℕ) :
 
 lemma excellent_map_mul_nat (x : R) (n : ℕ) : f (x * n) = n • f x := by
   have h := excellent_map_add_nat_mul_add_nat f (x - n) 0 n
-  rwa [zero_add, mul_zero, excellent_map_zero, zero_add, add_zero,
-    mul_nsmul, ← nsmul_add, ← excellent_map_add_nat, sub_add_cancel] at h
+  simp only [sub_add_cancel, zero_add, mul_zero, excellent_map_zero, add_zero] at h
+  rwa [mul_nsmul, ← nsmul_add, ← excellent_map_add_nat, sub_add_cancel] at h
 
 lemma excellent_map_nat_mul (n : ℕ) (x : R) : f (n * x) = n • f x := by
   have h := excellent_map_add_nat_mul_add_nat f 0 (x - n) n
-  rwa [zero_add, zero_mul, excellent_map_zero, zero_add, zero_add,
-    mul_nsmul, ← nsmul_add, ← excellent_map_add_nat, sub_add_cancel] at h
+  simp only [zero_add, sub_add_cancel, zero_mul, excellent_map_zero] at h
+  rwa [mul_nsmul, ← nsmul_add, ← excellent_map_add_nat, sub_add_cancel] at h
 
-/-- Note: heavy lemma -/
+/-- TODO: Simplify the proof, if possible -/
 lemma excellent_linear_formula (x y : R) : 2 • f (3 * x + y) = 2 • (3 • f x + f y) := by
   have X (x : R) : f (2 * x) = 2 • f x := excellent_map_nat_mul f 2 x
   have h (x y : R) : f ((x + 2) * (y + 2)) = f (x * y) + 2 • f (x + y) + 4 • f 1 :=
@@ -82,6 +81,5 @@ lemma excellent_linear_formula (x y : R) : 2 • f (3 * x + y) = 2 • (3 • f 
     excellent_map_neg_add_map_self, add_zero, two_add_one_eq_three]
 
 lemma excellent_linear_formula_weak (x y : R) : 6 • f (x + y) = 6 • (f x + f y) := by
-  have h := excellent_linear_formula f x (3 * y)
-  rwa [← mul_add, ← Nat.cast_ofNat (n := 3), excellent_map_nat_mul,
-    excellent_map_nat_mul, ← nsmul_add, ← mul_nsmul, ← mul_nsmul] at h
+  simpa only [mul_nsmul _ 3 2, ← excellent_map_nat_mul, Nat.cast_ofNat, mul_add, nsmul_add]
+    using excellent_linear_formula f x (3 * y)

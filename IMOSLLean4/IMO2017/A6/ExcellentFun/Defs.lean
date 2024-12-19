@@ -19,6 +19,7 @@ In this file, we define excellent functions and prove their most basic propertie
 namespace IMOSL
 namespace IMO2017A6
 
+/-- Exellent functions. -/
 structure ExcellentFun (R G) [NonAssocRing R] [Add G] where
   toFun : R → G
   excellent_def' : ∀ x y, toFun (x + y - x * y) + toFun (1 - (x + y)) = toFun (1 - x * y)
@@ -73,14 +74,13 @@ section
 variable [AddZeroClass G] [FunLike F R G] [ExcellentFunClass F R G] (f : F) (x : R)
 
 lemma excellent_map_self_add_map_one_sub : f x + f (1 - x) = f 1 := by
-  have h := excellent_def f 0 x
-  rwa [zero_add, zero_mul, sub_eq_add_neg,
-    sub_eq_add_neg 1 0, neg_zero, add_zero, add_zero] at h
+  simpa [sub_eq_add_neg] using excellent_def f 0 x
 
-lemma excellent_map_one_add : f (1 + x) = f 1 + f x := by
-  have h := (excellent_def f 1 (-x)).symm
-  rwa [one_mul, sub_eq_add_neg, sub_eq_add_neg, sub_eq_add_neg, neg_add_rev,
-    neg_neg, neg_add_cancel_right, add_neg_cancel_comm_assoc] at h
+lemma excellent_map_one_sub_add_map_self : f (1 - x) + f x = f 1 := by
+  simpa [sub_eq_add_neg] using excellent_map_self_add_map_one_sub f (1 - x)
+
+@[simp] lemma excellent_map_one_add : f (1 + x) = f 1 + f x := by
+  simpa [sub_eq_add_neg] using (excellent_def f 1 (-x)).symm
 
 end
 
@@ -88,16 +88,14 @@ end
 lemma excellent_map_nat_add [AddMonoid G] [FunLike F R G] [ExcellentFunClass F R G]
     (f : F) (x : R) (n : ℕ) : f (n + x) = n • f 1 + f x := by
   induction n with
-  | zero => rw [Nat.cast_zero, zero_add, zero_nsmul, zero_add]
+  | zero => simp [zero_nsmul]
   | succ n n_ih => rw [succ_nsmul', Nat.add_comm, Nat.cast_add,
       Nat.cast_one, add_assoc, excellent_map_one_add, n_ih, add_assoc]
 
-lemma excellent_map_zero [AddZeroClass G] [IsCancelAdd G]
+@[simp] lemma excellent_map_zero [AddZeroClass G] [IsCancelAdd G]
     [FunLike F R G] [ExcellentFunClass F R G] (f : F) : f 0 = 0 :=
-  add_right_cancel (b := f (1 - 0)) <| calc
-    _ = f (0 + 0 - 0 * 0) + f (1 - (0 + 0)) := by
-      rw [add_zero, mul_zero, sub_eq_add_neg, sub_eq_add_neg, neg_zero, add_zero, add_zero]
-    _ = 0 + f (1 - 0) := by rw [excellent_def, zero_add, zero_mul]
+  add_right_cancel (b := f 1)
+    (by simpa [sub_eq_add_neg] using excellent_map_self_add_map_one_sub f 0)
 
 
 section
@@ -107,15 +105,12 @@ variable [AddCancelMonoid G] [FunLike F R G] [ExcellentFunClass F R G] (f : F)
 lemma excellent_map_nat (n : ℕ) : f n = n • f 1 := by
   rw [← add_zero (n : R), excellent_map_nat_add, excellent_map_zero, add_zero]
 
-lemma excellent_map_self_add_map_neg (x : R) : f x + f (-x) = 0 :=
-  add_left_cancel (a := f 1) <| calc
-    _ = f (1 + x) + f (-x) := by rw [excellent_map_one_add, add_assoc]
-    _ = f (1 + x) + f (1 - (1 + x)) := by
-      rw [sub_eq_add_neg, neg_add_rev, add_neg_cancel_comm_assoc]
-    _ = f 1 + 0 := by rw [excellent_map_self_add_map_one_sub, add_zero]
+@[simp] lemma excellent_map_neg_add_map_self (x : R) : f (-x) + f x = 0 :=
+  add_left_cancel (a := f 1)
+    (by simpa [sub_eq_add_neg, add_assoc] using excellent_map_one_sub_add_map_self f x)
 
-lemma excellent_map_neg_add_map_self (x : R) : f (-x) + f x = 0 := by
-  rw [← excellent_map_self_add_map_neg f (-x), neg_neg]
+@[simp] lemma excellent_map_self_add_map_neg (x : R) : f x + f (-x) = 0 := by
+  rw [← excellent_map_neg_add_map_self f (-x), neg_neg]
 
 end
 
@@ -124,7 +119,7 @@ section
 
 variable [AddCommMonoid G] [FunLike F R G] [ExcellentFunClass F R G] (f : F)
 
-lemma excellent_map_add_one (x : R) : f (x + 1) = f x + f 1 := by
+@[simp] lemma excellent_map_add_one (x : R) : f (x + 1) = f x + f 1 := by
   rw [add_comm, excellent_map_one_add, add_comm]
 
 lemma excellent_map_add_nat (x : R) (n : ℕ) : f (x + n) = f x + n • f 1 := by
@@ -162,10 +157,8 @@ variable [AddCommSemigroup G]
 
 protected def add (f g : ExcellentFun R G) : ExcellentFun R G where
   toFun x := f x + g x
-  excellent_def' x y := calc (f _ + g _) + (f _ + g _)
-    _ = (f (x + y - x * y) + f (1 - (x + y))) + (g (x + y - x * y) + g (1 - (x + y))) := by
-      rw [add_assoc, ← add_assoc (g _), add_comm (g _), add_assoc, ← add_assoc]
-    _ = _ := congrArg₂ _ (f.excellent_def' x y) (g.excellent_def' x y)
+  excellent_def' x y := by dsimp only; rw [add_assoc, ← add_assoc (g _),
+    add_comm (g _), add_assoc, ← add_assoc, excellent_def, excellent_def]
 
 instance : Add (ExcellentFun R G) := ⟨ExcellentFun.add⟩
 
@@ -202,14 +195,11 @@ variable [AddCancelCommMonoid G]
 
 protected def neg (f : ExcellentFun R G) : ExcellentFun R G where
   toFun x := f (-x)
-  excellent_def' x y := add_right_cancel (b := f (1 - x * y)) <|
-    calc f (-(x + y - x * y)) + f (-(1 - (x + y))) + f (1 - x * y)
-    _ = f (-_) + f (-_) + (f (1 - (x + y)) + f (x + y - x * y)) := by
-      rw [← excellent_def, add_comm (f (1 - _))]
-    _ = f (-(x + y - x * y)) + ((f (-(1 - (x + y))) + f (1 - (x + y))) + f _) := by
-      rw [add_assoc, ← add_assoc (f (-(1 - (x + y))))]
-    _ = 0 := by rw [excellent_map_neg_add_map_self, zero_add, excellent_map_neg_add_map_self]
-    _ = f (-(1 - x * y)) + f (1 - x * y) := by rw [excellent_map_neg_add_map_self]
+  excellent_def' x y := by
+    apply add_right_cancel (b := f (1 - x * y))
+    rw [excellent_map_neg_add_map_self, add_comm (f (-_)),
+      ← excellent_def, add_assoc, ← add_assoc (f (-(x + y - _)))]
+    simp only [excellent_map_neg_add_map_self, zero_add]
 
 instance : Neg (ExcellentFun R G) := ⟨ExcellentFun.neg⟩
 
