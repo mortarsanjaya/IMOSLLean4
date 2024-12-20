@@ -26,6 +26,8 @@ These are all the $\iota$-good functions in the following cases:
     \item
     $G = R$ is a simple ring of characteristic not equal to $2$ and $\iota = \id_R$.
     Since $Z(R)$ is a field, this means that the good functions are $0$, $x \mapsto 1 - x$, and $x \mapsto x - 1$.
+
+    (For now, we only implement the division ring case.)
     
     \item
     $G = R$ is a field of characteristic $2$ and $\iota = \id_R$.
@@ -318,8 +320,59 @@ Then all non-periodic $\iota$-good functions are of form $x \mapsto \phi(a(1 - x
 All $\iota$-good functions are of form $x \mapsto x \mapsto \phi(a(1 - [x]))$ for some $a \in Z(R/I)$ with $a^2 = 1$ and group homomorphism $\phi : R/I \to G$ with $[\iota(\phi(x))] = x$ for all $x \in R/I$.
 \end{corollary}
 
-Combined with Lemma~\ref{2017a6-excellent-main}, we are done if $G$ is $2$-torsion free and $3$-torsion free.
-Removing the $3$-torsion free assumption on Lemma~\ref{2017a6-excellent-main} would also mean removing the $3$-torsion assumption here.
+\begin{lemma}\label{2017a6-good-simple-ring-case}
+If $R$ is simple, then $f$ is $\iota$-good iff either $f = 0$ or $f$ is non-periodic $\iota$-good.
+\end{lemma}
+\begin{proof}
+The fact that $R$ is simple means that the period ideal $I_f$ of $f$ is either $R$ or $(0)$.
+Thus $f$ is either constant, and so constant zero, or non-periodic, respectively.
+\end{proof}
 
+\begin{corollary}
+If $R$ is simple, then the $\id_R$-good functions are $0$, $1 - x$, and $x - 1$.
+\end{corollary}
 
-\subsubsection*{Subcase: Simple ring}
+\begin{lemma}\label{2017a6-integral-domain-char2-unit}
+Suppose that $R$ is an integral domain of characteristic $2$.
+Let $f$ be a non-periodic $\iota$-good function.
+Then $\iota(f(x)) = 1 - x$ for any $x \in R^{\times}$.
+\end{lemma}
+\begin{proof}
+From~\eqref{2017a6-eq0}, we get that for any units $a \in R^{\times}$,
+\[ f(\iota(f(a + 1)) \iota(f(a^{-1} + 1))) = 0 \iff \iota(f(a + 1)) \iota(f(a^{-1} + 1)) = 1. \]
+Thus, if $a$ is a unit, then $\iota(f(a + 1))$ is also a unit.
+Since $R$ is an integral domain of characteristic $2$, we also have $\iota(f(0))^2 = 1 \iff \iota(f(0)) = 1$.
+From this, it is easy to see that
+\[ f(\iota(f(a + 1))) = f(\iota(f(0)) \iota(f(a + 1))) = f(0) - f(a + 1), \]
+\[ (\iota \circ f)^2(a + 1) = \iota(f(0)) - \iota(f(a + 1)) = \iota(f(0)) + \iota(f(a + 1)) = \iota(f(a)). \]
+One can check that $\iota(f(a)) = \iota(f(b))$ always implies $a = b$, namely, from comparing~\eqref{2017a6-eq0} using $y = 0$.
+Thus we get $f(\iota(f(a + 1))) = f(a)$ for any unit $a$.
+It remains to show the following: if $a, b \in R^{\times}$ satisfy $f(a) = f(b)$, then $a = b$.
+
+Fix some $a, b \in R^{\times}$ with $f(a) = f(b)$.
+Consider~\eqref{2017a6-eq0} with $(x, y) = (a + 1, b^{-1} + 1)$.
+Since $f(1) = 0$, we get
+\begin{align*}
+    f((a + 1)(b^{-1} + 1)) &= f((a + 1) + (b^{-1} + 1)) \\
+    f(ab^{-1} + a + b^{-1} + 1) &= f(a + b^{-1}) \\
+    f(ab^{-1} + a + b^{-1}) &= f(1 + a + b^{-1}).
+\end{align*}
+By symmetry, we also have
+\[ f(ba^{-1} + b + a^{-1}) = f(1 + b + a^{-1}). \]
+Now notice the identity
+\[ (1 + a + b^{-1})(1 + b + a^{-1}) = (ab^{-1} + a + b^{-1})(ba^{-1} + b + a^{-1}). \]
+As a result, by plugging the appropriate values into~\eqref{2017a6-eq0}, we get
+\[ f((1 + a + b^{-1}) + (1 + b + a^{-1})) = f((ab^{-1} + a + b^{-1}) + (ba^{-1} + b + a^{-1})). \]
+Letting $C = a + b + 1$ and $D = a^{-1} + b^{-1} + 1$, the above equation is equivalent to saying that
+\[ f(C + D) = f(CD + 1) = f(CD) + 1. \]
+But then plugging $(x, y) = (C, D)$ into~\eqref{2017a6-eq0} yields
+\[ f(f(C) f(D)) = 1 \iff f(C) f(D) = 0 \iff f(C) = 0 \vee f(D) = 0 \iff C = 1 \vee D = 1. \]
+By definition of $C$ and $D$, and by $\rchar(R) = 2$, this is equivalent to
+\[ a + b + 1 = 1 \vee a^{-1} + b^{-1} + 1 = 1 \iff a = b \vee a^{-1} = b^{-1}. \]
+But $a^{-1} = b^{-1}$ yields $a = b$.
+So, regardless, we have obtained $a = b$, as desired.
+\end{proof}
+
+\begin{corollary}
+If $R$ is a field, then the $\id_R$-good functions are $0$ and $1 - x$.
+\end{corollary}
