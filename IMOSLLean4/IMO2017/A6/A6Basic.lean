@@ -9,120 +9,20 @@ import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Algebra.Group.Basic
 
 /-!
-# IMO 2017 A6 (P2, Basic properties)
+# IMO 2017 A6 (P2, Additional lemmas on good functions)
 
-We prove basic properties of good functions.
-This file is separated from `IMOSLLean4/IMO2012/A6/A6Defs.lean`
-  since it uses an extra import: `Mathlib/Algebra/Group/Basic.lean`.
+We prove more lemmas about good functions.
+This file is separate from `IMOSLLean4/IMO2012/A6/A6Defs.lean` for using extra imports.
 -/
 
 namespace IMOSL
 namespace IMO2017A6
 
-/-! ### Some good functions -/
+/-! ### Additional lemmas on good functions -/
 
 section
 
-variable (R) [NonAssocRing R]
-
-def GoodFun.one_sub : GoodFun (id : R → R) where
-  toFun x := 1 - x
-  good_def' x y := by
-    simp only [id]
-    rw [mul_one_sub, one_sub_mul, sub_sub, sub_sub_cancel,
-      ← add_sub_assoc x, sub_add_sub_cancel']
-
-def NonperiodicGoodFun.one_sub : NonperiodicGoodFun (id : R → R) :=
-  { GoodFun.one_sub R with
-    period_imp_eq' := λ _ _ h ↦ add_right_injective 0 (sub_right_injective (h 0)) }
-
-end
-
-
-section
-
-variable [Semiring R] (a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a})
-
-def GoodFun.mul_central_involutive (f : GoodFun (id : R → R)) : GoodFun (id : R → R) where
-  toFun x := a * f x
-  good_def' x y := by
-    simp only [id]
-    rw [a.2.2 (f x), mul_assoc, ← mul_assoc a.1 a.1, a.2.1,
-      one_mul, ← mul_add, ← good_def id f x y]; rfl
-
-def NonperiodicGoodFun.mul_central_involutive (f : NonperiodicGoodFun (id : R → R)) :
-    NonperiodicGoodFun (id : R → R) :=
-  { f.toGoodFun.mul_central_involutive a with
-    period_imp_eq' := λ c d h ↦ f.period_imp_eq' c d λ x ↦ by
-      replace h : a.1 * (a.1 * _) = a.1 * (a.1 * _) := congrArg (a.1 * ·) (h x)
-      rwa [← mul_assoc, ← mul_assoc, a.2.1, one_mul, one_mul] at h }
-
-end
-
-
-section
-
-variable [Ring R] (a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a})
-
-@[deprecated]
-theorem mul_one_sub_is_good : good id (λ x : R ↦ a * (1 - x)) :=
-  ⟨(GoodFun.one_sub R).mul_central_involutive a, rfl⟩
-
-@[deprecated]
-theorem mul_one_sub_is_nonperiodicGood : nonperiodicGood id (λ x : R ↦ a * (1 - x)) :=
-  ⟨(NonperiodicGoodFun.one_sub R).mul_central_involutive a, rfl⟩
-
-end
-
-
-
-
-
-/-! ### Properties of good function -/
-
-lemma map_map_zero_mul_self
-    [NonUnitalNonAssocSemiring R] [AddZeroClass S] [IsCancelAdd S] (ι : S → R)
-    [FunLike F R S] [GoodFunClass F ι] (f : F) :
-    f (ι (f 0) * ι (f 0)) = 0 := by
-  rw [← add_right_cancel_iff, good_def, zero_add, mul_zero, add_zero]
-
-
-section
-
-variable [NonAssocSemiring R] [Add S] [IsCancelAdd S] (ι : S → R)
-  [FunLike F R S] [GoodFunClass F ι] {f : F} (h : f a = f b)
-include ι h
-
-lemma map_add_one_eq_of_map_eq : f (a + 1) = f (b + 1) := by
-  rw [← add_right_inj, good_def ι, mul_one, h, good_def ι, mul_one]
-
-lemma map_add_nat_eq_of_map_eq : ∀ n : ℕ, f (a + n) = f (b + n) :=
-  Nat.rec (by rw [Nat.cast_zero, add_zero, add_zero, h]) λ n hn ↦ by
-    rw [Nat.cast_succ, ← add_assoc, ← add_assoc]
-    exact map_add_one_eq_of_map_eq ι hn
-
-lemma map_mul_nat_eq_of_map_eq (n : ℕ) : f (a * n) = f (b * n) := by
-  rw [← good_def ι, map_add_nat_eq_of_map_eq ι h, h, good_def]
-
-end
-
-
-lemma map_neg_eq_of_map_eq
-    [NonAssocRing R] [Add S] [IsCancelAdd S] (ι : S → R)
-    [FunLike F R S] [GoodFunClass F ι] {f : F} (h : f a = f b) :
-    f (-a) = f (-b) := by
-  have h0 : f ((a + 1) * -1) = f ((b + 1) * -1) := by
-    rw [← good_def ι, map_add_one_eq_of_map_eq ι h, add_neg_cancel_right,
-      h, ← good_def ι f (b + 1), add_neg_cancel_right]
-  replace h0 := map_add_one_eq_of_map_eq ι h0
-  rwa [mul_neg_one, mul_neg_one, neg_add_rev,
-    neg_add_cancel_comm, neg_add_rev, neg_add_cancel_comm] at h0
-
-
-section
-
-variable [Semiring R] [AddCancelMonoid S] (ι : S →+ R)
-  [FunLike F R S] [GoodFunClass F ι] (f : F)
+variable [Semiring R] [AddMonoid G] (ι : G →+ R) [FunLike F R G] [GoodFunClass F ι]
 include ι
 
 lemma map_mul_kernel_eq {f : F} (hd : f d = 0) (x) : f (x * d) = f 0 + f (x + d) := by
@@ -130,6 +30,14 @@ lemma map_mul_kernel_eq {f : F} (hd : f d = 0) (x) : f (x * d) = f 0 + f (x + d)
 
 lemma map_kernel_add_one_eq {f : F} (hd : f d = 0) : f 0 + f (d + 1) = 0 := by
   rw [add_comm, ← map_mul_kernel_eq ι hd, one_mul, hd]
+
+end
+
+
+section
+
+variable [Semiring R] [AddCancelMonoid G] (ι : G →+ R) [FunLike F R G] [GoodFunClass F ι]
+include ι
 
 /-- Periodicity of zeroes of `f` -/
 theorem period_of_map_eq_zero' {f : F} (hc : f c = 0) :
@@ -145,22 +53,26 @@ theorem period_of_map_eq_zero' {f : F} (hc : f c = 0) :
         add_assoc, add_comm, ← hc0, add_one_mul, one_mul, this]
     obtain ⟨b, hb⟩ : ∃ b, f b = f 0 + f 0 := by
       refine ⟨ι (f 0) * ι (f (c + 1)), ?_⟩
-      rw [← add_right_cancel_iff, map_map_zero_mul_map, add_assoc, hc1, add_zero]
-    replace hc0 : _ + _ = _ + _ := congrArg (· + f (c + 1)) (map_map_zero_mul_map ι f b)
+      rw [← add_right_cancel_iff, map_incl_map_zero_mul_incl_map_add_map,
+        add_assoc, hc1, add_zero]
+    replace hc0 : _ + _ = _ + _ :=
+      congrArg (· + f (c + 1)) (map_incl_map_zero_mul_incl_map_add_map ι f b)
     rw [hb, ι.map_add, ← mul_two, ← mul_assoc, ← add_assoc, add_assoc, hc1, add_zero] at hc0
     replace hc0 : f 0 + f (ι (f 0) * ι (f 0) * 2) = 0 := by
       rw [← add_right_cancel_iff, add_assoc, hc0, zero_add, add_zero]
-    replace hb : f (ι (f 0) * ι (f 0)) = f c := (map_map_zero_mul_self ι f).trans hc.symm
+    replace hb : f (ι (f 0) * ι (f 0)) = f c :=
+      (map_incl_map_zero_mul_self ι f).trans hc.symm
     rwa [← Nat.cast_two, map_mul_nat_eq_of_map_eq ι hb, Nat.cast_two, mul_two] at hc0
   ---- Now write `f(xc^4)` in two ways
   intro x; rw [← add_left_cancel_iff, ← hc0, add_mul, add_right_comm,
     ← map_mul_kernel_eq ι h0, add_one_mul, ← add_left_cancel_iff,
     ← map_mul_kernel_eq ι h1, ← map_mul_kernel_eq ι h0]
-  repeat rw [mul_assoc]
+  simp_rw [mul_assoc]
 
-theorem incl_map_zero_mul_self_period_one (x) : f (x + ι (f 0) * ι (f 0)) = f (x + 1) := by
+theorem map_add_incl_map_zero_mul_self (f : F) (x) :
+    f (x + ι (f 0) * ι (f 0)) = f (x + 1) := by
   let C := ι (f 0) * ι (f 0)
-  have h : f C = 0 := map_map_zero_mul_self ι f
+  have h : f C = 0 := map_incl_map_zero_mul_self ι f
   obtain ⟨d, hd⟩ : ∃ d, d + C * C = 0 := by
     refine ⟨C * (ι (f 0) * ι (f (C + 1))), ?_⟩
     rw [← mul_add, add_comm, ← mul_add, ← ι.map_add,
@@ -168,58 +80,64 @@ theorem incl_map_zero_mul_self_period_one (x) : f (x + ι (f 0) * ι (f 0)) = f 
   have h0 := period_of_map_eq_zero' ι h (x + d)
   rwa [add_assoc x, hd, add_zero] at h0
 
-theorem map_one_eq_zero : f 1 = 0 := by
-  have h := incl_map_zero_mul_self_period_one ι f 0
-  rwa [zero_add, zero_add, map_map_zero_mul_self, eq_comm] at h
+theorem map_one_eq_zero (f : F) : f 1 = 0 := by
+  rw [← zero_add 1, ← map_add_incl_map_zero_mul_self ι, zero_add]
+  exact map_incl_map_zero_mul_self ι f
 
-theorem map_add_one' (x) : f 0 + f (x + 1) = f x := by
-  have h := good_def ι f x 1
-  rwa [map_one_eq_zero ι, ι.map_zero, mul_zero, mul_one] at h
+theorem map_zero_add_map_add_one (f : F) (x) : f 0 + f (x + 1) = f x := by
+  simpa only [mul_one] using (map_mul_kernel_eq ι (map_one_eq_zero ι f) x).symm
+
+theorem map_zero_add_map_add_nat (f : F) (x) (n : ℕ) : n • f 0 + f (x + n) = f x := by
+  induction n with
+  | zero => simp [zero_nsmul]
+  | succ n n_ih => rw [Nat.cast_succ, ← add_assoc, succ_nsmul,
+      add_assoc, map_zero_add_map_add_one ι, n_ih]
 
 end
 
 
-theorem map_add_one [Semiring R] [AddCommGroup S] (ι : S →+ R)
-    [FunLike F R S] [GoodFunClass F ι] (f : F) (x) : f (x + 1) = f x - f 0 :=
-  eq_sub_of_add_eq' (map_add_one' ι f x)
-
-theorem map_sub_one [Ring R] [AddCancelCommMonoid S] (ι : S →+ R)
-    [FunLike F R S] [GoodFunClass F ι] (f : F) (x) : f (x - 1) = f x + f 0 := by
-  rw [← map_add_one' ι, sub_add_cancel, add_comm]
+/-- Custom cancellation lemma for non-commutative `G` case. -/
+theorem map_eq_of_map_add_map_left_eq_map_add_map_right
+    [NonUnitalNonAssocSemiring R] [IsCancelAdd R] [AddZeroClass G] [IsCancelAdd G]
+    (ι : G →+ R) [FunLike F R G] [GoodFunClass F ι]
+    {f : F} (h : f a + f b = f b + f c) : f a = f c := by
+  replace h : ι (f a + f b) = ι (f b + f c) := congrArg ι h
+  rw [ι.map_add, add_comm, ι.map_add, add_right_inj] at h
+  exact map_eq_of_incl_map_eq ι h
 
 
 section
 
-variable [Ring R] [AddCommGroup S] (ι : S →+ R) [FunLike F R S] [GoodFunClass F ι] (f : F)
+variable [Ring R] [AddCancelMonoid G] (ι : G →+ R)
+  [FunLike F R G] [GoodFunClass F ι] (f : F) (x : R)
 include ι
 
-theorem map_one_sub' (x) : f (1 - x) = f (ι (f 0) * ι (f x)) := by
-  have h := map_map_zero_mul_map ι f (ι (f 0) * ι (f x))
-  rw [eq_sub_of_add_eq (map_map_zero_mul_map ι f x), ← eq_sub_iff_add_eq, sub_sub_cancel,
-    ι.map_sub, mul_sub, sub_eq_neg_add, incl_map_zero_mul_self_period_one, map_add_one ι,
-    sub_eq_iff_eq_add, ← map_sub_one ι] at h
-  replace h := map_neg_eq_of_map_eq ι h
-  rwa [eq_comm, neg_neg, neg_sub] at h
+theorem map_sub_one : f (x - 1) = f 0 + f x := by
+  simpa only [sub_add_cancel] using (map_zero_add_map_add_one ι f (x - 1)).symm
 
-theorem map_one_sub (x) : f (1 - x) = f 0 - f x := by
-  rw [map_one_sub' ι, eq_sub_iff_add_eq, map_map_zero_mul_map]
+theorem map_neg_incl_map_zero_mul_incl_map : f (-(ι (f 0) * ι (f x))) = f (x - 1) := by
+  have h : ι (f (ι (f 0) * ι (f x))) = ι (f 0) - ι (f x) := by
+    rw [eq_sub_iff_add_eq, ← ι.map_add, map_incl_map_zero_mul_incl_map_add_map]
+  have h0 : f (ι (f 0) * ι (f (ι (f 0) * ι (f x)))) = f x := by
+    apply map_eq_of_map_add_map_left_eq_map_add_map_right ι
+    rw [map_incl_map_zero_mul_incl_map_add_map, map_incl_map_zero_mul_incl_map_add_map]
+  rw [h, mul_sub, ← neg_add_eq_sub, map_add_incl_map_zero_mul_self] at h0
+  rw [← map_zero_add_map_add_one ι f, h0, map_sub_one ι]
 
-theorem map_neg_add_map_eq (x) : f (-x) + f x = 2 • f 0 := by
-  have h := add_eq_of_eq_sub (map_one_sub ι f x)
-  rwa [sub_eq_neg_add, map_add_one ι, ← add_sub_right_comm,
-    sub_eq_iff_eq_add, ← two_nsmul] at h
+theorem map_incl_map_zero_mul_incl_map_eq_map_one_sub :
+    f (ι (f 0) * ι (f x)) = f (1 - x) := by
+  rw [← map_neg_eq_iff_map_eq ι, map_neg_incl_map_zero_mul_incl_map, neg_sub]
 
-theorem map_neg_eq (x) : f (-x) = 2 • f 0 - f x :=
-  eq_sub_of_add_eq (map_neg_add_map_eq ι f x)
+theorem map_one_sub_add_map : f (1 - x) + f x = f 0 := by
+  rw [← map_incl_map_zero_mul_incl_map_eq_map_one_sub ι,
+    map_incl_map_zero_mul_incl_map_add_map]
 
-theorem map_mul_two_eq (x) : f (x * 2) = 2 • f x - f 0 := by
-  have h : f (1 + 1) = -f 0 := by
-    rw [map_add_one ι, map_one_eq_zero ι, zero_sub]
-  have h0 := good_def ι f x (1 + 1)
-  rw [h, ι.map_neg, mul_neg, map_neg_eq ι, ← add_assoc, map_add_one ι, map_add_one ι,
-    eq_sub_of_add_eq (map_map_mul_map_zero ι f x), sub_sub, ← add_sub_right_comm,
-    two_nsmul, add_sub_cancel, ← sub_add, ← add_sub_right_comm, ← two_nsmul] at h0
-  rw [h0, one_add_one_eq_two]
+theorem map_add_map_one_sub : f x + f (1 - x) = f 0 := by
+  simpa only [sub_sub_cancel] using map_one_sub_add_map ι f (1 - x)
+
+theorem map_neg_add_map : f (-x) + f x = 2 • f 0 := by
+  rw [← map_zero_add_map_add_one ι, neg_add_eq_sub,
+    add_assoc, map_one_sub_add_map ι, two_nsmul]
 
 end
 
@@ -227,45 +145,36 @@ end
 
 
 
-/-! ##### If `f` is injective, we are done -/
+/-! ### Additional lemmas on non-periodic good functions -/
 
-theorem solution_of_injective [Ring R] [AddCommGroup S] (ι : S →+ R)
-    [FunLike F R S] [GoodFunClass F ι] {f : F} (h : (f : R → S).Injective) :
-    ∃ a : {a : R // a * a = 1 ∧ ∀ x, a * x = x * a}, ∀ x, ι (f x) = a * (1 - x) := by
-  have h0 : ι (f 0) * ι (f 0) = 1 :=
-    h ((map_map_zero_mul_self ι f).trans (map_one_eq_zero ι f).symm)
-  have h1 (x) : ι (f x) = ι (f 0) * (1 - x) := by
-    have X := map_map_zero_mul_map ι f
-    have h1 := X (ι (f 0) * ι (f x))
-    rw [eq_sub_of_add_eq (X x), ι.map_sub, mul_sub,
-      add_sub_left_comm, add_right_eq_self] at h1
-    replace h1 := h (eq_of_sub_eq_zero h1)
-    rw [sub_eq_iff_eq_add, ← sub_eq_iff_eq_add', h0] at h1
-    rw [h1, ← mul_assoc, h0, one_mul]
-  have h2 (x) : ι (f 0) * x = x * ι (f 0) := by
-    have h2 : ι (f 0) * ι (f (1 - x)) = ι (f (1 - x)) * ι (f 0) := by
-      apply h; rw [← add_left_inj, good_def, zero_mul, add_comm 0, good_def, mul_zero]
-    rw [h1 (1 - x), sub_sub_cancel, mul_assoc] at h2
-    replace h2 : (ι (f 0) * ι (f 0)) * (ι (f 0) * x)
-        = (ι (f 0) * ι (f 0)) * (x * ι (f 0)) := by
-      rw [mul_assoc, h2, mul_assoc]
-    rwa [h0, one_mul, one_mul] at h2
-  exact ⟨⟨ι (f 0), h0, h2⟩, h1⟩
+section
 
-
-
-
-
-/-! ### Properties of non-periodic good function -/
-
-variable [Ring R] [AddCommGroup S] (ι : S →+ R)
-  [FunLike F R S] [NonperiodicGoodFunClass F ι]
+variable [Semiring R] [IsCancelAdd R] [AddCancelMonoid G] (ι : G →+ R)
+  [FunLike F R G] [NonperiodicGoodFunClass F ι]
 include ι
 
-theorem map_eq_zero_iff {f : F} : f c = 0 ↔ c = 1 := by
-  refine ⟨λ h ↦ period_imp_eq ι (f := f) λ x ↦ ?_, λ h ↦ h ▸ map_one_eq_zero ι f⟩
-  have h := period_of_map_eq_zero' ι h (x - c * c)
-  rwa [sub_add_cancel] at h
+theorem map_eq_zero_imp_eq_one {f : F} (h : f c = 0) : c = 1 := by
+  refine add_left_cancel (a := c * c) (period_imp_eq ι (f := f) λ x ↦ ?_)
+  rw [← add_assoc, ← add_assoc, period_of_map_eq_zero' ι h]
+
+theorem map_eq_zero_iff_eq_one {f : F} : f x = 0 ↔ x = 1 :=
+  ⟨map_eq_zero_imp_eq_one ι, λ h ↦ h ▸ map_one_eq_zero ι f⟩
 
 theorem incl_map_zero_mul_self (f : F) : ι (f 0) * ι (f 0) = 1 :=
-  (map_eq_zero_iff ι).mp (map_map_zero_mul_self ι f)
+  map_eq_zero_imp_eq_one ι (map_incl_map_zero_mul_self ι f)
+
+end
+
+
+theorem incl_map_zero_comm_incl_map [Ring R] [AddCancelMonoid G]
+    (ι : G →+ R) [FunLike F R G] [NonperiodicGoodFunClass F ι] (f : F) (x) :
+    ι (f 0) * ι (f x) = ι (f x) * ι (f 0) := by
+  have X (x) : f (ι (f (1 - x)) * ι (f x)) = f ((1 - x) * x) := by
+    rw [← good_def ι f (1 - x), sub_add_cancel, map_one_eq_zero ι, add_zero]
+  have h := good_def ι f (ι (f (1 - x)) * ι (f 0)) (ι (f 0) * ι (f x))
+  rwa [map_incl_map_zero_mul_incl_map_eq_map_one_sub, map_incl_map_comm_incl_map_zero,
+    map_incl_map_zero_mul_incl_map_eq_map_one_sub, X, sub_sub_cancel, mul_one_sub,
+    mul_assoc, ← mul_assoc (ι (f 0)), incl_map_zero_mul_self, one_mul, X, one_sub_mul,
+    add_right_eq_self, map_eq_zero_iff_eq_one ι, ← add_right_inj (a := ι (f x) * ι (f 0)),
+    ← add_assoc, ← add_mul, ← ι.map_add, map_add_map_one_sub ι, incl_map_zero_mul_self,
+    add_comm, add_left_inj] at h
