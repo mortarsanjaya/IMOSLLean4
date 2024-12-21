@@ -41,10 +41,24 @@ instance : One (CentralInvolutive M) := ⟨CentralInvolutive.one⟩
 
 @[simp] theorem one_val : (1 : CentralInvolutive M).val = 1 := rfl
 
+@[simp] theorem mul_mul_cancel_left (x : CentralInvolutive M) (y : M) : x * (x * y) = y := by
+  rw [← mul_assoc, x.mul_self_eq_one, one_mul]
+
+@[simp] theorem mul_mul_cancel_right (x : CentralInvolutive M) (y : M) : y * x * x = y := by
+  rw [mul_assoc, x.mul_self_eq_one, mul_one]
+
+theorem mul_mul_mul_cancel_left (x : CentralInvolutive M) (y z : M) :
+    (x * y) * (x * z) = y * z := by
+  rw [x.mul_comm, mul_assoc, x.mul_mul_cancel_left]
+
+theorem mul_mul_mul_cancel_right (x : CentralInvolutive M) (y z : M) :
+    (y * x) * (z * x) = y * z := by
+  rw [← x.mul_comm, ← x.mul_comm, x.mul_mul_mul_cancel_left]
+
 protected def mul (x y : CentralInvolutive M) : CentralInvolutive M where
   val := x * y
-  mul_self_eq_one := by rw [mul_assoc, x.mul_comm y, ← mul_assoc y.1, y.2, one_mul, x.2]
-  mul_comm z := by rw [mul_assoc, y.3, x.3, mul_assoc, y.3]
+  mul_self_eq_one := by rw [x.mul_mul_mul_cancel_left, y.mul_self_eq_one]
+  mul_comm z := by rw [mul_assoc, y.mul_comm, x.mul_comm, mul_assoc, y.mul_comm]
 
 instance : Mul (CentralInvolutive M) := ⟨CentralInvolutive.mul⟩
 
@@ -84,5 +98,26 @@ instance : HasDistribNeg (CentralInvolutive M) where
   neg_neg x := CentralInvolutive.ext (neg_neg x.1)
   neg_mul x y := CentralInvolutive.ext (neg_mul x.1 y.1)
   mul_neg x y := CentralInvolutive.ext (mul_neg x.1 y.1)
+
+end
+
+
+
+
+
+/-! ### Additional lemmas about central involutive elements -/
+
+section
+
+variable (x : CentralInvolutive M) {y z : M}
+
+theorem mul_left_inj : x * y = x * z ↔ y = z :=
+  ⟨λ h ↦ by simpa only [mul_mul_cancel_left] using congrArg (x.1 * ·) h, congrArg (x.1 * ·)⟩
+
+theorem mul_left_eq_iff_eq_mul : x * y = z ↔ y = x * z :=
+  ⟨λ h ↦ h ▸ (x.mul_mul_cancel_left y).symm, λ h ↦ h ▸ x.mul_mul_cancel_left z⟩
+
+theorem mul_right_eq_iff_eq_mul : y * x = z ↔ y = z * x :=
+  ⟨λ h ↦ h ▸ (x.mul_mul_cancel_right y).symm, λ h ↦ h ▸ x.mul_mul_cancel_right z⟩
 
 end

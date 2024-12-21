@@ -25,7 +25,8 @@ structure ExcellentFun (R G) [NonAssocRing R] [Add G] where
   excellent_def' : ∀ x y, toFun (x + y - x * y) + toFun (1 - (x + y)) = toFun (1 - x * y)
 
 /-- Class of excellent functions; see mathlib's `DFunLike` design. -/
-class ExcellentFunClass (F R G) [NonAssocRing R] [Add G] [FunLike F R G] where
+class ExcellentFunClass (F) (R G : outParam Type*)
+    [NonAssocRing R] [Add G] [FunLike F R G] where
   excellent_def : ∀ (f : F) (x y : R), f (x + y - x * y) + f (1 - (x + y)) = f (1 - x * y)
 
 

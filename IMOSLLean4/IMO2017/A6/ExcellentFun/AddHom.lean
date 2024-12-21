@@ -27,31 +27,11 @@ namespace ExcellentFun
 
 variable [NonAssocRing R]
 
-/-! ### Excellent functions from additive map -/
-
-def ofAddHom [Add G] (φ : AddHom R G) : ExcellentFun R G where
-  toFun := φ
-  excellent_def' x y := by rw [← φ.map_add, sub_add_sub_cancel']
-
-theorem ofAddHom_injective [Add G] : (ofAddHom (R := R) (G := G)).Injective :=
-  λ _ _ h ↦ AddHom.ext λ _ ↦ ExcellentFun.ext_iff.mp h _
-
-def HomOfAddHom [AddCommSemigroup G] : AddHom (AddHom R G) (ExcellentFun R G) where
-  toFun := ofAddHom
-  map_add' _ _ := rfl
-
-theorem HomOfAddHom_injective [AddCommSemigroup G] :
-    Function.Injective (HomOfAddHom (R := R) (G := G)) :=
-  ofAddHom_injective
-
-
-
-
-
 /-! ### Excellent functions from group homomorphisms -/
 
-def ofAddMonoidHom [AddZeroClass G] (φ : R →+ G) : ExcellentFun R G :=
-  ofAddHom φ
+def ofAddMonoidHom [AddZeroClass G] (φ : R →+ G) : ExcellentFun R G where
+  toFun := φ
+  excellent_def' x y := by rw [← φ.map_add, sub_add_sub_cancel']
 
 theorem ofAddMonoidHom_injective [AddZeroClass G] :
     (ofAddMonoidHom (R := R) (G := G)).Injective :=

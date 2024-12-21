@@ -21,11 +21,6 @@ We say that $f$ is
 This file defines the functional equation and prove basic properties.
 The good functions are characterized for a decent amount of subcases.
 The file `IMOSLLean4/IMO2017/A6/A6.lean` collects all the main results.
-
-### Note
-
-Currently, the definition only assumes that $ι$ is a function for extreme generality.
-I think only defining good functions for homomorphisms is a better practice, but...
 -/
 
 namespace IMOSL
