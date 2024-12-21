@@ -17,7 +17,7 @@ Let $I$ be a double-sided ideal of $R$ and $[\cdot] : R \to R/I$ be the projecti
 Let $\phi : R/I \to G$ be a group homomorphism such that $[\iota(\phi(x))] = x$ for all $x \in R/I$.
 Let $a \in Z(R/I)$ such that $a^2 = 1$.
 Then the function $f(x) = \phi(a(1 - [x]))$ is $\iota$-good.
-These are all the $\iota$-good functions in the following cases:
+This construction gives us all the $\iota$-good functions in the following cases:
 \begin{enumerate}
 
     \item 
@@ -67,12 +67,12 @@ These are all the $\iota$-good functions in the following cases:
 Let $R$ be a ring and $G$ be an abelian group.
 An \emph{excellent function} from $R$ to $G$ is a function $f : R \to G$ such that for all $x, y \in R$,
 \[ f(x + y - xy) + f(1 - (x + y)) = f(1 - xy). \tag{**}\label{2017a6-eq-excellent0} \]
+
 Excellent functions appear in the classification of non-periodic good functions.
 Namely, an injective non-periodic good function induces an excellent function.
-
 Clearly, group homomorphisms are excellent functions.
-The main question is: when are there are no other excellent functions?
-We prove this in some subcases.
+The main question of interest is determining if the converse holds.
+In this part, we try to answer this question and explore some properties of excellent function.
 
 By plugging $y = 0$ into~\eqref{2017a6-eq-excellent0}, we get $f(x) + f(1 - x) = f(1)$ for all $x \in R$.
 By plugging $y = 1$ instead, we get $f(1) + f(-x) = f(1 - x)$, which implies $f(x) + f(1) = f(x + 1)$ for all $x \in R$.
@@ -113,25 +113,25 @@ Thus, we can consider the quotient $Q(R, G) = E(R, G)/\Hom(R, G)$.
 The main goal can be rephrased as $Q(R, G) = 0$ for all $R$ and $G$.
 
 To prove $Q(R, G) = 0$ by first principles, we would check that $f(x + y) = f(x) + f(y)$ for any $x, y \in E(R, G)$.
-Now we fix $x$ and $y$, and consider the evaluation homomorphism $\phi : \Z[X, Y] \to R$ given by $X \mapsto x$ and $Y \mapsto y$.
-Then one can check that $f \circ \phi \in E(\Z[X, Y], G)$, and if $f$ is a group homomorphism, then $f(x + y) = f(x) + f(y)$.
-Thus, the goal reduces to proving $Q(\Z[X, Y], G) = 0$ for all groups $G$.
+Now we fix $x$ and $y$, and consider the evaluation homomorphism $\phi : \Z \langle X, Y \rangle \to R$ given by $X \mapsto x$ and $Y \mapsto y$, where $\Z \langle X, Y \rangle$ is the ring of non-commutative integer polynomials with two variables.
+Then one can check that $f \circ \phi \in E(\Z \langle X, Y \rangle, G)$, and if $f$ is a group homomorphism, then $f(x + y) = f(x) + f(y)$.
+Thus, the goal reduces to proving $Q(\Z \langle X, Y \rangle, G) = 0$ for all groups $G$.
 We can still make further reductions.
 
 The first lemma says that $Q(R, G)$ is $6$-torsion for any $R$ and $G$.
 Thus we can write $Q(R, G) = Q_2(R, G) \times Q_3(R, G)$, where $Q_p(R, G)$ is the set of $p$-torsion elements for $p = 2, 3$.
-When $R$ is free as an abelian group, e.g. $R = \Z[X, Y]$, we can reduce even further.
+When $R$ is free as an abelian group, e.g. $R = \Z \langle X, Y \rangle$, we can reduce even further.
 For $p = 2, 3$, by shifting with a group homomorphism, each element of $Q_p(R, G)$ has a representative that sends a fixed $\Z$-basis of $R$, say $\cB$, to zero.
 Then $f$ is $p$-torsion as an element of $E(R, G)$, so in fact $f \in E(R, G[p])$, where $G[p]$ is the set of $p$-torsion elements of $G$.
 If $f$ is non-zero, then we can choose an appropriate $\F_p$-linear functional $\alpha : G[p] \to \F_p$ such that $\alpha \circ f \in E(R, \F_p)$ is non-zero either.
 Since it still sends the basis $\cB$ to zero, $\alpha \circ f$ is not a group homomorphism, which means $Q(R, \F_3) \neq 0$.
-This means that the goal reduces entirely to two equalities: $Q_2(\Z[X, Y], \F_2) = 0$ and $Q_3(\Z[X, Y], \F_3) = 0$.
+This means that the goal reduces entirely to two equalities: $Q_2(\Z \langle X, Y \rangle, \F_2) = 0$ and $Q_3(\Z \langle X, Y \rangle, \F_3) = 0$.
 
 If $p = 3$, then the second lemma says more.
 For any ring $R$ and $f \in E(R, \F_3)$ and $a, b \in R$, we have $f(3a + b) = 3 f(a) + f(b) = f(b)$.
 In particular, $f$ naturally induces an excellent function in $E(R/(3), \F_3)$.
 That is, we get $E(R, \F_3) \equiv E(R/(3), \F_3)$.
-Thus, the equality $Q_3(\Z[X, Y], \F_3) = 0$ reduces further to $Q_3(\F_3[X, Y], \F_3) = 0$.
+Thus, the equality $Q_3(\Z \langle X, Y \rangle, \F_3) = 0$ reduces further to $Q_3(\F_3[X, Y], \F_3) = 0$.
 
 
 
