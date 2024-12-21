@@ -22,6 +22,11 @@ Thus we get a correspondence between good functions and non-periodic good functi
 ### Implementation notes
 
 Instead of using ideals explicitly, we use the `RingCon` API.
+
+### TODO
+
+Tbe function `GoodFun.Lift` might be problematic here.
+Change it to something like `Lift (f : GoodFun β) (_ : β = ι)` instead.
 -/
 
 namespace IMOSL

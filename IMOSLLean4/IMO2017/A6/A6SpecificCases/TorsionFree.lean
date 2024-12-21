@@ -28,14 +28,14 @@ instance ExcellentFun.instIsOfAddMonoidHomSurjective_of_TwoThreeTorsionFree
     excellent_map_nat_mul, ← nsmul_add] at h
   exact nsmul_left_cancel h
 
-instance NonperiodicGoodFun.instIsForallInjective_of_TwoTorsionFree
-    [Ring R] [AddCancelMonoid G] [IsTorsionFreeBy G 2] (ι : G →+ R) :
-    IsForallInjective ι where
-  is_injective f a b h := by
-    replace h : f (-(a - b)) = f (a - b) := by
-      rw [neg_sub, map_sub_eq_iff_map_mul_eq ι h.symm h]
-      exact map_mul_eq_of_map_eq_of_map_add_eq ι h.symm h (congrArg f (add_comm b a))
-    replace h : f (a - b) = f 0 :=
-      nsmul_left_cancel (n := 2) (by rw [← map_neg_add_map ι, h, two_nsmul])
-    rwa [← map_zero_add_map_add_one ι, add_right_eq_self,
-      map_eq_zero_iff_eq_one ι, add_left_eq_self, sub_eq_zero] at h
+theorem NonperiodicGoodFun.injective_of_TwoTorsionFree
+    [Ring R] [AddCancelMonoid G] [IsTorsionFreeBy G 2]
+    {ι : G →+ R} (f : NonperiodicGoodFun ι) : Function.Injective f := by
+  intro a b h
+  replace h : f (-(a - b)) = f (a - b) := by
+    rw [neg_sub, map_sub_eq_iff_map_mul_eq ι h.symm h]
+    exact map_mul_eq_of_map_eq_of_map_add_eq ι h.symm h (congrArg f (add_comm b a))
+  replace h : f (a - b) = f 0 :=
+    nsmul_left_cancel (n := 2) (by rw [← map_neg_add_map ι, h, two_nsmul])
+  rwa [← map_zero_add_map_add_one ι, add_right_eq_self,
+    map_eq_zero_iff_eq_one ι, add_left_eq_self, sub_eq_zero] at h
