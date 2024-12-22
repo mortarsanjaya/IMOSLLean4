@@ -223,8 +223,10 @@ theorem final_solution (R : Type u) [CommRing R] (hR : ∀ x y : R, 2 • x = 2 
       funext λ x ↦ ?_, funext λ x ↦ ?_⟩
     · change _ = (idempotent_decomp h0).symm (_, 0)
       rw [idempotent_decomp_symm_apply, idempotent_self_mul_part_map_quot, map_zero,
-        add_zero, h1, map_add, idempotent_self_mul_part_map_quot, ← map_mul,
-        idempotent_self_mul_part_map_quot, h1]
+        add_zero, h1, map_add, idempotent_self_mul_part_map_quot, h1, ← Prod.fst_mul]
+      simp only [RingEquiv.toEquiv_eq_coe, RingEquiv.coe_toEquiv_symm, Equiv.symm_symm,
+        Equiv.toFun_as_coe, EquivLike.coe_coe]
+      rw [← map_mul]; rfl
     · change x * A = x * A + 0 * (1 - A)
       rw [zero_mul, add_zero],
   λ ⟨R₁, R₂, hR₁, hR₂, φ, c, h, h0⟩ ↦ by
