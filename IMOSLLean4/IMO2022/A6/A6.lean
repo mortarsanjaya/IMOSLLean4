@@ -81,7 +81,22 @@ def good (G) [AddGroup G] (m n : ℤ) := ∀ f : InfectiousFun G, ∃ z, m • f
 
 lemma gcd_addOrderOf_dvd_iff [AddGroup G] {g : G} {a b : ℤ} :
     a.gcd (addOrderOf g) ∣ b.natAbs ↔ ∃ k : ℤ, (a * k) • g = b • g := by
-  sorry
+  have h : b.natAbs = b ∨ b.natAbs = -b := b.natAbs_eq.imp Eq.symm Int.eq_neg_comm.mp
+  simp_rw [← addOrderOf_dvd_sub_iff_zsmul_eq_zsmul, Int.gcd_dvd_iff]
+  generalize (b.natAbs : ℤ) = c at h ⊢
+  rcases h with rfl | rfl
+  ---- Case 1: `b ≥ 0`
+  · refine ⟨?_, ?_⟩
+    · rintro ⟨x, y, rfl⟩; refine ⟨x, -y, ?_⟩
+      rw [sub_add_cancel_left, mul_neg]
+    · rintro ⟨k, y, h⟩; refine ⟨k, -y, ?_⟩
+      rw [mul_neg, ← h, neg_sub, add_sub_cancel]
+  ---- Case 2: `b < 0`
+  · refine ⟨?_, ?_⟩
+    · rintro ⟨x, y, h⟩; refine ⟨-x, y, ?_⟩
+      rw [sub_eq_add_neg, h, mul_neg, neg_add_cancel_left]
+    · intro ⟨k, y, h⟩; refine ⟨-k, y, ?_⟩
+      rw [← h, mul_neg, ← add_sub_assoc, neg_add_cancel, zero_sub]
 
 theorem imp_good [AddGroup G] (h : ∀ g : G, (m - n).gcd (addOrderOf g) ∣ m.natAbs) :
     good G m n := by
