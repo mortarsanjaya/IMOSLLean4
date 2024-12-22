@@ -481,9 +481,9 @@ include hg
 /-- (2.3.1) -/
 lemma Eq1 (x) : g (x + 1) + g (x - 1) = 2 * (g x + 1) := by
   have h := hg.shift_good.Eq6 x; simp only [Pi.sub_apply, Pi.one_apply] at h
-  rwa [sub_add_cancel, hg.map_two, sub_eq_of_eq_add three_add_one_eq_four.symm,
-    sub_eq_of_eq_add two_add_one_eq_three.symm, sub_add_sub_comm, mul_two,
-    sub_eq_iff_eq_add, one_add_one_eq_two, ← two_mul, ← mul_add_one (α := S)] at h
+  rwa [sub_add_cancel, hg.map_two, sub_eq_of_eq_add (G := S) three_add_one_eq_four.symm,
+    sub_eq_of_eq_add (G := S) two_add_one_eq_three.symm, sub_add_sub_comm, mul_two,
+    sub_eq_iff_eq_add, one_add_one_eq_two, ← two_mul, ← mul_add_one] at h
 
 omit [NoZeroDivisors S] in
 /-- (2.3.2) -/
@@ -683,11 +683,12 @@ lemma Eq8 (x y) : g (x + y) + g (x - y) = 2 • (g x + g y) := by
 
 open Extra.SquareLike
 
+
 theorem solution :
     ∃ (R' : Type u) (_ : CommRing R') (φ : R →+* R') (ι : SqSubring R' →+* S),
       ∀ x, g x = ι (RestrictedSq (φ x)) := by
-  refine ⟨R, CommRing.mk hg.Rcomm, RingHom.id R, ?_⟩
   let hR := CommRing.mk hg.Rcomm
+  refine ⟨R, hR, RingHom.id R, ?_⟩
   have hS (x y : S) (h : 2 • x = 2 • y) : x = y := by
     rwa [two_nsmul, ← two_mul, two_nsmul, ← two_mul, ← sub_eq_zero, ← mul_sub,
       mul_eq_zero, or_iff_right hg.Schar_ne_two, sub_eq_zero] at h
@@ -707,7 +708,7 @@ theorem solution :
         rw [← h1, Subring.coe_add, ρ.map_add, h1, h1, nsmul_add]
       exact ⟨AddMonoidHom.mk' ι h3, h1⟩
     suffices ∀ r ∈ R₂, ∃ s, ρ r = 2 • s
-      from Classical.axiomOfChoice λ a ↦ this a.1 a.2
+      from Classical.axiomOfChoice λ (a : SqSubring R) ↦ this a.1 a.2
     λ r ↦ AddSubgroup.closure_induction
       (λ y ⟨x, h3⟩ ↦ ⟨g x, by rw [← h, h0 x, ← sq, ← h3]⟩)
       ⟨0, by rw [ρ.map_zero, nsmul_zero]⟩
@@ -735,8 +736,10 @@ theorem solution :
     rw [add_mul, ρ.map_add, nsmul_add, hx₁, hx₂, ρ.map_add, add_mul]
   · rintro x y₁ y₂ - - - hy₁ hy₂
     rw [mul_add, ρ.map_add, nsmul_add, hy₁, hy₂, ρ.map_add, mul_add]
-  · rintro x y - - h2; rw [neg_mul, ρ.map_neg, ρ.map_neg, neg_mul, smul_neg, h2]
-  · rintro x y - - h2; rw [mul_neg, ρ.map_neg, ρ.map_neg, mul_neg, smul_neg, h2]
+  · rintro x y - - h2; rw [neg_mul, ρ.map_neg, ρ.map_neg, neg_mul, ← h2]
+    simp only [nsmul_eq_mul, Nat.cast_ofNat, mul_neg]
+  · rintro x y - - h2; rw [mul_neg, ρ.map_neg, ρ.map_neg, mul_neg, ← h2]
+    simp only [nsmul_eq_mul, Nat.cast_ofNat, mul_neg]
 
 end
 
