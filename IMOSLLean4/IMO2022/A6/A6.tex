@@ -1,0 +1,60 @@
+Let $G$ be a commutative group.
+A function $f : G \to G$ is called \emph{infectious} if
+\[ f(x + f(y)) = f(x) + f(y) \quad \forall x, y \in G. \]
+Find all pairs $(m, n)$ of integers such that for any infectious functions $f : G \to G$, there exists $z \in G$ such that $m f(z) = nz$.
+
+
+
+\subsection*{Answer}
+
+The pairs $(m, n)$ that work are precisely those such that $\gcd(m - n, o(g)) \mid m$ for all $g \in G$, where $o(g)$ is the order of $g$.
+
+If $G = \R$, then $o(1) = 0$ so the criterion simplifies to $m - n \mid m$.
+This corresponds to the answer to the original problem: $q = 1 + 1/k$ for some non-zero integer $k$.
+
+
+
+\subsection*{Solution}
+
+Reference: \url{https://artofproblemsolving.com/community/c6h3107327p33516285}
+
+Solution in AoPS by \textbf{BlazingMuddy} (author of this project, post \#23).
+The solution presented here is basically a copy of this solution, with slight modification.
+Note that it is also possible to describe all infectious functions.
+We say that $(m, n)$ is $G$-good if it satisfies the condition of the problem.
+
+First, the functional equation can be rearranged to $f(x) - f(y) = f(x - f(y))$ for all $x, y \in G$.
+Thus $f(G)$ is closed under subtraction, and thus it is a subgroup of $G$.
+Since $f(0) \in f(G)$, this gives $f(k f(0)) = f(0) + k f(0) = (k + 1) f(0)$ for all $k \in \Z$.
+If we fix $f$ and plug $z = k f(0)$ into the given condition, we get
+\[ m (k + 1) f(0) = n k f(0) \iff o(f(0)) \mid m(k + 1) - nk = (m - n) k + m. \]
+The existence of $k$ with this property is equivalent to $\gcd(m - n, o(f(0))) \mid m$.
+This is clearly satisfied if $\gcd(m - n, o(g)) \mid m$ for all $g \in G$.
+
+Now we prove the converse.
+Fix a $G$-good pair $(m, n)$.
+First let $H \leq G$ be an arbitrary subgroup.
+Choose a fixed coset representative $(x_j \in G)_{j \in G/H}$ for $H$, so $x_j \bmod{H} = j$ for each $j \in G/H$.
+In particular, every element of $G$ has a unique representation as $x_j + h$ for some $j \in G/H$ and $h \in H$.
+
+Consider arbitrary collection $(h_j)_{j \in G/H}$ of elements of $H$.
+Then one can check that the function $f : G \to H \subseteq G$ defined by $x_j + h \mapsto h_j + h$ is well-defined and infectious.
+Thus, there must exist $j \in G/H$ and $h \in H$ such that
+\[ m(h_j + h) = n(x_j + h) \iff (m - n) h = nx_j - mh_j. \]
+That is, for any collection $(h_j \in H)_{j \in G/H}$, there exists $j$ such that
+\[ nx_j \equiv mh_j \pmod{(m - n) H}. \]
+
+Now we claim that $mH \subseteq (m - n) H$.
+Fix $a \in H$, and consider $(h_j')_{j \in G/H}$ defined by $h_j' = a$ if $nx_j \in (m - n) H$ and $h_j' = 0$ otherwise.
+Then there exists $j$ such that $nx_j \equiv mh_j' \pmod{(m - n) H}$.
+If $nx_j \notin (m - n) H$, then $nx_j \equiv mh_j' \equiv 0 \pmod{(m - n) H}$, contradiction.
+Thus, $nx_j \in (m - n) H$, and so
+\[ ma = mh_j' \equiv nx_j \equiv 0 \pmod{(m - n) H} \implies ma \in (m - n) H. \]
+This proves the claim.
+
+Finally, consider only the cyclic subgroups.
+Fix $g \in G$, and take $H = \langle g \rangle$.
+Then we get $mg \in (m - n) \langle g \rangle$, so there exists $k \in \Z$ such that
+\[ mg = (m - n) kg \iff o(g) \mid (m - n) k - m. \]
+The existence of such $k$ implies $\gcd(m - n, o(g)) \mid m$.
+This holds for all $g \in G$, so we are done.
