@@ -30,15 +30,15 @@ variable {f : ℕ → ℤ} (h : ∀ a b : ℕ, (a : ℤ) - b ∣ f a - f b)
 include h
 
 lemma const_of_infinite_map_eq_map_zero (h0 : ∀ k, ∃ n, k ≤ n ∧ f n = f 0) :
-    ∃ C, f = λ _ ↦ C :=
-  ⟨f 0, funext λ b ↦ by
-    obtain ⟨n, h0, h1⟩ := h0 (b + (f 0 - f b).natAbs + 1)
-    specialize h n b
-    rw [Nat.succ_le_iff, lt_iff_exists_add] at h0
-    rcases h0 with ⟨C, h0, rfl⟩
-    rw [h1, add_assoc, Nat.cast_add, add_sub_cancel_left, Int.natCast_dvd] at h
-    have h2 := Nat.eq_zero_of_dvd_of_lt h (Nat.lt_add_of_pos_right h0)
-    rwa [Int.natAbs_eq_zero, sub_eq_zero, eq_comm] at h2⟩
+    ∃ C, f = λ _ ↦ C := by
+  refine ⟨f 0, funext λ b ↦ ?_⟩
+  obtain ⟨n, h0, h1⟩ := h0 (b + (f 0 - f b).natAbs + 1)
+  specialize h n b
+  rw [Nat.succ_le_iff, lt_iff_exists_add] at h0
+  rcases h0 with ⟨C, h0, rfl⟩
+  rw [h1, add_assoc, Nat.cast_add, add_sub_cancel_left, Int.natCast_dvd] at h
+  have h2 := Nat.eq_zero_of_dvd_of_lt h (Nat.lt_add_of_pos_right h0)
+  rwa [Int.natAbs_eq_zero, sub_eq_zero, eq_comm] at h2
 
 lemma const_of_finite_prime_divisor (h0 : ∀ p : ℕ, p.Prime → (∃ c, (p : ℤ) ∣ f c) → p < K) :
     ∃ C, f = λ _ ↦ C := by
@@ -79,8 +79,7 @@ lemma const_of_finite_prime_divisor (h0 : ∀ p : ℕ, p.Prime → (∃ c, (p : 
 theorem final_solution (h0 : ∀ C : ℤ, ∃ b : ℕ, f b ≠ C) (K : ℕ) :
     ∃ p : ℕ, K ≤ p ∧ p.Prime ∧ ∃ c, (p : ℤ) ∣ f c := by
   refine by_contra λ h1 ↦ absurd h0 (not_forall.mpr ⟨f 0, ?_⟩)
-  rw [← not_forall, not_not]
   obtain ⟨C, rfl⟩ : ∃ C, f = λ _ ↦ C :=
     const_of_finite_prime_divisor h (K := K) λ p h2 h3 ↦
       lt_of_not_le λ h4 ↦ not_exists.mp h1 p ⟨h4, h2, h3⟩
-  exact λ _ ↦ rfl
+  rintro ⟨b, hb⟩; exact hb rfl

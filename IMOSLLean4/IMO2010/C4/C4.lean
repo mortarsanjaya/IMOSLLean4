@@ -111,12 +111,14 @@ theorem log2_iter_add (seed n) :
 
 theorem log2_iter_lt_iff {seed} (hk : 0 < k) : ∀ {n}, log2_iter seed n < k ↔ seed < P k n
   | 0 => Iff.rfl
-  | n + 1 => by rw [P_succ', log2_iter, log2_iter_lt_iff hk, log2_lt_iff₂ (P_pos_of_seed hk n)]
+  | n + 1 => by rw [P_succ', log2_iter, log2_iter_lt_iff hk,
+      log2_lt_iff₂ (P_pos_of_seed hk n)]
 
 theorem log2_iter_eq_zero_iff : log2_iter seed n = 0 ↔ seed < P 1 n := by
   rw [← log2_iter_lt_iff Nat.one_pos, Nat.lt_succ, Nat.le_zero]
 
-theorem log2_iter_monotone_seed (h : seed₁ ≤ seed₂) : ∀ n, log2_iter seed₁ n ≤ log2_iter seed₂ n
+theorem log2_iter_monotone_seed (h : seed₁ ≤ seed₂) :
+    ∀ n, log2_iter seed₁ n ≤ log2_iter seed₂ n
   | 0 => h
   | n + 1 => log2_iter_monotone_seed (log2_monotone h) n
 
@@ -235,7 +237,7 @@ theorem type1_double_repeat (a b c N) : isReachable [a + N, b, c] [a, b, c + 4 *
     (cons_left (type1_repeat b c (2 * N)) a)
 
 theorem type1_double_repeat_a_eq_zero (b c N) : isReachable [N, b, c] [0, b, c + 4 * N] := by
-  have h := type1_double_repeat 0 b c N; rwa [N.zero_add] at h
+  simpa only [Nat.zero_add] using type1_double_repeat 0 b c N
 
 /-- `[2, 0, 0] → [1, 2, 0] → [1, 1, 2] → [0, 2, 1] → [0, 0, 5]` -/
 theorem Nadd2_zero_zero_to_4Nadd5 (N) : isReachable [N + 2, 0, 0] [0, 0, 4 * N + 5] := by
@@ -314,7 +316,7 @@ theorem three_stack_of_bdd (hN : 6 ≤ N) (hL₀ : isReachable L [0, 0, 0, N, 0,
   rcases h1 with ((h1 | h1) | h1) | h1
   · rw [Nat.lt_succ, Nat.le_zero] at h1
     exact hL₀.trans (append_left (three_stack_0mod4 N h1 h0) [0, 0, 0])
-  · have hN : 2 ≤ N := Nat.le_trans (Nat.le_add_left 2 4) hN
+  · replace hN : 2 ≤ N := Nat.le_trans (Nat.le_add_left 2 4) hN
     exact hL₀.trans (append_left (three_stack_1mod4 hN h1 h h0) [0, 0, 0])
   · exact hL₀.trans (append_left (three_stack_2mod4 hN h1 h0) [0, 0, 0])
   · exact hL₁.trans (append_left (three_stack_3mod4 N h1 h0) [0, 0, 0])

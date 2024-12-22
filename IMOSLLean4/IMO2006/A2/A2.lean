@@ -25,14 +25,13 @@ def a : ℕ → ℚ
   | 0 => -1
   | n + 1 => -(univ : Finset (Fin (n + 1))).sum λ i ↦ a i / (n + 2 - i : ℕ)
 
-lemma a_zero : a 0 = -1 := by
-  rw [a]
+lemma a_zero : a 0 = -1 := by rw [a]
 
 lemma a_succ (n) : a (n + 1) = -(range (n + 1)).sum λ i ↦ a i / (n + 2 - i : ℕ) := by
   rw [a, ← Fin.sum_univ_eq_sum_range]
 
 lemma a_one : a 1 = 1 / 2 := by
-  rw [a, Fin.sum_univ_one, Fin.val_zero, a, neg_div, neg_neg]; rfl
+  rw [a, Fin.sum_univ_one, Fin.val_zero, a_zero, neg_div, neg_neg]; rfl
 
 lemma a_nonzero (h : n ≠ 0) : a n = -(range n).sum λ i ↦ a i / (n + 1 - i : ℕ) :=
   Nat.succ_pred_eq_of_ne_zero h ▸ a_succ n.pred
@@ -45,11 +44,12 @@ lemma a_nonzero' (h : n ≠ 0) : (range (n + 1)).sum (λ i ↦ a i / (n + 1 - i 
 lemma Rat_formula {k n : ℕ} (h : k < n) :
     (n : ℚ) / (n - k : ℕ) - (n + 1 : ℕ) / (n + 1 - k : ℕ)
       = k / ((n - k) * (n + 1 - k) : ℕ) := by
-  rw [lt_iff_exists_add] at h; rcases h with ⟨c, h, rfl⟩
-  rw [gt_iff_lt, ← Nat.ne_zero_iff_zero_lt] at h
-  rw [Nat.add_sub_cancel_left, Nat.add_assoc, Nat.add_sub_cancel_left, Nat.cast_mul,
-    div_sub_div _ _ (Nat.cast_ne_zero.mpr h) (Nat.cast_ne_zero.mpr c.succ_ne_zero)]
-  refine congrArg₂ _ ?_ rfl
+  obtain ⟨c, hc, rfl⟩ : ∃ c ≠ 0, n = k + c := by
+    obtain ⟨c, rfl⟩ := Nat.exists_eq_add_of_lt h
+    exact ⟨c + 1, c.succ_ne_zero, k.add_assoc c 1⟩
+  rw [Nat.add_sub_cancel_left, Nat.add_assoc, Nat.add_sub_cancel_left, Nat.cast_mul]
+  rw [div_sub_div _ _ (Nat.cast_ne_zero.mpr hc) (Nat.cast_ne_zero.mpr c.succ_ne_zero)]
+  refine congrArg (· / _) ?_
   rw [k.cast_add, k.cast_add, add_mul, mul_add, add_sub_add_right_eq_sub,
     mul_comm, Nat.cast_succ, add_one_mul (c : ℚ), add_sub_cancel_left]
 
