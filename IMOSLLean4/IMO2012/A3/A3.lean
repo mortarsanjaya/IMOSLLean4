@@ -41,8 +41,8 @@ theorem bernoulli_ineq {x y : R} (hy : 0 ≤ y) (h : 0 ≤ x + y) :
       add_comm _ x, add_assoc, mul_add, mul_comm]
     refine add_le_add ?_ ?_
     · obtain hx | hx : 0 ≤ x ∨ x ≤ 0 := le_total 0 x
-      · exact mul_le_mul_of_nonneg_left (pow_le_pow_left hy (le_add_of_nonneg_left hx) _) hx
-      · exact mul_le_mul_of_nonpos_left (pow_le_pow_left h (add_le_of_nonpos_left hx) _) hx
+      · exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hy (le_add_of_nonneg_left hx) _) hx
+      · exact mul_le_mul_of_nonpos_left (pow_le_pow_left₀ h (add_le_of_nonpos_left hx) _) hx
     · rw [pow_succ', mul_assoc]
       exact mul_le_mul_of_nonneg_left hn hy
 

@@ -36,7 +36,7 @@ theorem final_solution [LinearOrderedField F]
     ∀ n : ℕ, 2 ≤ n → (n : F) ≤ (range n).sum a := by
   ---- First replace the inequality condition on `a`
   replace h0 (k : ℕ) : (k.succ : F) / a k.succ ≤ a k + k / a k := by
-    rw [add_div' _ _ _ (h k).ne.symm, div_le_div_iff (h _) (h k), ← sq]
+    rw [add_div' _ _ _ (h k).ne.symm, div_le_div_iff₀ (h _) (h k), ← sq]
     exact (div_le_iff₀' <| add_pos_of_pos_of_nonneg
       (pow_pos (h k) 2) k.cast_nonneg).mp (h0 k)
   ---- Now induct on `n`, clearing the easy cases

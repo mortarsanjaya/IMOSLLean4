@@ -81,6 +81,6 @@ theorem final_solution {I : Finset ι}
       ∧ ((Q i).1.1 + (Q i).1.2).bodd = false := by
   suffices ∃ i ∈ I, 0 < weight (latticeRect (Q i))
     from this.elim λ i h3 ↦ ⟨i, h3.1, latticeRect_weight_pos_imp h3.2⟩
-  apply_fun weight at h1
+  replace h1 := congrArg weight h1
   rw [latticeRect_weight, disjiUnion_weight_eq, h0.1, h0.2, add_zero] at h1
   exact exists_lt_of_sum_lt (sum_const_zero.trans_lt (Int.zero_lt_one.trans_eq h1))

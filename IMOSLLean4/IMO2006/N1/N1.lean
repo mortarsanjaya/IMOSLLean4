@@ -99,7 +99,7 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
       refine add_le_add (mul_le_mul_of_nonneg_left ?_ (pow_nonneg X.le x)) ?_
       · have h0 : (2 : ℤ) ^ 3 ≤ 3 ^ 2 := Int.le_add_one (Int.le_refl 8)
         have h1 : 0 ≤ (3 : ℤ) := Int.sign_nonneg.mp Int.one_nonneg
-        exact h0.trans (pow_le_pow_left h1 hm 2)
+        exact h0.trans (pow_le_pow_left₀ h1 hm 2)
       · exact (Int.lt_of_add_one_le (a := 2) hm).le
   ---- Case 2: `2^x` divides `y + 1`
   · rcases h0 with ⟨m, h0⟩; rw [← eq_sub_iff_add_eq] at h0; subst h0
@@ -118,7 +118,7 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
       · refine (((add_pos hy one_pos).trans' (mul_neg_of_pos_of_neg (pow_pos X x) ?_))).ne h
         change m < 2 + 1 at h0
         have h1 : (2 ^ 2 : ℤ) < 8 := Batteries.compareOfLessAndEq_eq_lt.mp rfl
-        have h2 : m ^ 2 ≤ 2 ^ 2 := pow_le_pow_left hy.le (Int.le_of_lt_add_one h0) 2
+        have h2 : m ^ 2 ≤ 2 ^ 2 := pow_le_pow_left₀ hy.le (Int.le_of_lt_add_one h0) 2
         exact sub_neg_of_lt (h2.trans_lt h1)
       -- Case `m > 3`
       · replace h : m ^ 2 - 2 ^ 3 ∣ m + 1 := Dvd.intro_left (2 ^ x) h

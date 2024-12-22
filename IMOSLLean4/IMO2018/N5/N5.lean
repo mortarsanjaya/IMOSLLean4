@@ -42,7 +42,7 @@ theorem sq_sub_eq_sq_bound {a b : ℤ} (hb : 0 < b) (h : ∃ c, a ^ 2 - b = c ^ 
   wlog hc : 0 ≤ c generalizing c
   · exact neg_sq c ▸ this _ (neg_sq c ▸ hb) (Int.neg_nonneg_of_nonpos (Int.le_of_not_le hc))
   replace hb : c < a := lt_of_pow_lt_pow_left₀ 2 ha.le (lt_of_sub_pos hb)
-  exact pow_le_pow_left hc (Int.le_sub_one_of_lt hb) 2
+  exact pow_le_pow_left₀ hc (Int.le_sub_one_of_lt hb) 2
 
 
 

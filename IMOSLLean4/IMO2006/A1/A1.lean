@@ -111,7 +111,7 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
       abs_mul, Nat.abs_cast, abs_of_nonneg (Int.fract_nonneg s)]
     exact mul_lt_of_lt_one_right (Nat.cast_pos.mpr C.succ_pos) (Int.fract_lt_one _)
   refine Infinitesimal.iff_nsmul_Nat_bdd.mpr ⟨C + 1 + C, λ k ↦ ?_⟩
-  apply (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC k).le).trans_lt
+  apply (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC).le).trans_lt
   exact (h0 _).symm.trans_lt (h (f^[k] r))
 
 

@@ -53,7 +53,7 @@ theorem final_solution : (∃ k : ℕ, 2 ∣ f^[k] M) ↔ M ≠ 3 := by
     let K := (M - 3).natAbs
     refine Int.eq_of_sub_eq_zero (Int.eq_zero_of_abs_lt_dvd (h0 K 0) ?_)
     rw [← Int.natCast_natAbs, ← Nat.cast_ofNat (n := 2), ← Int.natCast_pow]
-    exact Int.ofNat_lt.mpr (K.lt_succ_self.trans K.succ.lt_two_pow)
+    exact Int.ofNat_lt.mpr (K.lt_succ_self.trans K.succ.lt_two_pow_self)
   ---- For any `k n : ℕ`, we have `2^(n + 1) ∣ f^[k] M - 3`
   refine Nat.rec (λ k ↦ ?_) (λ n h0 k ↦ ?_)
   · rw [Int.dvd_iff_emod_eq_zero, Nat.zero_add, pow_one,

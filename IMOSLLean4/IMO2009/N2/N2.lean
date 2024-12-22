@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.NumberTheory.ArithmeticFunction
+import Mathlib.Data.Nat.Bits
 
 /-!
 # IMO 2009 N2
@@ -77,4 +78,4 @@ theorem final_solution_part2 (h : ∀ k, Even (Ω ((a + k) * (b + k)))) : a = b 
   have h2 := c.succ_ne_zero
   rwa [cardFactors_mul (Nat.mul_ne_zero h0 h2) (Nat.mul_ne_zero h1 h2),
     cardFactors_mul h0 h2, cardFactors_mul h1 h2, Nat.bodd_add,
-    bne_eq_false_iff_eq, Nat.bodd_add, Nat.bodd_add, Bool.xor_right_inj] at h
+    bne_eq_false_iff_eq, Nat.bodd_add, Nat.bodd_add, Bool.xor_left_inj] at h

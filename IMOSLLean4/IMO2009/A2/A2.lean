@@ -137,7 +137,7 @@ theorem field_ineq3 :
   have h := mul_pos (mul_pos (add_pos ha hb) (add_pos hb hc)) (add_pos hc ha)
   have h0 := mul_pos (pow_pos (zero_lt_two' F) 3) (ring_ineq5 ha hb hc)
   rw [X, mul_assoc 2, mul_comm, ← div_div, mul_comm 2, ← div_div _ _ 2,
-    div_le_div_right (zero_lt_two' F), div_le_div_iff h h0, mul_left_comm]
+    div_le_div_iff_of_pos_right (zero_lt_two' F), div_le_div_iff₀ h h0, mul_left_comm]
   exact ring_ineq3 ha.le hb.le hc.le
 
 theorem field_ineq4 :

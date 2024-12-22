@@ -53,7 +53,7 @@ theorem sq_sum_lt_sum_sq {S : Multiset R} (hS : ∀ x ∈ S, 0 < x) (h : 1 < car
 variable [ExistsAddOfLE R]
 
 /-- `QM-AM inequality`: `(x_1 + x_2 + … + x_n)^2 ≤ n(x_1^2 + x_2^2 + … + x_n^2)`. -/
-theorem QM_AM (S : Multiset R) : S.sum ^ 2 ≤ card S • (S.map λ x ↦ x ^ 2).sum := by
+theorem QM_AM (S : Multiset R) : S.sum ^ 2 ≤ S.card • (S.map λ x ↦ x ^ 2).sum := by
   induction' S using Multiset.induction with c S hS
   · rw [card_zero, zero_nsmul, sum_zero, zero_pow (Nat.succ_ne_zero 1)]
   · rw [map_cons, sum_cons, sum_cons, card_cons, succ_nsmul, add_sq, nsmul_add,
