@@ -1,0 +1,40 @@
+Let $N$ be a positive integer and $(a_0, a_1, \ldots, a_N)$ be a permutation of $(0, 1, \ldots, N)$.
+Suppose that $(|a_0 - a_1|, \ldots, |a_{N - 1} - a_N|)$ is a permutation of $(1, 2, \ldots, N)$.
+Prove that $\max\{a_0, a_N\} \geq \lfloor (N + 1)/4 \rfloor + 1$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow the official solution and prove something stronger: $a_0 + a_N \geq \lfloor (N + 1)/2 \rfloor$.
+The problem statement would follow immediately since $a_0 \neq a_N$; note that $\max\{x, y\} \geq \lfloor (x + y)/2 \rfloor + 1$ for any $x \neq y \in \N$.
+The original problem is a specialization of this version with $N$ even and $a_0, \ldots, a_N$ all increased by $1$.
+
+We start with triangle inequality.
+For any $k \in \N$ with $k \leq N$,
+\begin{align*}
+    \frac{N(N + 1)}{2}
+    &= \sum_{i = 0}^{N - 1} |a_i - a_{i + 1}| \\
+    &\leq \sum_{i = 0}^{N - 1} (|a_i - k| + |a_{i + 1} - k|) \\
+    &= 2 \sum_{i = 0}^N |a_i - k| - (|a_0 - k| + |a_N - k|) \\
+    &= 2 \sum_{i = 0}^N |i - k| - (|a_0 - k| + |a_N - k|) \\
+    &= k(k + 1) + (N - k)(N - k + 1) - (|a_0 - k| + |a_N - k|).
+\end{align*}
+After some rearrangement, we get
+\begin{align*}
+    |a_0 - k| + |a_N - k| &\leq \frac{(N - 2k)^2 + N}{2}, \\
+    a_0 + a_N &\geq 2k - \frac{(N - 2k)^2 + N}{2}.
+\end{align*}
+Optimizing, we choose $k = \lfloor (N + 1)/2 \rfloor$, which is equal to $N/2$ if $N$ is even and $(N + 1)/2$ otherwise.
+The upper bound simplifies to $\lfloor (N + 1)/2 \rfloor$, as desired.
+
+
+
+\subsection*{Extra notes}
+
+For $N = 4k + 2$, the lower bound is attained for the following sequence:
+\[ k + 1, 3k + 1, k + 2, 3k, \ldots, 2k, 2k + 2, 2k + 1, 4k + 2, 0, 4k + 1, 1, \ldots, 3k + 2, k. \]
+For $N = 4k$, the lower bound $k + 1$ is tight for $k = 1$ with a sequence $2, 3, 1, 4, 0$ and for $k = 2$ with a sequence $3, 7, 2, 5, 4, 6, 0, 8, 1$.
+I still don't know if the lower bound is tight in general, but for any sequence that attains $k + 1$, $(a_0, a_{2N})$ is a permutation of $(k + 1, k - 1)$.
