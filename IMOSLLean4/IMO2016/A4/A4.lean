@@ -23,10 +23,9 @@ def good [Mul M] [Add M] (f : M → M) :=
 
 class CancelCommDistribMonoid (M) extends CancelCommMonoid M, Distrib M
 
-variable [CancelCommDistribMonoid M] [IsCancelAdd M] {f : M → M}
+variable [CancelCommDistribMonoid M]
 
-omit [IsCancelAdd M] in
-lemma inv'_is_good (h : ∀ x, x * f x = 1) : good f := λ x y ↦ by
+lemma inv'_is_good {f : M → M} (h : ∀ x, x * f x = 1) : good f := λ x y ↦ by
   have h0 (y) : f (f y) = y := by rw [← mul_left_cancel_iff, h, mul_comm, h]
   rw [h0, h0, h0, mul_add]; apply congrArg₂
   · rw [← mul_assoc, ← mul_left_cancel_iff (a := x), ← mul_assoc,
@@ -34,17 +33,10 @@ lemma inv'_is_good (h : ∀ x, x * f x = 1) : good f := λ x y ↦ by
   · rw [← mul_left_cancel_iff (a := y * f x), h, mul_comm,
       mul_assoc, mul_mul_mul_comm, h, mul_one, mul_comm, h]
 
-theorem good_imp_inv' (hf : good f) : ∀ x, x * f x = 1 := by
-  have h : f 1 = 1 := by
-    specialize hf 1 1
-    rwa [one_mul, one_mul, one_mul, mul_add, add_right_inj, self_eq_mul_left] at hf
-  have h0 (y) : f y * f (f (y * y)) = f (f y) := by
-    specialize hf 1 y
-    rwa [one_mul, one_mul, h, h, one_mul, mul_one, one_mul,
-      mul_add, mul_one, add_left_inj, eq_comm] at hf
-  replace h (x) : x * f (x * x) = f x := by
-    specialize hf x 1
-    rwa [one_mul, mul_one, mul_one, h, h, mul_one, mul_add, mul_one, h0, add_left_inj] at hf
+theorem good_imp_inv' [IsCancelAdd M] {f : M → M} (hf : good f) : ∀ x, x * f x = 1 := by
+  have h : f 1 = 1 := by simpa [mul_add] using hf 1 1
+  have h0 (y) : f y * f (f (y * y)) = f (f y) := by simpa [h, mul_add] using (hf 1 y).symm
+  replace h (x) : x * f (x * x) = f x := by simpa [h0, mul_add] using hf x 1
   replace h0 (x) : f (f (x * x)) = f (f x * f x) := by rw [← mul_right_inj, h0, h]
   suffices f.Injective from λ x ↦ by
     rw [← mul_left_eq_self (b := f x), mul_assoc, ← this (h0 x), h]
@@ -52,11 +44,11 @@ theorem good_imp_inv' (hf : good f) : ∀ x, x * f x = 1 := by
       = f (x * y) * (f (f y * f y) + f (f x * f x)) := by
     specialize hf x y; rwa [h, h0, h0] at hf
   replace hf {a b} (h1 : f a = f b) (y) : f (a * y) = f (b * y) := by
-    have h2 := hf a y; rwa [h1, hf, mul_left_inj, eq_comm] at h2
+    have h2 := (hf a y).symm; rwa [h1, hf, mul_left_inj] at h2
   intro a b h1
   have h2 : f (a * a) = f (b * b) := by rw [hf h1, mul_comm, hf h1]
   rw [← mul_left_inj, h, h2, h, h1]
 
 /-- Final solution -/
-theorem final_solution : good f ↔ ∀ x, x * f x = 1 :=
+theorem final_solution [IsCancelAdd M] {f : M → M} : good f ↔ ∀ x, x * f x = 1 :=
   ⟨good_imp_inv', inv'_is_good⟩
