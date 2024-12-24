@@ -29,9 +29,9 @@ theorem admissible_ideal [CommSemiring R] (I : Ideal R) : admissible I.carrier :
 
 theorem admissible_mem_sq_mul [CommRing R] {A : Set R} (h : admissible A)
     (h0 : z ∈ A) (k : R) : k * z ^ 2 ∈ A := by
-  have h1 := h z z h0 h0 (k - 2)
-  rwa [mul_assoc, ← sq, ← one_add_mul (α := R), ← add_one_mul (α := R),
-    add_right_comm, one_add_one_eq_two, add_sub_cancel] at h1
+  convert h z z h0 h0 (k - 2) using 1
+  rw [mul_assoc, ← sq, ← one_add_mul, ← add_one_mul,
+    add_right_comm, one_add_one_eq_two, add_sub_cancel]
 
 theorem admissible_add_sq [CommSemiring R] {A : Set R} (h : admissible A)
     (h0 : x ∈ A) (h1 : y ∈ A) : (x + y) ^ 2 ∈ A :=
@@ -39,18 +39,13 @@ theorem admissible_add_sq [CommSemiring R] {A : Set R} (h : admissible A)
 
 /-- Final solution -/
 theorem final_solution [CommRing R] (x y : R) :
-    (∀ A : Set R, admissible A → x ∈ A → y ∈ A → ∀ z : R, z ∈ A) ↔ IsCoprime x y :=
-  ---- `→`
-  ⟨λ h ↦ by
-    specialize h (Ideal.span {x, y}) (admissible_ideal _)
-      (Ideal.subset_span (Set.mem_insert x _))
-      (Ideal.subset_span (Set.mem_insert_of_mem x rfl)) 1
-    rwa [SetLike.mem_coe, Ideal.mem_span_pair] at h,
-  ---- `←`
-  λ h A h0 h1 h2 ↦ by
-    suffices 1 ∈ A from λ z ↦ mul_one z ▸
-      one_pow (M := R) 2 ▸ admissible_mem_sq_mul h0 this z
+    (∀ A : Set R, admissible A → x ∈ A → y ∈ A → ∀ z : R, z ∈ A) ↔ IsCoprime x y := by
+  refine ⟨λ h ↦ ?_, λ h A h0 h1 h2 ↦ ?_⟩
+  · simpa only [SetLike.mem_coe, Ideal.mem_span_pair] using
+      h (Ideal.span {x, y}) (admissible_ideal _)
+        (Ideal.subset_span (Set.mem_insert x _))
+        (Ideal.subset_span (Set.mem_insert_of_mem x rfl)) 1
+  · suffices 1 ∈ A from λ z ↦ by simpa using admissible_mem_sq_mul h0 this z
     obtain ⟨a, b, h⟩ : IsCoprime (x ^ 2) (y ^ 2) := IsCoprime.pow h
-    rw [← one_pow 2, ← h]
-    exact admissible_add_sq h0 (admissible_mem_sq_mul h0 h1 a)
-      (admissible_mem_sq_mul h0 h2 b)⟩
+    simpa only [h, one_pow] using admissible_add_sq h0
+      (admissible_mem_sq_mul h0 h1 a) (admissible_mem_sq_mul h0 h2 b)
