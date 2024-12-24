@@ -68,7 +68,7 @@ theorem ring_ineq3 {a b c : R} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) :
     (2 ^ 3) * ((a + b + c) * (a * b + b * c + c * a))
       ≤ (3 * 3) * ((a + b) * (b + c) * (c + a)) := by
   have X : (3 * 3 : R) = 2 ^ 3 + 1 := by norm_num
-  rw [X, add_one_mul (α := R), ← ring_identity1, mul_add, add_le_add_iff_left]
+  rw [X, add_one_mul, ← ring_identity1, mul_add, add_le_add_iff_left]
   exact ring_ineq2 ha hb hc
 
 theorem ring_ineq4 (a b c : R) :

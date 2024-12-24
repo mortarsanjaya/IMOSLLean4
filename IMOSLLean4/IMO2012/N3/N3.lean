@@ -52,7 +52,7 @@ theorem final_solution (h : 1 < m) :
     suffices k = 0 by rwa [this, mul_zero, zero_add, mul_one]
     by_contra h1; apply prime_binom_not_dvd h2 h1
     specialize h0 (p * k)
-    rw [mul_add_one (α := ℕ), mul_left_comm, Nat.add_sub_cancel_left] at h0
+    rw [Nat.mul_add_one, Nat.mul_left_comm, Nat.add_sub_cancel_left] at h0
     exact h0 (Nat.le_add_right (p * (2 * k)) p)
   ---- If `m` is prime, then `m` is "good"
   · rcases Nat.exists_eq_add_of_le h1 with ⟨c, rfl⟩

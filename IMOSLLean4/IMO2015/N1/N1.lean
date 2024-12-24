@@ -36,7 +36,7 @@ theorem main_claim (h : 2 * c ∣ m - 3) (h0 : 2 * c ∣ f m - 3) :
     have X0 : (3 / 2 : ℤ) = 1 := rfl
     rw [f, eq_add_of_sub_eq h, add_mul, add_sub_assoc, mul_assoc, ← mul_sub_one,
       dvd_add_right ⟨_, rfl⟩, mul_assoc, add_comm, Int.add_mul_ediv_left _ _ X,
-      X0, add_sub_cancel_left, ← two_add_one_eq_three, add_one_mul (α := ℤ),
+      X0, add_sub_cancel_left, ← two_add_one_eq_three, add_one_mul,
       ← mul_assoc, dvd_add_right ⟨_, rfl⟩, mul_comm] at h0
     exact Int.dvd_of_mul_dvd_mul_left h1 h0
 

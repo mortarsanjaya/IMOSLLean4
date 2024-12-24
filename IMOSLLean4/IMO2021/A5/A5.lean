@@ -61,7 +61,7 @@ lemma ring_id [CommRing R] (x y : R) :
       add_sub_add_left_eq_sub, ← add_assoc, add_sub_cancel_right]
   _ = x * y * (x + y) + 2 * (x * y * (x + y)) := by
     rw [sq, sq, mul_right_comm, ← mul_rotate x y y, ← mul_add]
-  _ = _ := by rw [← one_add_mul (α := R), add_comm, two_add_one_eq_three]
+  _ = _ := by rw [← one_add_mul, add_comm, two_add_one_eq_three]
 
 lemma field_ineq [LinearOrderedField F] {r : F} (ha : 0 ≤ a) (hs : 0 ≤ s) (h : a + s ≤ r) :
     a / (r - a) * s ^ 2 ≤ ((a + s) ^ 3 - s ^ 3 - a ^ 3) / (3 * r) := calc

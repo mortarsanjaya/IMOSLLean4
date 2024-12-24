@@ -55,7 +55,7 @@ lemma ratSeq_formula :
     ∀ n, ratSeq n * ratSeq (n + 1) * ratSeq (n + 2) * ratSeq (n + 3) = n.succ := by
   refine Nat.rec (by unfold ratSeq; norm_num) λ n h ↦ ?_
   rw [ratSeq_add_four, Rat.mul_comm, Rat.mul_assoc, ← (ratSeq n).mul_assoc,
-    ← (ratSeq n).mul_assoc, h, one_add_mul (α := ℚ), n.succ.cast_succ,
+    ← (ratSeq n).mul_assoc, h, one_add_mul, n.succ.cast_succ,
     inv_mul_cancel₀ (Nat.cast_ne_zero.mpr n.succ_ne_zero)]
 
 

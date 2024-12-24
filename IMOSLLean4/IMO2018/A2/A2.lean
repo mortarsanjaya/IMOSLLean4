@@ -87,8 +87,7 @@ namespace good
 
 lemma eq1 [Semiring R] {a : ℕ → R} (ha : good a) (k) :
     a (k + 2) ^ 2 + a k = a k * a (k + 3) + a (k + 2) := by
-  rw [ha (k + 1), mul_add_one (a k), add_right_comm,
-    ← mul_assoc, ← add_one_mul (α := R), ← ha, sq]
+  rw [ha (k + 1), mul_add_one (a k), add_right_comm, ← mul_assoc, ← add_one_mul, ← ha, sq]
 
 lemma eq2 [Semiring R] [IsCancelAdd R] {a : ℕ → R} (ha : good a) (hn : a.Periodic (n + 1)) :
     ∑ k : Fin (n + 1), a k ^ 2 = ∑ k : Fin (n + 1), a k * a (k + 3) := by
