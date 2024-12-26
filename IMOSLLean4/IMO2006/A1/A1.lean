@@ -48,11 +48,11 @@ theorem floor_f_iter_natAbs_le (r : R) : ∀ k, ⌊f^[k] r⌋.natAbs ≤ ⌊r⌋
   | k + 1 => (floor_f_iter_natAbs_le _ k).trans (floor_f_natAbs_le r)
 
 theorem floor_f_iter_natAbs_eventually_const (r : R) :
-    ∃ C N, ∀ n, ⌊f^[n + N] r⌋.natAbs = C :=
-  NatSeq_antitone_imp_const (a := λ k ↦ ⌊f^[k] r⌋.natAbs) λ k m h0 ↦ by
-    rcases Nat.exists_eq_add_of_le h0 with ⟨c, rfl⟩
-    simp only; rw [Nat.add_comm, f.iterate_add_apply]
-    exact floor_f_iter_natAbs_le _ c
+    ∃ C N, ∀ n, ⌊f^[n + N] r⌋.natAbs = C := by
+  refine NatSeq_antitone_imp_const (a := λ k ↦ ⌊f^[k] r⌋.natAbs) λ k m h0 ↦ ?_
+  rcases Nat.exists_eq_add_of_le h0 with ⟨c, rfl⟩
+  dsimp only; rw [Nat.add_comm, f.iterate_add_apply]
+  exact floor_f_iter_natAbs_le _ c
 
 theorem floor_f_lt_of_floor_pos {r : R} (h : 0 < ⌊r⌋) : ⌊f r⌋ < ⌊r⌋ :=
   Int.floor_lt.mpr <| mul_lt_of_lt_one_right (Int.cast_pos.mpr h) (Int.fract_lt_one r)

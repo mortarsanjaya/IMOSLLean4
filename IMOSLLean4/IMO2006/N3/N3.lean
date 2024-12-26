@@ -43,11 +43,11 @@ theorem two_le_card_divisors {n : ℕ} (h : 2 ≤ n) : 2 ≤ n.divisors.card := 
     card_insert_of_not_mem Nat.properDivisors.not_self_mem, Nat.succ_lt_succ_iff, card_pos]
   exact ⟨1, Nat.one_mem_properDivisors_iff_one_lt.mpr h⟩
 
-theorem two_mul_lt_g : ∀ n : ℕ, 6 ≤ n → 2 * n < g n :=
-  Nat.le_induction (by norm_num : 12 < 14) λ n h h0 ↦ by
-    rw [Nat.mul_succ, g_succ]
-    exact add_lt_add_of_lt_of_le h0 <| two_le_card_divisors <|
-      Nat.succ_le_succ (Nat.one_le_of_lt h)
+theorem two_mul_lt_g : ∀ n : ℕ, 6 ≤ n → 2 * n < g n := by
+  refine Nat.le_induction (by norm_num : 12 < 14) λ n h h0 ↦ ?_
+  rw [Nat.mul_succ, g_succ]
+  exact add_lt_add_of_lt_of_le h0 <| two_le_card_divisors <|
+    Nat.succ_le_succ (Nat.one_le_of_lt h)
 
 theorem card_divisors_prime {p : ℕ} (hp : p.Prime) : p.divisors.card = 2 :=
   (congr_arg card hp.divisors).trans (card_pair hp.ne_one.symm)
@@ -61,11 +61,12 @@ theorem card_divisors_prime {p : ℕ} (hp : p.Prime) : p.divisors.card = 2 :=
 /-- `f(n) = g(n)/n`, as a rational. -/
 def f (n : ℕ) : ℚ := ((g n : ℤ) : ℚ) / ((n : ℤ) : ℚ)
 
-theorem exists_lt_card_divisor_succ (c : ℕ) : ∃ n : ℕ, c < n.succ.divisors.card :=
-  ⟨2 ^ c - 1, by rw [Nat.succ_eq_add_one, Nat.sub_add_cancel Nat.one_le_two_pow,
-    Nat.divisors_prime_pow Nat.prime_two, card_map, card_range, Nat.lt_succ_iff]⟩
+theorem exists_lt_card_divisor_succ (c : ℕ) : ∃ n : ℕ, c < n.succ.divisors.card := by
+  refine ⟨2 ^ c - 1, ?_⟩
+  rw [Nat.succ_eq_add_one, Nat.sub_add_cancel Nat.one_le_two_pow,
+    Nat.divisors_prime_pow Nat.prime_two, card_map, card_range, Nat.lt_succ_iff]
 
-theorem f_lt_f_of_g {a b : ℕ} (h : g a * b < g b * a) : f a < f b := by
+theorem f_lt_f_of_g (h : g a * b < g b * a) : f a < f b := by
   unfold f; rcases a with _ | a
   · rw [g_zero, zero_mul, mul_zero] at h; exact absurd rfl h.ne
   rcases b with _ | b
@@ -74,7 +75,7 @@ theorem f_lt_f_of_g {a b : ℕ} (h : g a * b < g b * a) : f a < f b := by
     rw [Rat.div_lt_div_iff_mul_lt_mul (X a) (X b), ← Nat.cast_mul, ← Nat.cast_mul]
     exact Int.ofNat_lt.mpr h
 
-theorem f_self_lt_f_succ_of_divisors_card {n : ℕ} (h : n ≠ 0)
+theorem f_self_lt_f_succ_of_divisors_card (h : n ≠ 0)
     (h0 : ∀ k < n, k.succ.divisors.card < n.succ.divisors.card) : f n < f n.succ := by
   apply f_lt_f_of_g
   rw [Nat.mul_succ, g_succ, add_mul, add_lt_add_iff_left, g_eq_sum_divisors_card]
