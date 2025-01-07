@@ -178,3 +178,16 @@ theorem incl_map_zero_comm_incl_map [Ring R] [AddCancelMonoid G]
     add_right_eq_self, map_eq_zero_iff_eq_one ι, ← add_right_inj (a := ι (f x) * ι (f 0)),
     ← add_assoc, ← add_mul, ← ι.map_add, map_add_map_one_sub ι, incl_map_zero_mul_self,
     add_comm, add_left_inj] at h
+
+/-- If `G` is `2`-torsion free, then any non-periodic good function `G → R` is injective. -/
+theorem NonperiodicGoodFun.injective_of_TwoTorsionFree
+    [Ring R] [AddCancelMonoid G] (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y)
+    {ι : G →+ R} (f : NonperiodicGoodFun ι) : Function.Injective f := by
+  intro a b h
+  replace h : f (-(a - b)) = f (a - b) := by
+    rw [neg_sub, map_sub_eq_iff_map_mul_eq ι h.symm h]
+    exact map_mul_eq_of_map_eq_of_map_add_eq ι h.symm h (congrArg f (add_comm b a))
+  replace h : f (a - b) = f 0 :=
+    hG2 _ _ (by rw [← map_neg_add_map ι, h, two_nsmul])
+  rwa [← map_zero_add_map_add_one ι, add_right_eq_self,
+    map_eq_zero_iff_eq_one ι, add_left_eq_self, sub_eq_zero] at h
