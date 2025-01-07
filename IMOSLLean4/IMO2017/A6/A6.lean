@@ -7,8 +7,6 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.TorsionFree
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.DivisionRing
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.CharTwoUnit
-import IMOSLLean4.IMO2017.A6.A6RingCon
-import IMOSLLean4.IMO2017.A6.ExcellentFun.RingCon
 import Mathlib.Algebra.Field.Basic
 
 /-!

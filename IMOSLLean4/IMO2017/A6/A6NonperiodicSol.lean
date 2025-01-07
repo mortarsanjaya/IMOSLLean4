@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.IMO2017.A6.A6Basic
-import IMOSLLean4.IMO2017.A6.ExcellentFun.AddHom
+import IMOSLLean4.IMO2017.A6.ExcellentFun.AddMonoidHom
 import IMOSLLean4.IMO2017.A6.Extra.CentralInvolutive
 import Mathlib.Algebra.Ring.Basic
 
