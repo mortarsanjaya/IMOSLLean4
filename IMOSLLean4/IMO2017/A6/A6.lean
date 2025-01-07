@@ -7,6 +7,8 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.TorsionFree
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.DivisionRing
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.CharTwoUnit
+import IMOSLLean4.IMO2017.A6.A6NonperiodicSol
+import IMOSLLean4.IMO2017.A6.ExcellentFun.TorsionFree
 import Mathlib.Algebra.Field.Basic
 
 /-!
@@ -24,8 +26,9 @@ open Extra NonperiodicGoodFun
 
 section
 
-variable [Ring R] [AddCancelCommMonoid G]
-  [IsTorsionFreeBy G 2] [IsTorsionFreeBy G 3] (ι : G →+ R)
+variable [Ring R] [AddCancelCommMonoid G] (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y)
+  (hG3 : ∀ x y : G, 3 • x = 3 • y → x = y) (ι : G →+ R)
+include hG2 hG3 ι
 
 /-- Final solution, $G$ is $2$- and $3$-torsion free, bundled version. -/
 theorem final_solution_GoodFun_TorsionFreeBy (f : GoodFun ι) :
@@ -35,8 +38,10 @@ theorem final_solution_GoodFun_TorsionFreeBy (f : GoodFun ι) :
   simp_rw [← GoodFun.AddMonoidHomNonperiodicCorrespondence_symm_def, Equiv.eq_symm_apply]
   let rc := f.inducedRingCon
   let ι' := rc.mk'.toAddMonoidHom.comp ι
+  have : ExcellentFun.IsOfAddMonoidHomSurjective rc.Quotient G :=
+    ExcellentFun.IsOfAddMonoidHomSurjective_of_TwoThreeTorsionFree hG2 hG3
   obtain ⟨a, φ, h0⟩ := exists_eq_ofCenterHom f.Quotient (ι := ι')
-    (f.Quotient.injective_of_TwoTorsionFree (ι := ι'))
+    (f.Quotient.injective_of_TwoTorsionFree hG2 (ι := ι'))
   exact ⟨rc, a, φ, Eq.symm (congrArg (Sigma.mk _) h0.symm)⟩
 
 /-- Final solution, $G$ is $2$- and $3$-torsion free. -/
@@ -47,7 +52,7 @@ theorem final_solution_TorsionFreeBy (f : R → G) :
           f = λ x ↦ φ.1 (a * (1 - rc.toQuotient x)) := by
   refine ⟨?_, ?_⟩
   · rintro ⟨f, rfl⟩
-    obtain ⟨rc, a, φ, rfl⟩ := final_solution_GoodFun_TorsionFreeBy ι f
+    obtain ⟨rc, a, φ, rfl⟩ := final_solution_GoodFun_TorsionFreeBy hG2 hG3 ι f
     exact ⟨rc, a, φ, rfl⟩
   · rintro ⟨rc, a, φ, rfl⟩
     exact ⟨(ofCenterHom (rc.mk'.toAddMonoidHom.comp ι) a φ).Lift, rfl⟩
@@ -57,13 +62,13 @@ end
 
 /-- Final solution, $R$ is a division ring with $\text{char}(R) ≠ 2$ and $ι = id_R$. -/
 theorem final_solution_DivisionRing_char_ne_two
-    [DivisionRing R] [IsTorsionFreeBy R 2] {f : R → R} :
+    [DivisionRing R] (hR2 : ∀ x y : R, 2 • x = 2 • y → x = y) {f : R → R} :
     (∃ f' : GoodFun (AddMonoidHom.id R), f' = f) ↔
       (f = 0 ∨ f = (λ x ↦ 1 - x) ∨ f = (λ x ↦ x - 1)) := by
   rw [IsSimpleRing_exists_GoodFun_iff_zero_or_NonperiodicGoodFun]
   refine or_congr_right ⟨?_, ?_⟩
   · rintro ⟨f, rfl⟩
-    obtain ⟨a, rfl⟩ := f.exists_eq_ofCenterId f.injective_of_TwoTorsionFree
+    obtain ⟨a, rfl⟩ := f.exists_eq_ofCenterId (f.injective_of_TwoTorsionFree hR2)
     apply (DivisionRing_Central a).imp
     all_goals rintro rfl; ext x
     · rw [ofCenterId_apply, CentralInvolutive.one_val, one_mul]
