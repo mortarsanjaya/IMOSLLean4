@@ -20,73 +20,87 @@ namespace IMOSL
 namespace IMO2017A6
 
 /-- Central involutive elements -/
-@[ext] structure CentralInvolutive (M) [Monoid M] where
+@[ext] structure CentralInvolutive (M) [MulOneClass M] where
   val : M
-  mul_self_eq_one : val * val = 1
-  mul_comm x : val * x = x * val
+  val_mul_self_eq_one : val * val = 1
+  val_mul_comm x : x * val = val * x
 
 
 namespace CentralInvolutive
 
-variable [Monoid M]
+section
+
+variable [MulOneClass M]
 
 instance : CoeHead (CentralInvolutive M) M := ⟨val⟩
 
-protected def one : CentralInvolutive M where
-  val := 1
-  mul_self_eq_one := mul_one 1
-  mul_comm x := by rw [mul_one, one_mul]
-
-instance : One (CentralInvolutive M) := ⟨CentralInvolutive.one⟩
+instance : One (CentralInvolutive M) :=
+  ⟨⟨1, mul_one 1, λ _ ↦ by rw [mul_one, one_mul]⟩⟩
 
 @[simp] theorem one_val : (1 : CentralInvolutive M).val = 1 := rfl
 
+end
+
+
+section
+
+variable [Monoid M]
+
 @[simp] theorem mul_mul_cancel_left (x : CentralInvolutive M) (y : M) : x * (x * y) = y := by
-  rw [← mul_assoc, x.mul_self_eq_one, one_mul]
+  rw [← mul_assoc, x.val_mul_self_eq_one, one_mul]
 
 @[simp] theorem mul_mul_cancel_right (x : CentralInvolutive M) (y : M) : y * x * x = y := by
-  rw [mul_assoc, x.mul_self_eq_one, mul_one]
+  rw [mul_assoc, x.val_mul_self_eq_one, mul_one]
 
 theorem mul_mul_mul_cancel_left (x : CentralInvolutive M) (y z : M) :
     (x * y) * (x * z) = y * z := by
-  rw [x.mul_comm, mul_assoc, x.mul_mul_cancel_left]
+  rw [← x.val_mul_comm, mul_assoc, x.mul_mul_cancel_left]
 
 theorem mul_mul_mul_cancel_right (x : CentralInvolutive M) (y z : M) :
     (y * x) * (z * x) = y * z := by
-  rw [← x.mul_comm, ← x.mul_comm, x.mul_mul_mul_cancel_left]
+  rw [x.val_mul_comm, x.val_mul_comm, x.mul_mul_mul_cancel_left]
 
 protected def mul (x y : CentralInvolutive M) : CentralInvolutive M where
   val := x * y
-  mul_self_eq_one := by rw [x.mul_mul_mul_cancel_left, y.mul_self_eq_one]
-  mul_comm z := by rw [mul_assoc, y.mul_comm, x.mul_comm, mul_assoc, y.mul_comm]
+  val_mul_self_eq_one := by rw [x.mul_mul_mul_cancel_left, y.val_mul_self_eq_one]
+  val_mul_comm z := by rw [← mul_assoc, y.val_mul_comm,
+    x.val_mul_comm, ← mul_assoc, y.val_mul_comm]
 
 instance : Mul (CentralInvolutive M) := ⟨CentralInvolutive.mul⟩
 
 @[simp] theorem mul_val (x y : CentralInvolutive M) : (x * y).val = x.val * y.val := rfl
+
+@[simp] theorem mul_self_eq_one (a : CentralInvolutive M) : a * a = 1 :=
+  CentralInvolutive.ext a.val_mul_self_eq_one
+
+theorem mul_comm (a b : CentralInvolutive M) : a * b = b * a :=
+  CentralInvolutive.ext (b.val_mul_comm a)
 
 instance : Inv (CentralInvolutive M) := ⟨id⟩
 
 @[simp] theorem inv_eq (x : CentralInvolutive M) : x⁻¹ = x := rfl
 
 instance : CommGroup (CentralInvolutive M) where
-  mul_comm x y := CentralInvolutive.ext (x.mul_comm y)
+  mul_comm x y := CentralInvolutive.ext (y.val_mul_comm x)
   mul_assoc x y z := CentralInvolutive.ext (mul_assoc x.1 y.1 z.1)
   one_mul x := CentralInvolutive.ext (one_mul x.1)
   mul_one x := CentralInvolutive.ext (mul_one x.1)
-  inv_mul_cancel x := CentralInvolutive.ext x.mul_self_eq_one
+  inv_mul_cancel x := CentralInvolutive.ext x.val_mul_self_eq_one
 
 theorem sq_eq_one (x : CentralInvolutive M) : x ^ 2 = 1 :=
-  (sq _).trans (CentralInvolutive.ext x.mul_self_eq_one)
+  (sq _).trans (CentralInvolutive.ext x.val_mul_self_eq_one)
+
+end
 
 
 section
 
-variable [HasDistribNeg M]
+variable [MulOneClass M] [HasDistribNeg M]
 
 protected def neg (x : CentralInvolutive M) : CentralInvolutive M where
   val := -x
-  mul_self_eq_one := by rw [neg_mul_neg, x.mul_self_eq_one]
-  mul_comm c := by rw [mul_neg, neg_mul, x.mul_comm]
+  val_mul_self_eq_one := by rw [neg_mul_neg, x.val_mul_self_eq_one]
+  val_mul_comm c := by rw [mul_neg, neg_mul, x.val_mul_comm]
 
 instance : Neg (CentralInvolutive M) := ⟨CentralInvolutive.neg⟩
 
@@ -94,12 +108,13 @@ instance : Neg (CentralInvolutive M) := ⟨CentralInvolutive.neg⟩
 
 @[simp] theorem neg_one_val : (-1 : CentralInvolutive M).val = -1 := rfl
 
-instance : HasDistribNeg (CentralInvolutive M) where
+end
+
+
+instance [Monoid M] [HasDistribNeg M] : HasDistribNeg (CentralInvolutive M) where
   neg_neg x := CentralInvolutive.ext (neg_neg x.1)
   neg_mul x y := CentralInvolutive.ext (neg_mul x.1 y.1)
   mul_neg x y := CentralInvolutive.ext (mul_neg x.1 y.1)
-
-end
 
 
 
@@ -109,7 +124,7 @@ end
 
 section
 
-variable (x : CentralInvolutive M) {y z : M}
+variable [Monoid M] (x : CentralInvolutive M) {y z : M}
 
 theorem mul_left_inj : x * y = x * z ↔ y = z :=
   ⟨λ h ↦ by simpa only [mul_mul_cancel_left] using congrArg (x.1 * ·) h, congrArg (x.1 * ·)⟩

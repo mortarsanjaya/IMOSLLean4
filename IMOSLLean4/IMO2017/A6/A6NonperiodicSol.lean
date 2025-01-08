@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import IMOSLLean4.IMO2017.A6.A6Basic
 import IMOSLLean4.IMO2017.A6.ExcellentFun.AddMonoidHom
-import IMOSLLean4.IMO2017.A6.Extra.CentralInvolutive
+import IMOSLLean4.IMO2017.A6.CentralInvolutive.Defs
 import Mathlib.Algebra.Ring.Basic
 
 /-!
@@ -103,8 +103,8 @@ theorem incl_map_eq (x) : ι (f x) = ι (f 0) * (1 - x) := by
   rw [← hf (map_incl_map_zero_mul_incl_map_eq_map_one_sub ι f x),
     ← mul_assoc, incl_map_zero_mul_self, one_mul]
 
-theorem incl_map_zero_comm (x) : ι (f 0) * x = x * ι (f 0) := by
-  have h := incl_map_zero_comm_incl_map ι f (1 - x)
+theorem incl_map_zero_comm (x) : x * ι (f 0) = ι (f 0) * x := by
+  have h := (incl_map_zero_comm_incl_map ι f (1 - x)).symm
   rw [f.incl_map_eq hf (1 - x), sub_sub_cancel, mul_assoc] at h
   replace h : ι (f 0) * _ = ι (f 0) * _ := congrArg (_ * ·) h
   rwa [← mul_assoc, ← mul_assoc (ι (f 0)), incl_map_zero_mul_self, one_mul, one_mul] at h

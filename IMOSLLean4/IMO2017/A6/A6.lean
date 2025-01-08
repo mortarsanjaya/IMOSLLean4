@@ -8,6 +8,7 @@ import IMOSLLean4.IMO2017.A6.A6SpecificCases.DivisionRing
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.CharTwoUnit
 import IMOSLLean4.IMO2017.A6.A6NonperiodicSol
 import IMOSLLean4.IMO2017.A6.ExcellentFun.TorsionFree
+import IMOSLLean4.IMO2017.A6.CentralInvolutive.SimpleRing
 import Mathlib.Algebra.Field.Basic
 
 /-!
@@ -60,15 +61,15 @@ end
 
 
 /-- Final solution, $R$ is a division ring with $\text{char}(R) ≠ 2$ and $ι = id_R$. -/
-theorem final_solution_DivisionRing_char_ne_two
-    [DivisionRing R] (hR2 : ∀ x y : R, 2 • x = 2 • y → x = y) {f : R → R} :
+theorem final_solution_DivisionRing_char_ne_two [Ring R] [IsSimpleRing R]
+    (hR2 : ∀ x y : R, 2 • x = 2 • y → x = y) {f : R → R} :
     (∃ f' : GoodFun (AddMonoidHom.id R), f' = f) ↔
       (f = 0 ∨ f = (λ x ↦ 1 - x) ∨ f = (λ x ↦ x - 1)) := by
   rw [IsSimpleRing_exists_GoodFun_iff_zero_or_NonperiodicGoodFun]
   refine or_congr_right ⟨?_, ?_⟩
   · rintro ⟨f, rfl⟩
     obtain ⟨a, rfl⟩ := f.exists_eq_ofCenterId (f.injective_of_TwoTorsionFree hR2)
-    apply (DivisionRing_Central a).imp
+    apply a.eq_one_or_neg_one_of_IsSimpleRing.imp
     all_goals rintro rfl; ext x
     · rw [ofCenterId_apply, CentralInvolutive.one_val, one_mul]
     · rw [ofCenterId_apply, CentralInvolutive.neg_one_val, neg_one_mul, neg_sub]
