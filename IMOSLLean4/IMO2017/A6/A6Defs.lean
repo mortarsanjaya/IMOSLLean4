@@ -82,6 +82,9 @@ theorem toGoodFun_eq (h : IsGoodFun ι f) : h.toGoodFun = f := rfl
 theorem iff : IsGoodFun ι f ↔ ∃ g : GoodFun ι, g = f :=
   ⟨λ h ↦ ⟨h.toGoodFun, rfl⟩, λ ⟨g, hg⟩ ↦ hg ▸ g.IsGoodFun⟩
 
+theorem zero {G} [AddZeroClass G] {ι : G → R} : IsGoodFun ι (λ _ ↦ 0) :=
+  ⟨λ _ _ ↦ zero_add 0⟩
+
 end IsGoodFun
 
 
@@ -138,6 +141,12 @@ theorem IsNonperiodicGoodFun {ι : G → R} (f : NonperiodicGoodFun ι) :
     IsNonperiodicGoodFun ι f :=
   ⟨f.IsGoodFun, f.period_imp_eq' _ _⟩
 
+instance [Subsingleton R] {G} [AddZeroClass G] (ι : G → R) : Zero (NonperiodicGoodFun ι) :=
+  ⟨0, λ _ _ _ ↦ Subsingleton.allEq _ _⟩
+
+theorem zero_apply [Subsingleton R] {G} [AddZeroClass G] (ι : G → R) (x) :
+    (0 : NonperiodicGoodFun ι) x = 0 := rfl
+
 end NonperiodicGoodFun
 
 
@@ -153,6 +162,10 @@ theorem toNonperiodicGoodFun_eq (h : IsNonperiodicGoodFun ι f) :
 
 theorem iff : IsNonperiodicGoodFun ι f ↔ ∃ g : NonperiodicGoodFun ι, g = f :=
   ⟨λ h ↦ ⟨h.toNonperiodicGoodFun, rfl⟩, λ ⟨g, hg⟩ ↦ hg ▸ g.IsNonperiodicGoodFun⟩
+
+theorem zero [Subsingleton R] {G} [AddZeroClass G] {ι : G → R} :
+    IsNonperiodicGoodFun ι (λ _ ↦ 0) :=
+  NonperiodicGoodFun.IsNonperiodicGoodFun 0
 
 end IsNonperiodicGoodFun
 

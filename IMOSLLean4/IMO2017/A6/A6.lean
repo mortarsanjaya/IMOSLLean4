@@ -24,6 +24,7 @@ namespace IMO2017A6
 
 open NonperiodicGoodFun
 
+/-- Final solution, $G$ is $2$- and $3$-torsion-free. -/
 theorem final_solution_TorsionFreeBy [Ring R] [AddCancelCommMonoid G]
     (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y) (hG3 : ∀ x y : G, 3 • x = 3 • y → x = y)
     (ι : G →+ R) (f : R → G) :
@@ -47,27 +48,23 @@ theorem final_solution_TorsionFreeBy [Ring R] [AddCancelCommMonoid G]
 /-- Final solution, $R$ is a division ring with $\text{char}(R) ≠ 2$ and $ι = id_R$. -/
 theorem final_solution_DivisionRing_char_ne_two [Ring R] [IsSimpleRing R]
     (hR2 : ∀ x y : R, 2 • x = 2 • y → x = y) {f : R → R} :
-    (∃ f' : GoodFun (AddMonoidHom.id R), f' = f) ↔
-      (f = 0 ∨ f = (λ x ↦ 1 - x) ∨ f = (λ x ↦ x - 1)) := by
-  rw [IsSimpleRing_exists_GoodFun_iff_zero_or_NonperiodicGoodFun]
-  refine or_congr_right ⟨?_, ?_⟩
-  · rintro ⟨f, rfl⟩
-    obtain ⟨a, rfl⟩ := f.exists_eq_ofCenterId (f.injective_of_TwoTorsionFree hR2)
+    IsGoodFun (AddMonoidHom.id R) f ↔ (f = 0 ∨ f = (λ x ↦ 1 - x) ∨ f = (λ x ↦ x - 1)) := by
+  refine SimpleRing_IsGoodFun_iff_zero_or_Nonperiodic.trans (or_congr_right ⟨?_, ?_⟩)
+  · rw [IsNonperiodicGoodFun.iff]; rintro ⟨g, rfl⟩
+    obtain ⟨a, rfl⟩ := g.exists_eq_ofCenterId (g.injective_of_TwoTorsionFree hR2)
     apply a.eq_one_or_neg_one_of_IsSimpleRing.imp
-    all_goals rintro rfl; ext x
-    · rw [ofCenterId_apply, CentralInvolutive.one_val, one_mul]
-    · rw [ofCenterId_apply, CentralInvolutive.neg_one_val, neg_one_mul, neg_sub]
-  · rintro (rfl | rfl)
-    · exact ⟨ofCenterId 1, funext λ x ↦ one_mul (1 - x)⟩
-    · exact ⟨ofCenterId (-1), funext λ x ↦ (neg_one_mul _).trans (neg_sub 1 x)⟩
+    · rintro rfl; ext x
+      rw [ofCenterId_apply, CentralInvolutive.one_val, one_mul]
+    · rintro rfl; ext x
+      rw [ofCenterId_apply, CentralInvolutive.neg_one_val, neg_one_mul, neg_sub]
+  · rintro (rfl | rfl); exacts [IsNonperiodicGoodFun.one_sub, IsNonperiodicGoodFun.sub_one]
 
 /-- Final solution, $R$ is a field of characteristic $2$ and $ι = id_R$. -/
 theorem final_solution_Field [Field R] [Extra.CharTwo R] {f : R → R} :
-    (∃ f' : GoodFun (AddMonoidHom.id R), f' = f) ↔ f = 0 ∨ f = (λ x ↦ 1 - x) := by
-  rw [IsSimpleRing_exists_GoodFun_iff_zero_or_NonperiodicGoodFun]
-  refine or_congr_right ⟨?_, ?_⟩
-  · rintro ⟨f, rfl⟩; ext x
-    obtain rfl | h : x = 0 ∨ x ≠ 0 := eq_or_ne x 0
-    · rw [sub_zero]; exact CharTwoDomain_incl_map_zero_eq_one (AddMonoidHom.id R) f
-    · exact CharTwoDomain_units_incl_map_eq (AddMonoidHom.id R) f (Units.mk0 x h)
-  · rintro rfl; exact ⟨ofCenterId 1, funext λ x ↦ one_mul (1 - x)⟩
+    IsGoodFun (AddMonoidHom.id R) f ↔ f = 0 ∨ f = (λ x ↦ 1 - x) := by
+  refine SimpleRing_IsGoodFun_iff_zero_or_Nonperiodic.trans (or_congr_right ⟨?_, ?_⟩)
+  · rw [IsNonperiodicGoodFun.iff]; rintro ⟨g, rfl⟩
+    ext x; obtain rfl | h : x = 0 ∨ x ≠ 0 := eq_or_ne x 0
+    · rw [sub_zero]; exact CharTwoDomain_incl_map_zero_eq_one (AddMonoidHom.id R) g
+    · exact CharTwoDomain_units_incl_map_eq (AddMonoidHom.id R) g (Units.mk0 x h)
+  · rintro rfl; exact IsNonperiodicGoodFun.one_sub

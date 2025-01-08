@@ -45,8 +45,9 @@ lemma PeriodEquiv_map_eq [AddCommMonoid R] {f : R → α} (h : PeriodEquiv f c d
 
 /-! ### Period ring congruence induced by good functions -/
 
-variable [AddCommMonoid R] [Semigroup R] [Add G] [IsCancelAdd G] {ι : G → R}
+section
 
+variable [AddCommMonoid R] [Semigroup R] [Add G] [IsCancelAdd G] {ι : G → R}
 
 namespace GoodFun
 
@@ -66,7 +67,7 @@ def inducedRingCon (f : GoodFun ι) : RingCon R :=
       simpa only [mul_assoc] using h1 (d * x) }
 
 /-- Definition of congruence relation given by `inducedRingCon`. -/
-theorem inducedRingCon_def {f : GoodFun ι} {c d} :
+theorem inducedRingCon_def {f : GoodFun ι} :
     f.inducedRingCon c d ↔ ∀ x, f (x + c) = f (x + d) := Iff.rfl
 
 theorem inducedRingConEquiv_map_eq {f : GoodFun ι} (h : inducedRingCon f c d) : f c = f d :=
@@ -91,3 +92,5 @@ theorem IsGoodFun_iff_Nonperiodic :
   ⟨λ h ↦ let f₀ := h.toGoodFun; let g := f₀.Quotient;
     ⟨f₀.inducedRingCon, g, g.IsNonperiodicGoodFun, rfl⟩,
   λ ⟨_, _, h, h0⟩ ↦ h0 ▸ ⟨λ x y ↦ h.good_def x y⟩⟩
+
+end

@@ -24,17 +24,49 @@ It only takes $a ∈ Z(R)$ with $a^2 = 1$ as a parameter.
 
 namespace IMOSL
 namespace IMO2017A6
-namespace NonperiodicGoodFun
 
-/-! ### Extra lemmas -/
+/-! ### `x ↦ 1 - x` and variants as a non-periodic good function -/
 
-lemma one_sub_mul_one_sub [NonAssocRing R] (x y : R) :
-    (1 - x) * (1 - y) = 1 - (x + y - x * y) := by
+section
+
+variable [NonAssocRing R]
+
+theorem one_sub_mul_one_sub (x y : R) : (1 - x) * (1 - y) = 1 - (x + y - x * y) := by
   rw [mul_one_sub, one_sub_mul, sub_sub, add_sub_assoc]
 
+theorem IsGoodFun_one_sub_explicit (x y : R) :
+    1 - (1 - x) * (1 - y) + (1 - (x + y)) = 1 - x * y := by
+  rw [one_sub_mul_one_sub, sub_sub_cancel, sub_add_sub_cancel']
+
+theorem IsNonperiodicGoodFun.one_sub :
+    IsNonperiodicGoodFun (id : R → R) (λ x : R ↦ 1 - x) :=
+  ⟨⟨IsGoodFun_one_sub_explicit⟩,
+  λ h ↦ by simpa only [sub_add_cancel_left, neg_inj] using h 1⟩
+
+/-- `x ↦ 1 - x` as a non-periodic good function. -/
+def NonperiodicGoodFun.one_sub : NonperiodicGoodFun (id : R → R) :=
+  IsNonperiodicGoodFun.one_sub.toNonperiodicGoodFun
+
+theorem IsGoodFun_sub_one_explicit (x y : R) :
+    (x - 1) * (y - 1) - 1 + (x + y - 1) = x * y - 1 := by
+  rw [sub_one_mul, sub_sub, sub_add_cancel, mul_sub_one, sub_sub, sub_add_sub_cancel]
+
+theorem IsNonperiodicGoodFun.sub_one :
+    IsNonperiodicGoodFun (id : R → R) (λ x : R ↦ x - 1) :=
+  ⟨⟨IsGoodFun_sub_one_explicit⟩,
+  λ h ↦ by simpa only [add_sub_cancel_left] using h 1⟩
+
+/-- `x ↦ 1 - x` as a non-periodic good function. -/
+def NonperiodicGoodFun.sub_one : NonperiodicGoodFun (id : R → R) :=
+  IsNonperiodicGoodFun.sub_one.toNonperiodicGoodFun
+
+end
 
 
 
+
+
+namespace NonperiodicGoodFun
 
 /-! ### The main constructors for non-periodic good functions -/
 
@@ -47,9 +79,8 @@ def ofCenterExcellent (φ : {φ : ExcellentFun R G // ∀ x, ι (φ x) = a * x})
     NonperiodicGoodFun ι where
   toFun x := φ.1 (1 - x)
   good_def' x y := by
-    refine (congrArg (φ.1 · + _) ?_).trans (φ.1.excellent_def' x y)
-    rw [φ.2, φ.2, a.mul_mul_mul_cancel_left,
-      one_sub_mul_one_sub, sub_sub_cancel, add_sub_assoc]
+    dsimp only; rw [φ.2, φ.2, a.mul_mul_mul_cancel_left,
+      one_sub_mul_one_sub, sub_sub_cancel, excellent_def]
   period_imp_eq' c d h := a.mul_left_inj.mp (by simpa [φ.2] using congrArg ι (h 1))
 
 @[simp] theorem ofCenterExcellent_apply (φ x) :
@@ -122,10 +153,8 @@ theorem Center_spec (x) : ι (f x) = (f.Center hf).val * (1 - x) :=
 /-- An $ι$-good function as an excellent function. -/
 def mkExcellentFun : ExcellentFun R G where
   toFun x := f (1 - x)
-  excellent_def' x y := by
-    simp only [sub_sub_cancel]; convert good_def ι f x y using 3
-    rw [f.Center_spec hf, f.Center_spec hf, CentralInvolutive.mul_mul_mul_cancel_left]
-    exact (one_sub_mul_one_sub x y).symm
+  excellent_def' x y := by simpa only [sub_sub_cancel, f.Center_spec hf,
+    (f.Center hf).mul_mul_mul_cancel_left, one_sub_mul_one_sub] using good_def ι f x y
 
 @[simp] theorem mkExcellentFun_apply (x) : f.mkExcellentFun hf x = f (1 - x) := rfl
 
