@@ -9,11 +9,10 @@ import IMOSLLean4.IMO2017.A6.CentralInvolutive.Defs
 import Mathlib.RingTheory.SimpleRing.Defs
 
 /-!
-# IMO 2017 A6 (P2, Classifying good functions: division ring case)
+# IMO 2017 A6 (P2, Classifying good functions: simple ring case)
 
-We show that if $R$ is a division ring, then $f$ is $ι$-good iff
+We show that if $R$ is a simple ring, then $f$ is $ι$-good iff
   either $f = 0$ or $f$ is non-periodic $ι$-good.
-We also prove that the only $a ∈ Z(R)$ with $a^2 = 1$ are $±1$.
 -/
 
 namespace IMOSL

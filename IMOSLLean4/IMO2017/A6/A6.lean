@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.IMO2017.A6.A6SpecificCases.DivisionRing
+import IMOSLLean4.IMO2017.A6.A6SpecificCases.SimpleRing
 import IMOSLLean4.IMO2017.A6.A6SpecificCases.CharTwoUnit
 import IMOSLLean4.IMO2017.A6.A6NonperiodicSol
 import IMOSLLean4.IMO2017.A6.ExcellentFun.TorsionFree
