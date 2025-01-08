@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import IMOSLLean4.IMO2017.A6.A6Basic
 import IMOSLLean4.IMO2017.A6.A6RingCon
 import IMOSLLean4.IMO2017.A6.CentralInvolutive.Defs
 import Mathlib.RingTheory.SimpleRing.Defs
@@ -33,4 +34,4 @@ theorem IsSimpleRing_exists_GoodFun_iff_zero_or_NonperiodicGoodFun
       replace h : f.inducedRingCon x (ι (f 0) * ι (f 0)) := h ▸ trivial
       exact (GoodFun.inducedRingConEquiv_map_eq h).trans (map_incl_map_zero_mul_self ι f)
     · intro h; exact ⟨⟨f, λ c d (h0 : f.inducedRingCon c d) ↦ by rwa [h] at h0⟩, rfl⟩
-  · rintro (rfl | ⟨f, rfl⟩); exacts [⟨GoodFun.zero ι, rfl⟩, ⟨f.toGoodFun, rfl⟩]
+  · rintro (rfl | ⟨f, rfl⟩); exacts [⟨0, rfl⟩, ⟨f.toGoodFun, rfl⟩]

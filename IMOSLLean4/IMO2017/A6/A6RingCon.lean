@@ -22,37 +22,14 @@ Thus we get a correspondence between good functions and non-periodic good functi
 ### Implementation notes
 
 Instead of using ideals explicitly, we use the `RingCon` API.
-
-### TODO
-
-Tbe function `GoodFun.Lift` might be problematic here.
-Change it to something like `Lift (f : GoodFun β) (_ : β = ι)` instead.
 -/
 
 namespace IMOSL
 namespace IMO2017A6
 
-/-! ### Extension of good functions -/
+/-! ### General period congruence -/
 
-namespace GoodFun
-
-variable [Add R] [Mul R] [Add G] {ι : G → R} {rc : RingCon R}
-
-/-- Extension of an `ι`-good function via the quotient map. -/
-def Lift (f : GoodFun (rc.toQuotient ∘ ι)) : GoodFun ι where
-  toFun x := f x
-  good_def' x y := good_def (rc.toQuotient ∘ ι) f x y
-
-theorem lift_def (f : GoodFun (rc.toQuotient ∘ ι)) (x) : f.Lift x = f x := rfl
-
-end GoodFun
-
-
-
-
-
-/-! ### Projecting down by period congruence -/
-
+/-- General additive congruence induced by period. -/
 def PeriodEquiv [AddCommSemigroup R] (f : R → α) : AddCon R where
   r c d := ∀ x, f (x + c) = f (x + d)
   iseqv := ⟨λ _ _ ↦ rfl, λ h x ↦ (h x).symm, λ h h0 x ↦ (h x).trans (h0 x)⟩
@@ -63,9 +40,15 @@ lemma PeriodEquiv_map_eq [AddCommMonoid R] {f : R → α} (h : PeriodEquiv f c d
   simpa only [zero_add] using h 0
 
 
-namespace GoodFun
+
+
+
+/-! ### Period ring congruence induced by good functions -/
 
 variable [AddCommMonoid R] [Semigroup R] [Add G] [IsCancelAdd G] {ι : G → R}
+
+
+namespace GoodFun
 
 /-- The ring congruence induced by an `ι`-good map. -/
 def inducedRingCon (f : GoodFun ι) : RingCon R :=
@@ -89,26 +72,11 @@ theorem inducedRingCon_def {f : GoodFun ι} {c d} :
 theorem inducedRingConEquiv_map_eq {f : GoodFun ι} (h : inducedRingCon f c d) : f c = f d :=
   PeriodEquiv_map_eq h
 
-
-section
-
-variable (f : GoodFun ι) (rc : RingCon R) (hrc : f.inducedRingCon = rc)
-
-/-- The induced non-periodic good quotient map using a copy of the ring congruence. -/
-def Quotient' : NonperiodicGoodFun (rc.toQuotient ∘ ι) where
-  toFun := Quotient.lift f λ _ _ h ↦ inducedRingConEquiv_map_eq (hrc ▸ h)
-  good_def' := Quotient.ind₂ (good_def ι f)
-  period_imp_eq' := Quotient.ind₂ λ _ _ h ↦ Quot.sound (hrc ▸ λ x ↦ h x)
-
-/-- Definition of the quotient map using a copy of the ring congruence. -/
-lemma Quotient'_apply_mk (x : R) : f.Quotient' rc hrc x = f x := rfl
-
-end
-
-
 /-- The induced non-periodic good quotient map. -/
-def Quotient (f : GoodFun ι) : NonperiodicGoodFun (f.inducedRingCon.toQuotient ∘ ι) :=
-  f.Quotient' f.inducedRingCon rfl
+def Quotient (f : GoodFun ι) : NonperiodicGoodFun (f.inducedRingCon.toQuotient ∘ ι) where
+  toFun := Quotient.lift f λ _ _ ↦ inducedRingConEquiv_map_eq
+  good_def' := Quotient.ind₂ (good_def ι f)
+  period_imp_eq' := Quotient.ind₂ λ _ _ h ↦ Quot.sound λ x ↦ h x
 
 /-- Definition of the quotient map. -/
 lemma Quotient_apply_mk (f : GoodFun ι) (x : R) : f.Quotient x = f x := rfl
@@ -116,75 +84,10 @@ lemma Quotient_apply_mk (f : GoodFun ι) (x : R) : f.Quotient x = f x := rfl
 end GoodFun
 
 
-
-
-
-/-! ### Correspondence between good functions and non-periodic good functions -/
-
-theorem NonperiodicGoodFun.inducedRingCon_lift_eq
-    [AddCommMonoid R] [Semigroup R] [Add G] [IsCancelAdd G] {ι : G → R}
-    {rc : RingCon R} (f : NonperiodicGoodFun (rc.toQuotient ∘ ι)) :
-    f.Lift.inducedRingCon = rc := by
-  refine RingCon.ext λ c d ↦ ?_
-  rw [← rc.eq, ← period_iff_eq (rc.toQuotient ∘ ι) (f := f)]
-  exact Iff.symm Quotient.forall
-
-
-namespace GoodFun
-
-section
-
-variable [AddCommMonoid R] [Semigroup R] [Add G] [IsCancelAdd G] (ι : G → R)
-include ι
-
-/-- Explicit correspondence between good functions with specified ring congruence
-  and non-periodic good functions on the quotient of the congruence. -/
-def FixedRingConCorrespondence (rc : RingCon R) :
-    {f : GoodFun ι | f.inducedRingCon = rc} ≃ NonperiodicGoodFun (rc.toQuotient ∘ ι) where
-  toFun f := f.1.Quotient' rc f.2
-  invFun f := ⟨f.Lift, f.inducedRingCon_lift_eq⟩
-  left_inv _ := rfl
-  right_inv _ := NonperiodicGoodFun.ext (Quotient.ind λ _ ↦ rfl)
-
-/-- Explicit correspondence between `ι`-good functions and non-periodic good functions. -/
-def NonperiodicCorrespondence :
-    GoodFun ι ≃ (rc : RingCon R) × NonperiodicGoodFun (rc.toQuotient ∘ ι) := calc
-  _ ≃ (rc : RingCon R) × {f : GoodFun ι | f.inducedRingCon = rc} :=
-    (Equiv.sigmaFiberEquiv inducedRingCon).symm
-  _ ≃ (rc : RingCon R) × NonperiodicGoodFun (rc.toQuotient ∘ ι) :=
-    Equiv.sigmaCongrRight (FixedRingConCorrespondence ι)
-
-/-- Specification of `GoodFun.NonperiodicCorrespondence`. -/
-theorem NonperiodicCorrespondence_def (f : GoodFun ι) :
-    NonperiodicCorrespondence ι f = ⟨f.inducedRingCon, f.Quotient⟩ := rfl
-
-/-- Specification of the inverse of `GoodFun.NonperiodicCorrespondence`. -/
-theorem NonperiodicCorrespondence_symm_def
-    {rc : RingCon R} (f : NonperiodicGoodFun (rc.toQuotient ∘ ι)) :
-    (NonperiodicCorrespondence ι).symm ⟨rc, f⟩ = f.Lift := rfl
-
-end
-
-
-section
-
-variable [Semiring R] [AddZeroClass G] [IsCancelAdd G] (ι : G →+ R)
-include ι
-
-/-- Group homomorphism version of `NonperiodicCorrespondence`. -/
-def AddMonoidHomNonperiodicCorrespondence :
-    GoodFun ι ≃ (rc : RingCon R) × NonperiodicGoodFun (rc.mk'.toAddMonoidHom.comp ι) :=
-  NonperiodicCorrespondence ι
-
-/-- Specification of `GoodFun.AddMonoidHomNonperiodicCorrespondence`. -/
-theorem AddMonoidHomNonperiodicCorrespondence_def (f : GoodFun ι) :
-    AddMonoidHomNonperiodicCorrespondence ι f = ⟨f.inducedRingCon, f.Quotient⟩ := rfl
-
-/-- Specification of the inverse of `GoodFun.AddMonoidHomNonperiodicCorrespondence`. -/
-theorem AddMonoidHomNonperiodicCorrespondence_symm_def
-    {rc : RingCon R} (f : NonperiodicGoodFun (rc.mk'.toAddMonoidHom.comp ι)) :
-    (AddMonoidHomNonperiodicCorrespondence ι).symm ⟨rc, f⟩ = f.Lift := rfl
-
-end
-
-end GoodFun
+/-- Correspondence between good functions and non-periodic good functions. -/
+theorem IsGoodFun_iff_Nonperiodic :
+    IsGoodFun ι f ↔ ∃ (rc : RingCon R) (g : rc.Quotient → G),
+      IsNonperiodicGoodFun (rc.toQuotient ∘ ι) g ∧ f = g ∘ rc.toQuotient :=
+  ⟨λ h ↦ let f₀ := h.toGoodFun; let g := f₀.Quotient;
+    ⟨f₀.inducedRingCon, g, g.IsNonperiodicGoodFun, rfl⟩,
+  λ ⟨_, _, h, h0⟩ ↦ h0 ▸ ⟨λ x y ↦ h.good_def x y⟩⟩

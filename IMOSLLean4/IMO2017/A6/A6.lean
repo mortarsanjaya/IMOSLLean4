@@ -22,43 +22,27 @@ $$ f(ι(f(x)) ι(f(y))) + f(x + y) = f(xy). $$
 namespace IMOSL
 namespace IMO2017A6
 
-open Extra NonperiodicGoodFun
+open NonperiodicGoodFun
 
-section
-
-variable [Ring R] [AddCancelCommMonoid G] (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y)
-  (hG3 : ∀ x y : G, 3 • x = 3 • y → x = y) (ι : G →+ R)
-include hG2 hG3 ι
-
-/-- Final solution, $G$ is $2$- and $3$-torsion free, bundled version. -/
-theorem final_solution_GoodFun_TorsionFreeBy (f : GoodFun ι) :
-    ∃ (rc : RingCon R) (a : CentralInvolutive rc.Quotient)
+theorem final_solution_TorsionFreeBy [Ring R] [AddCancelCommMonoid G]
+    (hG2 : ∀ x y : G, 2 • x = 2 • y → x = y) (hG3 : ∀ x y : G, 3 • x = 3 • y → x = y)
+    (ι : G →+ R) (f : R → G) :
+    IsGoodFun ι f ↔ ∃ (rc : RingCon R) (a : CentralInvolutive rc.Quotient)
       (φ : {φ : rc.Quotient →+ G // ∀ x, ι (φ x) = x}),
-    f = (ofCenterHom (rc.mk'.toAddMonoidHom.comp ι) a φ).Lift := by
-  simp_rw [← GoodFun.AddMonoidHomNonperiodicCorrespondence_symm_def, Equiv.eq_symm_apply]
-  let rc := f.inducedRingCon
-  let ι' := rc.mk'.toAddMonoidHom.comp ι
-  have : ExcellentFun.IsOfAddMonoidHomSurjective rc.Quotient G :=
-    ExcellentFun.IsOfAddMonoidHomSurjective_of_TwoThreeTorsionFree hG2 hG3
-  obtain ⟨a, φ, h0⟩ := exists_eq_ofCenterHom f.Quotient (ι := ι')
-    (f.Quotient.injective_of_TwoTorsionFree hG2 (ι := ι'))
-  exact ⟨rc, a, φ, Eq.symm (congrArg (Sigma.mk _) h0.symm)⟩
-
-/-- Final solution, $G$ is $2$- and $3$-torsion free. -/
-theorem final_solution_TorsionFreeBy (f : R → G) :
-    (∃ f' : GoodFun ι, f' = f) ↔
-      ∃ (rc : RingCon R) (a : CentralInvolutive rc.Quotient)
-        (φ : {φ : rc.Quotient →+ G // ∀ x, ι (φ x) = x}),
-          f = λ x ↦ φ.1 (a * (1 - rc.toQuotient x)) := by
-  refine ⟨?_, ?_⟩
-  · rintro ⟨f, rfl⟩
-    obtain ⟨rc, a, φ, rfl⟩ := final_solution_GoodFun_TorsionFreeBy hG2 hG3 ι f
-    exact ⟨rc, a, φ, rfl⟩
-  · rintro ⟨rc, a, φ, rfl⟩
-    exact ⟨(ofCenterHom (rc.mk'.toAddMonoidHom.comp ι) a φ).Lift, rfl⟩
-
-end
-
+        f = λ x ↦ φ.1 (a * (1 - rc.toQuotient x)) := by
+  refine IsGoodFun_iff_Nonperiodic.trans (exists_congr λ rc ↦ ⟨?_, ?_⟩)
+  ---- `→` direction
+  · rintro ⟨g, h, rfl⟩
+    let ι' := rc.mk'.toAddMonoidHom.comp ι
+    have : ExcellentFun.IsOfAddMonoidHomSurjective rc.Quotient G :=
+      ExcellentFun.IsOfAddMonoidHomSurjective_of_TwoThreeTorsionFree hG2 hG3
+    obtain ⟨a, φ, h0⟩ := exists_eq_ofCenterHom h.toNonperiodicGoodFun (ι := ι')
+      (h.toNonperiodicGoodFun.injective_of_TwoTorsionFree hG2 (ι := ι'))
+    exact ⟨a, φ, funext λ x ↦ NonperiodicGoodFun.ext_iff.mp h0 x⟩
+  ---- `←` direction
+  · rintro ⟨a, φ, rfl⟩
+    let g' := ofCenterHom (rc.mk'.toAddMonoidHom.comp ι) a φ
+    exact ⟨g', g'.IsNonperiodicGoodFun, rfl⟩
 
 /-- Final solution, $R$ is a division ring with $\text{char}(R) ≠ 2$ and $ι = id_R$. -/
 theorem final_solution_DivisionRing_char_ne_two [Ring R] [IsSimpleRing R]
@@ -78,7 +62,7 @@ theorem final_solution_DivisionRing_char_ne_two [Ring R] [IsSimpleRing R]
     · exact ⟨ofCenterId (-1), funext λ x ↦ (neg_one_mul _).trans (neg_sub 1 x)⟩
 
 /-- Final solution, $R$ is a field of characteristic $2$ and $ι = id_R$. -/
-theorem final_solution_Field [Field R] [CharTwo R] {f : R → R} :
+theorem final_solution_Field [Field R] [Extra.CharTwo R] {f : R → R} :
     (∃ f' : GoodFun (AddMonoidHom.id R), f' = f) ↔ f = 0 ∨ f = (λ x ↦ 1 - x) := by
   rw [IsSimpleRing_exists_GoodFun_iff_zero_or_NonperiodicGoodFun]
   refine or_congr_right ⟨?_, ?_⟩
