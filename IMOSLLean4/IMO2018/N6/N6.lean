@@ -52,40 +52,91 @@ lemma PNat_exists_big_not_dvd {d : ℕ+} (hd : d > 1) (N : ℕ+) : ∃ n ≥ N, 
 
 /-! ### Theory of good functions -/
 
-structure GoodFun where
-  toFun : ℕ+ → ℕ+
+structure GoodFun (G) [Add G] where
+  toFun : G → ℕ+
   good_def' m n : toFun (m + n) ∣ toFun m + toFun n
 
 
 namespace GoodFun
 
-instance : FunLike GoodFun ℕ+ ℕ+ where
+section
+
+variable [Add G]
+
+instance : FunLike (GoodFun G) G ℕ+ where
   coe f := f.toFun
   coe_injective' f g h := by rwa [GoodFun.mk.injEq]
 
-@[ext] theorem ext {f g : GoodFun} : (∀ x, f x = g x) → f = g :=
+@[ext] theorem ext {f g : GoodFun G} : (∀ x, f x = g x) → f = g :=
   DFunLike.ext _ _
 
-theorem good_def (f : GoodFun) : ∀ m n, f (m + n) ∣ f m + f n :=
+theorem good_def (f : GoodFun G) : ∀ m n, f (m + n) ∣ f m + f n :=
   f.good_def'
 
-theorem good_def2 (f : GoodFun) (m n) : (f (m + n)).val ∣ f m + f n :=
+theorem good_def2 (f : GoodFun G) (m n) : (f (m + n)).val ∣ f m + f n :=
   PNat.dvd_iff.mp (f.good_def m n)
 
+/-- Scalar multiplication of a good function. -/
+protected def smul (c : ℕ+) (f : GoodFun G) : GoodFun G :=
+  ⟨λ n ↦ c * f n, λ m n ↦ by simpa only [mul_add] using mul_dvd_mul_left c (f.good_def m n)⟩
+
+instance : SMul ℕ+ (GoodFun G) := ⟨GoodFun.smul⟩
+
+@[simp] theorem smul_apply (c : ℕ+) (f : GoodFun G) (n) : (c • f) n = c * f n := rfl
+
+
+variable (f : GoodFun G) {M : ℕ+} (h : ∀ n, M ∣ f n)
+include h
+
+protected def div : GoodFun G where
+  toFun n := (f n).divExact M
+  good_def' m n := by
+    obtain ⟨k, h0⟩ : f (m + n) ∣ f m + f n := f.good_def m n
+    replace h (n) : M * (f n).divExact M = f n := PNat.mul_div_exact (h n)
+    rw [← h m, ← h n, ← h (m + n), ← mul_add, mul_assoc, mul_right_inj] at h0
+    exact ⟨k, h0⟩
+
+@[simp] theorem div_apply : f.div h n = (f n).divExact M := rfl
+
+theorem smul_div : M • f.div h = f :=
+  ext λ n ↦ PNat.mul_div_exact (h n)
+
+end
+
+
+
+
+
+/-! ### Construction of good functions -/
+
 /-- The identity function as a good function. -/
-protected def id : GoodFun :=
+protected def id : GoodFun ℕ+ :=
   ⟨id, λ m n ↦ dvd_refl (m + n)⟩
 
 @[simp] theorem id_apply (n) : GoodFun.id n = n := rfl
 
+
+section
+
+variable (G) [Add G]
+
 /-- The constant function as a good function. -/
-protected def const (c : ℕ+) : GoodFun :=
+protected def const (c : ℕ+) : GoodFun G :=
   ⟨λ _ ↦ c, λ _ _ ↦ ⟨2, PNat.coe_inj.mp c.val.mul_two.symm⟩⟩
 
-@[simp] theorem const_apply (c n) : GoodFun.const c n = c := rfl
+@[simp] theorem const_apply (c x) : GoodFun.const G c x = c := rfl
+
+theorem const_mul_eq_smul (m n : ℕ+) :
+    GoodFun.const G (m * n) = m • GoodFun.const G n := rfl
+
+theorem const_eq_smul_const_one (m : ℕ+) : GoodFun.const G m = m • GoodFun.const G 1 :=
+  GoodFun.ext λ _ ↦ (mul_one m).symm
+
+end
+
 
 /-- The periodic `1-2` function as a good function. -/
-protected def periodic_one_two (d : ℕ+) : GoodFun where
+protected def periodic_one_two (d : ℕ+) : GoodFun ℕ+ where
   toFun n := if d.val ∣ n then 2 else 1
   good_def' m n := by
     ---- If `d ∤ m + n`, we are done
@@ -110,62 +161,28 @@ theorem periodic_one_two_apply_of_dvd {d n : ℕ+} (h : d.val ∣ n) :
 theorem periodic_one_two_apply_of_not_dvd {d n : ℕ+} (h : ¬d.val ∣ n) :
     GoodFun.periodic_one_two d n = 1 := if_neg h
 
-/-- Scalar multiplication of a good function. -/
-protected def smul (c : ℕ+) (f : GoodFun) : GoodFun :=
-  ⟨λ n ↦ c * f n, λ m n ↦ by simpa only [mul_add] using mul_dvd_mul_left c (f.good_def m n)⟩
-
-instance : SMul ℕ+ GoodFun := ⟨GoodFun.smul⟩
-
-@[simp] theorem smul_apply (c : ℕ+) (f : GoodFun) (n) : (c • f) n = c * f n := rfl
-
-theorem const_mul_eq_smul (m n : ℕ+) : GoodFun.const (m * n) = m • GoodFun.const n := rfl
-
-theorem const_eq_smul_const_one (m : ℕ+) : GoodFun.const m = m • GoodFun.const 1 :=
-  GoodFun.ext λ _ ↦ (mul_one m).symm
-
-
-section
-
-variable (f : GoodFun) {M : ℕ+} (h : ∀ n, M ∣ f n)
-include h
-
-protected def div : GoodFun where
-  toFun n := (f n).divExact M
-  good_def' m n := by
-    obtain ⟨k, h0⟩ : f (m + n) ∣ f m + f n := f.good_def m n
-    replace h (n) : M * (f n).divExact M = f n := PNat.mul_div_exact (h n)
-    rw [← h m, ← h n, ← h (m + n), ← mul_add, mul_assoc, mul_right_inj] at h0
-    exact ⟨k, h0⟩
-
-@[simp] theorem div_apply : f.div h n = (f n).divExact M := rfl
-
-theorem smul_div : M • f.div h = f :=
-  ext λ n ↦ PNat.mul_div_exact (h n)
-
-end
-
 
 
 
 
 /-! ### Start of the problem -/
 
-theorem map_le_mul_map_one (f : GoodFun) (n : ℕ+) : f n ≤ f 1 * n := by
+theorem map_le_mul_map_one (f : GoodFun ℕ+) (n : ℕ+) : f n ≤ f 1 * n := by
   induction n using PNat.recOn with | p1 => exact (mul_one _).ge | hp n hn => ?_
   apply (PNat.le_of_dvd (f.good_def n 1)).trans
   rwa [mul_add_one, add_le_add_iff_right]
 
-theorem map_add_eq_of_map_lt_dvd_map_add {f : GoodFun}
+theorem map_add_eq_of_map_lt_dvd_map_add {f : GoodFun ℕ+}
     (h : f k < M) (h0 : f m < M) (h1 : M ∣ f (k + m)) : f k + f m = M :=
   PNat_eq_of_dvd_of_lt_mul_one_add_one (h1.trans (f.good_def k m))
     ((add_lt_add h h0).trans_eq (by rw [mul_add_one, mul_one]))
 
-theorem map_add_eq_of_map_lt {f : GoodFun} (h : f k < f (k + m)) (h0 : f m < f (k + m)) :
+theorem map_add_eq_of_map_lt {f : GoodFun ℕ+} (h : f k < f (k + m)) (h0 : f m < f (k + m)) :
     f k + f m = f (k + m) :=
   map_add_eq_of_map_lt_dvd_map_add h h0 (dvd_refl _)
 
 /-- If `f` is unbounded, then `f(n) = f(1) n` for all `n`. -/
-theorem eq_smul_id_of_unbounded {f : GoodFun} (hf : ∀ N, ∃ n, N < f n) :
+theorem eq_smul_id_of_unbounded {f : GoodFun ℕ+} (hf : ∀ N, ∃ n, N < f n) :
     ∃ d : ℕ+, f = d • GoodFun.id := by
   ---- Reduce to just proving `f(n + 1) = f(n) + f(1)`
   suffices ∀ n, f (n + 1) = f n + f 1 by
@@ -210,23 +227,23 @@ theorem eq_smul_id_of_unbounded {f : GoodFun} (hf : ∀ N, ∃ n, N < f n) :
       rw [← mul_add_one, add_right_comm, mul_assoc, mul_add_one, mul_one]
     _ < f (M + 1) * 2 := mul_lt_mul_right' hN 2
 
-theorem dvd_map_add_imp_iff {f : GoodFun} {M : ℕ}
+theorem dvd_map_add_imp_iff {f : GoodFun ℕ+} {M : ℕ}
     (h : M ∣ f (m + n)) (h0 : M ∣ f m) : M ∣ f n :=
   (Nat.dvd_add_right h0).mp (h.trans (PNat.dvd_iff.mp (f.good_def m n)))
 
-theorem dvd_map_dvd_map_mul_add_imp {f : GoodFun} {M : ℕ}
+theorem dvd_map_dvd_map_mul_add_imp {f : GoodFun ℕ+} {M : ℕ}
     (h : M ∣ f d) (h0 : M ∣ f (d * (m + k))) : M ∣ f (d * m) := by
   have h1 {m} (h1 : M ∣ f (d * (m + 1))) : M ∣ f (d * m) := by
     rw [mul_add_one, add_comm] at h1; exact dvd_map_add_imp_iff h1 h
   induction' k using PNat.caseStrongInductionOn with k k_ih
   exacts [h1 h0, k_ih _ (le_refl k) (h1 (add_assoc m k 1 ▸ h0))]
 
-theorem dvd_map_dvd_map_mul_imp {f : GoodFun} {M : ℕ}
+theorem dvd_map_dvd_map_mul_imp {f : GoodFun ℕ+} {M : ℕ}
     (h : M ∣ f d) (h0 : M ∣ f (d * k)) (h1 : m ≤ k) : M ∣ f (d * m) :=
   h1.eq_or_lt.elim (λ h2 ↦ h2 ▸ h0)
     (λ h2 ↦ dvd_map_dvd_map_mul_add_imp h (by rwa [PNat.add_sub_of_lt h2]))
 
-theorem exists_dvd_dvd_imp {f : GoodFun} {M : ℕ} (h : ∃ n, M ∣ f n) :
+theorem exists_dvd_dvd_imp {f : GoodFun ℕ+} {M : ℕ} (h : ∃ n, M ∣ f n) :
     ∃ d : ℕ+, M ∣ f d ∧ ∀ n, M ∣ f n → d.val ∣ n := by
   let d := PNat.find h
   have d_spec : M ∣ f d := PNat.find_spec h
@@ -237,7 +254,7 @@ theorem exists_dvd_dvd_imp {f : GoodFun} {M : ℕ} (h : ∃ n, M ∣ f n) :
   exacts [d.val.dvd_refl, Nat.dvd_add_self_right.mpr <| n_ih _ (m.lt_add_right d) <|
     (Nat.dvd_add_iff_left d_spec).mpr (hn.trans (f.good_def2 m d))]
 
-theorem dvd_set_infinite_imp {f : GoodFun} {M : ℕ} (h : ∀ N, ∃ n ≥ N, M ∣ f n) :
+theorem dvd_set_infinite_imp {f : GoodFun ℕ+} {M : ℕ} (h : ∀ N, ∃ n ≥ N, M ∣ f n) :
     ∃ d : ℕ+, ∀ n, M ∣ f n ↔ d.val ∣ n := by
   obtain ⟨d, hd, hd0⟩ := exists_dvd_dvd_imp ((h 1).imp λ _ ↦ And.right)
   refine ⟨d, λ n ↦ ⟨hd0 n, ?_⟩⟩
@@ -246,12 +263,12 @@ theorem dvd_set_infinite_imp {f : GoodFun} {M : ℕ} (h : ∀ N, ∃ n ≥ N, M 
   obtain ⟨m, rfl⟩ : d ∣ n := (PNat.dvd_iff).mpr (hd0 n h1)
   exact dvd_map_dvd_map_mul_imp hd h1 ((mul_le_mul_iff_left d).mp h0)
 
-theorem exists_limsup_and_dvd_map_iff {f : GoodFun} (h : ∃ N, ∀ n, f n ≤ N) :
+theorem exists_limsup_and_dvd_map_iff {f : GoodFun ℕ+} (h : ∃ N, ∀ n, f n ≤ N) :
     ∃ M, (∃ N, ∀ n ≥ N, f n ≤ M) ∧ (∃ d : ℕ+, ∀ n, M.val ∣ f n ↔ d.val ∣ n) := by
   obtain ⟨M, h0, h1⟩ := PNat_exists_greatest_infinite_fiber h
   exact ⟨M, h1, dvd_set_infinite_imp λ N ↦ (h0 N).imp λ n ↦ And.imp_right λ h2 ↦ by rw [h2]⟩
 
-theorem dvd_set_cofinite_imp {f : GoodFun} {M : ℕ} (h : ∃ N, ∀ n ≥ N, M ∣ f n) :
+theorem dvd_set_cofinite_imp {f : GoodFun ℕ+} {M : ℕ} (h : ∃ N, ∀ n ≥ N, M ∣ f n) :
     ∀ n, M ∣ f n := by
   rcases h with ⟨K, h⟩
   obtain ⟨d, hd⟩ : ∃ d : ℕ+, ∀ n, M ∣ f n ↔ d.val ∣ n :=
@@ -261,8 +278,8 @@ theorem dvd_set_cofinite_imp {f : GoodFun} {M : ℕ} (h : ∃ N, ∀ n ≥ N, M 
   rw [← PNat.dvd_one_iff, PNat.dvd_iff, Nat.dvd_add_iff_right (h K (le_refl K))]
   exact h (K + 1) (K.lt_add_right 1).le
 
-theorem eq_set_cofinite_imp {f : GoodFun} (h : ∃ N, ∀ n ≥ N, f n = M) :
-    ∃ g : GoodFun, f = M • g ∧ ∃ N, ∀ n ≥ N, g n = 1 := by
+theorem eq_set_cofinite_imp {f : GoodFun ℕ+} (h : ∃ N, ∀ n ≥ N, f n = M) :
+    ∃ g : GoodFun ℕ+, f = M • g ∧ ∃ N, ∀ n ≥ N, g n = 1 := by
   rcases h with ⟨N, hN⟩
   have h0 (n) : M ∣ f n := PNat.dvd_iff.mpr <|
     f.dvd_set_cofinite_imp ⟨N, λ n hn ↦ dvd_of_eq (congrArg _ (hN n hn).symm)⟩ n
@@ -270,7 +287,7 @@ theorem eq_set_cofinite_imp {f : GoodFun} (h : ∃ N, ∀ n ≥ N, f n = M) :
   refine ⟨f.div h0, hg.symm, N, λ n hn ↦ ?_⟩
   rw [← mul_right_eq_self (a := M), ← smul_apply, hg, hN n hn]
 
-theorem eventually_bound_and_dvd_iff_period_imp {f : GoodFun} (hN : ∀ n ≥ N, f n ≤ M)
+theorem eventually_bound_and_dvd_iff_period_imp {f : GoodFun ℕ+} (hN : ∀ n ≥ N, f n ≤ M)
     {d : ℕ+} (hd : d > 1) (hd0 : ∀ n, M.val ∣ f n ↔ d.val ∣ n) :
     ∃ C, 2 * C = M ∧ ∀ n, n ≥ N → f n = C * if d.val ∣ n then 2 else 1 := by
   replace hd0 (n) (hn : n ≥ N) : f n = M ↔ d.val ∣ n := by
@@ -318,9 +335,9 @@ theorem eventually_bound_and_dvd_iff_period_imp {f : GoodFun} (hN : ∀ n ≥ N,
   exact Nat.dvd_antisymm (hd0 hk hm hk0 hm0 h1) (hd0 hm hk hm0 hk0 (by rwa [add_comm]))
 
 /-- Characterization of bounded good functions. -/
-theorem exists_smul_eventually_eq_one_or_one_two {f : GoodFun} (h : ∃ N, ∀ n, f n ≤ N) :
-    (∃ (C : ℕ+) (g : GoodFun), f = C • g ∧ ∃ N, ∀ n ≥ N, g n = 1) ∨
-    (∃ (C : ℕ+) (g : GoodFun), f = C • g ∧ ∃ d : ℕ+, d > 1 ∧
+theorem exists_smul_eventually_eq_one_or_one_two {f : GoodFun ℕ+} (h : ∃ N, ∀ n, f n ≤ N) :
+    (∃ (C : ℕ+) (g : GoodFun ℕ+), f = C • g ∧ ∃ N, ∀ n ≥ N, g n = 1) ∨
+    (∃ (C : ℕ+) (g : GoodFun ℕ+), f = C • g ∧ ∃ d : ℕ+, d > 1 ∧
       ∃ N, ∀ n ≥ N, g n = if d.val ∣ n then 2 else 1) := by
   obtain ⟨M, ⟨N, hN⟩, ⟨d, hd⟩⟩ := exists_limsup_and_dvd_map_iff h
   apply d.one_le.eq_or_lt.imp
@@ -337,10 +354,10 @@ theorem exists_smul_eventually_eq_one_or_one_two {f : GoodFun} (h : ∃ N, ∀ n
     exact (GoodFun.ext_iff.mp hg n).symm
 
 /-- Main characterization lemma. -/
-theorem exists_smul_id_or_eventually_eq_one_or_one_two (f : GoodFun) :
+theorem exists_smul_id_or_eventually_eq_one_or_one_two (f : GoodFun ℕ+) :
     (∃ C : ℕ+, f = C • GoodFun.id) ∨
-    (∃ (C : ℕ+) (g : GoodFun), f = C • g ∧ ∃ N, ∀ n ≥ N, g n = 1) ∨
-    (∃ (C : ℕ+) (g : GoodFun), f = C • g ∧ ∃ d : ℕ+, d > 1 ∧
+    (∃ (C : ℕ+) (g : GoodFun ℕ+), f = C • g ∧ ∃ N, ∀ n ≥ N, g n = 1) ∨
+    (∃ (C : ℕ+) (g : GoodFun ℕ+), f = C • g ∧ ∃ d : ℕ+, d > 1 ∧
       ∃ N, ∀ n ≥ N, g n = if d.val ∣ n then 2 else 1) :=
   (forall_or_exists_not λ N ↦ ∃ n, N < f n).imp eq_smul_id_of_unbounded
     λ h ↦ exists_smul_eventually_eq_one_or_one_two (by simpa using h)
@@ -354,7 +371,7 @@ end GoodFun
 /-! ### Final solution -/
 
 /-- Final solution -/
-theorem final_solution (f : GoodFun) : ∃ m, ∀ n, f m ∣ f n := by
+theorem final_solution (f : GoodFun ℕ+) : ∃ m, ∀ n, f m ∣ f n := by
   obtain ⟨C, rfl⟩ | ⟨C, g, rfl, N, hN⟩ | ⟨C, g, rfl, d, hd, N, hN⟩ :=
     f.exists_smul_id_or_eventually_eq_one_or_one_two
   ---- Case 1: `f(n) = f(1) n`
