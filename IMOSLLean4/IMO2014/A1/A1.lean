@@ -35,6 +35,7 @@ theorem d_one (z : ℕ → ℤ) : d z 1 = z 0 := by
   rw [d_succ, sum_range_one, Int.ofNat_zero, Int.zero_mul, Int.sub_zero]
 
 variable {z : ℕ → ℤ} (h : StrictMono z)
+include h
 
 theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
   have X : (n : ℤ) * (z n + 1) = n * z n + n := by rw [Int.mul_add, Int.mul_one]
@@ -55,6 +56,7 @@ theorem d_nonpos_mono (h0 : d z n ≤ 0) : (h1 : n ≤ k) → d z k ≤ 0 :=
   Nat.le_induction h0 (λ x _ h2 ↦ (main_lemma h x).trans <|
     Int.sub_nonpos_of_le (h2.trans <| Int.ofNat_zero_le x)) k
 
+omit h in
 theorem d_one_pos (h0 : 0 < z 0) : 0 < d z 1 :=
   h0.trans_eq (d_one z).symm
 
@@ -63,6 +65,7 @@ def greatestDPos (_ : StrictMono z) : ℕ :=
   Nat.findGreatest (0 < d z ·) (z 0).natAbs.succ
 
 variable (h0 : 0 < z 0)
+include h0
 
 theorem greatestDPos_is_d_pos : 0 < d z (greatestDPos h) :=
   Nat.findGreatest_spec (P := λ n ↦ 0 < d z n) (Nat.succ_pos _) (d_one_pos h0)

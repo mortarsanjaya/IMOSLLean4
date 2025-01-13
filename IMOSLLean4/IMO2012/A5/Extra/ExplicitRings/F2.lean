@@ -65,7 +65,7 @@ protected theorem add_assoc : ∀ x y z : 𝔽₂, x + y + z = x + (y + z)
   | I, I, O => rfl
   | I, I, I => rfl
 
-protected theorem add_left_neg : ∀ x : 𝔽₂, -x + x = 0
+protected theorem neg_add_cancel : ∀ x : 𝔽₂, -x + x = 0
   | O => rfl
   | I => rfl
 
@@ -74,11 +74,11 @@ instance : AddCommGroup 𝔽₂ :=
     zero_add := 𝔽₂.zero_add
     add_zero := 𝔽₂.add_zero
     add_comm := 𝔽₂.add_comm
-    add_left_neg := 𝔽₂.add_left_neg
+    neg_add_cancel := 𝔽₂.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
 
-instance : CharTwo 𝔽₂ := ⟨add_left_neg⟩
+instance : CharTwo 𝔽₂ := ⟨neg_add_cancel⟩
 
 
 
@@ -146,11 +146,11 @@ theorem cast_add [AddMonoidWithOne R] [CharTwo R] :
   | I, O => (add_zero 1).symm
   | I, I => (CharTwo.add_self_eq_zero 1).symm
 
-variable [NonAssocSemiring R] [CharTwo R]
-
-theorem cast_mul : ∀ x y : 𝔽₂, cast (R := R) (x * y) = cast x * cast y
+theorem cast_mul [NonAssocSemiring R] : ∀ x y : 𝔽₂, cast (R := R) (x * y) = cast x * cast y
   | O, _ => (zero_mul _).symm
   | I, _ => (one_mul _).symm
+
+variable [NonAssocSemiring R] [CharTwo R]
 
 def castRingHom : 𝔽₂ →+* R :=
   { toFun := cast

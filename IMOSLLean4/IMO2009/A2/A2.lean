@@ -53,7 +53,7 @@ theorem ring_ineq2 {a b c : R} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) :
     2 ^ 3 * (a * b * c) ≤ (a + b) * (b + c) * (c + a) := by
   have X {x y : R} : 0 ≤ x → 0 ≤ y → 0 ≤ x * y := mul_nonneg
   have Y {x y : R} : 0 ≤ x → 0 ≤ y → 0 ≤ x + y := add_nonneg
-  apply le_of_pow_le_pow_left (Nat.succ_ne_zero 1) (X (X (Y ha hb) (Y hb hc)) (Y hc ha))
+  apply le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) (X (X (Y ha hb) (Y hb hc)) (Y hc ha))
   replace Y (x : R) : 0 ≤ x ^ 2 := sq_nonneg x
   let Z := ring_ineq1 (R := R)
   have Y2 := Y 2
@@ -68,7 +68,7 @@ theorem ring_ineq3 {a b c : R} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) :
     (2 ^ 3) * ((a + b + c) * (a * b + b * c + c * a))
       ≤ (3 * 3) * ((a + b) * (b + c) * (c + a)) := by
   have X : (3 * 3 : R) = 2 ^ 3 + 1 := by norm_num
-  rw [X, add_one_mul (α := R), ← ring_identity1, mul_add, add_le_add_iff_left]
+  rw [X, add_one_mul, ← ring_identity1, mul_add, add_le_add_iff_left]
   exact ring_ineq2 ha hb hc
 
 theorem ring_ineq4 (a b c : R) :
@@ -89,6 +89,7 @@ end
 section
 
 variable [Field F] {a b c : F} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
+include ha hb hc
 
 theorem field_identity1 : (a * b)⁻¹ + (b * c)⁻¹ + (c * a)⁻¹ = (a + b + c) / (a * b * c) := by
   have hab : a * b ≠ 0 := mul_ne_zero ha hb
@@ -107,12 +108,13 @@ end
 /-! ### Field inequalities -/
 
 variable [LinearOrderedField F] {a b c : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
+include ha hb hc
 
 theorem field_ineq1 : ((2 * a + b + c) ^ 2)⁻¹ ≤ (2 ^ 2 * ((a + b) * (a + c)))⁻¹ := by
   rw [two_mul, add_assoc, add_add_add_comm]
   have hab : 0 < a + b := add_pos ha hb
   have hac : 0 < a + c := add_pos ha hc
-  refine (inv_le_inv (pow_pos (add_pos hab hac) 2) ?_).mpr (ring_ineq1 _ _)
+  refine (inv_le_inv₀ (pow_pos (add_pos hab hac) 2) ?_).mpr (ring_ineq1 _ _)
   exact mul_pos (pow_pos (zero_lt_two' F) 2) (mul_pos hab hac)
 
 theorem field_ineq2 :
@@ -135,7 +137,7 @@ theorem field_ineq3 :
   have h := mul_pos (mul_pos (add_pos ha hb) (add_pos hb hc)) (add_pos hc ha)
   have h0 := mul_pos (pow_pos (zero_lt_two' F) 3) (ring_ineq5 ha hb hc)
   rw [X, mul_assoc 2, mul_comm, ← div_div, mul_comm 2, ← div_div _ _ 2,
-    div_le_div_right (zero_lt_two' F), div_le_div_iff h h0, mul_left_comm]
+    div_le_div_iff_of_pos_right (zero_lt_two' F), div_le_div_iff₀ h h0, mul_left_comm]
   exact ring_ineq3 ha.le hb.le hc.le
 
 theorem field_ineq4 :

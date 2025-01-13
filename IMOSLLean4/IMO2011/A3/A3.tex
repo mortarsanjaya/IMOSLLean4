@@ -1,4 +1,4 @@
-Let $R$ be a commutative ring such that multiplication by $2$ is injective.
+Let $R$ be an integral domain such that $2 \neq 0$ in $R$.
 Determine all pairs of functions $(f, g) : R \to R$ such that for any $x, y \in R$,
 \[ g(f(x + y)) = f(x) + (2x + y) g(y). \tag{*}\label{2011a3-eq0} \]
 
@@ -6,9 +6,7 @@ Determine all pairs of functions $(f, g) : R \to R$ such that for any $x, y \in 
 
 \subsection*{Answer}
 
-Let $\phi : R_1 \times R_2 \cong R$ be an isomorphism of rings.
-Define $f$ and $g$ by $f(\phi(x, y)) = (x^2 + c, 0)$ and $g(\phi(x, y)) = (x, 0)$ for all $x \in R_1$ and $y \in R_2$, where $c \in R_1$ is fixed.
-Then $(f, g)$ satisfies~\eqref{2011a3-eq0}, and all functions satisfying~\eqref{2011a3-eq0} are of this form for some ring isomorphism $R_1 \times R_2 \cong R$ and $c \in R_1$
+$(0, 0)$ and $(x^2 + c, x)$ for some constant $c$.
 
 
 
@@ -44,11 +42,9 @@ Then \[ CA = (CA + B)A = CA + BA = CA - B \implies B = 0. \]
 Thus, we have $f(x) = x^2 A + C$ and $g(x) = xA$ where $A^2 = A$ and $CA = C$.
 Since $R$ is commutative, one can check that this $(f, g)$ always works.
 
-Since $A^2 = A$ and clearly $\langle A - 1, A \rangle = 1$, by Chinese Remainder Theorem,
-\[ R \cong R/\langle A \rangle \times R/\langle A - 1 \rangle. \]
-That is, there is an isomorphism $\phi : R \cong R_1 \times R_2$ sending $A$ to $(1, 0)$.
-Since $CA = C$, $\phi(C) = (c, 0)$ for some $c \in R_1$.
-Then one can check that $f(x, y) = (x^2 + c, 0)$ and $g(x, y) = (x, 0)$ for any $x \in R_1$ and $y \in R_2$.
+If $R$ is an integral domain, then $A \in \{0, 1\}$, and $A = 0$ yields $C = 0$.
+Plugging back into the formula for $f$ and $g$ yields the two classes of pairs.
+
 
 
 \subsection*{Further directions}

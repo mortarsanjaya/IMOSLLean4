@@ -108,7 +108,7 @@ theorem discrete_counterexample (h : ¬DenselyOrdered G) :
   let f := λ x ↦ if x = 0 then -g else if x = g then g else -x
   refine ⟨f, λ h1 ↦ ?_, λ x y ↦ ?_⟩
   · apply (h1 0 g hg.le).not_lt; dsimp only [f]
-    rwa [if_pos rfl, neg_add_self, if_neg hg.ne.symm, if_pos rfl, add_zero]
+    rwa [if_pos rfl, neg_add_cancel, if_neg hg.ne.symm, if_pos rfl, add_zero]
   ---- Finally, prove that `f` is good
   simp only [f]; split_ifs
   -- Case 1: `x = 0` and `y = 0`
@@ -116,7 +116,7 @@ theorem discrete_counterexample (h : ¬DenselyOrdered G) :
     exact absurd rfl h0.ne
   -- Case 2: `x = 0` and `y = g`
   · subst x y; rintro -
-    exact ⟨(neg_add_self g).le, hg.le.trans_eq (add_zero g).symm⟩
+    exact ⟨(neg_add_cancel g).le, hg.le.trans_eq (add_zero g).symm⟩
   -- Case 3: `x = 0` and `y ∉ {0, g}`
   · subst x; intro h0
     rw [hg0, add_zero, neg_add_cancel_comm, le_neg_self_iff] at h0
@@ -125,7 +125,7 @@ theorem discrete_counterexample (h : ¬DenselyOrdered G) :
   -- Case 4: `x = g` and `y = 0`
   · subst x y; intro h0
     refine absurd ?_ h0.not_lt
-    rwa [neg_add_self, add_zero]
+    rwa [neg_add_cancel, add_zero]
   -- Case 5: `x = g` and `y = g`
   · subst x y; intro h0
     exact absurd rfl h0.ne

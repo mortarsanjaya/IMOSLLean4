@@ -28,16 +28,12 @@ However, the official solution essentially proves that $S$ is a ring.
 namespace IMOSL
 namespace IMO2012A7
 
-/-- Curry-ed version of `MvPolynomial.eval` -/
-abbrev MvPolynomial_evalCurry [CommRing R] : MvPolynomial σ R →+* ((σ → R) → R) :=
-  Pi.ringHom MvPolynomial.eval
-
-/-- The image of `MvPolynomial σ R` in `(σ → R) → R` as a ring -/
+/-- The image of `MvPolynomial σ R` in `(σ → R) → R` as a ring. -/
 abbrev MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → R) :=
-  (MvPolynomial_evalCurry (R := R) (σ := σ)).range
+  (Pi.ringHom (MvPolynomial.eval (R := R) (σ := σ))).range
 
 /-- Final solution -/
 theorem final_solution (σ R) [LinearOrderedCommRing R] :
     ∃ T : Subring ((σ → R) → R), T.carrier =
-      setOf (BinOpClosure Sup.sup (BinOpClosure Inf.inf (· ∈ MvPolynomial_image σ R))) :=
+      setOf (BinOpClosure Max.max (BinOpClosure Min.min (· ∈ MvPolynomial_image σ R))) :=
   ⟨_, MetaClosure.PiSubring_mk_carrier _⟩

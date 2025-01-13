@@ -40,7 +40,7 @@ theorem final_solution {f : Int → Int} :
     · simp only [h2, Int.zero_mul, Int.zero_add] at h1
       rw [h1, ← h1 (-1)]; exact Int.eq_of_sub_eq_zero h2
     · specialize h0 x
-      rwa [h1, h1 (f x), Int.add_right_inj, Int.mul_eq_mul_left_iff h2, eq_comm] at h0,
+      rwa [h1, h1 (f x), Int.add_left_inj, Int.mul_eq_mul_left_iff h2, eq_comm] at h0,
   ---- `←`
   λ h x y ↦ by
     rcases h with rfl | rfl

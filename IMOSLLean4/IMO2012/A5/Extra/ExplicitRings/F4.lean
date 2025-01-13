@@ -120,7 +120,7 @@ protected theorem add_assoc : ∀ x y z : 𝔽₄, x + y + z = x + (y + z)
   | Y, Y, X => rfl
   | Y, Y, Y => rfl
 
-protected theorem add_left_neg : ∀ x : 𝔽₄, -x + x = 0
+protected theorem neg_add_cancel : ∀ x : 𝔽₄, -x + x = 0
   | O => rfl
   | I => rfl
   | X => rfl
@@ -131,11 +131,11 @@ instance : AddCommGroup 𝔽₄ :=
     zero_add := 𝔽₄.zero_add
     add_zero := 𝔽₄.add_zero
     add_comm := 𝔽₄.add_comm
-    add_left_neg := 𝔽₄.add_left_neg
+    neg_add_cancel := 𝔽₄.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
 
-instance : CharTwo 𝔽₄ := ⟨add_left_neg⟩
+instance : CharTwo 𝔽₄ := ⟨neg_add_cancel⟩
 
 
 
@@ -270,6 +270,7 @@ theorem cast_add (r : R) : ∀ x y : 𝔽₄, cast r (x + y) = cast r x + cast r
   | Y, Y => (add_self_eq_zero _).symm
 
 variable {r : R} (h : r * r + r = 1)
+include h
 
 theorem cast_mul : ∀ x y : 𝔽₄, cast r (x * y) = cast r x * cast r y
   | O, _ => (zero_mul _).symm

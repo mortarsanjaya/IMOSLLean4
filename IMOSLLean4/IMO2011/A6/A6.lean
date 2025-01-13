@@ -30,7 +30,7 @@ theorem final_solution [LinearOrderedCommRing R]
   replace h0 (x : R) : x * f x ≤ 0 := by
     have h1 := h0 x (f x + f x)
     rwa [sub_add_cancel_left, sub_mul, neg_mul, mul_comm,
-      ← add_sub_assoc, neg_add_self, zero_sub, neg_nonneg] at h1
+      ← add_sub_assoc, neg_add_cancel, zero_sub, neg_nonneg] at h1
   have h1 (x : R) : f x ≤ f (f x) := by
     have h1 := h x 0; rwa [add_zero, zero_mul, zero_add] at h1
   replace h1 (x : R) : f x ≤ 0 :=

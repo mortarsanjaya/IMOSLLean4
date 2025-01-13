@@ -17,7 +17,9 @@ namespace IMOSL
 namespace IMO2012A5
 namespace 𝔽₂X
 
-variable [Semiring R] [Extra.CharTwo R] (r : R)
+section
+
+variable [Semiring R] (r : R)
 
 def cast (P : 𝔽₂X) : R := P.toFinset.sum λ n ↦ r ^ n
 
@@ -33,6 +35,13 @@ theorem cast_one : cast r 1 = 1 :=
   (cast_Xpow r 0).trans (pow_zero r)
 
 theorem cast_zero : cast r 0 = 0 := rfl
+
+end
+
+
+section
+
+variable [Semiring R] [Extra.CharTwo R] (r : R)
 
 theorem cast_add (P Q : 𝔽₂X) : cast r (P + Q) = cast r P + cast r Q :=
   Extra.CharTwo.symmDiff_sum_eq _ _ _
@@ -59,3 +68,5 @@ def castRingHom : 𝔽₂X →+* R :=
     map_mul' := cast_mul r
     map_zero' := cast_zero r
     map_add' := cast_add r }
+
+end

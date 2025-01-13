@@ -1,0 +1,77 @@
+Let $f : \N^+ \to \N^+$ be a function such that $f(m + n) \mid f(m) + f(n)$ for all $m, n \in \N^+$.
+Prove that there exists $n \in \N^+$ such that $f(n) \mid f(n)$ for all $n \in \N^+$.
+
+
+
+\subsection*{Solution}
+
+We only use the first lemma and a bit of similar idea for the unbounded case from the official solution.
+Afterwards, we proceed on our own, and we prove more properties.
+Specifically, we show that one of the following holds:
+\begin{itemize}
+    \item   $f(n) = f(1) n$ for all $n \in \N^+$;
+    \item   $f$ is eventually constant;
+    \item   there exists $d > 1$ and $N, c \in \N^+$ such that for all $n \geq N$,
+            \[ f(n) = \begin{cases} 2c, & d \mid n, \\ c, & d \nmid n. \end{cases} \]
+\end{itemize}
+In the second case, if $f(n) = c$ for all $n$ big enough, then we claim that $c \mid f(n)$ for all $n$.
+In the third case, we also claim that $c \mid f(n)$ for all $n$.
+Both are easy to prove via downwards induction or via the following claim.
+
+\begin{claim}
+For any $c \in \N^+$, if the set $S = \{n \in \N^+ : c \mid f(n)\}$ is infinite, then it is of form $d \N^+ = \{nd : n \in \N^+\}$ for some $d \in \N^+$. 
+\end{claim}
+\begin{proof}
+Notice that for any $m, n \in \N^+$, if $m, m + n \in S$, then $n \in S$, which follows from the given condition on $f$.
+By downwards induction, for any $m, n \in S$ and $k \leq n$ with $k \equiv n \pmod{m}$, we also have $k \in S$.
+
+Now take $d = \min(S)$ and claim that $S \subseteq d \N^+$.
+Otherwise, for some $n \in S$, we get $n \% d \in S$ with $0 < n \% d < d$, where $n \% d$ is the remainder of $n$ divided by $d$.
+Conversely, for any $n$, since $S$ is infinite, there exists $N \geq n$ such that $Nd \in S$.
+Then the first paragraph yields $nd \in S$, which implies $d \N^+ \subseteq S$ and thus $S = d \N^+$.
+\end{proof}
+
+First, consider the case where $f$ is unbounded, and let $a = f(1)$.
+By induction, it is easy to see that $f(n) \leq an$ for all $n \in \N^+$.
+We now claim that $f(n) = an$ for all $n \in \N^+$.
+By using induction, it suffices to show that $f(n + 1) = f(n) + f(1)$ for all $n \in \N^+$.
+
+Let $N$ be the minimal positive integer satisfying $f(N) > a(2n + 1)$.
+Since $f(N) \leq aN$, we have $N > 2n + 1$.
+By minimality, we have $f(m) \leq a(2n + 1) < f(N)$ for all $m < N$.
+In particular, we get $f(N) \mid f(m) + f(N - m) < 2 f(N)$, so $f(m) + f(N - m) = f(N)$ for each $m < N$.
+From this, we get
+\[ an = f(n) + f(N - n) = f(n + 1) + f(N - n - 1). \]
+It remains to show that $f(N - n) = f(N - n - 1) + a$.
+Indeed, we know that $f(N - n) \mid f(N - n - 1) + a$.
+On the other hand, $f(N - n) + f(n) \geq f(N) > a(2n + 1)$, so $f(N - n) > a(n + 1)$.
+Also, minimality yields $f(N - n - 1) + a \leq a(2n + 1) + a = 2a(n + 1)$.
+Thus $2 f(N - n) > f(N - n - 1) + a$, which yields $f(N - n) = f(N - n - 1) + a$, as desired.
+
+Now we consider the case where $f$ is bounded.
+Then there exists at least one value of $f$ that is attained infinitely many times.
+Let $M$ be the maximal such value, and pick some $N$ such that $f(n) \leq M$ for all $n \geq N$.
+By our choice of $M$, equality happens infinitely many times.
+Using the first claim on $\{n \in \N^+ : M \mid f(n)\}$, there exists $d \in \N^+$ such that $M \mid f(n) \iff d \mid n$.
+For $n \geq N$, this yields $f(n) = M \iff d \mid n$.
+If $d = 1$, then indeed $f$ is eventually constant, so now assume that $d > 1$.
+If $d > 1$, we claim that $M$ is even and $f(n) = M/2$ for all $n \geq N$ such that $d \nmid n$.
+
+Fix some $k, m \geq N$ such that $d \mid k + m$ and $d \nmid k$.
+Then $f(k + m) = M > f(k), f(m)$, we get $f(k) + f(m) = M$.
+The same holds with $k$ replaced by $k + Nd$, so
+\[ f(k) + f(m) = f(k + Nd) + f(m) = M \implies f(k) = f(k + Nd). \]
+Since $Nd \geq N$, we have $f(Nd) = M$, so the above yields
+\[ f(k) = f(k + Nd) \mid f(k) + M \iff f(k) \mid M = f(k) + f(m) \iff f(k) \mid f(m). \]
+By symmetry, $f(m) \mid f(k)$ as well, yielding $f(k) = f(m)$.
+Since $2 f(k) = f(k) + f(m) = M$, we get $f(k) = M/2$.
+We get $f(n) = M/2$ for all $n \geq N$ with $d \mid n$ by taking $k = n$ and $M = n(d - 1)$.
+
+
+
+\subsection*{Extra notes}
+
+On the other hand, it is quite obvious that any one of the three conditions "almost" suffice to imply that $f$ satisfies the given property.
+The function $f(n) = an$ and any constant function works.
+The periodic function $f$ defined by $f(n) = 2$ if $d \mid n$ and $f(n) = 1$ otherwise also satisfy the given condition.
+It is not hard either to modify the first few terms of all these functions to get another function that satisfies the given condition.

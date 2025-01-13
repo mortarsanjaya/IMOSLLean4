@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Data.Nat.GCD.Basic
 
 /-!
 # IMO 2012 N3
@@ -51,7 +52,7 @@ theorem final_solution (h : 1 < m) :
     suffices k = 0 by rwa [this, mul_zero, zero_add, mul_one]
     by_contra h1; apply prime_binom_not_dvd h2 h1
     specialize h0 (p * k)
-    rw [mul_add_one (α := ℕ), mul_left_comm, Nat.add_sub_cancel_left] at h0
+    rw [Nat.mul_add_one, Nat.mul_left_comm, Nat.add_sub_cancel_left] at h0
     exact h0 (Nat.le_add_right (p * (2 * k)) p)
   ---- If `m` is prime, then `m` is "good"
   · rcases Nat.exists_eq_add_of_le h1 with ⟨c, rfl⟩
@@ -65,7 +66,7 @@ theorem final_solution (h : 1 < m) :
     · exact Nat.dvd_refl 0
     -- `c, n > 0`
     · refine (Nat.Coprime.dvd_mul_right ?_).mp ⟨_, (n.succ_mul_choose_eq c).symm⟩
-      rw [two_mul, add_assoc] at h0
+      rw [Nat.two_mul, Nat.add_assoc] at h0
       rw [← Nat.coprime_self_add_right, ← Nat.coprime_self_add_right,
         Nat.coprime_comm, h0.coprime_iff_not_dvd]
       exact Nat.not_dvd_of_pos_of_lt n.succ_pos (Nat.lt_add_of_pos_right (n.succ + c).succ_pos)

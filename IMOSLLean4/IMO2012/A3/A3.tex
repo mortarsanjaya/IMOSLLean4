@@ -1,0 +1,23 @@
+Let $R$ be a totally ordered commutative ring and $x_0, x_1, \ldots, x_n \in R$ (with $n \geq 1$) be positive elements such that $x_0 x_1 \ldots x_n = 1$.
+Prove that \[ (1 + x_0)^2 (1 + x_1)^3 \ldots (1 + x_n)^{n + 2} > (n + 2)^{n + 2}. \]
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2012SL.pdf}
+
+We follow the official solution, but we avoid the given substitution.
+
+By Bernoulli's inequality, for any $n \in \N$ and $x, y \in R$ with $x > 0$ and $x + y > 0$,
+\[ (x + y)^{n + 1} \geq x^n (x + (n + 1) y), \]
+    with equality iff $n = 0$ or $y = 0$.
+Now replace $x$ with $n + 1$ and $y$ with $ny - 1$.
+We get that for all $n > 0$ and $y > -1$,
+\[ (n + ny)^{n + 1} \geq (n + 1)^n \cdot (n + 1) ny \iff n^n (1 + y)^{n + 1} \geq (n + 1)^{n + 1} y, \]
+    with equality iff $ny = 1$.
+Applying this inequality $n + 1$ times yield
+\[ \prod_{k = 0}^n (1 + x_k)^{k + 2} \geq (n + 2)^{n + 2} x_0 x_1 \ldots x_n, \]
+    with equality iff $(k + 1) x_k = 1$ for each $k \leq n$.
+Clearly, this can't happen if $x_0 x_1 \ldots x_n = 1$.
+The strict inequality is the desired inequality; we are done.

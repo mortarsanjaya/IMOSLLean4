@@ -24,8 +24,8 @@ open scoped Classical
 def good (f g : ℕ → ℕ) := ∀ n : ℕ, f (g n) = (f n).succ
 
 
-
-variable {f g : ℕ → ℕ} (h : good f g)
+variable {f g : ℕ → ℕ} (h : good f g) (h0 : good g f)
+include h
 
 lemma lem1 : ∃ a, ∀ k, (∃ x, f x = k) ↔ a ≤ k := by
   have h0 : ∃ n, ∃ x, f x = n := ⟨f 0, 0, rfl⟩
@@ -39,7 +39,7 @@ lemma lem3 (h0 : ∀ k, (∃ x, g x = k) ↔ a ≤ k) : a < g a :=
   (lt_or_eq_of_le <| (h0 (g a)).mp ⟨a, rfl⟩).resolve_right
     λ h1 ↦ (f a).succ_ne_self <| (h a).symm.trans (congr_arg f h1.symm)
 
-variable (h0 : good g f)
+include h0
 
 lemma lem4 (h1 : ∃ x, f x = k) (h2 : ∃ y, f y = m) (h3 : f k = f m) : k = m := by
   rcases h1 with ⟨x, rfl⟩; rcases h2 with ⟨y, rfl⟩
@@ -73,7 +73,7 @@ lemma lem7 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
   exact ⟨y, rfl⟩
 
 /-- Final solution -/
-theorem final_solution {f g : ℕ → ℕ} (h : good f g) (h0 : good g f) : f = g := by
+theorem final_solution : f = g := by
   obtain ⟨a, h1, h2⟩ := lem6 h h0
   suffices h3 : ∀ n, a ≤ n → f n = n.succ ∧ g n = n.succ by
     ext x; rw [← Nat.succ_inj', ← h, (h3 _ <| (h2 _).mp ⟨x, rfl⟩).1]

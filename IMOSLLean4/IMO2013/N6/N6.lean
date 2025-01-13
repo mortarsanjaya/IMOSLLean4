@@ -26,7 +26,7 @@ theorem good_const (C : ℤ) : good (λ _ ↦ C) := λ _ _ _ _ ↦ rfl
 theorem good_floor : good Int.floor := λ x a b hb ↦ by
   refine Int.floor_congr λ n ↦ ?_
   replace hb : 0 < (b : ℚ) := Nat.cast_pos.mpr hb
-  rw [← Int.cast_add, ← Int.floor_add_int, le_div_iff hb, le_div_iff hb,
+  rw [← Int.cast_add, ← Int.floor_add_int, le_div_iff₀ hb, le_div_iff₀ hb,
     ← Int.cast_natCast, ← Int.cast_mul, Int.cast_le, Int.le_floor]
 
 theorem good_neg_map_neg (hf : good f) : good (λ x ↦ -f (-x)) := λ x a b hb ↦ by
@@ -43,6 +43,7 @@ theorem good_ceil : good Int.ceil :=
 section
 
 variable (hf : good f)
+include hf
 
 lemma const_of_not_int_id {n : ℤ} (h : f n ≠ n) : ∃ C, f = λ _ ↦ C := by
   rw [← sub_ne_zero] at h
@@ -69,6 +70,7 @@ lemma const_of_not_int_id {n : ℤ} (h : f n ≠ n) : ∃ C, f = λ _ ↦ C := b
   rwa [Nat.cast_one, div_one, div_one, Int.cast_zero, add_zero, h0, add_zero, eq_comm] at hf
 
 variable (h : ∀ n : ℤ, f n = n)
+include h
 
 lemma int_id_map_add_int (x : ℚ) (a : ℤ) : f (x + a) = f x + a := by
   specialize hf x a 1 Nat.one_pos
@@ -91,7 +93,7 @@ lemma eq_floor_of_map_half_nonpos (h0 : f 2⁻¹ ≤ 0) : f = Int.floor := by
       rw [sub_pos, ← Int.zero_add 1, Int.lt_add_one_iff]
       exact mul_nonpos_of_nonneg_of_nonpos zero_le_two h0
     specialize hf 2⁻¹ (-f 2⁻¹) (1 - 2 * f 2⁻¹).natAbs (Int.natAbs_pos.mpr h0.ne.symm)
-    rw [Int.cast_neg, add_neg_self, zero_div, Int.cast_natAbs, abs_eq_self.mpr h0.le,
+    rw [Int.cast_neg, add_neg_cancel, zero_div, Int.cast_natAbs, abs_eq_self.mpr h0.le,
       inv_eq_one_div, ← sub_eq_add_neg, div_sub' _ _ _ two_ne_zero, one_div] at hf
     have h1 : (1 - 2 * f 2⁻¹ : ℚ) = (1 - 2 * f 2⁻¹ : ℤ) := by
       rw [Int.cast_sub, Int.cast_mul, Int.cast_one, Int.cast_two]

@@ -23,18 +23,19 @@ namespace IMO2012A5
 def SqSubring (R) [CommRing R] : Subring R :=
   let R₂ := AddSubgroup.closure (Set.range λ x : R ↦ x ^ 2)
   { R₂ with
+    one_mem' := AddSubgroup.subset_closure ⟨1, one_pow 2⟩
     mul_mem' :=
       have h1 : 0 ∈ R₂ := AddSubgroup.subset_closure ⟨0, zero_pow (Nat.succ_ne_zero 1)⟩
-      λ h h0 ↦ AddSubgroup.closure_induction₂ h h0
-        (λ _ ⟨c, h2⟩ _ ⟨d, h3⟩ ↦ h2 ▸ h3 ▸ mul_pow c d 2 ▸
+      AddSubgroup.closure_induction₂
+        (λ _ _ ⟨c, h2⟩ ⟨d, h3⟩ ↦ h2 ▸ h3 ▸ mul_pow c d 2 ▸
           AddSubgroup.subset_closure ⟨c * d, rfl⟩)
-        (λ x ↦ (zero_mul x).symm ▸ h1)
-        (λ x ↦ (mul_zero x).symm ▸ h1)
-        (λ x₁ x₂ y ↦ add_mul x₁ x₂ y ▸ R₂.add_mem)
-        (λ x y₁ y₂ ↦ mul_add x y₁ y₂ ▸ R₂.add_mem)
-        (λ x y ↦ neg_mul x y ▸ R₂.neg_mem)
-        (λ x y ↦ mul_neg x y ▸ R₂.neg_mem)
-    one_mem' := AddSubgroup.subset_closure ⟨1, one_pow 2⟩ }
+        (λ x _ ↦ (zero_mul x).symm ▸ h1)
+        (λ x _ ↦ (mul_zero x).symm ▸ h1)
+        (λ x₁ x₂ y _ _ _ ↦ add_mul x₁ x₂ y ▸ R₂.add_mem)
+        (λ x₁ x₂ y _ _ _ ↦ mul_add y x₁ x₂ ▸ R₂.add_mem)
+        (λ x y _ _ ↦ neg_mul x y ▸ R₂.neg_mem)
+        (λ x y _ _ ↦ mul_neg x y ▸ R₂.neg_mem) }
+
 
 
 variable [CommRing R]

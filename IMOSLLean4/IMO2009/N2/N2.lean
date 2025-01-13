@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.NumberTheory.ArithmeticFunction
+import Mathlib.Data.Nat.Bits
 
 /-!
 # IMO 2009 N2
@@ -26,8 +27,7 @@ open ArithmeticFunction
 /-! ### Part 1 -/
 
 lemma Even_iff_bodd {k : ℕ} : Even k ↔ k.bodd = false := by
-  rw [Nat.even_iff, Nat.mod_two_of_bodd, Bool.cond_eq_ite,
-    Nat.one_ne_zero.ite_eq_right_iff, Bool.bool_iff_false]
+  rw [Nat.even_iff, Nat.mod_two_of_bodd, Bool.toNat_eq_zero]
 
 /-- Final solution, part 1 -/
 theorem final_solution_part1 (N) : ∃ a b, a ≠ b ∧ ∀ k < N, Even (Ω ((a + k) * (b + k))) := by
@@ -55,8 +55,7 @@ lemma eventually_const_of_map_succ_eq {f : ℕ → α} (h : ∀ k, a ≤ k → f
   Nat.le_induction rfl λ k h0 ↦ (h k h0).symm.trans
 
 lemma exists_lt_omega_bodd_ne_succ (a) : ∃ b, a ≤ b ∧ (Ω b).bodd ≠ (Ω b.succ).bodd := by
-  by_contra h; rw [not_exists] at h
-  simp only [not_and, not_not] at h
+  by_contra h; simp only [not_exists, not_and, not_not] at h
   rcases a.exists_infinite_primes with ⟨p, h0, h1⟩
   apply absurd (eventually_const_of_map_succ_eq h
     p (p * p) h0 (h0.trans (Nat.le_mul_self p)))
@@ -78,4 +77,4 @@ theorem final_solution_part2 (h : ∀ k, Even (Ω ((a + k) * (b + k)))) : a = b 
   have h2 := c.succ_ne_zero
   rwa [cardFactors_mul (Nat.mul_ne_zero h0 h2) (Nat.mul_ne_zero h1 h2),
     cardFactors_mul h0 h2, cardFactors_mul h1 h2, Nat.bodd_add,
-    bne_eq_false_iff_eq, Nat.bodd_add, Nat.bodd_add, Bool.xor_right_inj] at h
+    bne_eq_false_iff_eq, Nat.bodd_add, Nat.bodd_add, Bool.xor_left_inj] at h

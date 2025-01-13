@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Nat.Squarefree
+import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2023 N7

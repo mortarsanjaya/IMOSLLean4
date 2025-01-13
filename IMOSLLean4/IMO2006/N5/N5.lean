@@ -25,7 +25,7 @@ theorem FiniteField_prime_geom_sum_eq_zero_imp [Field F] [Fintype F] [DecidableE
   rw [geom_sum_eq hx, div_eq_zero_iff, or_iff_left (sub_ne_zero_of_ne hx), sub_eq_zero] at h
   haveI : Fact p.Prime := ⟨hp⟩
   have h0 : x ≠ 0 := λ h0 ↦ absurd h (by rw [h0, zero_pow hp.ne_zero]; exact zero_ne_one' F)
-  let xᵤ : Fˣ := ⟨x, x⁻¹, mul_inv_cancel h0, inv_mul_cancel h0⟩
+  let xᵤ : Fˣ := ⟨x, x⁻¹, mul_inv_cancel₀ h0, inv_mul_cancel₀ h0⟩
   have h1 : orderOf xᵤ = p := orderOf_eq_prime (Units.eq_iff.mp h) (mt Units.eq_iff.mpr hx)
   rw [← h1, ← Fintype.card_units]; exact orderOf_dvd_card
 
@@ -84,7 +84,8 @@ theorem Int_dvd_prime_geom_sum_imp (hp : Nat.Prime p)
 
 /-- Final solution -/
 theorem final_solution {p : ℕ} (hp : p.Prime) (h : 3 < p) (x y : ℤ) :
-    ¬(range p).sum (x ^ ·) = y ^ (p - 2) - 1 := λ h0 ↦ by
+    ¬(range p).sum (x ^ ·) = y ^ (p - 2) - 1 := by
+  intro h0
   have h1 : Odd p := hp.eq_two_or_odd'.resolve_left (Nat.lt_of_succ_lt h).ne.symm
   have h2 : 0 < (range (p - 2)).sum (y ^ ·) :=
     (Nat.Odd.sub_even hp.two_le h1 even_two).geom_sum_pos
@@ -116,7 +117,7 @@ theorem final_solution {p : ℕ} (hp : p.Prime) (h : 3 < p) (x y : ℤ) :
   · rw [sub_sub, ← CharP.intCast_eq_zero_iff (ZMod p), Int.cast_sub,
       sub_eq_zero, one_add_one_eq_two, Int.cast_two] at h3
     replace h2 : 0 < y ^ (p - 2) - 1 :=
-      sub_pos_of_lt (one_lt_pow (lt_of_sub_pos h1) X.ne.symm)
+      sub_pos_of_lt (one_lt_pow₀ (lt_of_sub_pos h1) X.ne.symm)
     specialize h0 h2 (dvd_refl _)
     rw [← CharP.intCast_eq_zero_iff (ZMod p), ← CharP.intCast_eq_zero_iff (ZMod p),
       Int.cast_sub, Int.cast_sub, Int.cast_sub, Int.cast_one, Int.cast_pow, h3,

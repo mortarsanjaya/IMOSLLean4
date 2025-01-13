@@ -43,7 +43,7 @@ lemma lemma1_strict {a b c : R} (h : c ^ 2 + 1 ≤ a * b) :
     (b + 2 * c) ^ 2 + 6 ≤ (a + 2 * b) ^ 2 := by
   refine le_of_add_le_add_right (a := 6 * c ^ 2) ((lemma1 _ _ _).trans' ?_)
   rw [add_assoc, add_le_add_iff_left, add_comm, ← mul_add_one 6 (c ^ 2)]
-  exact mul_le_mul_of_nonneg_left h (Nat.ofNat_nonneg 6)
+  exact mul_le_mul_of_nonneg_left h (by norm_num)
 
 lemma lemma2 (r : R) {y : ℕ → R} (hy : ∀ n, 0 ≤ y n) (hy0 : ∀ n, n • r ≤ y n ^ 2) (N) :
     (4 * N ^ 3) • r ≤ (3 * (range (N + 1)).sum y) ^ 2 := by
@@ -86,7 +86,7 @@ lemma lemma2 (r : R) {y : ℕ → R} (hy : ∀ n, 0 ≤ y n) (hy0 : ∀ n, n •
     have X : 0 ≤ (3 : R) := zero_le_three
     refine mul_nonneg ?_ (mul_nonneg X (hy _))
     exact mul_nonneg zero_le_two (mul_nonneg X (sum_nonneg λ n _ ↦ hy n))
-  apply le_of_pow_le_pow_left (Nat.succ_ne_zero 1) h0
+  apply le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) h0
   calc
     _ = (((4 * N + 1) * (3 * N)) ^ 2 : ℕ) * r ^ 2 := by
       rw [nsmul_eq_mul, mul_pow, ← Nat.cast_pow]
@@ -133,7 +133,7 @@ theorem final_solution {x : ℕ → R} (hx : ∀ n, 0 ≤ x n)
       exact lemma2 6 h1 hx0 N
     _ < 3 * (3 * (range (N + 2)).sum x) ^ 2 := by
       refine mul_lt_mul_of_pos_left ?_ three_pos
-      refine pow_lt_pow_left ?_ (sum_nonneg λ n _ ↦ h1 n) (Nat.succ_ne_zero 1)
+      refine pow_lt_pow_left₀ ?_ (sum_nonneg λ n _ ↦ h1 n) (Nat.succ_ne_zero 1)
       rw [← Nat.cast_ofNat (n := 3), ← nsmul_eq_mul, ← lemma3]
       simp only [nsmul_eq_mul]; rw [Nat.cast_two, lt_add_iff_pos_right]
       exact add_pos_of_nonneg_of_pos (hx 0) (mul_pos two_pos (h N))

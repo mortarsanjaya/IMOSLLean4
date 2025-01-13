@@ -85,7 +85,7 @@ instance : AddCommGroup 𝔽₂X where
   add_zero := 𝔽₂X.add_zero
   add_comm := 𝔽₂X.add_comm
   add_assoc := 𝔽₂X.add_assoc
-  add_left_neg := 𝔽₂X.add_self_eq_zero
+  neg_add_cancel := 𝔽₂X.add_self_eq_zero
   nsmul := nsmulRec
   zsmul := zsmulRec
 

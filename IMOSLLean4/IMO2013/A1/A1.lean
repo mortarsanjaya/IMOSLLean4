@@ -89,8 +89,8 @@ theorem f_aux_matrix_description1 :
     matrix_fin2_mulVec, matrix_fin2_mulVec, M]
   simp only [Matrix.head_cons, of_apply, cons_val_one, cons_val_zero]
   refine ⟨?_, ?_⟩
-  · rw [one_add_mul (α := R), neg_mul, add_assoc, ← sub_eq_add_neg, mul_sub]
-  · rw [add_sub_add_right_eq_sub, one_add_mul (α := R), add_sub_cancel_right]
+  · rw [one_add_mul, neg_mul, add_assoc, ← sub_eq_add_neg, mul_sub]
+  · rw [add_sub_add_right_eq_sub, one_add_mul, add_sub_cancel_right]
 
 theorem f_description1 (l : List R) : f l = f_aux_alt1 l 0 :=
   congrArg Prod.fst (f_aux_matrix_description1 l)
@@ -127,8 +127,8 @@ theorem f_aux_matrix_description2 :
     matrix_fin2_vecMul, matrix_fin2_vecMul, M]
   simp only [Matrix.head_cons, of_apply, cons_val_one, cons_val_zero]
   refine ⟨?_, ?_⟩
-  · rw [mul_comm, add_mul, mul_one_add (α := R), add_assoc]
-  · rw [← add_mul, mul_one_add (α := R), add_assoc (f_aux_alt2 l 0),
+  · rw [mul_comm, add_mul, mul_one_add, add_assoc]
+  · rw [← add_mul, mul_one_add, add_assoc (f_aux_alt2 l 0),
       ← add_mul, mul_neg, add_neg_cancel_right]
 
 theorem f_description2 (l : List R) : f l = f_aux_alt2 l 0 :=
