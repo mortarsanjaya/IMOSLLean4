@@ -52,7 +52,7 @@ theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := λ n h
     refine ⟨(2 * t + 1) ::ₘ T, card_cons _ T,
       forall_mem_cons.mpr ⟨(2 * t).succ_pos, h1⟩, ?_⟩
     rw [map_cons, prod_cons, ← h2, add_add_add_comm, add_right_comm,
-      add_assoc (2 * t) 1, ← mul_add_one (α := ℕ), ← mul_add, div_mul_div_comm,
+      add_assoc (2 * t) 1, ← Nat.mul_add_one, ← mul_add, div_mul_div_comm,
       Nat.cast_mul, Nat.cast_mul, mul_right_comm]
     exact (mul_div_mul_right _ _ <| Nat.cast_ne_zero.mpr X.ne.symm).symm
 

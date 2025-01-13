@@ -128,7 +128,7 @@ theorem exists_x_sq_le_a (h : ∃ x y, nice k a x y) :
   refine ⟨?_, ?_⟩
   ---- Goal 1: `-|x| < (2k + 1) |x| - 2(k + 1) |y|`
   · have h2 : 0 < 2 * (k + 1) := mul_pos two_pos hk0
-    rwa [lt_add_neg_iff_add_lt, neg_add_lt_iff_lt_add', ← add_one_mul (α := ℤ),
+    rwa [lt_add_neg_iff_add_lt, neg_add_lt_iff_lt_add', ← add_one_mul,
       add_assoc, one_add_one_eq_two, ← mul_add_one 2 k, mul_lt_mul_iff_of_pos_left h2]
   ---- Goal 2: `(2k + 1) |x| - 2(k + 1) |y| < |x|`
   · rw [add_neg_lt_iff_lt_add, add_one_mul _ |x|, add_comm]

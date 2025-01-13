@@ -33,7 +33,7 @@ theorem sum_easy_ineq (x : F) (S : Finset ℕ) :
   sum_nonneg λ i _ ↦ by rw [mul_comm, pow_mul, mul_comm, pow_mul]; exact easy_ineq _
 
 theorem main_ineq {x : F} (h : 0 < x) (h0 : x ≠ 1) : (1 + x ^ 2) / (1 + x ^ 4) < x⁻¹ := by
-  rw [inv_eq_one_div, div_lt_div_iff (add_pos one_pos (pow_pos h 4)) h, one_mul,
+  rw [inv_eq_one_div, div_lt_div_iff₀ (add_pos one_pos (pow_pos h 4)) h, one_mul,
     ← sub_pos, one_add_mul _ x, ← pow_succ, pow_succ, add_sub_add_comm,
     add_comm, ← mul_sub_one, ← neg_sub x, ← sub_eq_add_neg, ← sub_one_mul]
   have h1 : 3 ≠ 0 := Nat.succ_ne_zero 2

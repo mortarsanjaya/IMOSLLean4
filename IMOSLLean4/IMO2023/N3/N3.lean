@@ -149,7 +149,7 @@ lemma main_step1 (N : ℕ) :
 /-- Final solution, part 1 -/
 theorem final_solution_part1 (N : ℕ) :
     ∃ n > N, padicValNat 9 n.factorial < padicValNat 10 n.factorial :=
-  ⟨5 ^ (N + 1), N.lt_succ_self.trans (Nat.lt_pow_self (by norm_num) N.succ), main_step1 N⟩
+  ⟨5 ^ (N + 1), N.lt_succ_self.trans (Nat.lt_pow_self (by norm_num)), main_step1 N⟩
 
 lemma Nat_digits5_3pow (k : ℕ) : 5 ≤ (Nat.digits 5 (3 ^ (2 * (2 * k + 1)))).sum := by
   have h : 0 < 3 := Nat.succ_pos 2
@@ -176,6 +176,6 @@ theorem final_solution_part2 (N : ℕ) :
     ∃ n > N, padicValNat 10 n.factorial < padicValNat 9 n.factorial := by
   refine ⟨3 ^ (2 * (2 * N + 1)), ?_, main_step2 _⟩; calc
     _ = 9 ^ (2 * N + 1) := Nat.pow_mul 3 2 _
-    _ > 2 * N + 1 := Nat.lt_pow_self (by norm_num) _
+    _ > 2 * N + 1 := Nat.lt_pow_self (by norm_num)
     _ > 2 * N := (2 * N).lt_succ_self
     _ ≥ N := Nat.le_mul_of_pos_left N Nat.two_pos

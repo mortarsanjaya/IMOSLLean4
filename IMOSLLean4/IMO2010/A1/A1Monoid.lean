@@ -153,7 +153,7 @@ lemma case_fract_map_one_big (h1 : ¬Infinitesimal (Int.fract (f 1))) :
   replace h2 : ∀ k, φ x ^ k • Int.fract (f 1) < 1 :=
     suffices ∀ k, ∃ y, φ y = φ x ^ k from λ k ↦ (this k).elim λ y h3 ↦ h3 ▸ h2 y
     Nat.rec ⟨1, φ.map_one⟩ λ n ⟨y, h3⟩ ↦ ⟨y * x, by rw [φ.map_mul, h3, pow_succ]⟩
-  intro k; exact (h2 k).trans' (nsmul_lt_nsmul_left h0 (Nat.lt_pow_self h1 k))
+  intro k; exact (h2 k).trans' (nsmul_lt_nsmul_left h0 (Nat.lt_pow_self h1))
 
 end
 

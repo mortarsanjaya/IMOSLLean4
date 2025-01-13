@@ -97,7 +97,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
   · rwa [add_zero, S_mul4, mul_eq_zero, or_iff_right h] at h0
   · rwa [S_mul4_add2, S_mul4, mul_eq_zero, or_iff_right h] at h0
   ---- If `S_{4q + r} = 0`, then `r ∈ {0, 2}`
-  apply_fun Int.bodd at h0
+  replace h0 := congrArg Int.bodd h0
   rw [Int.bodd_zero, S_parity, Nat.bodd_add, Nat.bodd_mul] at h0
   change xor (false && q.bodd) r.bodd = false at h0
   iterate 3 rw [Nat.lt_succ_iff_lt_or_eq] at h
@@ -137,7 +137,7 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   rcases q.eq_zero_or_pos with (rfl | h0)
   rw [add_zero, MulZeroClass.mul_zero, x_zero]
   replace k_ih := k_ih q (lt_mul_left h0 <| Nat.succ_lt_succ <| Nat.succ_pos 2) h
-  apply_fun Int.bodd at h; rw [Int.bodd_zero, S_parity] at h
+  replace h : q.bodd = false := by simpa [S_parity] using congrArg Int.bodd h
   rw [add_zero, x_mul4, h, k_ih]; rfl
 
 /-- Final solution for the extra part -/

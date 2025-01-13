@@ -68,7 +68,7 @@ theorem map_iterate_sq (a : ℤ) : f^[a.natAbs ^ 2] a = a * f a := by
 theorem map_neg_one : f (-1) = 0 := by
   have h : f (-1) = -1 * f (-1) := by exact map_iterate_sq h (-1)
   rw [Int.neg_mul, Int.one_mul, ← Int.add_left_inj (k := f (-1)),
-    Int.add_right_neg, ← Int.two_mul, Int.mul_eq_zero] at h
+    Int.add_left_neg, ← Int.two_mul, Int.mul_eq_zero] at h
   exact h.resolve_left (ne_of_beq_false rfl)
 
 theorem map_iterate_sq_add_one (a : ℤ) :
@@ -166,7 +166,7 @@ theorem eq_zero_of_not_injective (h0 : ∃ M, ∀ n, (f^[n] 0).natAbs < M) : f =
       rw [Ne, Nat.pow_eq_zero, not_and_or, Int.natAbs_eq_zero]
       left; exact ha
     rwa [Int.natAbs_neg, h3, f.iterate_succ_apply, ← h1, ← f.iterate_succ_apply, ← h3,
-      h.map_iterate_sq, Int.neg_mul, ← Int.add_left_inj (k := a * f a), Int.add_right_neg,
+      h.map_iterate_sq, Int.neg_mul, ← Int.add_left_inj (k := a * f a), Int.add_left_neg,
       ← Int.two_mul, Int.mul_eq_zero, or_iff_right (ne_of_beq_false (by rfl)),
       Int.mul_eq_zero, or_iff_right ha] at h2
   funext a; obtain ha | rfl : a ≠ 0 ∨ a = 0 := ne_or_eq a 0

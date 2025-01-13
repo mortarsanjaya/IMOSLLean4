@@ -27,8 +27,8 @@ lemma div_pos_of_dvd (hm : 0 < m) (hk : k ∣ m) : 0 < m / k :=
 lemma clog_base_mul (hb : 1 < b) (hn : 0 < n) : b.clog (b * n) = b.clog n + 1 := by
   refine (Nat.clog_of_two_le hb (Nat.mul_le_mul hb hn)).trans (congrArg (b.clog · + 1) ?_)
   have hb' : 0 < b := Nat.zero_lt_of_lt hb
-  rw [Nat.add_sub_assoc hb.le, Nat.mul_add_div hb', Nat.add_eq_left, Nat.div_eq_zero_iff hb']
-  exact Nat.sub_one_lt_of_lt hb
+  rw [Nat.add_sub_assoc hb.le, Nat.mul_add_div hb', Nat.add_eq_left, Nat.div_eq_zero_iff]
+  exact Or.inr (Nat.sub_one_lt_of_lt hb)
 
 lemma two_pow_clog_mem_Ico (hn : 0 < n) : 2 ^ Nat.clog 2 n ∈ Ico n (2 * n) := by
   have X : 1 < 2 := Nat.one_lt_two

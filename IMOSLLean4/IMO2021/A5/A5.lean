@@ -61,7 +61,7 @@ lemma ring_id [CommRing R] (x y : R) :
       add_sub_add_left_eq_sub, ← add_assoc, add_sub_cancel_right]
   _ = x * y * (x + y) + 2 * (x * y * (x + y)) := by
     rw [sq, sq, mul_right_comm, ← mul_rotate x y y, ← mul_add]
-  _ = _ := by rw [← one_add_mul (α := R), add_comm, two_add_one_eq_three]
+  _ = _ := by rw [← one_add_mul, add_comm, two_add_one_eq_three]
 
 lemma field_ineq [LinearOrderedField F] {r : F} (ha : 0 ≤ a) (hs : 0 ≤ s) (h : a + s ≤ r) :
     a / (r - a) * s ^ 2 ≤ ((a + s) ^ 3 - s ^ 3 - a ^ 3) / (3 * r) := calc
@@ -70,7 +70,7 @@ lemma field_ineq [LinearOrderedField F] {r : F} (ha : 0 ≤ a) (hs : 0 ≤ s) (h
     refine mul_le_mul_of_nonneg_left ?_ (mul_nonneg ha hs)
     obtain rfl | h0 : a = r ∨ a < r := (le_of_add_le_of_nonneg_left h hs).eq_or_lt
     · rw [sub_self, div_zero]; exact div_nonneg (add_nonneg ha hs) ha
-    · rw [div_le_div_iff (sub_pos_of_lt h0) (ha.trans_lt h0), add_mul, mul_sub s,
+    · rw [div_le_div_iff₀ (sub_pos_of_lt h0) (ha.trans_lt h0), add_mul, mul_sub s,
         add_sub_left_comm, le_add_iff_nonneg_right, mul_comm a, ← sub_mul, sub_sub]
       exact mul_nonneg (sub_nonneg_of_le h) ha
   _ = _ := by rw [sub_right_comm, ring_id, mul_div_mul_left _ _ three_ne_zero, mul_div_assoc]
@@ -141,7 +141,7 @@ theorem final_solution [LinearOrderedField F] {r : F} (hr : 0 < r)
         refine div_lt_div_of_pos_right ?_ X
         rwa [sub_lt_self_iff, ← l.foldr_map]
       _ ≤ r ^ 3 / (3 * r) :=
-        div_le_div_of_nonneg_right (pow_le_pow_left (foldr_add_nonneg hl) h 3) X.le
+        div_le_div_of_nonneg_right (pow_le_pow_left₀ (foldr_add_nonneg hl) h 3) X.le
       _ = r ^ 2 / 3 := by rw [pow_succ, mul_div_mul_right _ _ hr.ne.symm]
     -- Finally, prove that `0 < ∑ a_i^3`
     apply foldr_add_pos

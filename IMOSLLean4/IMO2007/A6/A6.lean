@@ -128,7 +128,7 @@ theorem niceTuple.of_three_le [ExistsAddOfLE R] :
   obtain ⟨b, hb, h0⟩ : ∃ b : Fin (n + 1) → R,
       (∀ i, 0 ≤ b i) ∧ ∀ i, a i = (Fin.cons 0 b : _ → R) i + a 0 := by
     obtain ⟨b, hb⟩ : ∃ b : Fin n.succ → R, ∀ i, a i.succ = a 0 + b i :=
-      Classical.axiom_of_choice λ i ↦ exists_add_of_le (h i.succ)
+      Classical.axiom_of_choice λ i ↦ exists_add_of_le (h _)
     refine ⟨b, λ i ↦ ?_, λ i ↦ ?_⟩
     · rw [← le_add_iff_nonneg_right (a 0), ← hb]; exact h _
     · obtain (rfl | ⟨j, rfl⟩) := i.eq_zero_or_eq_succ

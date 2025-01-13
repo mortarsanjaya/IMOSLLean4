@@ -37,9 +37,9 @@ def IntEquiv_of_Ioo01 (h : ¬∃ x : R, 0 < x ∧ x < 1) : ℤ ≃+* R :=
       refine (Int.fract_nonneg y).eq_or_gt.resolve_right λ h0 ↦ ?_
       exact h ⟨_, h0, Int.fract_lt_one y⟩ }
 
-theorem IntEquiv_apply (φ : R ≃+* ℤ) : ⇑φ = Int.floor := by
-  refine (φ.eq_comp_symm id Int.floor).mp (funext λ x ↦ (?_ : x = ⌊φ.symm x⌋))
-  rw [eq_intCast, Int.floor_intCast]
+theorem IntEquiv_apply (φ : R ≃+* ℤ) : ⇑φ = Int.floor :=
+  (φ.eq_comp_symm id Int.floor).mp
+    (funext λ x ↦ (by rw [eq_intCast, Int.floor_intCast] : x = ⌊φ.symm x⌋))
 
 theorem dense_or_equiv_Int : DenselyOrdered R ∨ Nonempty (ℤ ≃+* R) :=
   (em (∃ x : R, 0 < x ∧ x < 1)).imp

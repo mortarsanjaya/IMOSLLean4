@@ -55,7 +55,7 @@ theorem main_claim {x y z w c : R} (h : x + y = z + w) (h0 : c ≤ x * y) (h1 : 
     (exists_add_of_le h1).imp λ b h2 ↦ by rw [h2, ha, add_assoc]
   rw [ha, hb, add_le_add_iff_left] at h1
   rw [ring_id ha, ring_id hb, h, add_le_add_iff_right]
-  exact pow_le_pow_left h0 h1 2
+  exact pow_le_pow_left₀ h0 h1 2
 
 /-- Final solution -/
 theorem final_solution {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) :
@@ -74,7 +74,7 @@ theorem final_solution {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) :
     · simp only [mem_map]; rintro x ⟨x, -, rfl⟩
       exact add_nonneg (sq_nonneg x) hc
     · simp only [mem_map]; rintro x ⟨x, hx, rfl⟩
-      exact add_le_add_right (pow_le_pow_left (hM x hx) (h x hx) 2) c
+      exact add_le_add_right (pow_le_pow_left₀ (hM x hx) (h x hx) 2) c
   ---- Break `M` into `(a + r) ::ₘ M` for some `a > 0`, and substitute `n`
   simp only [not_forall, not_le] at h
   rcases h with ⟨a, haM, ha⟩
@@ -85,7 +85,7 @@ theorem final_solution {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) :
   ---- The new `M` must contain an element `b < r`; break `M` again and simplify `hr`
   rw [sum_cons, add_assoc, succ_nsmul', add_le_add_iff_left] at hr
   obtain ⟨b, hbM, hb⟩ : ∃ b ∈ M, b < r := by
-    by_contra h; simp only [not_exists, not_and, not_lt] at h
+    by_contra! h
     exact (lt_add_of_pos_left M.sum ha).not_le (hr.trans (card_nsmul_le_sum h))
   apply exists_cons_of_mem at hbM; rcases hbM with ⟨M, rfl⟩
   rw [forall_mem_cons, forall_mem_cons] at hM

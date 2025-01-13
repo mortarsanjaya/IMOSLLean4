@@ -27,8 +27,7 @@ open Finset
 
 theorem add_modeq_mul_add_one (h : a ≡ 1 [ZMOD n]) (h0 : b ≡ 1 [ZMOD n]) :
     a + b ≡ a * b + 1 [ZMOD n ^ 2] := by
-  rw [Int.modEq_iff_dvd, sq, add_comm, ← sub_sub_sub_eq,
-    ← one_sub_mul (α := ℤ), ← mul_one_sub]
+  rw [Int.modEq_iff_dvd, sq, add_comm, ← sub_sub_sub_eq, ← one_sub_mul, ← mul_one_sub]
   exact mul_dvd_mul h.dvd h0.dvd
 
 variable [DecidableEq ι] {S : Finset ι}

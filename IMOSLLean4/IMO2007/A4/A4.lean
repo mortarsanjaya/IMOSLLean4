@@ -26,10 +26,10 @@ structure weakGood [OrderedAddCommMonoid M] (f : M → M) : Prop where
 variable [LinearOrderedAddCommGroup G]
 
 /-- Solution for the unboundled version -/
-theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f x = x + x :=
+theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f x = x + x := by
+  refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   ---- `→` direction
-  ⟨λ hf ↦ by
-    rcases hf with ⟨hf, hf₀⟩
+  · rcases hf with ⟨hf, hf₀⟩
     obtain ⟨g, rfl⟩ : ∃ g : G → G, f = λ x ↦ g x + x :=
       ⟨λ x ↦ f x - x, funext λ x ↦ (sub_add_cancel (f x) x).symm⟩
     simp only at hf hf₀ ⊢
@@ -70,12 +70,11 @@ theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f
     intro x hx; rw [add_left_inj]
     exact ((lt_trichotomy (g x) x).resolve_left
       λ h ↦ (hf₀ hx).not_lt (h.trans' (hg₁ (hf hx) h))).resolve_right
-      λ h ↦ (hf₀ hx).not_gt (h.trans (hg₁ hx h)),
+      λ h ↦ (hf₀ hx).not_gt (h.trans (hg₁ hx h))
   ---- `←` direction
-  λ hf ↦ ⟨λ x hx ↦ hf x hx ▸ add_pos hx hx,
-    λ x y hx hy ↦ by
-      rw [hf y hy, hf _ (add_pos hx hy), add_add_add_comm x, add_assoc,
-        add_add_add_comm x x, hf _ (add_pos hx (add_pos hy hy))]⟩⟩
+  · refine ⟨λ x hx ↦ hf x hx ▸ add_pos hx hx, λ x y hx hy ↦ ?_⟩
+    rw [hf y hy, hf _ (add_pos hx hy), add_add_add_comm x, add_assoc,
+      add_add_add_comm x x, hf _ (add_pos hx (add_pos hy hy))]
 
 
 
@@ -93,17 +92,17 @@ lemma posSubtypeExt_spec (f : {x : G // 0 < x} → {x : G // 0 < x}) (x : {x : G
 def good [Add G] (f : G → G) := ∀ x y, f (x + f y) = f (x + y) + f y
 
 lemma good_iff_posSubtypeExt_weakGood {f : {x : G // 0 < x} → {x : G // 0 < x}} :
-    good f ↔ weakGood (posSubtypeExt f) :=
-  ⟨λ h ↦ ⟨λ x hx ↦ (f ⟨x, hx⟩).2.trans_eq (posSubtypeExt_spec f _).symm,
-    λ x y hx hy ↦ by
-      lift x to {x : G // 0 < x} using hx
-      lift y to {x : G // 0 < x} using hy
-      simp only [posSubtypeExt_spec, ← Positive.coe_add]
-      exact congrArg _ (h x y)⟩,
-  λ ⟨_, h0⟩ x y ↦ by
+    good f ↔ weakGood (posSubtypeExt f) := by
+  refine ⟨λ h ↦ ?_, ?_⟩
+  · refine ⟨λ x hx ↦ (f ⟨x, hx⟩).2.trans_eq (posSubtypeExt_spec f _).symm, λ x y hx hy ↦ ?_⟩
+    lift x to {x : G // 0 < x} using hx
+    lift y to {x : G // 0 < x} using hy
+    simp only [posSubtypeExt_spec, ← Positive.coe_add]
+    exact congrArg _ (h x y)
+  · rintro ⟨_, h0⟩ x y
     specialize h0 x.1 y.1 x.2 y.2
     simp only [posSubtypeExt_spec, ← Positive.coe_add] at h0
-    exact Subtype.coe_inj.mp h0⟩
+    exact Subtype.coe_inj.mp h0
 
 /-- Final solution -/
 theorem final_solution {f : {x : G // 0 < x} → {x : G // 0 < x}} :

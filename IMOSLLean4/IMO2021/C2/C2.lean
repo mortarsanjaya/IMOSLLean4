@@ -52,8 +52,10 @@ theorem good.mod_le_div {f : Fin (m + 1) → Fin n} (hf : good f) :
     (m + 1) % n ≤ (m + 1) / n := by
   match n with | 0 => exact (f 0).elim0 | n + 1 => ?_
   obtain ⟨i, hi⟩ : ∃ i, (univ.filter λ x ↦ f x = i).card ≤ m.succ / n.succ := by
-    by_contra h; simp only [not_exists, not_le] at h
-    apply (sum_le_sum (s := univ) (λ i _ ↦ h i)).not_lt
+    by_contra h; simp at h
+    have X : ∑ i : Fin (n + 1), ((m + 1) / (n + 1) + 1) ≤ _ :=
+      sum_le_sum (s := univ) (λ i _ ↦ h i)
+    apply X.not_lt
     simp only [card_eq_sum_ones, sum_fiberwise]
     simp only [sum_const, card_univ, Fintype.card_fin]
     exact m.succ.mul_one.trans_lt (Nat.lt_mul_div_succ m.succ n.succ_pos)

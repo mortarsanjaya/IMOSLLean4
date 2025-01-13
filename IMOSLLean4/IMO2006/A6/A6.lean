@@ -40,21 +40,21 @@ variable [LinearOrderedCommRing R]
 
 theorem good_alt {M : R} :
     good M ↔ ∀ a b c, 3 ^ 2 * |(b - a) * (c - b) * (a - c) * (a + b + c)|
-      ≤ M * ((b - a) ^ 2 + (c - b) ^ 2 + (a - c) ^ 2 + (a + b + c) ^ 2) ^ 2 :=
-  forall_congr' λ a ↦ forall_congr' λ b ↦ forall_congr' λ c ↦ by
-    have X0 : (0 : R) < 3 ^ 2 := pow_pos zero_lt_three 2
-    rw [ring_id1, ring_id2, mul_pow, mul_left_comm, mul_le_mul_iff_of_pos_left X0]
+      ≤ M * ((b - a) ^ 2 + (c - b) ^ 2 + (a - c) ^ 2 + (a + b + c) ^ 2) ^ 2 := by
+  refine forall₃_congr λ a b c ↦ ?_
+  rw [ring_id1, ring_id2, mul_pow, mul_left_comm]
+  exact (mul_le_mul_left (pow_pos zero_lt_three 2)).symm
 
-theorem ring_ineq1 (r t : R) : 2 ^ 8 * (r ^ 3 * t) ≤ 3 ^ 3 * (r + t) ^ 4 :=
-  le_of_sub_nonneg <| by calc
+theorem ring_ineq1 (r t : R) : 2 ^ 8 * (r ^ 3 * t) ≤ 3 ^ 3 * (r + t) ^ 4 := by
+  apply le_of_sub_nonneg; calc
     0 ≤ (r - 3 * t) ^ 2 * ((5 * r + t) ^ 2 + 2 * (r + t) ^ 2) :=
       mul_nonneg (sq_nonneg _) <| add_nonneg (sq_nonneg _) <|
         mul_nonneg zero_le_two (sq_nonneg _)
     _ = _ := by ring
 
 theorem ring_ineq2 {x y z : R} (h : x + y + z = 0) :
-    2 * 3 ^ 3 * (x * y * z) ^ 2 ≤ (x ^ 2 + y ^ 2 + z ^ 2) ^ 3 :=
-  le_of_sub_nonneg <| by calc
+    2 * 3 ^ 3 * (x * y * z) ^ 2 ≤ (x ^ 2 + y ^ 2 + z ^ 2) ^ 3 := by
+  apply le_of_sub_nonneg; calc
     0 ≤ 2 * ((x - y) * (x + 2 * y) * (2 * x + y)) ^ 2 := mul_nonneg zero_le_two (sq_nonneg _)
     _ = (x ^ 2 + y ^ 2 + (-(x + y)) ^ 2) ^ 3 - 2 * 3 ^ 3 * (x * y * -(x + y)) ^ 2 := by ring
     _ = _ := by rw [eq_neg_of_add_eq_zero_right h]
@@ -85,7 +85,8 @@ open HasSqrt2
 
 variable [HasSqrt2 R] {M : R}
 
-theorem good_lower_bound (hM : 3 ^ 2 * √2 ≤ 2 ^ 5 * M) : good M := good_alt.mpr λ a b c ↦ by
+theorem good_lower_bound (hM : 3 ^ 2 * √2 ≤ 2 ^ 5 * M) : good M := by
+  refine good_alt.mpr λ a b c ↦ ?_
   have h : (0 : R) < 2 := two_pos
   rw [← mul_le_mul_iff_of_pos_left (pow_pos h 5), mul_left_comm, ← mul_assoc _ M]
   apply (mul_le_mul_of_nonneg_right hM (sq_nonneg _)).trans'
@@ -105,11 +106,11 @@ theorem good_upper_bound (hM : good M) : 9 * √2 ≤ 32 * M := by
   rw [h, h0, mul_comm M, mul_assoc, mul_assoc, abs_of_nonneg sqrt2_nonneg] at hM
   exact le_of_mul_le_mul_left hM (by norm_num)
 
-theorem good_iff : good M ↔ 9 * √2 ≤ 32 * M :=
-  ⟨good_upper_bound, by
-    have h : (9 : R) = 3 ^ 2 := by norm_num
-    have h0 : (32 : R) = 2 ^ 5 := by norm_num
-    rw [h, h0]; exact good_lower_bound⟩
+theorem good_iff : good M ↔ 9 * √2 ≤ 32 * M := by
+  refine ⟨good_upper_bound, ?_⟩
+  have h : (9 : R) = 3 ^ 2 := by norm_num
+  have h0 : (32 : R) = 2 ^ 5 := by norm_num
+  rw [h, h0]; exact good_lower_bound
 
 end
 

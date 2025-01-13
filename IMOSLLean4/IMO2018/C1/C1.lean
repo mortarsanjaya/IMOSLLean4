@@ -119,7 +119,7 @@ def GoodSubsetBase (K m : ℕ) : Finset ℕ :=
 lemma GoodSubsetBase_subset_GoodSetBase (hm : 0 < m) (h : K + m ≤ N) :
     GoodSubsetBase K m ⊆ GoodSetBase N := by
   show ∀ x ∈ insert (2 * 3 ^ K) _, x ∈ GoodSetBase N
-  refine (forall_mem_insert _ _ _).mpr ⟨?_, forall_image.mpr λ k hk ↦ ?_⟩
+  refine (forall_mem_insert _ _ _).mpr ⟨?_, forall_mem_image.mpr λ k hk ↦ ?_⟩
   · refine mem_union_left _ (mem_image.mpr ⟨K, ?_, rfl⟩)
     exact mem_range.mpr ((Nat.lt_add_of_pos_right hm).trans_le h)
   · refine mem_union_right _ (mem_image.mpr ⟨K + k, mem_range.mpr ?_, rfl⟩)
@@ -257,7 +257,7 @@ theorem final_solution (n : ℕ) : ∃ S : Finset ℕ, S.card = n ∧ (∀ x ∈
   obtain hn | hn : n / 2 < 2 ∨ 2 ≤ n / 2 := lt_or_le _ _
   · have h : ((range n).image Nat.succ).card = n := by
       rw [card_image_of_injective _ Nat.succ_injective, card_range]
-    exact ⟨(range n).image Nat.succ, h, forall_image.mpr λ k _ ↦ k.succ_pos,
+    exact ⟨(range n).image Nat.succ, h, forall_mem_image.mpr λ k _ ↦ k.succ_pos,
       good_of_card_lt_four (h.trans_lt (Nat.lt_mul_of_div_lt hn Nat.two_pos))⟩
   ---- Write `n = 2(q + 2) + r` where `r < 2`
   obtain ⟨q, r, hr, rfl⟩ : ∃ q r, r < 2 ∧ n = 2 * (q + 2) + r := by

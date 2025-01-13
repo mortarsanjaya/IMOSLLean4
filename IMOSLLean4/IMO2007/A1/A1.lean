@@ -41,17 +41,17 @@ theorem final_solution_part1 {x : ℕ → G} (h : Monotone x) (h0 : k ≤ m) (h1
 
 /-- Final solution, part 2 -/
 theorem final_solution_part2 (h : ∀ k m : ℕ, k ≤ m → m ≤ n → a k - a m ≤ 2 • g) :
-    ∃ x : ℕ → G, Monotone x ∧ seqMax (λ i ↦ |x i - a i|) n = g :=
-  ⟨λ i ↦ seqMax a i - g, λ i j h0 ↦ sub_le_sub_right (seqMax_mono a h0) g, by
-    apply le_antisymm
-    · rcases exists_map_eq_seqMax (λ i ↦ |seqMax a i - g - a i|) n with ⟨i, h0, h1⟩
-      rw [← h1, sub_right_comm, abs_le]
-      clear h1; refine ⟨?_, ?_⟩
-      · rw [le_sub_iff_add_le, neg_add_cancel, sub_nonneg]
-        exact le_seqMax_self a i
-      · rcases exists_map_eq_seqMax a i with ⟨j, h1, h2⟩
-        rw [← h2, sub_le_iff_le_add, ← two_nsmul]
-        exact h j i h1 h0
-    · apply (le_seqMax_of_le _ n.zero_le).trans'
-      rw [sub_sub, seqMax, sub_add_cancel_right, abs_neg]
-      exact le_abs_self g⟩
+    ∃ x : ℕ → G, Monotone x ∧ seqMax (λ i ↦ |x i - a i|) n = g := by
+  refine ⟨λ i ↦ seqMax a i - g, λ i j h0 ↦ sub_le_sub_right (seqMax_mono a h0) g, ?_⟩
+  apply le_antisymm
+  · rcases exists_map_eq_seqMax (λ i ↦ |seqMax a i - g - a i|) n with ⟨i, h0, h1⟩
+    rw [← h1, sub_right_comm, abs_le]
+    clear h1; refine ⟨?_, ?_⟩
+    · rw [le_sub_iff_add_le, neg_add_cancel, sub_nonneg]
+      exact le_seqMax_self a i
+    · rcases exists_map_eq_seqMax a i with ⟨j, h1, h2⟩
+      rw [← h2, sub_le_iff_le_add, ← two_nsmul]
+      exact h j i h1 h0
+  · apply (le_seqMax_of_le _ n.zero_le).trans'
+    rw [sub_sub, seqMax, sub_add_cancel_right, abs_neg]
+    exact le_abs_self g

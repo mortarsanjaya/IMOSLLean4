@@ -99,8 +99,7 @@ theorem lower_bound :
     replace X {u v : F} (h : 0 < u) (h0 : 0 < v) : 0 < 2 * u + v :=
       add_pos (mul_pos zero_lt_two h) h0
     refine (field_ineq1 _ _ (X hy hz) (X hz hy)).trans_eq' (congrArg₂ _ rfl ?_)
-    rw [add_add_add_comm (2 * _), ← mul_add, add_comm,
-      ← add_one_mul (α := F), two_add_one_eq_three]
+    rw [add_add_add_comm (2 * _), ← mul_add, add_comm, ← add_one_mul, two_add_one_eq_three]
   ---- `|y/((y + b)(y + d)) - z/((z + a)(z + c))| ≤ 1/(y + z)`
   · replace X : (9 : F) = 3 * 3 := by norm_num
     rw [X, mul_assoc, mul_div_mul_left _ _ (three_ne_zero' F), mul_right_comm 3 (b - d),
@@ -114,13 +113,13 @@ theorem lower_bound :
     · generalize a + c = y at hy ⊢
       replace X : 0 < (y + b) * (y + d) := mul_pos (add_pos hy hb) (add_pos hy hd)
       have X0 : 0 < y * (y + (b + d)) := mul_pos hy (add_pos hy hz)
-      rw [← div_mul_cancel_left₀ hy.ne.symm, div_le_div_left hy X X0,
+      rw [← div_mul_cancel_left₀ hy.ne.symm, div_le_div_iff_of_pos_left hy X X0,
         ← add_assoc, mul_comm, add_mul, mul_comm d, mul_add, add_le_add_iff_left]
       exact mul_le_mul_of_nonneg_right (le_add_of_nonneg_right hb.le) hd.le
     · generalize b + d = z at hz ⊢
       replace X : 0 < (z + c) * (z + a) := mul_pos (add_pos hz hc) (add_pos hz ha)
       have X0 : 0 < z * (a + c + z) := mul_pos hz (add_pos hy hz)
-      rw [← div_mul_cancel_left₀ hz.ne.symm, div_le_div_left hz X X0,
+      rw [← div_mul_cancel_left₀ hz.ne.symm, div_le_div_iff_of_pos_left hz X X0,
         ← add_rotate, mul_add, add_mul, add_le_add_iff_left, mul_comm]
       exact mul_le_mul_of_nonneg_left (le_add_of_nonneg_right ha.le) hc.le
 

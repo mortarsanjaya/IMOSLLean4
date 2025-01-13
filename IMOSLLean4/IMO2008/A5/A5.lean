@@ -39,7 +39,7 @@ lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) 
       mul_le_mul_of_nonneg_left (ring_ineq _ _) (sq_nonneg _)
     _ = (2 ^ 2 * (2 * (a / b) * (b / c + a / d))) ^ 2 := by rw [← mul_pow, X, mul_assoc]
     _ ≤ ((2 * (a / b) + (b / c + a / d)) ^ 2) ^ 2 := by
-      refine pow_le_pow_left (mul_nonneg (sq_nonneg 2) ?_) (ring_ineq _ _) 2
+      refine pow_le_pow_left₀ (mul_nonneg (sq_nonneg 2) ?_) (ring_ineq _ _) 2
       have X {u v : F} (hu : 0 < u) (hv : 0 < v) : 0 < u / v := div_pos hu hv
       exact mul_nonneg (mul_nonneg zero_le_two (X ha hb).le) (add_pos (X hb hc) (X ha hd)).le
     _ = _ := by rw [← pow_mul]

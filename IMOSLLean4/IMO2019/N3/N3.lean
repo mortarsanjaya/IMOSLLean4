@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Nat.Digits
 import Mathlib.Data.Int.Interval
+import Mathlib.Algebra.Order.Ring.Abs
 
 /-!
 # IMO 2019 N3

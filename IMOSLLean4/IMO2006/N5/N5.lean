@@ -84,7 +84,8 @@ theorem Int_dvd_prime_geom_sum_imp (hp : Nat.Prime p)
 
 /-- Final solution -/
 theorem final_solution {p : ℕ} (hp : p.Prime) (h : 3 < p) (x y : ℤ) :
-    ¬(range p).sum (x ^ ·) = y ^ (p - 2) - 1 := λ h0 ↦ by
+    ¬(range p).sum (x ^ ·) = y ^ (p - 2) - 1 := by
+  intro h0
   have h1 : Odd p := hp.eq_two_or_odd'.resolve_left (Nat.lt_of_succ_lt h).ne.symm
   have h2 : 0 < (range (p - 2)).sum (y ^ ·) :=
     (Nat.Odd.sub_even hp.two_le h1 even_two).geom_sum_pos

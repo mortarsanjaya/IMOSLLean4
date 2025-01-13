@@ -42,7 +42,7 @@ theorem bernoulli_ineq {x y : R} (hx : 0 ≤ x) (hy : 0 ≤ y) :
       add_one_mul, add_comm _ x, add_assoc, mul_add]
     refine add_le_add ?_ ?_
     · rw [mul_comm]; refine mul_le_mul_of_nonneg_left ?_ hx
-      exact pow_le_pow_left hy (le_add_of_nonneg_left hx) _
+      exact pow_le_pow_left₀ hy (le_add_of_nonneg_left hx) _
     · rw [pow_succ', mul_assoc]
       exact mul_le_mul_of_nonneg_left hn hy
 
@@ -57,7 +57,7 @@ theorem bernoulli_ineq_strict {x y : R} (hx : 0 < x) (hy : 0 ≤ y) :
 
 theorem bernoulli_ineq_special {x : R} (h : 0 ≤ x) {n : ℕ} (hn : 0 < n) :
     (n : R) ^ n * (x + 1) ≤ (x + n) ^ n := by
-  obtain ⟨n, rfl⟩ : ∃ n', n = n'.succ := Nat.exists_eq_succ_of_ne_zero hn.ne.symm
+  obtain ⟨n, rfl⟩ : ∃ n' : ℕ, n = n'.succ := Nat.exists_eq_succ_of_ne_zero hn.ne.symm
   rw [pow_succ, mul_assoc, mul_add_one]
   exact bernoulli_ineq h n.succ.cast_nonneg n
 
@@ -109,7 +109,7 @@ theorem final_solution [DecidableEq ι] {f : ι → ℕ} {I : Finset ι}
   replace h (i) (hi : i ∈ I) : 0 < (f i : R) ^ f i * (x + 1) :=
     mul_pos (pow_pos (Nat.cast_pos.mpr (hfI i hi)) _) (add_pos hx one_pos)
   refine prod_lt_prod (λ i hi ↦ pow_pos (h i hi) _) ?_ ?_
-  · intro i hi; exact pow_le_pow_left (h i hi).le (bernoulli_ineq_special hx.le (hfI i hi)) _
+  · intro i hi; exact pow_le_pow_left₀ (h i hi).le (bernoulli_ineq_special hx.le (hfI i hi)) _
   · rcases hfI0 with ⟨i, hi, hi0⟩
     refine ⟨i, hi, pow_lt_pow_left₀ (bernoulli_ineq_special_strict hx hi0) (h i hi).le ?_⟩
     exact prod_ne_zero_iff.mpr λ j hj ↦ (hfI j (mem_of_mem_erase hj)).ne.symm

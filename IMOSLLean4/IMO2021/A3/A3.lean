@@ -34,7 +34,7 @@ def targetSum : List ℕ → ℕ
 /-! ### Lower bound -/
 
 theorem succ_le_mul_two_pow_div (a) (h : 0 < b) : a + 1 ≤ 2 ^ (a / b) * b :=
-  Nat.lt_mul_of_div_lt (a / b).lt_two_pow h
+  Nat.lt_mul_of_div_lt (a / b).lt_two_pow_self h
 
 theorem prod_map_succ_iota : ∀ n : ℕ, ((iota n).map Nat.succ).prod = (n + 1).factorial
   | 0 => rfl

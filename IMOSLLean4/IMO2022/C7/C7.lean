@@ -54,7 +54,7 @@ include hS
 theorem Finset_range_sup_mem {f : ℕ → α} (hf : ∀ k, f k ∈ S) :
     ∀ n : ℕ, (Finset.range n.succ).sup' Finset.nonempty_range_succ f ∈ S := by
   refine Nat.rec ?_ λ n hn ↦ ?_
-  · simp only [Finset.range_one, Finset.sup'_singleton]; exact hf 0
+  · simpa only [Finset.range_one, Finset.sup'_singleton] using hf 0
   · simp only [Finset.range_succ (n := n.succ)]
     rw [Finset.sup'_insert Finset.nonempty_range_succ]
     exact hS.sup_mem _ (hf n.succ) _ hn
@@ -288,9 +288,8 @@ theorem doubleton_AddSupGenerator_imp₂ (h0 : i ≠ j) : v i * v j < 0 := by
     right; exact ⟨h2 i, h2 j⟩
   ---- Contradiction setup
   refine mul_neg_of_pos_of_neg hvi (lt_of_not_le λ hvj ↦ ?_)
-  replace hvj : 0 < v j := by
-    refine hvj.lt_of_ne λ h1 ↦ (doubleton_AddSupGenerator_imp₁ h j).ne ?_
-    rw [← h1, zero_mul]
+  replace hvj : 0 < v j :=
+    hvj.lt_of_ne λ h1 ↦ (doubleton_AddSupGenerator_imp₁ h j).ne (by rw [← h1, zero_mul])
   have hwi : w i < 0 := neg_of_mul_neg_right (doubleton_AddSupGenerator_imp₁ h i) hvi.le
   have hwj : w j < 0 := neg_of_mul_neg_right (doubleton_AddSupGenerator_imp₁ h j) hvj.le
   ---- Reduce to the case where `v_i w_j ≥ w_i v_j`
@@ -298,9 +297,8 @@ theorem doubleton_AddSupGenerator_imp₂ (h0 : i ≠ j) : v i * v j < 0 := by
   · exact this h0.symm hvj hvi hwj hwi (Int.le_of_not_le h1)
   ---- Show contradiction by showing that `{v, w}` is contained in a sloped set
   have h2 : {x : ι → ℤ | v j * x i ≤ v i * x j} = Set.univ := by
-    unfold AddSupGenerator at h
     refine h _ ?_ (AddMaxClosed.ofSlopedHalf hvj.le hvi.le i j)
-    simp only [Finset.coe_insert, Finset.coe_singleton]
+    rw [Finset.coe_insert, Finset.coe_singleton]
     rintro _ (rfl | rfl)
     exacts [Int.le_of_eq (mul_comm _ _), h1]
   replace h2 : Pi.single i 1 ∈ {x : ι → ℤ | v j * x i ≤ v i * x j} := h2 ▸ Set.mem_univ _

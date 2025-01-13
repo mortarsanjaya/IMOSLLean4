@@ -31,7 +31,7 @@ lemma zero_is_good [LinearOrderedSemiring S] : good (λ _ : R ↦ (0 : S)) := λ
 lemma neg_one_is_good [LinearOrderedRing S] : good (λ _ : R ↦ (-1 : S)) := λ x y ↦ by
   rw [mul_assoc, ← sq, neg_one_sq, two_mul, add_assoc, self_eq_add_right,
     ← max_add_add_left, ← add_assoc, add_neg_cancel, zero_add, max_eq_right_iff]
-  exact (neg_one_lt_zero (α := S)).le
+  exact neg_one_lt_zero.le
 
 lemma hom_is_good [LinearOrderedCommSemiring S] (φ : R →+* S) : good φ := λ x y ↦ by
   rw [φ.map_add, φ.map_add, max_self, add_comm (_ * _), φ.map_pow, φ.map_pow, add_sq']
@@ -125,7 +125,7 @@ theorem good_case_one (hf : good f) (h : f 0 = 0) : f = 0 ∨ ∃ φ : R →+* S
 theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+* S, f = φ - 1 := by
   have h0 (x) : f (x ^ 2) = f x ^ 2 + 2 * f x := by
     specialize hf x 0
-    have X : (-1 : S) ≤ 0 := (neg_one_lt_zero (α := S)).le
+    have X : (-1 : S) ≤ 0 := neg_one_lt_zero.le
     rw [add_zero, zero_pow (Nat.succ_ne_zero 1), h, mul_neg_one, eq_neg_add_iff_add_eq,
       add_zero, add_comm, max_eq_right (add_le_of_nonpos_right X)] at hf
     exact hf.symm
@@ -165,8 +165,8 @@ theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+*
       rw [h3, h0, ← two_mul, mul_neg_one]
     replace h0 (x) : f (-x) = -(f x + 2) := by rw [neg_add, ← h0 x, neg_add_cancel_left]
     intro x y; specialize h x y
-    rwa [h0, sub_neg_eq_add, h0, h0, neg_mul_neg, ← add_assoc, ← two_mul, add_mul, mul_add,
-      mul_add, ← mul_add_one (α := S), add_assoc, add_sub_cancel_left, mul_comm (f x),
+    rwa [h0, sub_neg_eq_add, h0, h0, neg_mul_neg, ← add_assoc, ← two_mul, add_mul,
+      mul_add, mul_add, ← mul_add_one, add_assoc, add_sub_cancel_left, mul_comm (f x),
       ← mul_add, ← mul_add, ← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero,
       or_iff_right two_ne_zero, ← one_add_one_eq_two, ← add_assoc, add_add_add_comm] at h
   ---- Case 2: `f` is even

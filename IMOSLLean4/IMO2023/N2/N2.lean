@@ -58,7 +58,7 @@ lemma y_bound₁ (hp : 5 ≤ p) (y) : 2 * (2 * y + 1) ^ 2 < (p - 1) * p ^ y := m
   | y + 1 => by
       refine y_bound₀ Nat.one_pos (Nat.le_of_add_right_le (k := 2) hp) ?_ _ y.succ_pos
       calc 18
-        _ < 20 := Nat.lt_of_sub_pos Nat.two_pos
+        _ < 20 := Nat.lt_of_sub_pos (by exact Nat.two_pos)
         _ ≤ (p - 1) * p := Nat.mul_le_mul (Nat.pred_le_pred hp) hp
         _ = (p - 1) * p ^ 1 := by rw [p.pow_one]
 

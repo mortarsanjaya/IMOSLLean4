@@ -1,0 +1,20 @@
+Consider a complete graph with an infinite vertex set $V$.
+Each edge $xy$ is coloured such that for each vertex $v$, there exists only finitely many colours assigned to an edge incident with $v$.
+Prove that if some of the edges has distinct colours, then there exists $x, y, z \in V$, pairwise distinct, such that $c_{xy} = c_{xz} \neq c_{yz}$.
+
+
+\subsection*{Solution}
+
+We prove the contrapositive.
+Assume that $c_{xy} = c_{xz}$ implies $c_{xy} = c_{xz} = c_{yz}$.
+Then we claim that the graph is monochromatic.
+
+Fix a vertex $v_0 \in V$.
+By pigeonhole principle, there exists a colour $c$ such that the set $X = \{v \in V : c_{v_0 v} = c\}$ is infinite.
+We claim that $c_{xy} = c$ for any $x \neq y \in V$.
+By our assumption, it suffices to show that $c_{v_0 v} = c$ for all $v \in V$.
+
+Indeed, fix a vertex $v$.
+By pigeonhole principle, there exists $w_1 \neq w_2 \in X$ such that $c_{vw_1} = c_{vw_2}$.
+Then $c_{v_0 w_1} = c_{v_0 w_2} = c_{w_1 w_2} = c = c_{v_0 w_1} = c_{v_0 w_2}$.
+In particular, $c_{v_0 w_1} = c_{v_0 w_1} = c$, which forces $c_{v_0 v} = c$, as desired.
