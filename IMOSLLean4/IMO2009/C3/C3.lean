@@ -42,10 +42,9 @@ theorem g_cons₂ (k m : α → Nat) (p a l) :
 theorem g_add (k m : α → Nat) (x y z w) :
     ∀ l, (g k m (x + y, z + w) l).1 = (g k m (x, z) l).1 + (g k m (y, w) l).1 ∧
       (g k m (x + y, z + w) l).2 = (g k m (x, z) l).2 + (g k m (y, w) l).2 := by
-  refine List.rec ⟨rfl, rfl⟩ λ a l h ↦ ⟨?_, ?_⟩
-  · rw [g_cons₁, g_cons₁, g_cons₁, h.2]
-  · rw [g_cons₂, g_cons₂, g_cons₂, Nat.add_add_add_comm,
-      ← Nat.mul_add, ← Nat.mul_add, h.1, h.2]
+  refine List.rec ⟨rfl, rfl⟩ λ a l h ↦ ⟨h.2, ?_⟩
+  rw [g_cons₂, g_cons₂, g_cons₂, Nat.add_add_add_comm,
+    ← Nat.mul_add, ← Nat.mul_add, h.1, h.2]
 
 theorem g_add₁ (k m : α → Nat) (x y z w l) :
     (g k m (x + y, z + w) l).1 = (g k m (x, z) l).1 + (g k m (y, w) l).1 :=
@@ -58,9 +57,8 @@ theorem g_add₂ (k m : α → Nat) (x y z w l) :
 theorem g_mul (k m : α → Nat) (c x y) :
     ∀ l, (g k m (c * x, c * y) l).1 = c * (g k m (x, y) l).1 ∧
       (g k m (c * x, c * y) l).2 = c * (g k m (x, y) l).2 := by
-  refine List.rec ⟨rfl, rfl⟩ λ a l h ↦ ⟨?_, ?_⟩
-  · rw [g_cons₁, g_cons₁, h.2]
-  · rw [g_cons₂, g_cons₂, h.1, h.2, c.mul_add, c.mul_left_comm, c.mul_left_comm]
+  refine List.rec ⟨rfl, rfl⟩ λ a l h ↦ ⟨h.2, ?_⟩
+  rw [g_cons₂, g_cons₂, h.1, h.2, c.mul_add, c.mul_left_comm, c.mul_left_comm]
 
 theorem g_mul₁ (k m : α → Nat) (c x y l) :
     (g k m (c * x, c * y) l).1 = c * (g k m (x, y) l).1 :=
@@ -76,7 +74,7 @@ theorem g_append (k m : α → Nat) (p l₁ l₂) :
 
 theorem g_append_singleton (k m : α → Nat) (p a l) :
     g k m p (l ++ [a]) = g k m (p.2, k a * p.1 + m a * p.2) l :=
-  g_append k m p l [a]
+  foldr_append _ p l [a]
 
 /-- The main theorem on `g` -/
 theorem g_reverse {k m : α → Nat} (h : ∀ a, k a * X + m a * Y = Z) :
@@ -90,7 +88,7 @@ theorem g_reverse {k m : α → Nat} (h : ∀ a, k a * X + m a * Y = Z) :
         rw [g_add₂, g_mul₂, g_mul₂, reverse_cons, g_append_singleton, h]
       _ = k b * (g k m (Y, Z) l).2 + m b * (g k m (Y, Z) (a :: l)).2 := by
         rw [g_reverse h l, g_reverse h (a :: l)]
-      _ = _ := by rw [← g_cons₁ k m _ a, ← g_cons₂]
+
 
 
 

@@ -48,11 +48,11 @@ theorem floor_f_iter_natAbs_le (r : R) : ∀ k, ⌊f^[k] r⌋.natAbs ≤ ⌊r⌋
   | k + 1 => (floor_f_iter_natAbs_le _ k).trans (floor_f_natAbs_le r)
 
 theorem floor_f_iter_natAbs_eventually_const (r : R) :
-    ∃ C N, ∀ n, ⌊f^[n + N] r⌋.natAbs = C :=
-  NatSeq_antitone_imp_const (a := λ k ↦ ⌊f^[k] r⌋.natAbs) λ k m h0 ↦ by
-    rcases Nat.exists_eq_add_of_le h0 with ⟨c, rfl⟩
-    simp only; rw [Nat.add_comm, f.iterate_add_apply]
-    exact floor_f_iter_natAbs_le _ c
+    ∃ C N, ∀ n, ⌊f^[n + N] r⌋.natAbs = C := by
+  refine NatSeq_antitone_imp_const (a := λ k ↦ ⌊f^[k] r⌋.natAbs) λ k m h0 ↦ ?_
+  rcases Nat.exists_eq_add_of_le h0 with ⟨c, rfl⟩
+  dsimp only; rw [Nat.add_comm, f.iterate_add_apply]
+  exact floor_f_iter_natAbs_le _ c
 
 theorem floor_f_lt_of_floor_pos {r : R} (h : 0 < ⌊r⌋) : ⌊f r⌋ < ⌊r⌋ :=
   Int.floor_lt.mpr <| mul_lt_of_lt_one_right (Int.cast_pos.mpr h) (Int.fract_lt_one r)
@@ -73,7 +73,7 @@ theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
   ---- `0 < r < 1`
   · rw [neg_pos, neg_lt]
     have h0 := Int.floor_eq_iff.mp (h 0)
-    rw [f.iterate_zero_apply, X, neg_add_self, and_comm] at h0
+    rw [f.iterate_zero_apply, X, neg_add_cancel, and_comm] at h0
     revert h0; refine And.imp_right λ h0 ↦ h0.lt_of_ne λ h1 ↦ ?_
     replace h0 : Int.fract (-1 : R) = 0 := Int.fract_neg_eq_zero.mpr Int.fract_one
     specialize h 1; rw [f.iterate_one, ← h1, f, h0, mul_zero, Int.floor_zero] at h
@@ -111,7 +111,7 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
       abs_mul, Nat.abs_cast, abs_of_nonneg (Int.fract_nonneg s)]
     exact mul_lt_of_lt_one_right (Nat.cast_pos.mpr C.succ_pos) (Int.fract_lt_one _)
   refine Infinitesimal.iff_nsmul_Nat_bdd.mpr ⟨C + 1 + C, λ k ↦ ?_⟩
-  apply (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC k).le).trans_lt
+  apply (nsmul_le_nsmul_left (abs_nonneg ε) (Nat.lt_pow_self hC).le).trans_lt
   exact (h0 _).symm.trans_lt (h (f^[k] r))
 
 
@@ -136,6 +136,7 @@ inductive ArchimedeanGood : (ℕ → R) → Prop
   | const_nonzero (C : ℕ) (_ : 1 < C) (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2) :
       ArchimedeanGood a
 
+omit [FloorRing R] in
 theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : GeneralGood a) :
     ArchimedeanGood a := by
   refine h.recOn ArchimedeanGood.const_zero ArchimedeanGood.two_period ?_
@@ -143,6 +144,7 @@ theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : Gener
   refine λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ ?_
   rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
 
+omit [FloorRing R] in
 theorem ArchimedeanGood.two_periodic {a : ℕ → R} (h : ArchimedeanGood a) (n) :
     a (n + 2) = a n := by
   refine h.recOn rfl ?_ ?_

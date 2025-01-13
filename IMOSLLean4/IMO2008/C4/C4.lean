@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Data.Fintype.Powerset
 
 /-!
 # IMO 2008 C4 (P5)
@@ -107,16 +108,18 @@ lemma exists_mem_fiber_one (l) : ∃ a, a ∈ s.fiber (1, l) :=
   Multiset.card_pos_iff_exists_mem.mp <|
     Nat.one_pos.trans_le ((s.fiber_card1_mod2 l).symm.trans_le (Nat.mod_le _ _))
 
+lemma card_lamp_le_step [Fintype I] [Fintype Λ] (s : NSequence I Λ) :
+    Fintype.card Λ ≤ Fintype.card I := by
+  apply Fintype.card_le_of_surjective (λ i ↦ (s.steps i).2) λ l ↦ ?_
+  obtain ⟨a, ha⟩ := s.exists_mem_fiber_one l
+  exact ⟨a, congrArg Prod.snd ((s.fiber_spec _ _).mp ha)⟩
+
+
 
 variable [DecidableEq I] [Fintype I] [Fintype Λ]
 
 noncomputable instance : Fintype (NSequence I Λ) :=
   Fintype.ofInjective steps λ _ _ ↦ ext
-
-lemma card_lamp_le_step : Fintype.card Λ ≤ Fintype.card I := by
-  apply Fintype.card_le_of_surjective (λ i ↦ (s.steps i).2) λ l ↦ ?_
-  obtain ⟨a, ha⟩ := s.exists_mem_fiber_one l
-  exact ⟨a, congrArg Prod.snd ((s.fiber_spec _ _).mp ha)⟩
 
 instance isEmpty (h : Fintype.card I < Fintype.card Λ) : IsEmpty (NSequence I Λ) :=
   ⟨λ s ↦ h.not_le s.card_lamp_le_step⟩
@@ -145,16 +148,17 @@ lemma exists_mem_fiber_one (s : MSequence I Λ) (l) : ∃ a, a ∈ s.fiber l :=
   Multiset.card_pos_iff_exists_mem.mp <|
     Nat.one_pos.trans_le ((s.fiber_card_mod2 l).symm.trans_le (Nat.mod_le _ _))
 
+lemma card_lamp_le_step [Fintype I] [Fintype Λ] (s : MSequence I Λ) :
+    Fintype.card Λ ≤ Fintype.card I := by
+  apply Fintype.card_le_of_surjective s.steps λ l ↦ ?_
+  obtain ⟨a, ha⟩ := s.exists_mem_fiber_one l
+  exact ⟨a, (s.fiber_spec _ _).mp ha⟩
+
 
 variable [DecidableEq I] [Fintype I] [Fintype Λ]
 
 noncomputable instance : Fintype (MSequence I Λ) :=
   Fintype.ofInjective steps λ _ _ ↦ ext
-
-lemma card_lamp_le_step (s : MSequence I Λ) : Fintype.card Λ ≤ Fintype.card I := by
-  apply Fintype.card_le_of_surjective s.steps λ l ↦ ?_
-  obtain ⟨a, ha⟩ := s.exists_mem_fiber_one l
-  exact ⟨a, (s.fiber_spec _ _).mp ha⟩
 
 instance isEmpty (h : Fintype.card I < Fintype.card Λ) : IsEmpty (MSequence I Λ) :=
   ⟨λ s ↦ h.not_le s.card_lamp_le_step⟩

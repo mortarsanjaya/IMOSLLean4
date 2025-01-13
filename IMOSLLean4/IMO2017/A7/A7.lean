@@ -29,6 +29,7 @@ def a (b : ℕ → ℤ) : ℕ → ℤ
 open Finset
 
 variable {b : ℕ → ℤ} (b_pos : ∀ n : ℕ, 0 < b n)
+include b_pos
 
 theorem main_equality :
     ∀ n, a b n.succ = (a b n * (b n - 1) + (range n).sum λ i ↦ a b i * |b i - 2|) + 1

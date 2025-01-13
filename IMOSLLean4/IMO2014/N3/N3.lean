@@ -38,7 +38,7 @@ theorem Multiset_mem_sum [DecidableEq α] {P : Multiset (Multiset α)} {a : α} 
 
 theorem sum_replicate_map_inv (hn : n ≠ 0) :
     ((replicate n n).map λ x : ℕ ↦ (x : ℚ)⁻¹).sum = 1 := by
-  rw [map_replicate, sum_replicate, nsmul_eq_mul, mul_inv_cancel (Nat.cast_ne_zero.mpr hn)]
+  rw [map_replicate, sum_replicate, nsmul_eq_mul, mul_inv_cancel₀ (Nat.cast_ne_zero.mpr hn)]
 
 theorem sum_replicate_two_mul (n : ℕ) :
     ((replicate 2 (2 * n)).map λ x : ℕ ↦ (x : ℚ)⁻¹).sum = (n : ℚ)⁻¹ := by
@@ -161,8 +161,9 @@ theorem nonempty_of_restricted (hC : 0 ∉ C) (hC0 : ∀ n ≠ 0, C.count n < n)
     have X (n : ℕ) : 0 ≤ (n : ℚ)⁻¹ := inv_nonneg.mpr n.cast_nonneg
     apply (add_le_add (nsmul_le_nsmul_left (X _) h0) (nsmul_le_nsmul_left (X _) (hC1 _))).trans
     replace X : 0 < ((2 * i).succ : ℚ) := Nat.cast_pos.mpr (2 * i).succ_pos
-    rw [one_nsmul, ← mul_inv_cancel X.ne.symm, ← nsmul_eq_mul, succ_nsmul, add_le_add_iff_left]
-    exact inv_le_inv_of_le X (Nat.cast_le.mpr (2 * i).succ.le_succ)
+    rw [one_nsmul, ← mul_inv_cancel₀ X.ne.symm,
+      ← nsmul_eq_mul, succ_nsmul, add_le_add_iff_left]
+    exact inv_anti₀ X (Nat.cast_le.mpr (2 * i).succ.le_succ)
 
 theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C).sum ≤ N + 2⁻¹) :
     Nonempty (CapeTownPartition N C) := by
@@ -179,27 +180,27 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
   ---- 2. Resolve case: for some `n : ℕ`, `n` has multiplicity `≥ n` in `C`
   by_cases hC0 : ∃ n ≠ 0, n ≤ C.count n
   · rcases hC0 with ⟨n, h0, h1⟩
-    rw [le_count_iff_replicate_le, le_iff_exists_add'] at h1
+    rw [le_count_iff_replicate_le, Multiset.le_iff_exists_add] at h1
     rcases h1 with ⟨C, rfl⟩
-    rw [Multiset.map_add, sum_add, sum_replicate_map_inv h0] at h
+    rw [Multiset.map_add, sum_add, sum_replicate_map_inv h0, add_comm] at h
     obtain ⟨N, rfl⟩ : ∃ N' : ℕ, N = N'.succ := by
       apply Nat.exists_eq_succ_of_ne_zero; rintro rfl
-      refine h.not_lt (add_lt_add_of_le_of_lt ?_ (inv_lt_one one_lt_two))
+      refine h.not_lt (add_lt_add_of_le_of_lt ?_ (inv_lt_one_of_one_lt₀ one_lt_two))
       refine sum_nonneg λ x h1 ↦ ?_
       rw [mem_map] at h1; rcases h1 with ⟨y, -, rfl⟩
       exact inv_nonneg.mpr y.cast_nonneg
-    refine nonempty_add_replicate_self (K_ih (card C) ?_ ?_ rfl) n
-    · rw [card_add, card_replicate, lt_add_iff_pos_right]
-      exact Nat.zero_lt_of_ne_zero h0
+    rw [add_comm]; refine nonempty_add_replicate_self (K_ih (card C) ?_ ?_ rfl) n
+    · rw [card_add, card_replicate]
+      exact Nat.lt_add_of_pos_left (Nat.zero_lt_of_ne_zero h0)
     · rwa [N.cast_succ, add_right_comm, add_le_add_iff_right] at h
   simp only [not_exists, not_and, not_le] at hC0
   ---- 3. Resolve case: for some `n : ℕ`, `2n` has multiplicity `> 1` in `C`
   by_cases hC1 : ∃ n, 1 < C.count (2 * n)
   · rcases hC1 with ⟨n, h0⟩
-    rw [← Nat.succ_le_iff, le_count_iff_replicate_le, le_iff_exists_add'] at h0
+    rw [← Nat.succ_le_iff, le_count_iff_replicate_le, Multiset.le_iff_exists_add] at h0
     rcases h0 with ⟨C, rfl⟩
-    refine nonempty_replicate_two_mul (K_ih (card (n ::ₘ C)) ?_ (h.trans_eq' ?_) rfl)
-    · rw [card_cons, card_add, card_replicate]
+    rw [add_comm]; refine nonempty_replicate_two_mul (K_ih (card _) ?_ (h.trans_eq' ?_) rfl)
+    · rw [card_cons, card_add, card_replicate, Nat.add_comm 2]
       exact (card C).succ.lt_succ_self
     · rw [map_cons, sum_cons, Multiset.map_add, sum_add, sum_replicate_two_mul, add_comm]
   simp only [not_exists, not_and, not_lt] at hC1
@@ -219,7 +220,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
       by_contra h0; simp only [not_exists, not_and, not_le] at h0
       have h2 : part' ≠ ∅ := by rw [empty_eq_zero, ← card_pos, card_part']; exact N.succ_pos
       apply (sum_lt_sum_of_nonempty h2 h0).not_le
-      replace h2 : (2 : ℚ)⁻¹ + 2⁻¹ = 1 := by rw [inv_eq_one_div]; rfl
+      replace h2 : (2 : ℚ)⁻¹ + 2⁻¹ = 1 := by rw [inv_eq_one_div, add_halves]
       rw [map_const', sum_replicate, card_part', nsmul_eq_mul, mul_one_sub, Nat.cast_mul,
         mul_inv_rev, mul_inv_cancel_left₀ (Nat.cast_ne_zero.mpr N.succ_ne_zero),
         N.cast_succ, ← h2, add_sub_assoc, Nat.cast_two, add_sub_cancel_right, sum_map_sum]
@@ -233,7 +234,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
     · rw [sum_cons, cons_add, sum_cons]
     · refine forall_mem_cons.mpr ⟨?_, λ G' hG' ↦ total_bound' G' (mem_cons_of_mem hG')⟩
       rw [map_cons, sum_cons, ← le_sub_iff_add_le']
-      refine hG0.trans (sub_le_sub_left (inv_le_inv_of_le ?_ (Nat.cast_le.mpr h1.le)) _)
+      refine hG0.trans (sub_le_sub_left (inv_anti₀ ?_ (Nat.cast_le.mpr h1.le)) _)
       rw [Nat.cast_pos, Nat.mul_pos_iff_of_pos_left Nat.two_pos]; exact N.succ_pos
   simp only [not_exists, not_and, not_lt] at hC2
   ---- 5. Resolve the final case

@@ -1,0 +1,47 @@
+Fix some $c \in \N$.
+Find all functions $f : \N \to \N$ such that $(f(m) + n + c)(f(n) + m + c)$ is a square for all $m, n \in \N$.
+
+
+
+\subsection*{Answer}
+
+$f(n) = n + k$ for some $k \in \N$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{https://www.imo-official.org/problems/IMO2010SL.pdf}
+
+We follow the official solution.
+The key results are as follows.
+
+\begin{claim}
+If $f(k) \equiv f(\ell) \pmod{p}$, then $k \equiv \ell \pmod{p}$.
+\end{claim}
+\begin{proof}
+The key observation is that for any $m, n \in \N$, if $\nu_p(f(m) + n + c) \in \{1, 3\}$, then $p \mid f(n) + m + c$.
+This holds since $\nu_p(f(m) + n + c) + \nu_p(f(n) + m + c)$ has to be even.
+
+First suppose that $f(k) \equiv f(\ell) \pmod{p^2}$.
+Then there exists $n \in \N$ such that $f(k) + n + c \equiv f(\ell) + n + c \equiv p \pmod{p^2}$.
+By the above observation, $p$ must divide $f(n) + k + c$ and $f(n) + \ell + c$.
+Thus $k \equiv \ell \equiv -f(n) - c \pmod{p}$.
+
+Now suppose that $f(k) \not\equiv f(\ell) \pmod{p^2}$.
+Then take $n \in \N$ such that $f(k) + n + c \equiv p^3 \pmod{p^4}$.
+Since $\nu_p(f(k) - f(\ell)) = 1$ and $\nu_p(f(k) + n + c) = 3$, we get $\nu_p(f(\ell) + n + c) = 1$.
+By the above key observation, again $p$ divides $f(n) + k + c$ and $f(n) + \ell + c$.
+Thus $k \equiv \ell \equiv -f(n) - c \pmod{p}$.
+\end{proof}
+
+As a result, $|f(k + 1) - f(k)| = 1$ and $f(k + 2) \neq f(k)$ for any $k \in \N$.
+If $f(1) = f(0) - 1$, then $f(n) = f(0) - n$ for all $n \in \N$ by induction, which is impossible.
+If $f(1) = f(0) + 1$, then $f(n) = f(0) + n$ for all $n \in \N$ by induction, which gives us a desired function.
+
+
+
+\subsection*{Extra notes}
+
+The tweak for the case $f(k) \not\equiv f(\ell) \pmod{p^2}$ is not necessary for the case $p \neq 2$, but avoiding it makes the solution a bit more technical.
+However, it is absolutely necessary for the case $p = 2$.

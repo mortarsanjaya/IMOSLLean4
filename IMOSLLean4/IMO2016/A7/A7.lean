@@ -30,8 +30,8 @@ lemma zero_is_good [LinearOrderedSemiring S] : good (λ _ : R ↦ (0 : S)) := λ
 
 lemma neg_one_is_good [LinearOrderedRing S] : good (λ _ : R ↦ (-1 : S)) := λ x y ↦ by
   rw [mul_assoc, ← sq, neg_one_sq, two_mul, add_assoc, self_eq_add_right,
-    ← max_add_add_left, ← add_assoc, add_neg_self, zero_add, max_eq_right_iff]
-  exact (neg_one_lt_zero (α := S)).le
+    ← max_add_add_left, ← add_assoc, add_neg_cancel, zero_add, max_eq_right_iff]
+  exact neg_one_lt_zero.le
 
 lemma hom_is_good [LinearOrderedCommSemiring S] (φ : R →+* S) : good φ := λ x y ↦ by
   rw [φ.map_add, φ.map_add, max_self, add_comm (_ * _), φ.map_pow, φ.map_pow, add_sq']
@@ -116,16 +116,16 @@ theorem good_case_one (hf : good f) (h : f 0 = 0) : f = 0 ∨ ∃ φ : R →+* S
     rw [← add_rotate, ← mul_add, add_add_sub_cancel, ← add_rotate, ← add_assoc, ← sq] at h2
     exact sq_eq_zero_iff.mp (h2.antisymm (sq_nonneg _))
   replace h (x) : f (-x) = -f x := by
-    specialize h0 ((add_zero _).trans (add_neg_self x))
+    specialize h0 ((add_zero _).trans (add_neg_cancel x))
     rwa [h, add_zero, add_comm, ← eq_neg_iff_add_eq_zero] at h0
-  intro x y; specialize h0 (add_neg_self (x + y))
+  intro x y; specialize h0 (add_neg_cancel (x + y))
   rwa [h, add_neg_eq_zero, eq_comm] at h0
 
 /-- Solution for Case 2: `f(0) = -1` -/
 theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+* S, f = φ - 1 := by
   have h0 (x) : f (x ^ 2) = f x ^ 2 + 2 * f x := by
     specialize hf x 0
-    have X : (-1 : S) ≤ 0 := (neg_one_lt_zero (α := S)).le
+    have X : (-1 : S) ≤ 0 := neg_one_lt_zero.le
     rw [add_zero, zero_pow (Nat.succ_ne_zero 1), h, mul_neg_one, eq_neg_add_iff_add_eq,
       add_zero, add_comm, max_eq_right (add_le_of_nonpos_right X)] at hf
     exact hf.symm
@@ -135,7 +135,7 @@ theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+*
     change f (x ^ 2) + 1 = (f x + 1) ^ 2; rw [h0, add_sq, mul_one, one_pow]
   have h1 {t} (ht : f (-t) = f t) : f t < 1 := by
     have h1 := good_map_main_ineq hf t (-t)
-    rw [neg_sq, h0, ht, add_neg_self, h, neg_one_sq, ← two_mul, mul_assoc, ← sq,
+    rw [neg_sq, h0, ht, add_neg_cancel, h, neg_one_sq, ← two_mul, mul_assoc, ← sq,
       mul_add, ← add_assoc, ← two_mul, ← mul_assoc, ← mul_assoc, ← sq, ← mul_pow] at h1
     replace h := le_of_add_le_of_nonneg_right h1 (sq_nonneg _)
     refine lt_of_mul_lt_mul_of_nonneg_left (h.trans_lt ?_) (sq_nonneg 2)
@@ -165,17 +165,17 @@ theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+*
       rw [h3, h0, ← two_mul, mul_neg_one]
     replace h0 (x) : f (-x) = -(f x + 2) := by rw [neg_add, ← h0 x, neg_add_cancel_left]
     intro x y; specialize h x y
-    rwa [h0, sub_neg_eq_add, h0, h0, neg_mul_neg, ← add_assoc, ← two_mul, add_mul, mul_add,
-      mul_add, ← mul_add_one (α := S), add_assoc, add_sub_cancel_left, mul_comm (f x),
+    rwa [h0, sub_neg_eq_add, h0, h0, neg_mul_neg, ← add_assoc, ← two_mul, add_mul,
+      mul_add, mul_add, ← mul_add_one, add_assoc, add_sub_cancel_left, mul_comm (f x),
       ← mul_add, ← mul_add, ← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero,
       or_iff_right two_ne_zero, ← one_add_one_eq_two, ← add_assoc, add_add_add_comm] at h
   ---- Case 2: `f` is even
-  · suffices ∀ x, f x = -1 from λ x y ↦ by rw [this, this, this, neg_add_self, zero_add]
+  · suffices ∀ x, f x = -1 from λ x y ↦ by rw [this, this, this, neg_add_cancel, zero_add]
     have X : (0 : S) < 2 := zero_lt_two
     replace h1 (t) : f t < 1 := h1 (h2 t)
     replace h (x) : f (x + x) = -1 := by
       have h3 := hf x (-x)
-      rw [add_neg_self, h, neg_one_sq, neg_sq, h2, ← hf, eq_comm, sq_eq_one_iff] at h3
+      rw [add_neg_cancel, h, neg_one_sq, neg_sq, h2, ← hf, eq_comm, sq_eq_one_iff] at h3
       exact h3.resolve_left (h1 _).ne
     replace h2 (x) : f x = -1 ∨ (0 < f x ∧ 2 * 2 * (f x ^ 2 + f x) = 1) := by
       specialize hf x x

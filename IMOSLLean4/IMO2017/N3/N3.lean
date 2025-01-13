@@ -8,6 +8,7 @@ import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Data.Nat.GCD.Basic
 
 /-!
 # IMO 2017 N3

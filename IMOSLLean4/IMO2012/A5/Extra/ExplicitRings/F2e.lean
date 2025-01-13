@@ -120,7 +120,7 @@ protected theorem add_assoc : ∀ x y z : 𝔽₂ε, x + y + z = x + (y + z)
   | Y, Y, X => rfl
   | Y, Y, Y => rfl
 
-protected theorem add_left_neg : ∀ x : 𝔽₂ε, -x + x = 0
+protected theorem neg_add_cancel : ∀ x : 𝔽₂ε, -x + x = 0
   | O => rfl
   | I => rfl
   | X => rfl
@@ -131,7 +131,7 @@ instance : AddCommGroup 𝔽₂ε :=
     zero_add := 𝔽₂ε.zero_add
     add_zero := 𝔽₂ε.add_zero
     add_comm := 𝔽₂ε.add_comm
-    add_left_neg := 𝔽₂ε.add_left_neg
+    neg_add_cancel := 𝔽₂ε.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
 
@@ -267,6 +267,7 @@ theorem cast_add [AddMonoidWithOne R] [CharTwo R] (r : R) :
   | Y, Y => (add_self_eq_zero _).symm
 
 variable [NonAssocSemiring R] [CharTwo R] {r : R} (h : r * r = 0)
+include h
 
 theorem cast_mul : ∀ x y : 𝔽₂ε, cast r (x * y) = cast r x * cast r y
   | O, _ => (zero_mul _).symm

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Defs
 import Mathlib.Data.Nat.GCD.Basic
+import Mathlib.Order.Basic
 
 /-!
 # IMO 2016 N4

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Set.Finite
+import Mathlib.Algebra.Order.Field.Rat
+import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Tactic.Ring
 
 /-!
@@ -90,6 +91,7 @@ theorem field_eq5 [Field F] {t : F} (h : t ≠ 0) (h0 : t + 1 ≠ 0) (h1 : t * (
 section
 
 variable [LinearOrderedField F] {t : F} (h : 0 < t)
+include h
 
 theorem field_ineq1 : -(t + 1) / t ^ 2 ≠ 1 :=
   div_ne_one_of_ne ((neg_lt_zero.mpr (add_pos h one_pos)).trans (pow_pos h 2)).ne
@@ -137,8 +139,9 @@ def ratMapSol (k : ℕ) : Fin 3 → ℚ
   | 2 => -(k.succ * (k.succ + 1))
 
 theorem ratMapSol_prod2_strictAnti : StrictAnti (λ k ↦ ratMapSol k 2) := λ k m h ↦ by
-  apply neg_lt_neg
-  rw [← Nat.cast_succ, ← Nat.cast_succ, ← Nat.cast_mul, ← Nat.cast_mul, Nat.cast_lt]
+  unfold ratMapSol; simp only
+  rw [neg_lt_neg_iff, ← Nat.cast_succ, ← Nat.cast_succ,
+    ← Nat.cast_mul, ← Nat.cast_mul, Nat.cast_lt]
   replace h : k.succ < m.succ := Nat.succ_lt_succ h
   exact Nat.mul_lt_mul'' h ( Nat.succ_lt_succ h)
 

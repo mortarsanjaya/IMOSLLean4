@@ -39,6 +39,7 @@ structure good (f : G → ℤ) : Prop where
 namespace good
 
 variable {f : G → ℤ} (hf : good f)
+include hf
 
 theorem nonneg (x) : 0 ≤ f x := (hf.pos x).le
 

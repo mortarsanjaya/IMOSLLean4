@@ -24,6 +24,8 @@ section
 variable [AddCommGroup G] [AddCancelCommMonoid H] (hH : ∀ x y : H, 2 • x = 2 • y → x = y)
   {f : G → H} (h : ∀ x y, f (x + y) + f (x - y) = 2 • (f x + f y))
 
+include hH h
+
 lemma map_zero : f 0 = 0 := by
   specialize h 0 0
   rw [add_zero, sub_zero, two_nsmul, self_eq_add_right, ← two_nsmul] at h
@@ -74,7 +76,7 @@ lemma BilinMap_def (x y : G) : BilinMap hH h x y = f (x + y) - (f x + f y) := rf
 
 lemma BilinMap_eq_two_nsmul (x : G) : BilinMap hH h x x = 2 • f x := by
   rw [two_nsmul, ← neg_inj, ← map_neg, BilinMap_def,
-    add_neg_self, map_zero hH h, map_even hH h, zero_sub]
+    add_neg_cancel, map_zero hH h, map_even hH h, zero_sub]
 
 lemma two_nsmul_BilinMap_eq (x y : G) :
     2 • BilinMap hH h x y = f (x + y) - f (x - y) := by

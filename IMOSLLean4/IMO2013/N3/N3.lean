@@ -72,4 +72,4 @@ theorem final_solution :
   refine general_result (f := λ n ↦ (n ^ 2 + n + 1).primeFactorsList.foldr max ⊥) λ n ↦ ?_
   simp only; rw [special_formula, ← foldr_max_append]
   have h0 (n) : n ^ 2 + n + 1 ≠ 0 := Nat.succ_ne_zero _
-  exact (Nat.perm_primeFactorsList_mul (h0 n) (h0 (n + 1))).foldr_eq max_left_commutative ⊥
+  exact (Nat.perm_primeFactorsList_mul (h0 n) (h0 (n + 1))).foldr_eq _

@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Int.ModEq
 import Mathlib.RingTheory.Coprime.Lemmas
+import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2007 N6 (P5)
@@ -35,8 +36,8 @@ theorem bad_pair_descent (hn : 1 < n) (ha : 0 < a) (hb : a < b) (h : bad_pair n 
   rcases h with ⟨k, h⟩
   rw [sq (a : ℤ), ← mul_assoc] at h
   unfold bad_pair; simp only [sq (a : ℤ), ← mul_assoc]
-  have ha' : 0 < (a : ℤ) := Nat.cast_pos.mpr ha
-  have hb' : 0 < (b : ℤ) := Nat.cast_pos.mpr (ha.trans hb)
+  have ha' : 0 < (a : ℤ) := Int.natCast_pos.mpr ha
+  have hb' : 0 < (b : ℤ) := Int.natCast_pos.mpr (ha.trans hb)
   replace hn : 1 < n * a :=
     hn.trans_le (le_mul_of_one_le_right (Int.one_pos.trans hn).le ha')
   generalize n * a = N at hn h ⊢; clear n
@@ -59,7 +60,7 @@ theorem bad_pair_descent (hn : 1 < n) (ha : 0 < a) (hb : a < b) (h : bad_pair n 
   refine ⟨c, Int.ofNat_pos.mp h0, ?_, Dvd.intro_left _ h.symm⟩
   ---- Now it remains to show that `c < a`
   have hNab : N * a - 1 < N * b - 1 :=
-    sub_lt_sub_right (mul_lt_mul_of_pos_left (Nat.cast_lt.mpr hb) hn') _
+    Int.sub_lt_sub_right (mul_lt_mul_of_pos_left (Nat.cast_lt.mpr hb) hn') _
   replace h : N * c - 1 < N * a - 1 := by
     rwa [← mul_lt_mul_iff_of_pos_left (X.mpr hb'), ← h,
       sq, mul_lt_mul_iff_of_pos_right (X.mpr ha')]
@@ -68,7 +69,7 @@ theorem bad_pair_descent (hn : 1 < n) (ha : 0 < a) (hb : a < b) (h : bad_pair n 
 /-- Final solution -/
 theorem final_solution (hn : 1 < n) (ha : 0 < a) (hb : 0 < b) (h : bad_pair n a b) :
     a = b := by
-  revert b; induction' a using Nat.strongRec with a a_ih; intro b hb h
+  induction' a using Nat.strong_induction_on with a a_ih generalizing b
   obtain h0 | h0 : b ≤ a ∨ a < b := le_or_lt b a
   · exact h0.eq_or_lt.elim Eq.symm λ h0 ↦ (a_ih b h0 hb ha (bad_pair_comm.mp h)).symm
   · obtain ⟨c, hc, hc0, h1⟩ := bad_pair_descent hn ha h0 h

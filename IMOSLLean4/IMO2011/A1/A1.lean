@@ -215,11 +215,11 @@ lemma four_le_p_val_imp₁ {A : Card4NatSet} (hA : 4 ≤ A.p_val) :
       | 3 => exact h.trans (Nat.mul_comm _ _)
 
 lemma four_le_p_val_imp₂ {A : Card4NatSet} (hA : 4 ≤ A.p_val) :
-    ∃ (n : ℕ) (hn : 0 < n), A = MaxSet1.nsmul hn ∨ A = MaxSet2.nsmul hn :=
+    ∃ (n : ℕ) (hn : n > 0), A = MaxSet1.nsmul hn ∨ A = MaxSet2.nsmul hn :=
   ⟨A.f 0, A.f_pos 0, (four_le_p_val_imp₁ hA).imp Card4NatSet.ext Card4NatSet.ext⟩
 
 lemma four_le_p_val_iff {A : Card4NatSet} :
-    4 ≤ A.p_val ↔ ∃ (n : ℕ) (hn : 0 < n), A = MaxSet1.nsmul hn ∨ A = MaxSet2.nsmul hn := by
+    4 ≤ A.p_val ↔ ∃ (n : ℕ) (hn : n > 0), A = MaxSet1.nsmul hn ∨ A = MaxSet2.nsmul hn := by
   refine ⟨four_le_p_val_imp₂, ?_⟩; rintro ⟨_, hn, rfl | rfl⟩
   exacts [(MaxSet1_nsmul_p_val hn).ge, (MaxSet2_nsmul_p_val hn).ge]
 
@@ -234,7 +234,7 @@ end Card4NatSet
 /-- Final solution -/
 theorem final_solution {A : Card4NatSet} :
     (∀ B : Card4NatSet, B.p_val ≤ A.p_val) ↔
-      ∃ (n : ℕ) (hn : 0 < n), A.f = n • ![1, 5, 7, 11] ∨ A.f = n • ![1, 11, 19, 29] := by
+      ∃ (n : ℕ) (_ : n > 0), A.f = n • ![1, 5, 7, 11] ∨ A.f = n • ![1, 11, 19, 29] := by
   have h : (∀ B : Card4NatSet, B.p_val ≤ A.p_val) ↔ 4 ≤ A.p_val :=
     ⟨λ h ↦ h Card4NatSet.MaxSet1, λ h B ↦ B.p_val_le_four.trans h⟩
   rw [h, Card4NatSet.four_le_p_val_iff]

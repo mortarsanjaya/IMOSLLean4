@@ -49,7 +49,7 @@ theorem good_ineq2 [LinearOrderedSemifield F] [ExistsAddOfLE F]
   have h2 : 0 < x 1 * x 3 := mul_pos (h 1) (h 3)
   have h3 : 0 < (x 0 * x 2) * (x 1 * x 3) := mul_pos h1 h2
   rw [div_add_div _ _ h2.ne.symm h1.ne.symm, ← sq, ← sq, mul_comm (x 1 * x 3),
-    div_add' _ _ _ h3.ne.symm, ← mul_assoc, ← add_sq', le_div_iff h3]
+    div_add' _ _ _ h3.ne.symm, ← mul_assoc, ← add_sq', le_div_iff₀ h3]
   exact good_ineq1 h h0
 
 theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
@@ -59,7 +59,7 @@ theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
   rw [targetVal, add_assoc, add_add_add_comm, X]
   replace X (i) : 0 < x i / x (i + 1) + x (i + 2) / x (i + 3) :=
     add_pos (div_pos (h i) (h (i + 1))) (div_pos (h (i + 2)) (h (i + 3)))
-  apply le_of_pow_le_pow_left (Nat.succ_ne_zero 1) (add_pos (X 0) (X 1)).le
+  apply le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) (add_pos (X 0) (X 1)).le
   ---- Reduce to `LHS ≥ 4(x_0 x_2/x_1 x_3 + x_1 x_3/x_0 x_2 + 2)`
   rw [← pow_mul, pow_add 2 2 4]
   apply (mul_le_mul_of_nonneg_left (good_ineq2 h h0) (sq_nonneg 2)).trans
@@ -70,12 +70,12 @@ theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
   rw [add_sq', mul_add, mul_add, mul_comm _ 2, mul_assoc 2]
   refine add_le_add (add_le_add h1 h2) (mul_le_mul_of_nonneg_left ?_ zero_le_two)
   ---- Prove `(x_0/x_1 + x_2/x_3)(x_1/x_2 + x_3/x_0) ≥ 4`
-  refine le_of_pow_le_pow_left (Nat.succ_ne_zero 1) (mul_pos (X 0) (X 1)).le ?_
+  refine le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 1) (mul_pos (X 0) (X 1)).le ?_
   have h3 : 0 < x 1 * x 3 / (x 0 * x 2) :=
     div_pos (mul_pos (h 1) (h 3)) (mul_pos (h 0) (h 2))
   rw [sq, mul_pow]
   apply (mul_le_mul h1 h2 (mul_nonneg (sq_nonneg 2) h3.le) (sq_nonneg _)).trans_eq'
-  rw [mul_mul_mul_comm, ← inv_div, inv_mul_cancel h3.ne.symm, mul_one]
+  rw [mul_mul_mul_comm, ← inv_div, inv_mul_cancel₀ h3.ne.symm, mul_one]
 
 
 
@@ -124,7 +124,7 @@ lemma sqrt3_seq_targetVal : targetVal (F := F) ![2 + √3, 1, 2 + √3, 1] = 8 :
     rw [div_one, one_div, add_assoc, this, ← Nat.cast_ofNat, ← Nat.cast_add]; rfl
   have X : (2 + √3 : F) ≠ 0 := two_add_sqrt3_pos.ne.symm
   apply mul_right_cancel₀ X
-  rw [add_mul, ← sq, inv_mul_cancel X, two_add_sqrt3_sq_add_one]
+  rw [add_mul, ← sq, inv_mul_cancel₀ X, two_add_sqrt3_sq_add_one]
 
 /-- Final solution -/
 theorem final_solution :

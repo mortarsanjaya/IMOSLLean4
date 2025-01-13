@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.Field.Defs
-import Mathlib.Algebra.Order.Field.Unbundled.Basic
 import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
@@ -29,6 +28,7 @@ lemma ring_ineq [LinearOrderedCommSemiring R] [ExistsAddOfLE R] (a b : R) :
 
 variable [LinearOrderedSemifield F] [ExistsAddOfLE F]
   {a b c d : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d)
+include ha hb hc hd
 
 lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) ^ 4 := by
   have X : 4 = (2 : F) ^ 2 := by rw [← Nat.cast_ofNat, ← Nat.cast_two, ← Nat.cast_pow]; rfl
@@ -39,7 +39,7 @@ lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) 
       mul_le_mul_of_nonneg_left (ring_ineq _ _) (sq_nonneg _)
     _ = (2 ^ 2 * (2 * (a / b) * (b / c + a / d))) ^ 2 := by rw [← mul_pow, X, mul_assoc]
     _ ≤ ((2 * (a / b) + (b / c + a / d)) ^ 2) ^ 2 := by
-      refine pow_le_pow_left (mul_nonneg (sq_nonneg 2) ?_) (ring_ineq _ _) 2
+      refine pow_le_pow_left₀ (mul_nonneg (sq_nonneg 2) ?_) (ring_ineq _ _) 2
       have X {u v : F} (hu : 0 < u) (hv : 0 < v) : 0 < u / v := div_pos hu hv
       exact mul_nonneg (mul_nonneg zero_le_two (X ha hb).le) (add_pos (X hb hc) (X ha hd)).le
     _ = _ := by rw [← pow_mul]
@@ -51,7 +51,7 @@ lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) 
     _ = 4 ^ 4 * (a / b * (a / c) * (a / d)) := by
       rw [div_mul_div_comm, div_mul_div_comm, ← sq, ← pow_succ]
     _ = 4 ^ 4 * ((a / b) ^ 2 * ((b / c) * (a / d))) := by
-      rw [sq, mul_mul_mul_comm, div_mul_div_cancel _ hb.ne.symm,
+      rw [sq, mul_mul_mul_comm, div_mul_div_cancel₀ hb.ne.symm,
         mul_left_comm (a / c), mul_assoc]
     _ = 4 ^ 2 * ((2 * (a / b)) ^ 2 * (2 ^ 2 * ((b / c) * (a / d)))) := by
       rw [mul_pow, ← X, mul_mul_mul_comm, ← sq, ← mul_assoc (4 ^ 2), ← pow_add]
@@ -59,11 +59,12 @@ lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) 
       rw [← mul_assoc, ← mul_pow]
 
 variable (h : a * b * c * d = 1)
+include h
 
 lemma ineq2 : 4 * a ≤ 2 * (a / b) + (b / c + a / d) := by
   have h0 := ineq1 ha hb hc hd
   rw [h, div_one] at h0
-  refine le_of_pow_le_pow_left (Nat.succ_ne_zero 3) ?_ h0
+  refine le_of_pow_le_pow_left₀ (Nat.succ_ne_zero 3) ?_ h0
   exact (add_pos (mul_pos two_pos (div_pos ha hb))
     (add_pos (div_pos hb hc) (div_pos ha hd))).le
 

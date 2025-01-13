@@ -75,7 +75,7 @@ protected theorem add_comm : ∀ x y : ℤφ, x + y = y + x
 protected theorem add_assoc : ∀ x y z : ℤφ, x + y + z = x + (y + z)
   | ⟨a, b⟩, ⟨a', b'⟩, ⟨a'', b''⟩ => ℤφ.ext (a.add_assoc a' a'') (b.add_assoc b' b'')
 
-protected theorem add_left_neg : ∀ x : ℤφ, -x + x = 0
+protected theorem neg_add_cancel : ∀ x : ℤφ, -x + x = 0
   | ⟨a, b⟩ => ℤφ.ext a.add_left_neg b.add_left_neg
 
 instance : AddCommGroup ℤφ :=
@@ -83,7 +83,7 @@ instance : AddCommGroup ℤφ :=
     zero_add := ℤφ.zero_add
     add_zero := ℤφ.add_zero
     add_comm := ℤφ.add_comm
-    add_left_neg := ℤφ.add_left_neg
+    neg_add_cancel := ℤφ.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
 
@@ -162,6 +162,7 @@ theorem cast_add [AddCommGroupWithOne R] (r : R) :
       rw [Int.cast_add, add_zsmul, add_add_add_comm]; rfl
 
 variable [Ring R] {r : R} (h : r * r = r + 1)
+include h
 
 theorem cast_mul : ∀ x y : ℤφ, cast r (x * y) = cast r x * cast r y
   | ⟨a, b⟩, ⟨a', b'⟩ => by

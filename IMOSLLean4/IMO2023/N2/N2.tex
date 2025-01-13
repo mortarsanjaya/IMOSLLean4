@@ -1,0 +1,46 @@
+Find all pairs $(a, p) \in (\N^+)^2$ such that $p$ is prime and $p^a + a^4$ is a perfect square.
+
+
+
+\subsection*{Answer}
+
+$(1, 3)$, $(2, 3)$, $(6, 3)$, and $(9, 3)$.
+
+
+
+\subsection*{Solution}
+
+Official solution: \url{http://www.imo-official.org/problems/IMO2023SL.pdf}
+
+We follow the official solution with some slightly different bounding.
+However, unlike the official solution, we also use bounding for $p = 2$.
+
+Write $p^a + a^4 = b^2$ for some $b \in \N^+$.
+Then $p^a = (b + a^2)(b - a^2)$, so $b = p^x + a^2$ and $b + a^2 = p^y$ for some $x, y \in \N$ such that $x + y = a$.
+That is, there exists $x, y \in \N$ such that $x + y = a$ and
+\[ 2(x + y)^2 = p^y - p^x. \tag{1}\label{2023n2-eq1} \]
+It is clear that $y > x$ since $p^y > p^x$.
+In particular,~\eqref{2023n2-eq1} gives $2(2y - 1)^2 \geq (p - 1) p^{y - 1}$.
+We now divide cases based on the value of $p$.
+
+If $p \geq 5$, then $2(2y - 1)^2 \geq (p - 1) p^{y - 1} \geq 4 \cdot 5^{y - 1}$.
+However, by easy induction, we have $4 \cdot 5^{y - 1} > 2(2y - 1)^2$ for all $y \geq 1$.
+Contradiction.
+
+If $p = 3$, then $2(2y - 1)^2 \geq 2 \cdot 3^{y - 1}$, which is false for $y \geq 6$.
+Bashing all $(x, y)$ with $x < y \leq 5$ yields that the pairs $(x, y)$ satisfying~\eqref{2023n2-eq1} are $(0, 1), (0, 2), (2, 4), (4, 5)$.
+
+Finally, if $p = 2$, then $2(2y - 1)^2 \geq 2^{y - 1}$, which is false for $y \geq 11$.
+Thus $y \leq 10$, and (humanly tedious) bashing yields that no pair $(x, y)$ work.
+
+
+
+\subsection*{Extra notes}
+
+Primality of $p$ is only needed to obtain~\eqref{2023n2-eq1}.
+The rest actually follows by bashing without assuming that $p$ is prime.
+One first proves that $p > 1$, and then proceed as above, except that the case $p = 4$ is missing.
+It can be dealt with the same way as the above cases, with the bounding yielding $y \leq 3$.
+
+The same method also allows us to find all such pairs where $p$ is only restricted to prime power.
+The only missing pair $(a, p)$ is $(1, 8)$.
