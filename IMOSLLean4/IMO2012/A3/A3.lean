@@ -59,8 +59,6 @@ end
 
 variable [LinearOrderedCommRing R]
 
--- theorem bernoulli_compute
-
 theorem bernoulli_special1 {x : R} (hy : -1 ≤ x) (n : ℕ) :
     (n + 2 : ℕ) ^ (n + 2) * x ≤ (n + 1 : ℕ) ^ (n + 1) * (1 + x) ^ (n + 2) := by
   have h : n.succ * x - 1 + (n + 2 : ℕ) = n.succ * (x + 1) := by
