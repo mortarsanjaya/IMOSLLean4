@@ -11,7 +11,7 @@ import Mathlib.Data.Fin.VecNotation
 /-!
 # IMO 2006 A1
 
-Let $R$ be an archimedean ring with floor.
+Let $R$ be an archimedean ring with floor. (See `FloorRing`.)
 Define the function $f : R → R$ by $$ f(x) = ⌊x⌋ (x - ⌊x⌋). $$
 Prove that for any $r ∈ R$, there exists $N ∈ ℕ$ such that for all $k ≥ N$,
 $$ f^{k + 2}(r) = f^k(r). $$
@@ -22,9 +22,12 @@ namespace IMO2006A1
 
 open Extra
 
-variable [LinearOrderedRing R] [FloorRing R]
+variable [Ring R] [LinearOrder R] [FloorRing R]
 
 abbrev f (r : R) := ⌊r⌋ * Int.fract r
+
+
+variable [IsStrictOrderedRing R]
 
 theorem floor_f_nonneg {r : R} (h : 0 ≤ ⌊r⌋) : 0 ≤ ⌊f r⌋ :=
   Int.floor_nonneg.mpr <| mul_nonneg (Int.cast_nonneg.mpr h) (Int.fract_nonneg r)
@@ -55,7 +58,7 @@ theorem floor_f_iter_natAbs_eventually_const (r : R) :
   exact floor_f_iter_natAbs_le _ c
 
 theorem floor_f_lt_of_floor_pos {r : R} (h : 0 < ⌊r⌋) : ⌊f r⌋ < ⌊r⌋ :=
-  Int.floor_lt.mpr <| mul_lt_of_lt_one_right (Int.cast_pos.mpr h) (Int.fract_lt_one r)
+  Int.floor_lt.mpr (mul_lt_of_lt_one_right (Int.cast_pos.mpr h) (Int.fract_lt_one r))
 
 theorem floor_f_iter_eventually_const (r : R) : ∃ (C N : ℕ), ∀ n, ⌊f^[n + N] r⌋ = -C := by
   rcases floor_f_iter_natAbs_eventually_const r with ⟨C, N, h⟩
@@ -66,6 +69,7 @@ theorem floor_f_iter_eventually_const (r : R) : ∃ (C N : ℕ), ∀ n, ⌊f^[n 
   rw [← h, Int.natCast_natAbs, abs_of_nonneg (floor_f_nonneg h1.le)] at h0
   exact absurd h0.symm (floor_f_lt_of_floor_pos h1).ne
 
+open Fin.NatCast in
 theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
     ∃ s : R, (0 < s ∧ s < 1) ∧ (∀ n, f^[n] r = ![-s, s - 1] n) := by
   have X : ((-1 : ℤ) : R) = -1 := by rw [Int.cast_neg, Int.cast_one]
@@ -80,11 +84,10 @@ theorem case_floor_neg_one {r : R} (h : ∀ n, ⌊f^[n] r⌋ = -1) :
     exact one_ne_zero (zero_eq_neg.mp h)
   ---- Formula for `f^n(r)`
   · rw [neg_neg]; refine Nat.rec rfl λ n h0 ↦ ?_
-    have X0 : (n.succ : Fin 2) = n + 1 := by
-      rw [Fin.ext_iff, Fin.val_add, Fin.val_natCast,
-        Fin.val_natCast, Fin.val_one, Nat.mod_add_mod]
-    rw [f.iterate_succ_apply', f, Int.fract, h, X, h0,
-      neg_one_mul, sub_neg_eq_add, neg_add', X0]
+    have X0 :(n.succ : Fin 2) = n + 1 := by
+      rw [Fin.ext_iff, Fin.val_add]; simp
+    rw [f.iterate_succ_apply', f, Int.fract, h, X,
+      h0, neg_one_mul, sub_neg_eq_add, neg_add', X0]
     exact Fin.cases rfl (λ i ↦ by simp [Fin.fin_one_eq_zero i]) n
 
 theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f^[n] r⌋ = -C) :
@@ -123,7 +126,8 @@ theorem case_floor_neg_of_one_lt {r : R} {C : ℕ} (hC : 1 < C) (h : ∀ n, ⌊f
 /-- Predicate for what the sequence `(f^[n](x))_{n ≥ 0}` looks like eventually. -/
 inductive GeneralGood : (ℕ → R) → Prop
   | const_zero : GeneralGood λ _ ↦ 0
-  | two_period (s : R) (_ : 0 < s) (_ : s < 1) : GeneralGood λ n ↦ ![-s, s - 1] n
+  | two_period (s : R) (_ : 0 < s) (_ : s < 1) :
+      GeneralGood λ n ↦ ![-s, s - 1] (Fin.ofNat 2 n)
   | const_nonzero_add_Infinitesimal (C : ℕ) (_ : 1 < C) (ε : R) (_ : Infinitesimal ε)
         (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2 + (-C) ^ n * ε) :
       GeneralGood a
@@ -132,7 +136,8 @@ inductive GeneralGood : (ℕ → R) → Prop
   in the archimedean case. -/
 inductive ArchimedeanGood : (ℕ → R) → Prop
   | const_zero : ArchimedeanGood λ _ ↦ 0
-  | two_period (s : R) (_ : 0 < s) (_ : s < 1) : ArchimedeanGood λ n ↦ ![-s, s - 1] n
+  | two_period (s : R) (_ : 0 < s) (_ : s < 1) :
+      ArchimedeanGood λ n ↦ ![-s, s - 1] (Fin.ofNat 2 n)
   | const_nonzero (C : ℕ) (_ : 1 < C) (a : ℕ → R) (_ : ∀ n, (C + 1) * a n = -C ^ 2) :
       ArchimedeanGood a
 
@@ -144,19 +149,20 @@ theorem GeneralGood.toArchimedeanGood [Archimedean R] {a : ℕ → R} (h : Gener
   refine λ C h ε h0 a h1 ↦ ArchimedeanGood.const_nonzero C h a λ n ↦ ?_
   rw [h1, h0.zero_of_Archimedean, mul_zero, add_zero]
 
+open Fin.NatCast in
 omit [FloorRing R] in
 theorem ArchimedeanGood.two_periodic {a : ℕ → R} (h : ArchimedeanGood a) (n) :
     a (n + 2) = a n := by
   refine h.recOn rfl ?_ ?_
   ---- Case `two_period`
   · rintro s - -; apply congrArg
-    rw [Fin.ext_iff, Fin.val_natCast, Fin.val_natCast, Nat.add_mod_right]
+    rw [Fin.ext_iff, Fin.ofNat_eq_cast, Fin.ofNat_eq_cast]
+    let N : Fin 2 := n
+    simp only [Fin.val_natCast, Nat.add_mod_right]
   ---- Case `const_nonzero`
   · rintro C - a ha
     have hC : 0 < (C : R) + 1 := (Nat.cast_pos.mpr C.succ_pos).trans_eq C.cast_succ
     rw [← mul_left_cancel_iff_of_pos hC, ha, ha]
-
-
 
 
 

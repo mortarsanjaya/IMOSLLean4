@@ -28,7 +28,7 @@ include hH h
 
 lemma map_zero : f 0 = 0 := by
   specialize h 0 0
-  rw [add_zero, sub_zero, two_nsmul, self_eq_add_right, ← two_nsmul] at h
+  rw [add_zero, sub_zero, two_nsmul, left_eq_add, ← two_nsmul] at h
   exact hH _ _ (h.trans (nsmul_zero 2).symm)
 
 lemma map_even (x) : f (-x) = f x := by

@@ -7,7 +7,7 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Extra.NatSequence.AntitoneConst
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Algebra.Field.Rat
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # IMO 2018 N4 (P5)

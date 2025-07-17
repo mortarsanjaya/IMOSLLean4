@@ -37,7 +37,7 @@ theorem sq_eq_zero {f : R → R} (hf : good f) : f 0 ^ 2 = 0 := by
   have h := hf 0 (f (f 0))
   rw [zero_mul, sq, zero_mul, add_zero] at h
   have h0 := hf (f 0) 0
-  rwa [add_zero, ← h, mul_zero, self_eq_add_right] at h0
+  rwa [add_zero, ← h, mul_zero, left_eq_add] at h0
 
 variable [NoZeroDivisors R]
 
@@ -61,8 +61,7 @@ theorem map_eq_zero_iff {x : R} : f x = 0 ↔ x = 0 := by
 theorem injective : f.Injective := by
   intro x y h; obtain h0 : f y = 0 ∨ x - y = 0 := by
     have h0 := hf.self_mul_map y
-    rwa [← h, ← add_sub_cancel y x, hf, add_left_eq_self,
-      hf.map_eq_zero_iff, mul_eq_zero] at h0
+    rwa [← h, ← add_sub_cancel y x, hf, add_eq_right, hf.map_eq_zero_iff, mul_eq_zero] at h0
   rcases h0 with h0 | h0
   · rw [hf.map_eq_zero_iff.mp h0, hf.map_eq_zero_iff.mp (h.trans h0)]
   · exact eq_of_sub_eq_zero h0
@@ -159,7 +158,7 @@ theorem char_eq2_solution [Extra.CharTwo R] {f : R → R} (hf : good f) : f = (�
   funext y; have h1 := h0 (y + 1)
   rw [add_add_cancel_right] at h1
   obtain h2 | h2 := h (h0 y) h1
-  · rw [hf.inj, add_right_eq_self] at h2
+  · rw [hf.inj, add_eq_left] at h2
     rw [← sub_eq_zero, ← mul_one (f y - y), h2, mul_zero]
   · rwa [h2, add_add_cancel_right, hf.inj] at h1
 

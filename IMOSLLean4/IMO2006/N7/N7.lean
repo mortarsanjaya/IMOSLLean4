@@ -36,16 +36,16 @@ theorem exists_ne_pow_eq (hn : 1 < n) (b) :
     replace hn : 0 < n := Nat.zero_lt_of_lt hn
     refine exists_ne_map_eq_of_card_lt_of_maps_to (t := (range n).filter (· ≠ 0))
       (card_lt_card (filter_ssubset.mpr ⟨0, mem_range.mpr hn, λ h ↦ h rfl⟩)) ?_
-    rintro M -; rw [mem_filter, mem_range]
+    rintro M -; rw [coe_filter, Set.mem_setOf_eq, mem_range, ne_eq]
     exact ⟨Nat.mod_lt _ hn, h M⟩
   wlog h2 : x < y
-  · exact this hn b h y hy x hx h0.symm h1.symm (h0.lt_or_lt.resolve_left h2)
+  · exact this hn b h y hy x hx h0.symm h1.symm (h0.lt_or_gt.resolve_left h2)
   refine ⟨x, y - x, Nat.sub_pos_of_lt h2, (y.sub_le x).trans_lt (mem_range.mp hy), ?_⟩
   rw [Nat.add_sub_cancel' h2.le, h1]
 
 theorem dvd_of_add_mod_eq_mod {a d k : ℕ} (h : (a + k) % d = a % d) : d ∣ k := by
   obtain rfl | hd : d = 0 ∨ 0 < d := d.eq_zero_or_pos
-  · rwa [Nat.mod_zero, Nat.mod_zero, add_right_eq_self, ← Nat.zero_dvd] at h
+  · rwa [Nat.mod_zero, Nat.mod_zero, Nat.add_eq_left, ← Nat.zero_dvd] at h
   · replace h := Nat.add_mod_eq_add_mod_left (d.pred * a) h
     rwa [← Nat.add_assoc, ← Nat.succ_mul, Nat.succ_pred_eq_of_pos hd, ← Nat.mod_add_mod,
       Nat.mul_mod_right, Nat.zero_add, ← Nat.dvd_iff_mod_eq_zero] at h

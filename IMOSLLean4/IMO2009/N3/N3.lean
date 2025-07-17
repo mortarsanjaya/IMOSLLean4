@@ -44,7 +44,7 @@ lemma const_of_finite_prime_divisor (h0 : ∀ p : ℕ, p.Prime → (∃ c, (p : 
     ∃ C, f = λ _ ↦ C := by
   have h1 : f 0 ≠ 0 := λ h1 ↦ by
     obtain ⟨p, h2, h3⟩ := K.exists_infinite_primes
-    exact h2.not_lt (h0 p h3 ⟨0, 0, h1⟩)
+    exact h2.not_gt (h0 p h3 ⟨0, 0, h1⟩)
   refine const_of_infinite_map_eq_map_zero h
     λ k ↦ ⟨(f 0).natAbs * (4 * K.factorial) * k, ?_, ?_⟩
   ---- `k ≤ Nk`, where `N = |f(0)| ⬝ 4K!`
@@ -81,5 +81,5 @@ theorem final_solution (h0 : ∀ C : ℤ, ∃ b : ℕ, f b ≠ C) (K : ℕ) :
   refine by_contra λ h1 ↦ absurd h0 (not_forall.mpr ⟨f 0, ?_⟩)
   obtain ⟨C, rfl⟩ : ∃ C, f = λ _ ↦ C :=
     const_of_finite_prime_divisor h (K := K) λ p h2 h3 ↦
-      lt_of_not_le λ h4 ↦ not_exists.mp h1 p ⟨h4, h2, h3⟩
+      lt_of_not_ge λ h4 ↦ not_exists.mp h1 p ⟨h4, h2, h3⟩
   rintro ⟨b, hb⟩; exact hb rfl

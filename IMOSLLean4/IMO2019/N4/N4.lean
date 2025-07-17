@@ -45,7 +45,7 @@ theorem eq_zero_of_prime_add_dvd_sq (h : p.Prime) (h0 : a < p) (h1 : p + a ∣ p
   rw [Nat.le_add_one_iff, Nat.le_add_one_iff, zero_add, le_zero_iff] at h1
   rcases h1 with (rfl | rfl) | rfl
   · exact absurd h2 (h.one_lt.trans_le le_self_add).ne.symm
-  · rwa [pow_one, add_right_eq_self] at h2
+  · rwa [pow_one, add_eq_left] at h2
   · refine absurd ((add_lt_add_left h0 p).trans_le ?_) h2.not_lt
     rw [sq, ← two_mul]; exact Nat.mul_le_mul_right p h.two_le
 

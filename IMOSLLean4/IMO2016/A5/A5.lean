@@ -38,7 +38,7 @@ theorem final_solution_part1 (n) :
     obtain ⟨a, h1⟩ : ∃ a, a ^ 2 = r ^ 2 * (r ^ 2 + 2 * k) + k ^ 2 :=
       ⟨r ^ 2 + k, by rw [add_sq, sq, mul_assoc, mul_left_comm, ← mul_add]⟩
     refine ⟨a, r, h0, r.le_succ, h1 ▸ ⟨Nat.le_add_right _ _, ?_⟩⟩
-    exact Nat.add_le_add_left (Nat.pow_le_pow_of_le_left h 2) _
+    exact Nat.add_le_add_left (Nat.pow_le_pow_left h 2) _
   ---- Case 2: `s` is odd
   · replace h : k < r := by
       rwa [Nat.succ_le_iff, ← Nat.two_mul, Nat.mul_lt_mul_left Nat.two_pos] at h
@@ -51,14 +51,14 @@ theorem final_solution_part1 (n) :
       rw [Nat.add_sub_cancel_left, ← k.add_assoc, ← two_mul, mul_add 2,
         ← add_assoc, ← add_assoc, add_sq, sq, mul_right_comm, ← add_mul]
     refine ⟨a, r + 1, r.succ_pos, le_refl _, h0 ▸ ⟨Nat.le_add_right _ _, ?_⟩⟩
-    exact Nat.add_le_add_left (Nat.pow_le_pow_of_le_left (r.sub_lt_succ k).le 2) _
+    exact Nat.add_le_add_left (Nat.pow_le_pow_left (r.sub_lt_succ k).le 2) _
 
 /-- Final solution, part 2, explicit version -/
 theorem final_solution_part2_general (k) :
     ¬∃ a b, 0 < b ∧ b ≤ k ∧ b ^ 2 * (k ^ 2 + 1) ≤ a ^ 2 ∧ a ^ 2 ≤ b ^ 2 * (k ^ 2 + 2) := by
   rintro ⟨a, b, h, h0, h1, h2⟩
   replace h1 : (b * k) * (b * k) < a ^ 2 := by
-    rw [← sq, mul_pow]; exact (Nat.lt_add_of_pos_right (Nat.pos_pow_of_pos 2 h)).trans_le h1
+    rw [← sq, mul_pow]; exact (Nat.lt_add_of_pos_right (Nat.pow_pos h)).trans_le h1
   replace h2 : a ^ 2 < (b * k + 1) * (b * k + 1) := by
     rw [← sq, add_sq, mul_pow, mul_one, one_pow, Nat.lt_add_one_iff]
     refine h2.trans ((b ^ 2).mul_add _ _ ▸ Nat.add_le_add_left ?_ _)

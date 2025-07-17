@@ -35,7 +35,8 @@ lemma padicValNat_pow_left (a b k) : padicValNat (a ^ k) b = padicValNat a b / k
   obtain rfl | hk : k = 0 ∨ k ≠ 0 := eq_or_ne k 0
   ---- Side case 1: `k = 0`
   · rw [Nat.pow_zero, Nat.div_zero]; rfl
-  obtain rfl | rfl | ha : a = 0 ∨ a = 1 ∨ 1 < a := a.eq_zero_or_pos.imp_right LE.le.eq_or_gt
+  obtain rfl | rfl | ha : a = 0 ∨ a = 1 ∨ 1 < a :=
+    a.eq_zero_or_pos.imp_right LE.le.eq_or_lt'
   ---- Side case 2: `a = 0`
   · rw [Nat.zero_pow (Nat.zero_lt_of_ne_zero hk), padicValNat.padicValNat_eq_maxPowDiv,
       Nat.maxPowDiv.zero_base, Nat.zero_div]

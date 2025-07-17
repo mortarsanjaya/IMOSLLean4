@@ -77,7 +77,7 @@ theorem CharTwoDomain_units_injective {a b : Rˣ} (h : f a = f b) : a = b := by
   have X : ∀ x, f (x + 1) = f 0 + f x := CharTwoDomain_map_add_one ι f
   have X0 {c} : f c = 0 ↔ c = 1 := map_eq_zero_iff_eq_one ι
   have X1 {c} : f c = f 0 ↔ c = 0 := by
-    rw [← map_zero_add_map_add_one ι, add_right_eq_self, X0, add_left_eq_self]
+    rw [← map_zero_add_map_add_one ι, add_eq_left, X0, add_eq_right]
   have h0 : (a.1 * b⁻¹ + (a + b⁻¹)) * (b * a⁻¹ + (b + a⁻¹))
       = (1 + (a + b⁻¹)) * (1 + (b + a⁻¹)) := calc
     _ = (a.1 * b⁻¹) * (b * a⁻¹) + (a * b⁻¹) * (b + a⁻¹)
@@ -106,14 +106,14 @@ theorem CharTwoDomain_units_injective {a b : Rˣ} (h : f a = f b) : a = b := by
         ← add_assoc, CharTwo.add_add_cancel_right]
     _ = _ := by rw [add_add_add_comm]
   rw [← h, X, add_add_add_comm, add_add_add_comm a.1, add_add_add_comm,
-    add_comm 1, add_comm 1, ← good_def ι, ← add_assoc, add_left_eq_self,
-    ← X, X0, add_left_eq_self, mul_eq_zero] at h0
+    add_comm 1, add_comm 1, ← good_def ι, ← add_assoc, add_eq_right,
+    ← X, X0, add_eq_right, mul_eq_zero] at h0
   rcases h0 with h0 | h0
   · replace h0 : f _ = 0 := map_eq_zero_of_incl_map_eq_zero ι h0
-    rwa [X0, add_left_eq_self, CharTwo.add_eq_zero_iff_eq, Units.eq_iff] at h0
+    rwa [X0, add_eq_right, CharTwo.add_eq_zero_iff_eq, Units.val_inj] at h0
   · replace h0 : f _ = 0 := map_eq_zero_of_incl_map_eq_zero ι h0
-    rwa [X0, add_left_eq_self, CharTwo.add_eq_zero_iff_eq,
-      Units.eq_iff, inv_inj, eq_comm] at h0
+    rwa [X0, add_eq_right, CharTwo.add_eq_zero_iff_eq,
+      Units.val_inj, inv_inj, eq_comm] at h0
 
 theorem CharTwoDomain_units_incl_map_eq (x : Rˣ) : ι (f x) = 1 - x := by
   let c : Rˣ := ⟨ι (f (x + 1)), _, units_inv_formula ι f x,

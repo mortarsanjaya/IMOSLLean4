@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.NumberTheory.Divisors
 import IMOSLLean4.Extra.NatSequence.SeqMax
+import Mathlib.Tactic.NormNum
 
 /-!
 # IMO 2006 N3
@@ -39,8 +41,8 @@ theorem g_eq_sum_divisors_card : ∀ n : ℕ, g n = (range n).sum λ k ↦ k.suc
   | n + 1 => by rw [g_succ, sum_range_succ, ← g_eq_sum_divisors_card]
 
 theorem two_le_card_divisors {n : ℕ} (h : 2 ≤ n) : 2 ≤ n.divisors.card := by
-  rw [← Nat.insert_self_properDivisors (Nat.not_eq_zero_of_lt h), Nat.succ_le_iff,
-    card_insert_of_not_mem Nat.properDivisors.not_self_mem, Nat.succ_lt_succ_iff, card_pos]
+  rw [← Nat.insert_self_properDivisors (Nat.ne_zero_of_lt h), Nat.succ_le_iff,
+    card_insert_of_notMem Nat.self_notMem_properDivisors, Nat.succ_lt_succ_iff, card_pos]
   exact ⟨1, Nat.one_mem_properDivisors_iff_one_lt.mpr h⟩
 
 theorem two_mul_lt_g : ∀ n : ℕ, 6 ≤ n → 2 * n < g n := by
@@ -82,7 +84,7 @@ theorem f_self_lt_f_succ_of_divisors_card (h : n ≠ 0)
   calc _ < (range n).sum λ _ ↦ n.succ.divisors.card :=
         sum_lt_sum_of_nonempty (nonempty_range_iff.mpr h) (λ k h1 ↦ h0 k (mem_range.mp h1))
        _ = n.succ.divisors.card * n := by
-        rw [sum_const, card_range, smul_eq_mul, mul_comm]
+        rw [sum_const, card_range, nsmul_eq_mul, mul_comm, Nat.cast_id]
 
 theorem f_succ_lt_self_of_succ_prime_large (h : 6 ≤ n) (h0 : n.succ.Prime) :
     f n.succ < f n := by
@@ -106,9 +108,9 @@ theorem final_solution_part1 : {n : ℕ | f n < f n.succ}.Infinite := by
       λ _ ↦ Extra.le_seqMax_of_le (λ n ↦ n.succ.divisors.card)⟩
     have h1 := exists_lt_card_divisor_succ K
     exact ⟨Nat.find h1,
-      (Nat.lt_find_iff h1 _).mpr λ k h2 ↦ (h0 k h2).not_lt,
-      λ k h2 ↦ (le_of_not_lt (Nat.find_min h1 h2)).trans_lt (Nat.find_spec h1)⟩
-  exact ⟨n, f_self_lt_f_succ_of_divisors_card (Nat.not_eq_zero_of_lt h0) h1, h0⟩
+      (Nat.lt_find_iff h1 _).mpr λ k h2 ↦ (h0 k h2).not_gt,
+      λ k h2 ↦ (le_of_not_gt (Nat.find_min h1 h2)).trans_lt (Nat.find_spec h1)⟩
+  exact ⟨n, f_self_lt_f_succ_of_divisors_card (Nat.ne_zero_of_lt h0) h1, h0⟩
 
 /-- Final solution, part 2 -/
 theorem final_solution_part2 : {n : ℕ | f n.succ < f n}.Infinite := by

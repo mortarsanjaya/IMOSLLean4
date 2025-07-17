@@ -22,7 +22,7 @@ namespace IMO2007A3
 
 open Finset
 
-variable [LinearOrderedField F]
+variable [Field F] [LinearOrder F] [IsStrictOrderedRing F]
 
 theorem easy_ineq (x : F) : 0 ≤ (1 + x ^ 2) / (1 + x ^ 4) :=
   div_nonneg (add_nonneg zero_le_one (sq_nonneg x))
@@ -60,10 +60,10 @@ theorem final_solution {x y : F} (hx : 0 < x) (hy : 0 < y) (h : x ^ n + y ^ n = 
       < ((1 - x) * (1 - y))⁻¹ := calc
   _ < (1 - x ^ n) / (x ^ n * (1 - x)) * ((1 - y ^ n) / (y ^ n * (1 - y))) := by
     obtain (rfl | hn) : n = 0 ∨ 0 < n := n.eq_zero_or_pos
-    · rw [pow_zero, pow_zero, add_right_eq_self] at h
+    · rw [pow_zero, pow_zero, add_eq_left] at h
       exact absurd h one_ne_zero
     have X (a b : F) (hb : 0 < b) (h : a ^ n + b ^ n = 1) : a < 1 :=
-      lt_of_not_le λ h1 ↦ h.not_gt (lt_add_of_le_of_pos (one_le_pow₀ h1) (pow_pos hb n))
+      lt_of_not_ge λ h1 ↦ h.not_gt (lt_add_of_le_of_pos (one_le_pow₀ h1) (pow_pos hb n))
     exact mul_lt_mul'' (sum_main_ineq hx (X x y hy h) hn)
       (sum_main_ineq hy (X y x hx ((add_comm _ _).trans h)) hn)
       (sum_easy_ineq _ _) (sum_easy_ineq _ _)

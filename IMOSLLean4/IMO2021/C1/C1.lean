@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fintype.Card
+import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
 # IMO 2021 C1

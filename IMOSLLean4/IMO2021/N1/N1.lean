@@ -80,7 +80,7 @@ theorem good_imp (h : good a b n) : n = 2 ∧ b + 2 = 2 * a := by
   replace h1 : (a + 1) ^ 2  = a ^ 2 + b + 3 := by
     rcases h1 with ⟨t, h1⟩
     rw [← mul_one (a ^ 2 + b + 3), h1, mul_right_inj, ← PNat.le_one_iff]
-    refine PNat.lt_add_one_iff.mp (lt_of_not_le λ h2 ↦ h1.not_lt ?_)
+    refine PNat.lt_add_one_iff.mp (lt_of_not_ge λ h2 ↦ h1.not_lt ?_)
     apply (mul_le_mul_left' h2 _).trans_lt' ?_
     ---- Prove the bound `(a + 1)^2 < 2(a^2 + b + 3)`
     rw [add_right_comm, add_mul, mul_add, mul_one, sq, mul_add_one _ a, add_one_mul a]

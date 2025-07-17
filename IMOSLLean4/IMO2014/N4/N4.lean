@@ -62,7 +62,7 @@ lemma case_two (k : ℕ) : Odd (2 ^ (2 ^ (2 * k.succ) * 3) / (2 ^ (2 * k.succ) *
 
 /-- Final solution -/
 theorem final_solution (hn : 1 < n) (N) : ∃ k > N, Odd (n ^ k / k) := by
-  obtain rfl | h : n = 2 ∨ 2 < n := LE.le.eq_or_gt hn
+  obtain rfl | h : n = 2 ∨ 2 < n := LE.le.eq_or_lt' hn
   ---- Case 1: `n` odd
   · refine ⟨2 ^ (2 * N.succ) * 3, ?_, case_two N⟩
     apply (Nat.le_mul_of_pos_right _ (Nat.succ_pos 2)).trans_lt'

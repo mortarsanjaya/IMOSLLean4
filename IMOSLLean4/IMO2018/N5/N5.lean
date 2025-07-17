@@ -36,7 +36,7 @@ theorem sq_sub_eq_sq_bound {a b : ℤ} (hb : 0 < b) (h : ∃ c, a ^ 2 - b = c ^ 
   rw [le_sub_iff_add_le, ← le_sub_iff_add_le',
     ← one_pow 2, ← (2 * a).mul_one, ← sub_add, ← sub_sq]
   replace ha : 0 < a := by
-    refine ha.lt_or_eq.resolve_right λ h ↦ hb.not_le ?_
+    refine ha.lt_or_eq.resolve_right λ h ↦ hb.not_ge ?_
     subst h; rw [sub_nonpos, sq, Int.zero_mul]
     exact sq_nonneg c
   wlog hc : 0 ≤ c generalizing c

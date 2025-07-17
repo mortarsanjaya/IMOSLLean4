@@ -26,7 +26,7 @@ theorem good_const (C : ℤ) : good (λ _ ↦ C) := λ _ _ _ _ ↦ rfl
 theorem good_floor : good Int.floor := λ x a b hb ↦ by
   refine Int.floor_congr λ n ↦ ?_
   replace hb : 0 < (b : ℚ) := Nat.cast_pos.mpr hb
-  rw [← Int.cast_add, ← Int.floor_add_int, le_div_iff₀ hb, le_div_iff₀ hb,
+  rw [← Int.cast_add, ← Int.floor_add_intCast, le_div_iff₀ hb, le_div_iff₀ hb,
     ← Int.cast_natCast, ← Int.cast_mul, Int.cast_le, Int.le_floor]
 
 theorem good_neg_map_neg (hf : good f) : good (λ x ↦ -f (-x)) := λ x a b hb ↦ by
@@ -94,16 +94,16 @@ lemma eq_floor_of_map_half_nonpos (h0 : f 2⁻¹ ≤ 0) : f = Int.floor := by
       exact mul_nonpos_of_nonneg_of_nonpos zero_le_two h0
     specialize hf 2⁻¹ (-f 2⁻¹) (1 - 2 * f 2⁻¹).natAbs (Int.natAbs_pos.mpr h0.ne.symm)
     rw [Int.cast_neg, add_neg_cancel, zero_div, Int.cast_natAbs, abs_eq_self.mpr h0.le,
-      inv_eq_one_div, ← sub_eq_add_neg, div_sub' _ _ _ two_ne_zero, one_div] at hf
+      inv_eq_one_div, ← sub_eq_add_neg, div_sub' two_ne_zero, one_div] at hf
     have h1 : (1 - 2 * f 2⁻¹ : ℚ) = (1 - 2 * f 2⁻¹ : ℤ) := by
       rw [Int.cast_sub, Int.cast_mul, Int.cast_one, Int.cast_two]
     rwa [h1, div_right_comm, div_self (Int.cast_ne_zero.mpr h0.ne.symm),
       one_div, ← Int.cast_zero, h, eq_comm] at hf
   ---- Start the induction, immediately resolving the base case
-  refine Nat.rec (λ k h1 ↦ h1.not_le.elim k.zero_le) (λ m hm ↦ ?_)
+  refine Nat.rec (λ k h1 ↦ h1.not_ge.elim k.zero_le) (λ m hm ↦ ?_)
   replace hm (k) (h1 : k < m) : f (k / m.succ) = 0 := by
     specialize hf (k / m) k m.succ m.succ_pos
-    have h2 : (m : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.not_eq_zero_of_lt h1)
+    have h2 : (m : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.ne_zero_of_lt h1)
     have h3 : (m.succ : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr m.succ_ne_zero
     rwa [Int.cast_natCast, div_add' _ _ _ h2, add_comm (k : ℚ),
       ← Nat.cast_mul, div_div, ← Nat.cast_add, ← Nat.mul_succ, Nat.cast_mul,
@@ -131,7 +131,7 @@ theorem final_solution : good f ↔ (∃ C, f = λ _ ↦ C) ∨ f = Int.floor �
   ---- `→` direction
   · refine (em' (∀ n : ℤ, f n = n)).imp
       (λ h0 ↦ (not_forall.mp h0).elim λ n ↦ const_of_not_int_id h)
-      (λ h0 ↦ (le_or_lt (f 2⁻¹) 0).imp (eq_floor_of_map_half_nonpos h h0) (λ h1 ↦ ?_))
+      (λ h0 ↦ (le_or_gt (f 2⁻¹) 0).imp (eq_floor_of_map_half_nonpos h h0) (λ h1 ↦ ?_))
     -- Only need to consider the case `f(1/2) > 0`.
     replace h : (λ x ↦ -f (-x)) = Int.floor := by
       refine eq_floor_of_map_half_nonpos (good_neg_map_neg h) (λ n ↦ ?_) ?_

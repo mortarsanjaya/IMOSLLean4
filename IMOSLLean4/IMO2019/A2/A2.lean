@@ -22,8 +22,9 @@ namespace IMO2019A2
 
 open Multiset
 
-theorem final_solution [LinearOrderedSemiring R] [ExistsAddOfLE R]
-    {M : Multiset R} (hM : M.sum = 0) (ha : ∀ x ∈ M, x ≤ a) (hb : ∀ x ∈ M, b ≤ x) :
+theorem final_solution [Semiring R] [LinearOrder R] [IsStrictOrderedRing R]
+    [ExistsAddOfLE R] {M : Multiset R} (hM : M.sum = 0)
+    (ha : ∀ x ∈ M, x ≤ a) (hb : ∀ x ∈ M, b ≤ x) :
     card M • (a * b) + (M.map λ x ↦ x ^ 2).sum ≤ 0 := by
   obtain h | h : card M = 0 ∨ card M ≠ 0 := Decidable.eq_or_ne (card M) 0
   · rw [h, zero_nsmul, zero_add, card_eq_zero.mp h, Multiset.map_zero, sum_zero]
@@ -43,7 +44,7 @@ theorem final_solution [LinearOrderedSemiring R] [ExistsAddOfLE R]
       (sq x).trans_le (mul_le_mul_of_nonpos_left (hb x hx.1) hx.2)
   have h1 : (P.map λ x ↦ x ^ 2).sum ≤ (P.map λ x ↦ a * x).sum :=
     sum_map_le_sum_map _ _ λ x hx ↦ let hx := mem_filter.mp hx;
-      (sq x).trans_le (mul_le_mul_of_nonneg_right (ha x hx.1) (le_of_not_le hx.2))
+      (sq x).trans_le (mul_le_mul_of_nonneg_right (ha x hx.1) (le_of_not_ge hx.2))
   replace h : (M.map λ x ↦ x ^ 2).sum ≤ (N.map λ x ↦ x * b).sum + (P.map λ x ↦ a * x).sum := by
     apply (add_le_add h0 h1).trans_eq'
     rw [← sum_add, ← Multiset.map_add, filter_add_not]

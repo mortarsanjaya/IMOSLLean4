@@ -27,8 +27,6 @@ namespace IMO2007A2
 
 def good (f : ℕ → ℕ) := ∀ m n : ℕ, f m + f (f n) ≤ f (m + n + 1)
 
-
-
 theorem sub_right_is_good (C : ℕ) : good (· - C) := by
   intro m n; dsimp only; rcases le_total n C with h | h
   · rw [Nat.sub_eq_zero_of_le h, Nat.zero_sub, Nat.add_zero, Nat.add_assoc]
@@ -67,7 +65,7 @@ theorem good_monotone (h0 : x ≤ y) : f x ≤ f y := by
 
 theorem good_map_zero : f 0 = 0 :=
   (f 0).eq_zero_or_pos.resolve_right λ h0 ↦
-    (good_monotone h h0).not_lt ((Nat.lt_add_of_pos_left h0).trans_le (h 0 0))
+    (good_monotone h h0).not_gt ((Nat.lt_add_of_pos_left h0).trans_le (h 0 0))
 
 theorem good_val_bound (N : ℕ) : f N ≤ N + 1 := by
   rw [← not_lt, ← Nat.add_one_le_iff]; intro h0

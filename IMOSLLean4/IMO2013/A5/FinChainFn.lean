@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Finset.Card
+import Mathlib.Data.Finset.Union
 
 /-!
 # Finite-chain functions
@@ -50,7 +51,7 @@ theorem surjective_iff : f.Surjective ↔ h.rangeCompl = ∅ := by
 theorem iter_apply_ne_of_mem_rangeCompl_iter_ne (h0 : m ≠ n)
     (h1 : a ∈ h.rangeCompl) (h2 : b ∈ h.rangeCompl) : f^[m] a ≠ f^[n] b := by
   wlog h3 : m < n
-  · exact (this h h0.symm h2 h1 <| (le_of_not_lt h3).lt_of_ne h0.symm).symm
+  · exact (this h h0.symm h2 h1 <| (le_of_not_gt h3).lt_of_ne h0.symm).symm
   -- Solve assuming `m < n`
   rcases Nat.exists_eq_add_of_le h3.le with ⟨k, rfl⟩
   rw [Nat.lt_add_right_iff_pos] at h3

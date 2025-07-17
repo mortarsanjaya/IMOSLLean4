@@ -61,7 +61,7 @@ theorem LinearOrder_induction {P : Multiset α → Prop}
 
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedAddCommGroup G] (g : G) :
+theorem final_solution [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G] (g : G) :
     ∀ (S : Multiset G) (_ : ∀ x : G, x ∈ S → g ≤ x) (_ : S.sum ≤ (2 * card S) • g)
       {r : G} (_ : -(2 • g) ≤ r) (_ : r ≤ S.sum),
         ∃ T : Multiset G, T ≤ S ∧ r ≤ T.sum ∧ T.sum ≤ r + 2 • g :=
@@ -74,13 +74,13 @@ theorem final_solution [LinearOrderedAddCommGroup G] (g : G) :
       rw [forall_mem_cons] at h1; rcases h1 with ⟨-, h1⟩
       rw [card_cons, Nat.mul_succ, sum_cons, add_nsmul, add_comm] at h2
       replace h (r) : -(2 • g) ≤ r → r ≤ S₀.sum → ∃ T ≤ S₀, r ≤ T.sum ∧ T.sum ≤ r + 2 • g := by
-        refine h h1 (le_of_not_lt λ h3 ↦ h2.not_lt (add_lt_add h3 ?_))
+        refine h h1 (le_of_not_gt λ h3 ↦ h2.not_gt (add_lt_add h3 ?_))
         replace h3 := h3.trans_le (sum_le_card_nsmul S₀ s₀ h0)
         rw [mul_nsmul] at h3; exact lt_of_nsmul_lt_nsmul_right _ h3
       -- Step 2: Solve the problem, assuming `s₀ - 2g ≤ Σ_{S_0}`
       suffices s₀ + -(2 • g) ≤ S₀.sum by
         clear h0 h1 h2; intro r hr hr₀
-        obtain (hr | hr₀) : s₀ + -(2 • g) ≤ r ∨ r ≤ S₀.sum := this.le_or_le r
+        obtain (hr | hr₀) : s₀ + -(2 • g) ≤ r ∨ r ≤ S₀.sum := this.ge_or_le r
         · rw [sum_cons, ← sub_le_iff_le_add'] at hr₀
           specialize h (r - s₀) (le_sub_iff_add_le'.mpr hr) hr₀
           rcases h with ⟨T, h, h0, h1⟩

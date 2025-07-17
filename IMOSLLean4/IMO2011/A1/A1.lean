@@ -99,14 +99,14 @@ lemma p_set_subset (A : Card4NatSet) : A.p_set ⊆ {(0, 1), (0, 2), (0, 3), (1, 
   | (1, 2) => λ _ ↦ by decide
   | (1, 3) => λ h ↦ absurd (mem_p_set_iff.mp h).2 λ h ↦ by
       rw [Nat.add_assoc, Nat.add_add_add_comm, Nat.dvd_add_self_right] at h
-      exact (Nat.le_of_dvd (Nat.add_lt_add (A.f_pos 0) (A.f_pos 2)) h).not_lt
+      exact (Nat.le_of_dvd (Nat.add_lt_add (A.f_pos 0) (A.f_pos 2)) h).not_gt
         (Nat.add_lt_add (A.f_strict_mono (by decide)) (A.f_strict_mono (by decide)))
   | (2, 0) => λ h ↦ absurd (mem_p_set_iff.mp h).1 (by decide)
   | (2, 1) => λ h ↦ absurd (mem_p_set_iff.mp h).1 (by decide)
   | (2, 2) => λ h ↦ absurd (mem_p_set_iff.mp h).1 (by decide)
   | (2, 3) => λ h ↦ absurd (mem_p_set_iff.mp h).2 λ h ↦ by
       rw [Nat.add_assoc, Nat.dvd_add_self_right] at h
-      exact (Nat.le_of_dvd (Nat.add_lt_add (A.f_pos 0) (A.f_pos 1)) h).not_lt
+      exact (Nat.le_of_dvd (Nat.add_lt_add (A.f_pos 0) (A.f_pos 1)) h).not_gt
         (Nat.add_lt_add (A.f_strict_mono (by decide)) (A.f_strict_mono (by decide)))
   | (3, 0) => λ h ↦ absurd (mem_p_set_iff.mp h).1 (by decide)
   | (3, 1) => λ h ↦ absurd (mem_p_set_iff.mp h).1 (by decide)

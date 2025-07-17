@@ -59,7 +59,7 @@ theorem final_solution (hk : 0 < k) (hl : 0 < l) (hm : 0 < m) (hn : 1 < n)
         n.mul_left_comm,← n.pow_add_one', Nat.sub_add_cancel hl]
     rw [h0, Nat.coprime_mul_left_add_left]
     exact n.gcd_one_left
-  refine (le_or_lt k l).imp (λ h1 ↦ ?_) (λ h1 ↦ ?_)
+  refine (le_or_gt k l).imp (λ h1 ↦ ?_) (λ h1 ↦ ?_)
   ---- Case 1: `l ≥ k`
   · obtain ⟨l', rfl⟩ : ∃ l', l = k + l' := Nat.exists_eq_add_of_le h1
     replace h1 : n ^ k + m * n ^ (k + l') + n ^ (k + (k + l'))
@@ -90,7 +90,7 @@ theorem final_solution (hk : 0 < k) (hl : 0 < l) (hm : 0 < m) (hn : 1 < n)
           exact Nat.mul_le_mul_right _ (hn.trans_le (Nat.le_self_pow hk.ne.symm n))
         _ = (m' + 1) * n ^ (k + l') := by
           rw [Nat.mul_right_comm, ← Nat.pow_add, Nat.add_comm, ← Nat.mul_succ, mul_comm]
-        _ < _ := Nat.lt_add_of_pos_left (Nat.pos_pow_of_pos k hn')
+        _ < _ := Nat.lt_add_of_pos_left (Nat.pow_pos hn')
     rw [Nat.one_mul, Nat.one_mul, Nat.add_comm, Nat.add_left_inj] at h
     refine ⟨rfl, ?_⟩; rw [Nat.two_mul, Nat.pow_right_injective hn h]
   ---- Case 2: `l < k`
@@ -110,7 +110,7 @@ theorem final_solution (hk : 0 < k) (hl : 0 < l) (hm : 0 < m) (hn : 1 < n)
         _ < _ := by
           refine Nat.mul_lt_mul_of_pos_left ?_ Nat.two_pos
           rw [Nat.lt_succ_iff, Nat.add_le_add_iff_left]
-          exact Nat.le_mul_of_pos_right _ (Nat.pos_pow_of_pos l hn')
+          exact Nat.le_mul_of_pos_right _ (Nat.pow_pos hn')
     replace h : n ^ k' - 1 = m * (n ^ l - 1) := by
       rw [Nat.add_assoc, Nat.add_assoc, Nat.add_right_inj] at h
       apply congrArg (· - (m + 1)) at h

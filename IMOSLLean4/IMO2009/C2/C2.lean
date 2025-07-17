@@ -40,12 +40,12 @@ theorem card_choose_le_nat_sum (S : Finset ℕ) : S.card.choose 2 ≤ S.sum id :
   ---- Start by writing `S = {m} ∪ T` for some `m ≥ n`
   obtain ⟨m, T, rfl, hm, hm0⟩ : ∃ m T, insert m T = S ∧ n ≤ m ∧ m ∉ T := by
     obtain ⟨m, hm, hm0⟩ := exists_mem_ge_of_card hn.ge
-    exact ⟨m, S.erase m, insert_erase hm, hm0, not_mem_erase m S⟩
+    exact ⟨m, S.erase m, insert_erase hm, hm0, notMem_erase m S⟩
   ---- Now `C(n, 2) ≤ T.sum id` by IH and `n ≤ m` gives the desired inequality
   rw [sum_insert hm0]; refine Nat.add_le_add (n.choose_one_right.trans_le hm) (n_ih T ?_)
-  rwa [card_insert_of_not_mem hm0, Nat.succ_inj] at hn
+  rwa [card_insert_of_notMem hm0, Nat.succ_inj] at hn
 
-theorem card_choose_le_sum__of_inj {f : ι → ℕ} (hf : f.Injective) (I : Finset ι) :
+theorem card_choose_le_sum_of_inj {f : ι → ℕ} (hf : f.Injective) (I : Finset ι) :
     I.card.choose 2 ≤ I.sum f := calc
   _ = (I.image f).card.choose 2 := by rw [card_image_of_injective I hf]
   _ ≤ (I.image f).sum id := card_choose_le_nat_sum (I.image f)
@@ -98,7 +98,7 @@ theorem card_bound [Fintype ι] (X : GoodTripleFn n ι) : Fintype.card ι ≤ 2 
   have h : 3 * (Fintype.card ι).choose 2 ≤ Fintype.card ι * n := calc
     _ = ∑ _ : Fin 3, (univ : Finset ι).card.choose 2 := (sum_const _).symm
     _ ≤ ∑ j : Fin 3, ∑ i : ι, X.toFun j i :=
-      sum_le_sum λ j _ ↦ card_choose_le_sum__of_inj (X.toFun_inj j) _
+      sum_le_sum λ j _ ↦ card_choose_le_sum_of_inj (X.toFun_inj j) _
     _ = ∑ i : ι, ∑ j : Fin 3, X.toFun j i := sum_comm
     _ = ∑ _ : ι, n := Fintype.sum_congr _ _ X.toFun_sum
     _ = Fintype.card ι * n := sum_const _

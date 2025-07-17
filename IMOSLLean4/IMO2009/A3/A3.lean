@@ -59,7 +59,7 @@ theorem final_solution_Nat : good f ↔ f = λ x ↦ x := by
     replace h0 (y) : f y ≤ Extra.seqMax f (f 0) := by
       rw [← y.mod_add_div (f 0), h0]
       exact Extra.le_seqMax_of_le f (y.mod_lt h1).le
-    apply (h (2 * Extra.seqMax f (f 0) + 1) 0).side_x.not_lt
+    apply (h (2 * Extra.seqMax f (f 0) + 1) 0).side_x.not_gt
     rw [Nat.lt_succ_iff, Nat.two_mul]
     exact Nat.add_le_add (h0 _) (h0 _)
   ---- Next show `f(f(x)) = x` for all `x`

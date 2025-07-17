@@ -39,7 +39,7 @@ theorem good_imp_inv' [IsCancelAdd M] {f : M → M} (hf : good f) : ∀ x, x * f
   replace h (x) : x * f (x * x) = f x := by simpa [h0, mul_add] using hf x 1
   replace h0 (x) : f (f (x * x)) = f (f x * f x) := by rw [← mul_right_inj, h0, h]
   suffices f.Injective from λ x ↦ by
-    rw [← mul_left_eq_self (b := f x), mul_assoc, ← this (h0 x), h]
+    rw [← mul_eq_right (b := f x), mul_assoc, ← this (h0 x), h]
   replace hf (x y) : f x * f (f y) + f (y * f x)
       = f (x * y) * (f (f y * f y) + f (f x * f x)) := by
     specialize hf x y; rwa [h, h0, h0] at hf

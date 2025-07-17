@@ -31,7 +31,7 @@ lemma main_step {f g : ℕ → ℕ} (h : ∀ k, f^[g k + 2] k < f (k + 1)) : f =
     suffices ∀ k n : ℕ, k ≤ n → k ≤ f n from λ n ↦ this n n n.le_refl
     refine Nat.rec (λ k _ ↦ (f k).zero_le) (λ k h0 n h1 ↦ ?_)
     rcases n with _ | n
-    · exact absurd k.succ_pos h1.not_lt
+    · exact absurd k.succ_pos h1.not_gt
     · apply (h n).trans_le'
       generalize g n + 2 = t
       exact t.rec (Nat.succ_le_succ_iff.mp h1)
@@ -55,7 +55,7 @@ theorem final_solution_Nat {f g : ℕ → ℕ} :
       rw [← h, Nat.lt_succ_iff]
       exact Nat.le_add_right _ _
     refine ⟨rfl, funext λ n ↦ ?_⟩
-    simp_rw [iterate_id, Function.id_def, Nat.succ_inj',
+    simp_rw [iterate_id, Function.id_def, Nat.succ_inj,
       Nat.add_eq_left, Nat.add_eq_zero] at h
     rcases n with _ | n
     exacts [(h 0).1, (h n).2]

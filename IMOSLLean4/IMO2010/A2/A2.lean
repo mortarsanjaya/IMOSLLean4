@@ -52,7 +52,7 @@ end CommRing
 
 /-! ### Solution -/
 
-variable [LinearOrderedCommRing R] (S : Multiset R)
+variable [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] (S : Multiset R)
 
 /-- General lower bound -/
 theorem final_solution_lower_bound :

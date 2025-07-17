@@ -19,7 +19,7 @@ namespace IMO2012A3
 
 section
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
 
 theorem bernoulli_side_ineq (x y : R) (n : ℕ) :
     y * (n.succ * x + y) ≤ (n * x + y) * (x + y) := calc
@@ -57,7 +57,7 @@ theorem bernoulli_ineq_strict {x y : R} (hy : 0 ≤ y) (h : 0 < x + y) (hx : x �
 end
 
 
-variable [LinearOrderedCommRing R]
+variable [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
 theorem bernoulli_special1 {x : R} (hy : -1 ≤ x) (n : ℕ) :
     (n + 2 : ℕ) ^ (n + 2) * x ≤ (n + 1 : ℕ) ^ (n + 1) * (1 + x) ^ (n + 2) := by
@@ -103,7 +103,7 @@ theorem main_ineq {n : ℕ} (hn : ∃ k ∈ range n, (k + 1 : ℕ) * x k ≠ 1) 
   have h0 : ∏ i ∈ range n, ((i + 2 : ℕ) : R) ^ (i + 2)
       = (n + 1 : ℕ) ^ (n + 1) * ∏ i ∈ range n, ((i + 1 : ℕ) : R) ^ (i + 1) := by
     obtain ⟨n, rfl⟩ : ∃ n', n = n' + 1 :=
-      Nat.exists_eq_succ_of_ne_zero (Nat.not_eq_zero_of_lt (mem_range.mp hkn))
+      Nat.exists_eq_succ_of_ne_zero (Nat.ne_zero_of_lt (mem_range.mp hkn))
     rw [prod_range_succ, prod_range_succ', Nat.cast_one, one_pow, mul_one, mul_comm]
   rw [prod_mul_distrib, prod_mul_distrib, h0, mul_right_comm, mul_comm] at h
   apply lt_of_mul_lt_mul_of_nonneg_left h

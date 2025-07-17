@@ -22,7 +22,7 @@ namespace IMO2016A1
 
 open Multiset
 
-theorem ring_prod_le_pow_card [OrderedCommSemiring R]
+theorem ring_prod_le_pow_card [CommSemiring R] [PartialOrder R] [IsOrderedRing R]
     {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) (hr : ∀ x ∈ M, x ≤ r) :
     M.prod ≤ r ^ card M := by
   induction' M using Multiset.induction with a M M_ih
@@ -45,7 +45,7 @@ theorem ring_id [CommSemiring R] {x y z c : R} (h : x * y = c + z) :
 
 /-! ### Start of the problem -/
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
 
 theorem main_claim {x y z w c : R} (h : x + y = z + w) (h0 : c ≤ x * y) (h1 : x * y ≤ z * w) :
     (x ^ 2 + c) * (y ^ 2 + c) ≤ (z ^ 2 + c) * (w ^ 2 + c) := by
@@ -86,7 +86,7 @@ theorem final_solution {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) :
   rw [sum_cons, add_assoc, succ_nsmul', add_le_add_iff_left] at hr
   obtain ⟨b, hbM, hb⟩ : ∃ b ∈ M, b < r := by
     by_contra! h
-    exact (lt_add_of_pos_left M.sum ha).not_le (hr.trans (card_nsmul_le_sum h))
+    exact (lt_add_of_pos_left M.sum ha).not_ge (hr.trans (card_nsmul_le_sum h))
   apply exists_cons_of_mem at hbM; rcases hbM with ⟨M, rfl⟩
   rw [forall_mem_cons, forall_mem_cons] at hM
   rcases hM with ⟨-, hb0, hM⟩
@@ -100,7 +100,7 @@ theorem final_solution {M : Multiset R} (hM : ∀ x ∈ M, 0 ≤ x) :
     rcases em' (a + b ∈ ({x, y} : Multiset R)) with h0 | h0
     -- Case 1: `a + b ∉ {x, y}`
     · exact hc0 x y ((le_cons_self _ _).trans'
-        ((le_cons_self _ _).trans' ((le_cons_of_not_mem h0).mp h)))
+        ((le_cons_self _ _).trans' ((le_cons_of_notMem h0).mp h)))
     -- Case 2: `a + b ∈ {x, y}`
     · have h1 (z) (h1 : z ∈ M) : c ≤ z * (a + b) := by
         apply (mul_le_mul_of_nonneg_left (le_add_of_nonneg_left ha.le) (hM z h1)).trans'

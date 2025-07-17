@@ -25,16 +25,16 @@ def targetVal [Semifield F] (x : Fin 4 → F) :=
 
 
 
-theorem ring_ineq [LinearOrderedCommSemiring R] [ExistsAddOfLE R] (a b : R) :
-    2 ^ 2 * (a * b) ≤ (a + b) ^ 2 := by
+theorem ring_ineq [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
+    (a b : R) : 2 ^ 2 * (a * b) ≤ (a + b) ^ 2 := by
   rw [sq, two_mul, add_mul, ← mul_assoc, add_sq', add_le_add_iff_right]
   exact two_mul_le_add_sq a b
 
-theorem field_ineq [LinearOrderedSemifield F] [ExistsAddOfLE F] (a b c d : F) :
-    2 ^ 2 * (a * c / (b * d)) ≤ (a / b + c / d) ^ 2 :=
+theorem field_ineq [Semifield F] [LinearOrder F] [IsStrictOrderedRing F] [ExistsAddOfLE F]
+    (a b c d : F) : 2 ^ 2 * (a * c / (b * d)) ≤ (a / b + c / d) ^ 2 :=
   div_mul_div_comm a b c d ▸ ring_ineq _ _
 
-theorem good_ineq1 [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+theorem good_ineq1 [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
     {x : Fin 4 → R} (h : ∀ i, 0 < x i) (h0 : good x) :
     2 ^ 4 * (x 0 * x 2 * (x 1 * x 3)) ≤ (x 0 * x 2 + x 1 * x 3) ^ 2 := by
   rw [pow_add 2 2 2, mul_mul_mul_comm]
@@ -42,7 +42,7 @@ theorem good_ineq1 [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
     (mul_nonneg (sq_nonneg 2) (mul_pos (h 1) (h 3)).le) (sq_nonneg _)).trans_eq
   rw [← mul_pow, h0]
 
-theorem good_ineq2 [LinearOrderedSemifield F] [ExistsAddOfLE F]
+theorem good_ineq2 [Semifield F] [LinearOrder F] [IsStrictOrderedRing F] [ExistsAddOfLE F]
     {x : Fin 4 → F} (h : ∀ i, 0 < x i) (h0 : good x) :
     2 ^ 4 ≤ x 0 * x 2 / (x 1 * x 3) + x 1 * x 3 / (x 0 * x 2) + 2 := by
   have h1 : 0 < x 0 * x 2 := mul_pos (h 0) (h 2)
@@ -52,7 +52,7 @@ theorem good_ineq2 [LinearOrderedSemifield F] [ExistsAddOfLE F]
     div_add' _ _ _ h3.ne.symm, ← mul_assoc, ← add_sq', le_div_iff₀ h3]
   exact good_ineq1 h h0
 
-theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
+theorem good_ineq3 [Semifield F] [LinearOrder F] [IsStrictOrderedRing F] [ExistsAddOfLE F]
     {x : Fin 4 → F} (h : ∀ i, 0 < x i) (h0 : good x) : 8 ≤ targetVal x := by
   ---- Reduce to `(x_0/x_1 + x_1/x_2 + x_2/x_3 + x_3/x_4)^2 ≥ 64`
   have X : (8 : F) = 2 ^ 3 := by rw [← Nat.cast_two, ← Nat.cast_pow]; rfl
@@ -81,7 +81,7 @@ theorem good_ineq3 [LinearOrderedSemifield F] [ExistsAddOfLE F]
 
 /-! ### Solution for rings with `√3` -/
 
-class HasSqrt3 (R) [LinearOrderedCommSemiring R] where
+class HasSqrt3 (R) [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] where
   sqrt3 : R
   sqrt3_nonneg : 0 ≤ sqrt3
   sqrt3_sq : sqrt3 ^ 2 = 3
@@ -92,7 +92,7 @@ open HasSqrt3
 
 section
 
-variable [LinearOrderedCommSemiring R] [HasSqrt3 R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [HasSqrt3 R]
 
 lemma two_add_sqrt3_pos : 0 < 2 + (√3 : R) :=
   add_pos_of_pos_of_nonneg two_pos sqrt3_nonneg
@@ -116,7 +116,7 @@ end
 
 
 
-variable [LinearOrderedSemifield F] [ExistsAddOfLE F] [HasSqrt3 F]
+variable [Semifield F] [LinearOrder F] [IsStrictOrderedRing F] [ExistsAddOfLE F] [HasSqrt3 F]
 
 lemma sqrt3_seq_targetVal : targetVal (F := F) ![2 + √3, 1, 2 + √3, 1] = 8 := by
   show (2 + √3 : F) / 1 + 1 / (2 + √3) + (2 + √3) / 1 + 1 / (2 + √3) = 8

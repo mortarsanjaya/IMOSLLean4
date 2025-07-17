@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Nat.Prime.Infinite
 import IMOSLLean4.Extra.NatSequence.SeqMax
+import Mathlib.Algebra.Field.ZMod
+import Mathlib.Algebra.Order.Ring.Rat
+import Mathlib.Data.Rat.Cast.Defs
 
 /-!
 # IMO 2020 N1
@@ -53,7 +54,7 @@ lemma ratSeq_ne_zero : ∀ n, ratSeq n ≠ 0
 
 lemma ratSeq_formula :
     ∀ n, ratSeq n * ratSeq (n + 1) * ratSeq (n + 2) * ratSeq (n + 3) = n.succ := by
-  refine Nat.rec (by unfold ratSeq; norm_num) λ n h ↦ ?_
+  refine Nat.rec (by simp) λ n h ↦ ?_
   rw [ratSeq_add_four, Rat.mul_comm, Rat.mul_assoc, ← (ratSeq n).mul_assoc,
     ← (ratSeq n).mul_assoc, h, one_add_mul, n.succ.cast_succ,
     inv_mul_cancel₀ (Nat.cast_ne_zero.mpr n.succ_ne_zero)]
@@ -75,7 +76,7 @@ lemma ratSeq_pos_iff_mod_four : 0 < ratSeq n ↔ 0 < ratSeq (n % 4) := by
 lemma ratSeq_pos_iff_of_lt_four (h : n < 4) : 0 < ratSeq n ↔ n = 0 ∨ n = 1 := by
   simp only [Nat.lt_succ_iff_lt_or_eq, Nat.not_lt_zero, false_or] at h
   rcases h with ((rfl | rfl) | rfl) | rfl
-  all_goals unfold ratSeq; norm_num
+  all_goals simp
 
 lemma ratSeq_pos_iff : 0 < ratSeq n ↔ n % 4 = 0 ∨ n % 4 = 1 := by
   rw [ratSeq_pos_iff_mod_four, ratSeq_pos_iff_of_lt_four (n.mod_lt (Nat.succ_pos 3))]
@@ -111,7 +112,7 @@ lemma ratSeq_abs_lt_of_mod_four (h : k % 4 = m % 4) (h0 : k < m) :
 
 lemma ratSeq_abs_ne_of_mod_four (h : k % 4 = m % 4) (h0 : k ≠ m) :
     |ratSeq k| ≠ |ratSeq m| :=
-  h0.lt_or_lt.elim (λ h1 ↦ (ratSeq_abs_lt_of_mod_four h h1).ne)
+  h0.lt_or_gt.elim (λ h1 ↦ (ratSeq_abs_lt_of_mod_four h h1).ne)
     (λ h1 ↦ (ratSeq_abs_lt_of_mod_four h.symm h1).ne.symm)
 
 
@@ -177,7 +178,7 @@ theorem ratSeq_injective : ratSeq.Injective := λ i j h ↦ by
     rw [h0, h0, mod_two_eq_iff, ← ratSeq_den_odd_iff, h, ratSeq_den_odd_iff]
   replace h0 : i % 4 = j % 4 := by
     have h1 : i % 4 < 2 ↔ j % 4 < 2 := by rw [← ratSeq_pos_iff', h, ratSeq_pos_iff']
-    obtain h2 | h2 : i % 4 < 2 ∨ 2 ≤ i % 4 := lt_or_le (i % 4) 2
+    obtain h2 | h2 : i % 4 < 2 ∨ 2 ≤ i % 4 := lt_or_ge (i % 4) 2
     · rwa [Nat.mod_eq_of_lt h2, Nat.mod_eq_of_lt (h1.mp h2)] at h0
     · replace h1 : 2 ≤ j % 4 := by rwa [← Nat.not_lt, ← h1, Nat.not_lt]
       obtain ⟨c, hc⟩ : ∃ c, i % 4 = c + 2 := Nat.exists_eq_add_of_le' h2
@@ -198,6 +199,7 @@ theorem ratSeq_injective : ratSeq.Injective := λ i j h ↦ by
 
 /-! ### Final solution -/
 
+open Fin.NatCast in
 /-- Final solution -/
 theorem final_solution (k : ℕ) :
     ∃ (p : ℕ) (_ : p.Prime) (a : Fin (k + 4) → ZMod p), a.Injective ∧ (∀ i, a i ≠ 0) ∧
@@ -214,9 +216,9 @@ theorem final_solution (k : ℕ) :
     M.le_mul_self.trans_lt (h.trans_le' (Nat.le_mul_of_pos_left _ Nat.two_pos))
   ---- The denominators of `ratSeq` are non-zero mod `p` up to `k + 3`
   have h0 (i : Fin (k + 4)) : ((ratSeq i).den : ZMod p) ≠ 0 := by
-    intro h1; rw [ZMod.natCast_zmod_eq_zero_iff_dvd] at h1
-    exact (Nat.le_of_dvd (Rat.den_pos _) h1).not_lt ((hM0 i).trans h')
-  refine ⟨p, hp, λ i ↦ ratSeq i, ?_, ?_, ?_⟩
+    intro h1; rw [ZMod.natCast_eq_zero_iff] at h1
+    exact (Nat.le_of_dvd (Rat.den_pos _) h1).not_gt ((hM0 i).trans h')
+  refine ⟨p, hp, λ i ↦ (ratSeq i : ZMod p), ?_, ?_, ?_⟩
   ---- `ratSeq` is injective mod `p` up to `k + 3`
   · intro i j h1; simp only [Rat.cast_def] at h1
     rw [div_eq_div_iff (h0 _) (h0 _), ← AddGroupWithOne.intCast_ofNat, ← Int.cast_mul,
@@ -225,7 +227,7 @@ theorem final_solution (k : ℕ) :
     replace h1 : (ratSeq i).num * (ratSeq j).den = (ratSeq j).num * ↑(ratSeq i).den := by
       rw [← sub_eq_zero, ← Int.natAbs_eq_zero]
       refine Nat.eq_zero_of_dvd_of_lt h1 ((Int.natAbs_sub_le _ _).trans_lt (h.trans' ?_))
-      simp only [Int.natAbs_ofNat, Int.natAbs_mul]
+      simp only [Int.natAbs_natCast, Int.natAbs_mul]
       replace h1 (x y : Fin (k + 4)) : (ratSeq x).num.natAbs * (ratSeq y).den < M * M :=
         Nat.mul_lt_mul'' (hM _) (hM0 _)
       exact (Nat.add_lt_add (h1 _ _) (h1 _ _)).trans_eq (M * M).two_mul.symm
@@ -234,15 +236,15 @@ theorem final_solution (k : ℕ) :
   · intro i; simp only [Rat.cast_def, div_ne_zero_iff]
     refine ⟨λ h1 ↦ ?_, h0 i⟩
     rw [ZMod.intCast_zmod_eq_zero_iff_dvd, Int.natCast_dvd] at h1
-    refine (Nat.le_of_dvd ?_ h1).not_lt ((hM i).trans h')
+    refine (Nat.le_of_dvd ?_ h1).not_gt ((hM i).trans h')
     rw [Int.natAbs_pos, Rat.num_ne_zero]; exact ratSeq_ne_zero _
   ---- The main content: `a_i a_{i + 1} a_{i + 2} a_{i + 3} = i + 1` mod `p`
   · intro i hi; have h1 {x y : Fin (k + 4)} := (Rat.cast_mul_of_ne_zero (h0 x) (h0 y)).symm
     rw [h1, mul_assoc, h1]
     replace h1 (x y : Fin (k + 4)) : ((ratSeq x * ratSeq y).den : ZMod p) ≠ 0 := by
-      intro h2; rw [ZMod.natCast_zmod_eq_zero_iff_dvd] at h2
+      intro h2; rw [ZMod.natCast_eq_zero_iff] at h2
       obtain h2 | h2 := hp.dvd_mul.mp (h2.trans (Rat.mul_den_dvd _ _))
-      all_goals exact h0 _ ((ZMod.natCast_zmod_eq_zero_iff_dvd _ _).mpr h2)
+      all_goals exact h0 _ ((ZMod.natCast_eq_zero_iff _ _).mpr h2)
     rw [← Rat.cast_mul_of_ne_zero (h1 _ _) (h1 _ _)]
     simp only [Fin.val_add, Fin.val_natCast, Nat.mod_add_mod]
     replace h1 {m} (hm : m < 4) : (i + m) % (k + 4) = i + m :=

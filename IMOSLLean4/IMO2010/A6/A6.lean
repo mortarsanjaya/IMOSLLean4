@@ -44,13 +44,13 @@ include h0
 lemma lem4 (h1 : ∃ x, f x = k) (h2 : ∃ y, f y = m) (h3 : f k = f m) : k = m := by
   rcases h1 with ⟨x, rfl⟩; rcases h2 with ⟨y, rfl⟩
   replace h3 := lem2 h0 h3
-  rw [h0, h0, Nat.succ_inj'] at h3
+  rw [h0, h0, Nat.succ_inj] at h3
   exact lem2 h h3
 
 lemma lem5 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
     (h2 : ∀ k : ℕ, (∃ x, g x = k) ↔ b ≤ k) : a = b := by
   wlog h3 : a ≤ b
-  · exact (this h0 h h2 h1 (le_of_not_le h3)).symm
+  · exact (this h0 h h2 h1 (le_of_not_ge h3)).symm
   refine h3.antisymm ((h2 _).mp ?_)
   obtain ⟨k, h4⟩ := Nat.exists_eq_add_of_le (lem3 h0 h1)
   obtain ⟨d, h5⟩ := (h1 (a + k)).mpr (a.le_add_right k)
@@ -63,7 +63,7 @@ lemma lem6 : ∃ a, (∀ k, (∃ x, f x = k) ↔ a ≤ k) ∧ (∀ k, (∃ x, g 
 
 lemma lem7 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
     (h2 : ∀ k : ℕ, (∃ x, g x = k) ↔ a ≤ k) : f a = a.succ := by
-  refine (Nat.succ_le_of_lt (lem3 h0 h1)).eq_or_gt.resolve_right λ h3 ↦ ?_
+  refine (Nat.succ_le_of_lt (lem3 h0 h1)).eq_or_lt'.resolve_right λ h3 ↦ ?_
   obtain ⟨t, h3⟩ := Nat.exists_eq_add_of_lt h3
   obtain ⟨x, h4⟩ := (h1 (a + t)).mpr (a.le_add_right t)
   obtain ⟨y, h5⟩ := (h1 (g x)).mpr <| (h2 _).mp ⟨x, rfl⟩
@@ -76,7 +76,7 @@ lemma lem7 (h1 : ∀ k : ℕ, (∃ x, f x = k) ↔ a ≤ k)
 theorem final_solution : f = g := by
   obtain ⟨a, h1, h2⟩ := lem6 h h0
   suffices h3 : ∀ n, a ≤ n → f n = n.succ ∧ g n = n.succ by
-    ext x; rw [← Nat.succ_inj', ← h, (h3 _ <| (h2 _).mp ⟨x, rfl⟩).1]
+    ext x; rw [← Nat.succ_inj, ← h, (h3 _ <| (h2 _).mp ⟨x, rfl⟩).1]
   refine Nat.le_induction ⟨lem7 h h0 h1 h2, lem7 h0 h h2 h1⟩ (λ n _ h3 ↦ ⟨?_, ?_⟩)
   · rw [← Nat.succ_eq_add_one, ← h3.2, h, h3.1, h3.2]
   · rw [← Nat.succ_eq_add_one, ← h3.1, h0, h3.1, h3.2]

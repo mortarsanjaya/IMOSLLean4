@@ -40,7 +40,7 @@ lemma prod_mod_ne_one [DecidableEq ι] {I : Finset ι}
     (∏ i ∈ I, (f i + 1)) % n ≠ 1 % n := by
   rcases h with ⟨i₀, hi₀, h⟩
   obtain ⟨I, hi₀', rfl⟩ : ∃ I' : Finset ι, i₀ ∉ I' ∧ insert i₀ I' = I :=
-    ⟨I.erase i₀, I.not_mem_erase i₀, insert_erase hi₀⟩
+    ⟨I.erase i₀, I.notMem_erase i₀, insert_erase hi₀⟩
   replace hi₀ : ¬n ∣ f i₀ := (not_congr (h i₀ hi₀)).mpr (· rfl)
   replace h (i) (hi : i ∈ I) : (f i + 1) % n = 1 % n := by
     obtain ⟨k, h0⟩ := (h i (mem_insert_of_mem hi)).mpr (ne_of_mem_of_not_mem hi hi₀')
@@ -69,7 +69,7 @@ theorem final_solution (hm : 0 < m) (hn : 1 < n) (h : ∀ k ∈ Ico n (2 * n), k
     ∀ N, ∏ k ∈ Ico n (2 * n), (m / k + 1) ≠ 2 ^ N + 1 := by
   have hn0 : 0 < n := Nat.zero_lt_of_lt hn
   obtain ⟨t, ht⟩ := main_lemma hm hn0 h
-  intro N hN; obtain h0 | h0 : t ≤ N ∨ N < t := le_or_lt t N
+  intro N hN; obtain h0 | h0 : t ≤ N ∨ N < t := le_or_gt t N
   ---- Case 1: `t ≤ N`
   · apply prod_mod_ne_one ⟨2 ^ Nat.clog 2 n, two_pow_clog_mem_Ico hn0, ht⟩
     obtain ⟨c, rfl⟩ : ∃ c, N = t + c := Nat.exists_eq_add_of_le h0

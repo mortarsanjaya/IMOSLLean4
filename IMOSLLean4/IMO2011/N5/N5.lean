@@ -18,7 +18,7 @@ $$ f(x - y) ∣ f(x) - f(y). $$
 
 Generally, all functions satisfying the given condition can be determined.
 The .tex file corresponding to this problem contains the solution to that.
-I'm still interested in implementing this solution.
+I'm still interested in implementing this solution, but it will be in a separate file.
 -/
 
 namespace IMOSL

@@ -18,7 +18,7 @@ namespace IMOSL
 namespace IMO2009A5
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedRing R] (f : R → R) :
+theorem final_solution [Ring R] [LinearOrder R] [IsStrictOrderedRing R] (f : R → R) :
     ¬∀ x y, f (x - f y) ≤ y * f x + x := by
   intro hf
   have hf1 (t) : f t ≤ t + f 0 := by
@@ -30,7 +30,7 @@ theorem final_solution [LinearOrderedRing R] (f : R → R) :
     exact sub_le_iff_le_add.mpr (hf.trans (hf1 _))
   ---- Prove that `f(x)` is "small", if it is positive
   replace hf2 (z) (hz : 0 ≤ z) (x) : z * f x ≤ 1 := by
-    refine (lt_or_le 0 (f x)).elim (λ h ↦ ?_)
+    refine (lt_or_ge 0 (f x)).elim (λ h ↦ ?_)
       (λ h ↦ (mul_nonpos_of_nonneg_of_nonpos hz h).trans zero_le_one)
     replace hf (y) : -1 - f 0 ≤ y * f x + x := by
       obtain ⟨C, h0, h1⟩ : ∃ C, C ≤ y ∧ f C < x := by
@@ -66,4 +66,4 @@ theorem final_solution [LinearOrderedRing R] (f : R → R) :
   obtain ⟨y, hy, hy0⟩ : ∃ y, 0 < y ∧ C < y :=
     ⟨max 0 C + 1, lt_add_of_le_of_pos (le_max_left 0 C) one_pos,
       lt_add_of_le_of_pos (le_max_right 0 C) one_pos⟩
-  exact hy0.not_le (hf3 y hy)
+  exact hy0.not_ge (hf3 y hy)

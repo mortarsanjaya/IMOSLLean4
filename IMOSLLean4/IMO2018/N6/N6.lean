@@ -38,13 +38,13 @@ lemma PNat_exists_greatest_infinite_fiber {f : ℕ+ → ℕ+} (h : ∃ N, ∀ n,
       exact ⟨n, (N.lt_add_right K).le.trans hn,
         h1.antisymm' <| PNat.lt_add_one_iff.mp <| hK n <| (K.lt_add_left N).le.trans hn⟩
     obtain ⟨n, h1, h2⟩ := h _ h0 K
-    exact (PNat.add_one_le_iff.mpr h2).not_lt (hK n h1)
+    exact (PNat.add_one_le_iff.mpr h2).not_gt (hK n h1)
 
 lemma PNat_exists_big_not_dvd {d : ℕ+} (hd : d > 1) (N : ℕ+) : ∃ n ≥ N, ¬d.val ∣ n := by
   refine (em' (d.val ∣ N)).elim (λ h ↦ ⟨N, le_refl N, h⟩)
     (λ h ↦ ⟨N + 1, (N.lt_add_right _).le, λ h0 ↦ ?_⟩)
   rw [PNat.add_coe, Nat.dvd_add_right h, ← PNat.dvd_iff] at h0
-  exact hd.not_le (PNat.le_of_dvd h0)
+  exact hd.not_ge (PNat.le_of_dvd h0)
 
 
 
@@ -168,7 +168,7 @@ theorem periodic_one_two_apply_of_not_dvd {d n : ℕ+} (h : ¬d.val ∣ n) :
 /-! ### Start of the problem -/
 
 theorem map_le_mul_map_one (f : GoodFun ℕ+) (n : ℕ+) : f n ≤ f 1 * n := by
-  induction n using PNat.recOn with | p1 => exact (mul_one _).ge | hp n hn => ?_
+  induction n using PNat.recOn with | one => exact (mul_one _).ge | succ n hn => ?_
   apply (PNat.le_of_dvd (f.good_def n 1)).trans
   rwa [mul_add_one, add_le_add_iff_right]
 
@@ -188,22 +188,22 @@ theorem eq_smul_id_of_unbounded {f : GoodFun ℕ+} (hf : ∀ N, ∃ n, N < f n) 
   suffices ∀ n, f (n + 1) = f n + f 1 by
     refine ⟨f 1, ext λ n ↦ ?_⟩
     induction n using PNat.recOn with
-    | p1 => exact (mul_one (f 1)).symm
-    | hp n n_ih => rw [this, n_ih]; exact (mul_add_one _ _).symm
+    | one => exact (mul_one (f 1)).symm
+    | succ n n_ih => rw [this, n_ih]; exact (mul_add_one _ _).symm
   ---- Find the minimal `N` such that `f(N) > a(2n + 1)`
   intro n
   obtain ⟨N, hN, hN0⟩ :
       ∃ N, f 1 * (n + (n + 1)) < f N ∧ ∀ m < N, f m ≤ f 1 * (n + (n + 1)) := by
     set C := f 1 * (n + (n + 1)); let hC := hf C
-    exact ⟨PNat.find hC, PNat.find_spec hC, λ m hm ↦ le_of_not_lt (PNat.find_min hC hm)⟩
+    exact ⟨PNat.find hC, PNat.find_spec hC, λ m hm ↦ le_of_not_gt (PNat.find_min hC hm)⟩
   replace hf (m) (hm : m < N) : f m < f N := (hN0 m hm).trans_lt hN
   ---- If `k + m = N`, then `f(k) + f(m) = f(N)`
   replace hf {k m} (h : k + m = N) : f k + f m = f N := by
     subst h; exact f.map_add_eq_of_map_lt (hf _ (k.lt_add_right m)) (hf _ (m.lt_add_left k))
   ---- Rewrite `N` as `M + n + 1`
   obtain ⟨M, rfl⟩ : ∃ M, M + (n + 1) = N :=
-    ⟨N - (n + 1), PNat.sub_add_of_lt <| lt_of_not_le λ h ↦
-      hN.not_le <| (f.map_le_mul_map_one N).trans <|
+    ⟨N - (n + 1), PNat.sub_add_of_lt <| lt_of_not_ge λ h ↦
+      hN.not_ge <| (f.map_le_mul_map_one N).trans <|
         mul_le_mul_left' (h.trans (PNat.lt_add_left _ _).le) _⟩
   ---- We get `f(M) + f(n + 1) = f(M + 1) + f(n)`
   replace hf : f M + f (n + 1) = f (M + 1) + f n :=
@@ -285,7 +285,7 @@ theorem eq_set_cofinite_imp {f : GoodFun ℕ+} (h : ∃ N, ∀ n ≥ N, f n = M)
     f.dvd_set_cofinite_imp ⟨N, λ n hn ↦ dvd_of_eq (congrArg _ (hN n hn).symm)⟩ n
   let hg : M • f.div h0 = f := f.smul_div h0
   refine ⟨f.div h0, hg.symm, N, λ n hn ↦ ?_⟩
-  rw [← mul_right_eq_self (a := M), ← smul_apply, hg, hN n hn]
+  rw [← mul_eq_left, ← smul_apply, hg, hN n hn]
 
 theorem eventually_bound_and_dvd_iff_period_imp {f : GoodFun ℕ+} (hN : ∀ n ≥ N, f n ≤ M)
     {d : ℕ+} (hd : d > 1) (hd0 : ∀ n, M.val ∣ f n ↔ d.val ∣ n) :

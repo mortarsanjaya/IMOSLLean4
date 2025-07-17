@@ -83,7 +83,7 @@ end FiniteFiberFn
 
 /-- Sequences in `S_N` -/
 structure NSequence (I Λ) extends FiniteFiberFn I (Fin 2 × Λ) where
-  fiber_card_Fin2 : ∀ p, ((fiber p).card : Fin 2) = p.1
+  fiber_card_Fin2 : ∀ p, open Fin.NatCast in ((fiber p).card : Fin 2) = p.1
 
 
 namespace NSequence
@@ -122,7 +122,7 @@ noncomputable instance : Fintype (NSequence I Λ) :=
   Fintype.ofInjective steps λ _ _ ↦ ext
 
 instance isEmpty (h : Fintype.card I < Fintype.card Λ) : IsEmpty (NSequence I Λ) :=
-  ⟨λ s ↦ h.not_le s.card_lamp_le_step⟩
+  ⟨λ s ↦ h.not_ge s.card_lamp_le_step⟩
 
 end NSequence
 
@@ -161,7 +161,7 @@ noncomputable instance : Fintype (MSequence I Λ) :=
   Fintype.ofInjective steps λ _ _ ↦ ext
 
 instance isEmpty (h : Fintype.card I < Fintype.card Λ) : IsEmpty (MSequence I Λ) :=
-  ⟨λ s ↦ h.not_le s.card_lamp_le_step⟩
+  ⟨λ s ↦ h.not_ge s.card_lamp_le_step⟩
 
 end MSequence
 
@@ -183,10 +183,12 @@ abbrev steps (s : KSequence I Λ) : I → Fin 2 × Λ := s.toFun
 @[ext] lemma ext {s₁ s₂ : KSequence I Λ} (h : s₁.steps = s₂.steps) : s₁ = s₂ :=
   (mk.injEq _ _ _ _).mpr (FiniteFiberFn.ext h)
 
+open Fin.NatCast in
 lemma fiber_card_add_Fin2 (s : KSequence I Λ)  (l) :
     ((s.fiber (0, l)).card + (s.fiber (1, l)).card : Fin 2) = 1 :=
   Fin.ext ((Nat.add_mod _ _ _).symm.trans (s.fiber_card_add_mod2 l))
 
+open Fin.NatCast in
 lemma fiber_card_Fin2 (s : KSequence I Λ) (b l) :
     ((s.fiber (b, l)).card : Fin 2) = (s.fiber (0, l)).card + b := match b with
   | 0 => match ((s.fiber (0, l)).card : Fin 2) with | 0 => rfl | 1 => rfl
@@ -242,7 +244,7 @@ def EquivPairMSeqFinset : KSequence I Λ ≃ MSequence I Λ × Finset I where
     · rcases h with ⟨l, h⟩; rw [s.fiber_spec] at h
       exact congrArg Prod.fst h.symm
     · replace h : (s.steps i).1 ≠ 0 := λ h0 ↦ h ⟨(s.steps i).2, by rw [← h0, s.fiber_spec]⟩
-      exact (Fin.eq_one_of_neq_zero _ h).symm
+      exact (Fin.eq_one_of_ne_zero _ h).symm
   right_inv := λ (s, P) ↦ by
     unfold to_PairMSeqFinset of_PairMSeqFinset
     refine Prod.ext ?_ ?_
@@ -261,8 +263,10 @@ theorem card_wrt_MSeq :
 
 /-! ### K-sequences and N-sequences -/
 
+open Fin.NatCast in
 def to_Fin2 (s : KSequence I Λ) (l : Λ) : Fin 2 := (s.fiber (0, l)).card
 
+open Fin.NatCast in
 def to_NSeq (s : KSequence I Λ) : NSequence I Λ where
   toFun := λ i ↦ ((s.toFun i).1 + s.to_Fin2 (s.toFun i).2, (s.toFun i).2)
   fiber := λ (b, l) ↦ s.fiber (b + s.to_Fin2 l, l)
@@ -291,6 +295,7 @@ def of_PairNSeqPi (p : NSequence I Λ × (Λ → Fin 2)) : KSequence I Λ where
     simp only; rw [Nat.add_mod, p.1.fiber_card_mod2, p.1.fiber_card_mod2]
     match p.2 l with | 0 => rfl | 1 => rfl
 
+open Fin.NatCast in
 def EquivPairNSeqPi : KSequence I Λ ≃ NSequence I Λ × (Λ → Fin 2) where
   toFun := to_PairNSeqPi
   invFun := of_PairNSeqPi
@@ -327,7 +332,7 @@ theorem card_NSeq_vs_MSeq :
 theorem final_solution :
     Fintype.card (NSequence I Λ) =
       2 ^ (Fintype.card I - Fintype.card Λ) * Fintype.card (MSequence I Λ) := by
-  obtain h | h := lt_or_le (Fintype.card I) (Fintype.card Λ)
+  obtain h | h := lt_or_ge (Fintype.card I) (Fintype.card Λ)
   · have h0 := NSequence.isEmpty h
     have h1 := MSequence.isEmpty h
     rw [Fintype.card_of_isEmpty, Fintype.card_of_isEmpty (α := MSequence I Λ), Nat.mul_zero]

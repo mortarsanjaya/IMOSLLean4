@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.Defs
+import Mathlib.Data.Int.Init
+import Mathlib.Data.Nat.Basic
 import Mathlib.Logic.Function.Iterate
 import IMOSLLean4.Extra.NatSequence.SeqMax
+import Mathlib.Tactic.Lift
 
 /-!
 # IMO 2020 A6
@@ -36,10 +38,11 @@ theorem good_add_one : good (· + 1) := λ a b ↦ by
   have h (c : ℤ) : c + (c.natAbs ^ 2 : ℕ) = c * (c + 1) := by
     rw [Int.natCast_pow, Int.natAbs_sq, Int.pow_succ, Int.pow_succ,
       Int.pow_zero, c.one_mul, Int.mul_add, Int.mul_one, Int.add_comm]
-  rw [add_one_iterate, Int.ofNat_add, ← h, ← h,
+  rw [add_one_iterate, Int.natCast_add, ← h, ← h,
     a.add_assoc, b.add_left_comm, ← a.add_assoc]
 
-theorem const_iterate (a b : α) : ∀ n, (λ _ ↦ b)^[n] a = bif n.beq 0 then a else b
+theorem const_iterate {α : Type*} (a b : α) :
+    ∀ n, (λ _ ↦ b)^[n] a = bif n.beq 0 then a else b
   | 0 => rfl
   | _ + 1 => iterate_succ_apply' _ _ _
 
@@ -84,7 +87,7 @@ theorem exists_iter_add_large_eq (a : ℤ) : ∀ k, ∃ N, f^[N + k] a = f^[N] (
   refine Nat.rec ⟨0, a.add_zero.symm⟩ λ k h0 ↦ ?_
   rcases h0 with ⟨N, h0⟩
   refine ⟨N + (a + k + 1).natAbs ^ 2, ?_⟩
-  rw [f.iterate_add_apply N, Int.natCast_succ, Int.succ, ← a.add_assoc,
+  rw [f.iterate_add_apply N, Int.natCast_succ, ← a.add_assoc,
     ← map_iterate_sq_add_one h, Commute.iterate_iterate_self, ← h0,
     ← iterate_add_apply, Nat.add_comm _ (N + k), Nat.add_add_add_comm]
 
@@ -99,7 +102,7 @@ theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
       exacts [⟨x, y, h1, h0⟩, ⟨y, x, h1, h0.symm⟩]
     replace h0 := Int.sub_pos_of_lt h0
     lift y - x to ℕ using Int.le_of_lt h0 with k hk
-    refine ⟨x, k, Int.ofNat_pos.mp h0, ?_⟩
+    refine ⟨x, k, Int.natCast_pos.mp h0, ?_⟩
     rw [hk, ← Int.add_sub_assoc, x.add_comm, y.add_sub_cancel, h1]
   ---- Upgrade to `f^k` having a fixed point of form `f^N(a)`
   replace h0 : ∃ a k N, 0 < k ∧ f^[N + k] a = f^[N] a := by
@@ -148,7 +151,7 @@ theorem eq_zero_of_not_injective (h0 : ∃ M, ∀ n, (f^[n] 0).natAbs < M) : f =
     refine Int.natAbs_eq_zero.mp <| Nat.eq_zero_of_dvd_of_lt
       ⟨(f n - f (-n)).natAbs, ?_⟩ (Nat.lt_of_lt_of_le (h0 _) ha)
     have h2 : f^[2 * n ^ 2] 0 = _ := h1 n
-    rw [h2, Int.natAbs_mul, Int.natAbs_ofNat]
+    rw [h2, Int.natAbs_mul, Int.natAbs_natCast]
   replace h0 : f^[2] 0 = 0 := by
     have h2 : M ≤ M ^ 2 + 1 := M.pow_two ▸ Nat.le_succ_of_le M.le_mul_self
     replace h2 := h0 (M ^ 2 + 1) h2

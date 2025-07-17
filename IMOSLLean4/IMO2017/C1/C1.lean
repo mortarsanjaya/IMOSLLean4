@@ -5,9 +5,10 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Ring
+import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Nat.Bits
+import Mathlib.Algebra.Order.Group.Int
 
 /-!
 # IMO 2017 C1
@@ -65,10 +66,10 @@ theorem latticeRect_weight_pos_imp :
       (q.2.1.bodd = true ∧ q.2.2.bodd = true) ∧ (q.1.1 + q.1.2).bodd = false := by
   rw [latticeRect_weight, ← Bool.and_eq_true]
   cases q.2.1.bodd && q.2.2.bodd
-  · exact λ h ↦ absurd h (le_refl 0).not_lt
+  · exact λ h ↦ absurd h (le_refl 0).not_gt
   · rw [neg_one_pow_eq_pow_mod_two (R := ℤ), Nat.mod_two_of_bodd]
     cases (q.1.1 + q.1.2).bodd
-    exacts [λ _ ↦ ⟨rfl, rfl⟩, λ h ↦ absurd neg_one_lt_zero h.not_lt]
+    exacts [λ _ ↦ ⟨rfl, rfl⟩, λ h ↦ absurd (by simp) h.not_gt]
 
 
 

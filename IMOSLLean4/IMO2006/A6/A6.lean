@@ -18,7 +18,7 @@ $$ \left|ab(a^2 - b^2) + bc(b^2 - c^2) + ca(c^2 - a^2)\right|
 namespace IMOSL
 namespace IMO2006A6
 
-def good [LinearOrderedCommRing R] (M : R) :=
+def good [CommRing R] [LinearOrder R] (M : R) :=
   ∀ a b c : R, |a * b * (a ^ 2 - b ^ 2) + b * c * (b ^ 2 - c ^ 2) + c * a * (c ^ 2 - a ^ 2)|
     ≤ M * (a ^ 2 + b ^ 2 + c ^ 2) ^ 2
 
@@ -36,7 +36,7 @@ theorem ring_id2 [CommRing R] (a b c : R) :
 
 section
 
-variable [LinearOrderedCommRing R]
+variable [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
 theorem good_alt {M : R} :
     good M ↔ ∀ a b c, 3 ^ 2 * |(b - a) * (c - b) * (a - c) * (a + b + c)|
@@ -74,7 +74,7 @@ theorem ring_ineq3 (a b c : R) :
 
 /-! ### Solution for rings with `√2` -/
 
-class HasSqrt2 (R) [LinearOrderedCommRing R] where
+class HasSqrt2 (R) [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] where
   sqrt2 : R
   sqrt2_nonneg : 0 ≤ sqrt2
   sqrt2_sq : sqrt2 ^ 2 = 2

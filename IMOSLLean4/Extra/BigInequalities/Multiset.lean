@@ -21,7 +21,7 @@ open Multiset
 
 namespace Multiset
 
-variable [LinearOrderedCommSemiring R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 /-- `x_1^2 + x_2^2 + … + x_n^2 ≤ (x_1 + x_2 + … + x_n)^2` -/
 theorem sq_sum_le_sum_sq {S : Multiset R} (hS : ∀ x ∈ S, 0 ≤ x) :

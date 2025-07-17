@@ -158,7 +158,7 @@ variable [AddCommSemigroup G]
 
 protected def add (f g : ExcellentFun R G) : ExcellentFun R G where
   toFun x := f x + g x
-  excellent_def' x y := by dsimp only; rw [add_assoc, ← add_assoc (g _),
+  excellent_def' x y := by rw [add_assoc, ← add_assoc (g _),
     add_comm (g _), add_assoc, ← add_assoc, excellent_def, excellent_def]
 
 instance : Add (ExcellentFun R G) := ⟨ExcellentFun.add⟩

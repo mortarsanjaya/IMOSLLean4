@@ -43,7 +43,7 @@ end LatticeOrderedGroup
 
 section LinearOrderedRing
 
-variable [LinearOrderedRing R]
+variable [Ring R] [LinearOrder R] [IsOrderedRing R]
 
 lemma le_max_one_sq (a : R) : a ≤ max 1 (a ^ 2) := by
   apply (le_abs_self a).trans
@@ -77,7 +77,8 @@ end LinearOrderedRing
 
 /-! ### Extra lemmas on products of totally ordered rings -/
 
-variable {R : I → Type*} [(i : I) → LinearOrderedRing (R i)]
+variable {R : I → Type*} [(i : I) → Ring (R i)] [(i : I) → LinearOrder (R i)]
+  [(i : I) → IsOrderedRing (R i)]
 
 instance : CovariantClass ((i : I) → R i) ((i : I) → R i) (· + ·) (· ≤ ·) :=
   ⟨λ f _ _ h i ↦ add_le_add_left (h i) (f i)⟩
@@ -138,6 +139,7 @@ namespace MetaClosure
 
 variable (S : Subring ((i : I) → R i))
 
+omit [∀ (i : I), IsOrderedRing (R i)] in
 lemma Pi_one_mem : MetaClosure (· ∈ S) 1 := ofMem S.one_mem
 
 theorem Pi_pos_part_mul_pos_part_mem (hf : f ∈ S) (hg : g ∈ S) :

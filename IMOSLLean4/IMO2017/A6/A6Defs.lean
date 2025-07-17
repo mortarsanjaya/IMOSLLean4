@@ -115,7 +115,7 @@ structure NonperiodicGoodFun (ι : G → R) extends GoodFun ι where
   period_imp_eq' (c d) (_ : ∀ x, toFun (x + c) = toFun (x + d)) : c = d
 
 /-- Unbundled good function. -/
-structure IsNonperiodicGoodFun (ι : G → R) (f : R → G) extends IsGoodFun ι f : Prop where
+structure IsNonperiodicGoodFun (ι : G → R) (f : R → G) extends IsGoodFun ι f where
   period_imp_eq {c d} (_ : ∀ x, f (x + c) = f (x + d)) : c = d
 
 /-- Class of non-periodic good functions; see mathlib's `DFunLike` design. -/

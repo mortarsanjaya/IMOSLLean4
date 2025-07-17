@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Nat.Prime.Infinite
+import Mathlib.Data.Nat.Find
 
 /-!
 # IMO 2023 N5
@@ -60,7 +61,7 @@ lemma b_not_bdd (M) : ∃ k, M ≤ X.b k := by
     obtain ⟨p, h0, hp⟩ := (max (X.a 0).succ (M + 2)).exists_infinite_primes
     exact ⟨p, le_of_max_le_left h0, le_of_max_le_right h0, hp⟩
   obtain ⟨k, hk⟩ : ∃ k, p ∣ X.a k := X.exists_dvd_a_of_prime p hp
-  revert ha0p; refine (Nat.le_of_dvd (X.a_pos 0) ?_).not_lt
+  revert ha0p; refine (Nat.le_of_dvd (X.a_pos 0) ?_).not_gt
   ---- Now we have `b_n + 2 < M + 2 ≤ p` for all `n` and `p ∣ a_k`, and the goal is `p ∣ a_0`
   refine Nat.decreasingInduction (λ k _ hk ↦ ?_) hk k.zero_le
   have h0 : p ∣ X.b k + 2 ∨ p ∣ X.a k := hp.dvd_mul.mp (X.b_formula _ ▸ hk.mul_left _)
@@ -72,7 +73,7 @@ lemma exists_dvd_a_of_pos (hN : 0 < N) : ∃ k, N ∣ X.a k := by
     have h : ∃ k, N ≤ X.b k := X.b_not_bdd N
     have h0 := Nat.find_spec h
     obtain ⟨k, h1⟩ : ∃ k, Nat.find h = k + 1 :=
-      Nat.exists_eq_succ_of_ne_zero λ h1 ↦ h0.not_lt (h1 ▸ X.b_zero.trans_lt hN)
+      Nat.exists_eq_succ_of_ne_zero λ h1 ↦ h0.not_gt (h1 ▸ X.b_zero.trans_lt hN)
     have h2 := Nat.lt_of_not_le (Nat.find_min h (k.lt_succ_self.trans_eq h1.symm))
     have h3 : X.b (k + 1) ≤ X.b k + 1 := X.b_succ_le k
     replace h0 : X.b (k + 1) = N := Nat.le_antisymm (h3.trans h2) (h1 ▸ h0)

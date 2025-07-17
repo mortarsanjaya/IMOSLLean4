@@ -73,7 +73,7 @@ theorem final_solution (h : good a.factorial b.factorial) :
     2 * b + 2 ≤ 3 * a ∧ (2 * b + 2 = 3 * a ↔ a = 2 ∧ b = 2 ∨ a = 4 ∧ b = 5) := by
   ---- First, discharge the case `b < a`
   obtain h0 | ⟨c, rfl⟩ : b < a ∨ ∃ c, b = a + c :=
-    (lt_or_le b a).imp_right Nat.exists_eq_add_of_le
+    (lt_or_ge b a).imp_right Nat.exists_eq_add_of_le
   · have h1 : 2 * b + 2 < 3 * a := by
       refine (Nat.add_lt_add_of_lt_of_le ?_ ?_).trans_eq (Nat.succ_mul 2 a).symm
       · exact Nat.mul_lt_mul_of_pos_left h0 Nat.two_pos
@@ -82,7 +82,7 @@ theorem final_solution (h : good a.factorial b.factorial) :
     refine ⟨h1.le, iff_of_false h1.ne ?_⟩
     rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
     · exact h0.ne rfl
-    · exact h0.not_lt (Nat.lt_succ_self 4)
+    · exact h0.not_gt (Nat.lt_succ_self 4)
   ---- Now write `b = a + c` and continue
   replace h : (a + 1).ascFactorial c + 1 ∣ a.factorial := by
     rwa [good_iff, ← a.factorial_mul_ascFactorial, Nat.add_comm,

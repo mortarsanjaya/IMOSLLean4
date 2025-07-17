@@ -100,7 +100,7 @@ lemma special_pair_is_good (m) :
     _ ≤ (m ^ 3 + m ^ 2 - 2 * m - 1) + (m ^ 2 + m) := Int.le_add_of_nonneg_right this
     _ = m ^ 3 + 2 * m ^ 2 - m - 1 := by ring
   rw [sq, ← mul_add_one]
-  obtain h | h : 0 ≤ m ∨ m < 0 := Int.le_or_lt 0 m
+  obtain h | h : 0 ≤ m ∨ m < 0 := le_or_gt 0 m
   · exact Int.mul_nonneg h (Int.add_nonneg h Int.one_nonneg)
   · exact Int.mul_nonneg_of_nonpos_of_nonpos h.le h
 

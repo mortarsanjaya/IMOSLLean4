@@ -9,6 +9,7 @@ import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Nat.GCD.Basic
+import Mathlib.Algebra.Group.Units.Equiv
 
 /-!
 # IMO 2017 N3
@@ -59,6 +60,8 @@ theorem Nat_exists_iterate_mod_eq (hp : 0 < p) (f : ℕ → ℕ) (i : ℕ) :
 
 section
 
+open Fin.NatCast
+
 variable [AddCommMonoid M]
 
 lemma sum_Ico_fin_boole_last (a : M) (n k m : ℕ) :
@@ -68,7 +71,7 @@ lemma sum_Ico_fin_boole_last (a : M) (n k m : ℕ) :
     (Nat.le_total m k).imp_right Nat.exists_eq_add_of_le
   ---- Case `m ≤ k` follows by definition of `Ico` and subtraction on `Nat`
   · have h0 : m / n.succ ≤ k / n.succ := Nat.div_le_div_right h
-    rw [Ico_eq_empty h.not_lt, Nat.sub_eq_zero_of_le h0, zero_nsmul, sum_empty]
+    rw [Ico_eq_empty h.not_gt, Nat.sub_eq_zero_of_le h0, zero_nsmul, sum_empty]
   ---- Case `m ≥ k` follows by induction on `k - m`
   induction' j with j j_ih
   · rw [Nat.add_zero, Ico_self, Nat.sub_self, zero_nsmul, sum_empty]
@@ -100,6 +103,7 @@ end
 
 /-! ### Start of the problem -/
 
+open Fin.NatCast in
 structure SpecialTuple (n : ℕ) where
   toFun : Fin n.pred.succ → ℤ
   jump_shift : Fin n.pred.succ → Fin n.pred.succ
@@ -119,7 +123,7 @@ def sum : ℤ := ∑ i, X.toFun i
 lemma sum_def : X.sum = ∑ i : Fin n.pred.succ, X.toFun i := rfl
 
 /-- `g(i) = i + f(i) + 1`, where `f` is `jump_shift` -/
-def jump_index (i : ℕ) : ℕ := i + ((X.jump_shift i).1 + 1)
+def jump_index (i : ℕ) : ℕ := open Fin.NatCast in i + ((X.jump_shift i).1 + 1)
 
 lemma lt_jump_index (i : ℕ) : i < X.jump_index i :=
   Nat.lt_add_of_pos_right (Nat.succ_pos _)
@@ -145,6 +149,8 @@ end
 
 section
 
+open Fin.NatCast
+
 variable (ha : 1 < a) (hb : 0 < b)
 
 def ofComposite : SpecialTuple (a * b) where
@@ -153,7 +159,7 @@ def ofComposite : SpecialTuple (a * b) where
   jump_shift_spec := λ i ↦ by
     have h : (a * b).pred.succ = a * b :=
       Nat.succ_pred_eq_of_pos (Nat.mul_pos (Nat.zero_lt_of_lt ha) hb)
-    simp only; have hi : i.1 < a * b := i.2.trans_eq h
+    have hi : i.1 < a * b := i.2.trans_eq h
     generalize i.1 = i at hi ⊢
     rw [sum_sub_distrib, sum_const, Nat.card_Ico, Nat.add_sub_cancel_left, ← Nat.cast_sum,
       sum_Ico_fin_boole_last, nsmul_eq_mul, smul_eq_mul, Nat.cast_mul, Nat.cast_mul]
@@ -184,6 +190,8 @@ end
 /-! ##### The prime case -/
 
 section
+
+open Fin.NatCast
 
 open Function
 
@@ -267,11 +275,11 @@ theorem final_solution (hn : 1 < n) : (∀ X : SpecialTuple n, (n : ℤ) ∣ X.s
         Nat.exists_prime_and_dvd hn.ne.symm
       refine ⟨p, hp.one_lt, k, Nat.lt_of_not_le ?_, rfl⟩
       rw [Nat.le_one_iff_eq_zero_or_eq_one]; rintro (rfl | rfl)
-      · rw [p.mul_zero] at hn; exact hn.not_lt Nat.one_pos
+      · rw [p.mul_zero] at hn; exact hn.not_gt Nat.one_pos
       · exact h0 (p.mul_one.symm ▸ hp)
     clear h0 hn; specialize h (SpecialTuple.ofComposite ha (Nat.zero_lt_of_lt hb))
-    rw [SpecialTuple.ofComposite_sum, ← Int.ofNat_mul, mul_sub_one,
-      Int.dvd_iff_emod_eq_zero, sub_eq_add_neg, add_comm, Int.add_mul_emod_self,
+    rw [SpecialTuple.ofComposite_sum, ← Int.natCast_mul, mul_sub_one,
+      Int.dvd_iff_emod_eq_zero, sub_eq_add_neg, add_comm, Int.add_mul_emod_self_right,
       ← Int.dvd_iff_emod_eq_zero, Int.dvd_neg, Int.ofNat_dvd] at h
     have ha0 : 0 < a := Nat.zero_lt_of_lt ha
     exact Nat.not_dvd_of_pos_of_lt ha0 ((Nat.lt_mul_iff_one_lt_right ha0).mpr hb) h
@@ -281,4 +289,4 @@ theorem final_solution (hn : 1 < n) : (∀ X : SpecialTuple n, (n : ℤ) ∣ X.s
     obtain ⟨m, hm, hm0, h0⟩ := X.exists_dvd_pos_lt_nsmul_sum (Nat.lt_of_succ_lt_succ hn)
     have h1 : n.succ.Coprime m := h.coprime_iff_not_dvd.mpr (Nat.not_dvd_of_pos_of_lt hm hm0)
     rwa [Int.natCast_dvd, nsmul_eq_mul, Int.natAbs_mul,
-      Int.natAbs_ofNat, h1.dvd_mul_left, ← Int.natCast_dvd] at h0
+      Int.natAbs_natCast, h1.dvd_mul_left, ← Int.natCast_dvd] at h0

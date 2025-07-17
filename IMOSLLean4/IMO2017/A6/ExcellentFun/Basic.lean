@@ -66,12 +66,13 @@ lemma excellent_linear_formula (x y : R) : 2 • f (3 * x + y) = 2 • (3 • f 
       ← two_mul, X, ← two_mul, mul_nsmul _ 2 2, add_assoc, ← nsmul_add] at h1
   replace h (x y) : 2 • (f (2 * x + y) + f (x + 2 * y)) = 6 • f (x + y) := by
     specialize h (x + 1) (y + 2)
-    rw [add_assoc, add_assoc, h0, ← Nat.cast_one, ← Nat.cast_two, ← Nat.cast_add,
+    rw [add_assoc, add_assoc, h0, ← Nat.cast_one, ← Nat.cast_two (R := R), ← Nat.cast_add,
       ← Nat.cast_add, excellent_map_add_nat_mul_add_nat, add_assoc, nsmul_add, nsmul_add,
       ← mul_nsmul, ← mul_nsmul, add_assoc, add_right_inj, ← nsmul_add, add_add_add_comm,
-      ← add_nsmul, Nat.cast_two, Nat.cast_one, mul_add 2 y, add_add_add_comm x, two_mul 2,
-      ← Nat.cast_two, ← Nat.cast_add, add_comm 1, ← Nat.cast_succ, excellent_map_add_nat,
-      ← add_assoc, add_assoc, ← add_nsmul, nsmul_add, ← mul_nsmul, add_left_inj] at h
+      ← add_nsmul, Nat.cast_two, Nat.cast_one, mul_add 2 y, add_add_add_comm x,
+      two_mul 2, ← Nat.cast_two (R := R), ← Nat.cast_add, add_comm 1,
+      ← Nat.cast_succ, excellent_map_add_nat, ← add_assoc, add_assoc,
+      ← add_nsmul, nsmul_add, ← mul_nsmul, add_left_inj] at h
     exact h.symm
   clear h0; specialize h (x + (x + y)) (-(x + y))
   rw [mul_add, two_mul (x + y), ← add_assoc, add_neg_cancel_right,

@@ -20,7 +20,8 @@ open Finset Extra
 
 namespace Finset
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R] [DecidableEq ι]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
+  [DecidableEq ι]
 
 /-! ### Cauchy-Schwarz inequality -/
 

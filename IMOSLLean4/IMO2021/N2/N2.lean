@@ -91,7 +91,7 @@ theorem good_cond2_k_witness :
   ---- `2k^2 + 4k + 1 < 2(k + 1)^2 + 4(k + 1)`
   · rw [Nat.mul_succ, ← Nat.add_assoc]
     refine Nat.add_le_add (Nat.add_le_add_right ?_ _) (Nat.le_add_left 1 3)
-    exact Nat.mul_le_mul_left 2 (Nat.pow_le_pow_of_le_left k.le_succ 2)
+    exact Nat.mul_le_mul_left 2 (Nat.pow_le_pow_left k.le_succ 2)
     ---- `(k + 1)^2 + 6(k + 1) + 8 ≤ 2k^2 + 4k + 1`
   · replace h1 : 2 * k ^ 2 + 4 * k + 2 = 2 * (k + 1) ^ 2 := calc
       _ = 2 * (k ^ 2 + 2 * k + 1) := by rw [Nat.mul_add, Nat.mul_add, ← Nat.mul_assoc]

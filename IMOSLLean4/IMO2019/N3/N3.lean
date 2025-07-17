@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Digits
+import Mathlib.Data.Nat.Digits.Defs
 import Mathlib.Data.Int.Interval
 import Mathlib.Algebra.Order.Ring.Abs
+import Mathlib.Data.Int.ModEq
 
 /-!
 # IMO 2019 N3
@@ -26,7 +27,7 @@ open List
 /-- Given `b k : ℤ` with `k ≠ 0`, there exists `m ≠ n` such that `b^m ≡ b^n (mod k)`. -/
 theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) : ∃ m n : ℕ, m ≠ n ∧ k ∣ b ^ m - b ^ n :=
   have h0 : Set.MapsTo (λ x : ℕ ↦ b ^ x % k) Set.univ (Finset.Ico 0 |k|) :=
-    λ x _ ↦ Finset.coe_Ico 0 |k| ▸ ⟨(b ^ x).emod_nonneg h, Int.emod_lt _ h⟩
+    λ x _ ↦ Finset.coe_Ico 0 |k| ▸ ⟨(b ^ x).emod_nonneg h, Int.emod_lt_abs _ h⟩
   (Set.infinite_univ.exists_ne_map_eq_of_mapsTo h0 (Set.toFinite _)).elim
     λ m ⟨_, n, _, h, h0⟩ ↦ ⟨m, n, h, Int.ModEq.dvd h0.symm⟩
 
@@ -60,13 +61,13 @@ theorem rootiful_one_mem_of_nat (n : ℕ) (h0 : n ≠ 0) (h1 : (n : ℤ) ∈ S) 
   h 1 (n :: replicate n (-1))
     (forall_mem_cons.mpr
       ⟨h1, λ x h2 ↦ (mem_replicate.mp h2).2 ▸ rootiful_neg_one_mem h n h0 h1⟩)
-    ⟨n, mem_cons_self _ _, h0⟩
+    ⟨n, mem_cons_self, h0⟩
     (by simp only [one_mul]; rw [← sum_eq_foldr, sum_cons,
       sum_replicate, nsmul_eq_mul, mul_neg_one, add_neg_cancel])
 
 theorem rootiful_one_mem_of_pos (n : ℤ) (h0 : 0 < n) (h1 : n ∈ S) : (1 : ℤ) ∈ S :=
   rootiful_one_mem_of_nat h n.natAbs (Int.natAbs_ne_zero.mpr h0.ne.symm)
-    (Int.eq_natAbs_of_zero_le h0.le ▸ h1)
+    (Int.eq_natAbs_of_nonneg h0.le ▸ h1)
 
 theorem rootiful_neg_mem_of_one_mem (h0 : (1 : ℤ) ∈ S) (x : ℤ) (h1 : x ∈ S) : -x ∈ S :=
   h (-x) [x, 1]
@@ -85,7 +86,7 @@ theorem rootiful_induction_of_nat_dvd_nat (h0 : 1 < n) (h1 : ∀ k : ℕ, k < n 
     (forall_mem_cons.mpr ⟨h4, λ x h5 ↦ by
       rw [mem_map] at h5; rcases h5 with ⟨d, h5, rfl⟩
       exact h1 d (Nat.digits_lt_base h0 h5)⟩)
-    ⟨-N, mem_cons_self _ _, by rw [Int.neg_ne_zero, Nat.cast_ne_zero]; exact h2.ne.symm⟩
+    ⟨-N, mem_cons_self, by rw [Int.neg_ne_zero, Nat.cast_ne_zero]; exact h2.ne.symm⟩
     (by rw [List.foldr, foldr_map, ← Nat.ofDigits_eq_foldr, ← Nat.coe_int_ofDigits,
       Nat.ofDigits_digits, h3, Nat.cast_mul, neg_add_cancel])
 
@@ -110,7 +111,7 @@ theorem rootiful_eq_univ (h0 : (0 : ℤ) ∈ S) (h1 : (1 : ℤ) ∈ S)
     (h2 : ∀ k : ℕ, 0 < k → ∃ N : ℤ, N ≠ 0 ∧ (k : ℤ) ∣ N ∧ N ∈ S) : S = Set.univ := by
   refine Set.eq_univ_of_forall λ k ↦ ?_
   have h3 := rootiful_nat_subset h h0 h1 h2 k.natAbs
-  rcases le_or_lt 0 k with h4 | h4
+  rcases le_or_gt 0 k with h4 | h4
   · rwa [Int.natAbs_of_nonneg h4] at h3
   · apply rootiful_neg_mem_of_pos h (Nat.cast_pos.mpr (Int.natAbs_pos.mpr h4.ne)) at h3
     rwa [Int.ofNat_natAbs_of_nonpos h4.le, neg_neg] at h3

@@ -20,12 +20,12 @@ namespace IMO2008A1
 
 /-! ### Unbundled version of the problem -/
 
-structure weakGood [OrderedSemiring R] (f : R → R) : Prop where
+structure weakGood [Semiring R] [PartialOrder R] (f : R → R) : Prop where
   map_pos_of_pos : ∀ x > 0, f x > 0
   good' : ∀ p > 0, ∀ q > 0, ∀ r > 0, ∀ s > 0, p * q = r * s →
     (f p ^ 2 + f q ^ 2) * (r ^ 2 + s ^ 2) = (p ^ 2 + q ^ 2) * (f (r ^ 2) + f (s ^ 2))
 
-variable [LinearOrderedCommSemiring R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 theorem side_ineq [ExistsAddOfLE R] {x y : R} (h : (x ^ 2 + 1) * y = (y ^ 2 + 1) * x) :
     x = y ∨ y * x = 1 := by
@@ -36,15 +36,15 @@ theorem side_ineq [ExistsAddOfLE R] {x y : R} (h : (x ^ 2 + 1) * y = (y ^ 2 + 1)
   rw [sq, sq, add_one_mul _ y, add_one_mul _ x, mul_rotate, mul_assoc, mul_assoc] at h
   rcases h0 with ⟨c, rfl⟩
   rw [add_mul x c (_ * x), add_assoc, add_right_inj, add_comm, add_left_inj, eq_comm] at h
-  rw [self_eq_add_right, or_comm, add_comm]
+  rw [left_eq_add, or_comm, add_comm]
   generalize (c + x) * x = y at h ⊢
   ---- It remains to show `cy = c → y = 1 ∨ c = 0`
   obtain ⟨d, h0⟩ | ⟨d, rfl⟩ : (∃ d, 1 = y + d) ∨ (∃ d, y = 1 + d) :=
     (le_total y 1).imp exists_add_of_le exists_add_of_le
-  · rw [h0, self_eq_add_right, ← mul_eq_zero, mul_comm,
-      ← add_right_eq_self, ← mul_add, ← h0, h, mul_one]
-  · rw [mul_one_add c, add_right_eq_self, mul_eq_zero] at h
-    rwa [add_right_eq_self, or_comm]
+  · rw [h0, left_eq_add, ← mul_eq_zero, mul_comm,
+      ← add_eq_left, ← mul_add, ← h0, h, mul_one]
+  · rw [mul_one_add c, add_eq_left, mul_eq_zero] at h
+    rwa [add_eq_left, or_comm]
 
 theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
     weakGood f ↔ (∀ x > 0, f x = x) ∨ (∀ x > 0, x * f x = 1) := by
@@ -88,7 +88,7 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
           mul_comm (f x), pow_left_inj₀ (mul_pos hx'' hy).le hy.le four_ne_zero] at h1
         refine absurd ?_ hx'; rwa [← mul_right_cancel_iff_of_pos hy, one_mul]
     refine (em' (∀ x > 0, x * f x = 1)).imp_left λ h4 ↦ ?_
-    simp only [not_forall, Classical.not_imp] at h4; rcases h4 with ⟨c, hc, h4⟩
+    simp only [not_forall] at h4; rcases h4 with ⟨c, hc, h4⟩
     intro x hx; exact h3 hc hx h4
   ---- `←` direction
   · rcases hf with hf | hf
@@ -112,6 +112,7 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
 def posSubtypeExt (f : {x : R // 0 < x} → {x : R // 0 < x}) (x : R) : R :=
   dite (0 < x) (λ h ↦ f ⟨x, h⟩) (λ _ ↦ 0)
 
+omit [IsStrictOrderedRing R] in
 lemma posSubtypeExt_spec (f : {x : R // 0 < x} → {x : R // 0 < x}) (x : {x : R // 0 < x}) :
     posSubtypeExt f x.1 = f x :=
   dif_pos _

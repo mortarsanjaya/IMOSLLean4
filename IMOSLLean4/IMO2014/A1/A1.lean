@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Nat.Choose.Basic
+import Mathlib.Data.Nat.Find
 
 /-!
 # IMO 2014 A1 (P1)
@@ -24,7 +26,7 @@ open Finset
 def d (z : ℕ → ℤ) (n : ℕ) := (range (n + 1)).sum z - n * z n
 
 theorem d_zero (z : ℕ → ℤ) : d z 0 = z 0 := by
-  rw [d, sum_range_one, Int.Nat.cast_ofNat_Int, Int.zero_mul, Int.sub_zero]
+  rw [d, sum_range_one, Int.cast_ofNat_Int, Int.zero_mul, Int.sub_zero]
 
 theorem d_succ (z : ℕ → ℤ) (n : ℕ) :
     d z (n + 1) = (range (n + 1)).sum z - n * z (n + 1) := by
@@ -45,7 +47,7 @@ theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
 theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
   | 0 => ((d_zero z).trans (sub_zero _).symm).le
   | n + 1 => by
-      rw [Nat.choose, Nat.choose_one_right, Int.ofNat_add, ← sub_sub, sub_right_comm]
+      rw [Nat.choose, Nat.choose_one_right, Int.natCast_add, ← sub_sub, sub_right_comm]
       exact Int.le_sub_right_of_add_le <|
         (Int.add_le_of_le_sub_right (main_lemma h n)).trans (binom_bound n)
 
@@ -71,10 +73,10 @@ theorem greatestDPos_is_d_pos : 0 < d z (greatestDPos h) :=
   Nat.findGreatest_spec (P := λ n ↦ 0 < d z n) (Nat.succ_pos _) (d_one_pos h0)
 
 theorem greatestDPos_succ_not_d_pos : d z (greatestDPos h + 1) ≤ 0 :=
-  le_of_not_lt <| Nat.findGreatest_is_greatest
+  le_of_not_gt <| Nat.findGreatest_is_greatest
       (P := λ n ↦ 0 < d z n) (greatestDPos h).lt_succ_self <|
     (Nat.findGreatest_le _).lt_or_eq.resolve_right λ h1 ↦
-      (greatestDPos_is_d_pos h h0).not_le <| d_nonpos_of_big h <|
+      (greatestDPos_is_d_pos h h0).not_ge <| d_nonpos_of_big h <|
         (congr_arg₂ Nat.choose h1.symm rfl).le.trans' <|
           (z 0).natAbs.choose_one_right.ge.trans (Nat.le_add_right _ _)
 
@@ -83,8 +85,8 @@ theorem eq_greatestDPos_iff :
   have h1 := greatestDPos_is_d_pos h h0
   have h2 := greatestDPos_succ_not_d_pos h h0
   ⟨λ h3 ↦ h3 ▸ ⟨h1, h2⟩, λ h3 ↦ le_antisymm
-    (le_of_not_lt λ h4 ↦ h3.1.not_le (d_nonpos_mono h h2 h4))
-    (le_of_not_lt λ h4 ↦ h1.not_le (d_nonpos_mono h h3.2 h4))⟩
+    (le_of_not_gt λ h4 ↦ h3.1.not_ge (d_nonpos_mono h h2 h4))
+    (le_of_not_gt λ h4 ↦ h1.not_ge (d_nonpos_mono h h3.2 h4))⟩
 
 
 
@@ -107,4 +109,4 @@ theorem final_solution_part2 : 0 < greatestDPos h :=
 
 /-- Final solution, extra: `C(N, 2) < z_0`, implemented as `C(N, 2) < (z 0).nat_abs`. -/
 theorem final_solution_extra : (greatestDPos h).choose 2 < (z 0).natAbs :=
-  lt_of_not_le λ h1 ↦ (d_nonpos_of_big h h1).not_lt (greatestDPos_is_d_pos h h0)
+  lt_of_not_ge λ h1 ↦ (d_nonpos_of_big h h1).not_gt (greatestDPos_is_d_pos h h0)

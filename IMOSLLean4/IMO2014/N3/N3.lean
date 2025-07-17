@@ -62,17 +62,17 @@ theorem sum_map_replicate_two (C : Multiset ℕ) :
       rw [range_succ, map_cons, sum_cons, add_left_comm, sum_map_replicate_two]
       ext x; rw [count_add, count_add, count_replicate,
         count_replicate, count_filter, count_filter, Nat.mul_succ]
-      obtain h | h : x ≤ 2 * N ∨ 2 * N < x := le_or_lt x (2 * N)
+      obtain h | h : x ≤ 2 * N ∨ 2 * N < x := le_or_gt x (2 * N)
       · have h0 : x < 2 * N + 2 := h.trans_lt (Nat.lt_add_of_pos_right Nat.two_pos)
-        rw [if_pos h, if_pos h0.le, add_left_eq_self, add_eq_zero]
+        rw [if_pos h, if_pos h0.le, add_eq_right, add_eq_zero]
         exact ⟨if_neg (Nat.lt_succ_of_le h).ne.symm, if_neg h0.ne.symm⟩
-      rw [if_neg h.not_le, add_zero]
+      rw [if_neg h.not_ge, add_zero]
       rw [Nat.lt_iff_add_one_le, le_iff_eq_or_lt, Nat.lt_iff_add_one_le, le_iff_eq_or_lt] at h
       rcases h with rfl | rfl | h
       · rw [if_pos rfl, if_neg (2 * N + 1).succ_ne_self,
           add_zero, if_pos (2 * N).succ.le_succ]
       · rw [if_neg (2 * N + 1).succ_ne_self.symm, zero_add, if_pos rfl, if_pos (le_refl _)]
-      · rw [if_neg (Nat.lt_of_succ_lt h).ne, zero_add, if_neg h.ne, if_neg h.not_le]
+      · rw [if_neg (Nat.lt_of_succ_lt h).ne, zero_add, if_neg h.ne, if_neg h.not_ge]
 
 
 
@@ -153,7 +153,7 @@ theorem nonempty_of_restricted (hC : 0 ∉ C) (hC0 : ∀ n ≠ 0, C.count n < n)
       + replicate (C.count (2 * i.succ)) (2 * i.succ), ?_, ?_, ?_⟩
   · rw [card_map, card_range]
   · have h := sum_map_replicate_two C N.succ
-    rwa [count_eq_zero_of_not_mem hC, replicate_zero, zero_add, filter_eq_self.mpr hC2] at h
+    rwa [count_eq_zero_of_notMem hC, replicate_zero, zero_add, filter_eq_self.mpr hC2] at h
   · intro G h; simp only [mem_map, mem_range] at h
     rcases h with ⟨i, -, rfl⟩
     rw [Multiset.map_add, sum_add, map_replicate, map_replicate, sum_replicate, sum_replicate]
@@ -185,7 +185,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
     rw [Multiset.map_add, sum_add, sum_replicate_map_inv h0, add_comm] at h
     obtain ⟨N, rfl⟩ : ∃ N' : ℕ, N = N'.succ := by
       apply Nat.exists_eq_succ_of_ne_zero; rintro rfl
-      refine h.not_lt (add_lt_add_of_le_of_lt ?_ (inv_lt_one_of_one_lt₀ one_lt_two))
+      refine h.not_gt (add_lt_add_of_le_of_lt ?_ (inv_lt_one_of_one_lt₀ one_lt_two))
       refine sum_nonneg λ x h1 ↦ ?_
       rw [mem_map] at h1; rcases h1 with ⟨y, -, rfl⟩
       exact inv_nonneg.mpr y.cast_nonneg
@@ -203,7 +203,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
     · rw [card_cons, card_add, card_replicate, Nat.add_comm 2]
       exact (card C).succ.lt_succ_self
     · rw [map_cons, sum_cons, Multiset.map_add, sum_add, sum_replicate_two_mul, add_comm]
-  simp only [not_exists, not_and, not_lt] at hC1
+  simp only [not_exists, not_lt] at hC1
   ---- 4. Resolve case: for some `n ∈ C`, we have `n > 2N`
   by_cases hC2 : ∃ n ∈ C, 2 * N.succ < n
   · rcases hC2 with ⟨n, h0, h1⟩
@@ -219,7 +219,7 @@ theorem nonempty_of_sum_le {N : ℕ} (h : (map (λ x : ℕ ↦ (x : ℚ)⁻¹) C
         ∃ G ∈ part', (G.map λ x : ℕ ↦ (x : ℚ)⁻¹).sum ≤ 1 - ((2 * N.succ : ℕ) : ℚ)⁻¹ := by
       by_contra h0; simp only [not_exists, not_and, not_le] at h0
       have h2 : part' ≠ ∅ := by rw [empty_eq_zero, ← card_pos, card_part']; exact N.succ_pos
-      apply (sum_lt_sum_of_nonempty h2 h0).not_le
+      apply (sum_lt_sum_of_nonempty h2 h0).not_ge
       replace h2 : (2 : ℚ)⁻¹ + 2⁻¹ = 1 := by rw [inv_eq_one_div, add_halves]
       rw [map_const', sum_replicate, card_part', nsmul_eq_mul, mul_one_sub, Nat.cast_mul,
         mul_inv_rev, mul_inv_cancel_left₀ (Nat.cast_ne_zero.mpr N.succ_ne_zero),

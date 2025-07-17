@@ -19,7 +19,7 @@ namespace IMOSL
 namespace IMO2011A6
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedCommRing R]
+theorem final_solution [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
     {f : R → R} (h : ∀ x y : R, f (x + y) ≤ y * f x + f (f x)) :
     ∀ x : R, x ≤ 0 → f x = 0 := by
   have h0 (t x : R) : f (f t) - f (f x) ≤ (f t - x) * f x :=
@@ -34,7 +34,7 @@ theorem final_solution [LinearOrderedCommRing R]
   have h1 (x : R) : f x ≤ f (f x) := by
     have h1 := h x 0; rwa [add_zero, zero_mul, zero_add] at h1
   replace h1 (x : R) : f x ≤ 0 :=
-    le_of_not_lt λ h2 ↦ (h0 (f x)).not_lt <| mul_pos h2 (h2.trans_le (h1 x))
+    le_of_not_gt λ h2 ↦ (h0 (f x)).not_gt (mul_pos h2 (h2.trans_le (h1 x)))
   replace h0 (x : R) (h2 : x < 0) : f x = 0 :=
     (h1 x).antisymm (nonneg_of_mul_nonpos_right (h0 x) h2)
   intros x h2; rcases h2.lt_or_eq with h2 | rfl

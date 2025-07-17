@@ -26,7 +26,7 @@ theorem FiniteField_prime_geom_sum_eq_zero_imp [Field F] [Fintype F] [DecidableE
   haveI : Fact p.Prime := ⟨hp⟩
   have h0 : x ≠ 0 := λ h0 ↦ absurd h (by rw [h0, zero_pow hp.ne_zero]; exact zero_ne_one' F)
   let xᵤ : Fˣ := ⟨x, x⁻¹, mul_inv_cancel₀ h0, inv_mul_cancel₀ h0⟩
-  have h1 : orderOf xᵤ = p := orderOf_eq_prime (Units.eq_iff.mp h) (mt Units.eq_iff.mpr hx)
+  have h1 : orderOf xᵤ = p := orderOf_eq_prime (Units.val_inj.mp h) (mt Units.val_inj.mpr hx)
   rw [← h1, ← Fintype.card_units]; exact orderOf_dvd_card
 
 theorem ZMod_prime_geom_sum_eq_zero_imp [Fact (Nat.Prime q)]
@@ -108,10 +108,10 @@ theorem final_solution {p : ℕ} (hp : p.Prime) (h : 3 < p) (x y : ℤ) :
     rw [sum_const, card_range, nsmul_one] at h0
     clear! x y; rcases h0 with h0 | h0
     · rw [CharP.cast_eq_zero_iff _ p] at h0
-      exact (Nat.sub_lt hp.pos Nat.two_pos).not_le (Nat.le_of_dvd X h0)
+      exact (Nat.sub_lt hp.pos Nat.two_pos).not_ge (Nat.le_of_dvd X h0)
     · rw [← Nat.sub_add_cancel X, Nat.cast_add, Nat.sub_sub,
-        Nat.cast_one, add_left_eq_self, CharP.cast_eq_zero_iff _ p] at h0
-      exact (Nat.sub_lt hp.pos (Nat.succ_pos 2)).not_le
+        Nat.cast_one, add_eq_right, CharP.cast_eq_zero_iff _ p] at h0
+      exact (Nat.sub_lt hp.pos (Nat.succ_pos 2)).not_ge
         (Nat.le_of_dvd (Nat.sub_pos_of_lt h) h0)
   ---- Case 2: `y ≡ 2 (mod p)`
   · rw [sub_sub, ← CharP.intCast_eq_zero_iff (ZMod p), Int.cast_sub,
@@ -126,10 +126,10 @@ theorem final_solution {p : ℕ} (hp : p.Prime) (h : 3 < p) (x y : ℤ) :
       rw [← pow_succ', ← p.sub_sub 1 1, Nat.sub_add_cancel (Nat.sub_pos_of_lt hp.one_lt)]
       refine ZMod.pow_card_sub_one_eq_one (?_ : ((2 : ℕ) : ZMod p) ≠ 0)
       rw [Ne, CharP.cast_eq_zero_iff _ p, Nat.prime_dvd_prime_iff_eq hp Nat.prime_two]
-      rintro rfl; exact h.not_lt (Nat.lt_succ_self 2)
+      rintro rfl; exact h.not_gt (Nat.lt_succ_self 2)
     clear! x y; rcases h0 with h0 | h0
-    · rw [h0, mul_one, ← one_add_one_eq_two, add_right_eq_self] at X
+    · rw [h0, mul_one, ← one_add_one_eq_two, add_eq_left] at X
       exact one_ne_zero X
-    · rw [h0, mul_two, ← one_add_one_eq_two, ← add_assoc, add_left_eq_self,
-        ← Nat.cast_one, ← Nat.cast_add, ← Nat.cast_add, CharP.cast_eq_zero_iff _ p] at X
-      exact h.not_le (Nat.le_of_dvd (Nat.succ_pos 2) X)
+    · rw [h0, mul_two, ← one_add_one_eq_two, ← add_assoc, add_eq_right, ← Nat.cast_one,
+        ← Nat.cast_add, ← Nat.cast_add, CharP.cast_eq_zero_iff _ p] at X
+      exact h.not_ge (Nat.le_of_dvd (Nat.succ_pos 2) X)

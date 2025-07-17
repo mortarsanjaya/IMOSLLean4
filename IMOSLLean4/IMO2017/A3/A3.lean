@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import Mathlib.Data.Fintype.Pigeonhole
 import Mathlib.Data.Finite.Prod
 
 /-!
@@ -46,7 +47,7 @@ variable [Fintype S]
 theorem exists_lt_iterate_eq (f : S → S) : ∃ a b, a < b ∧ f^[a] = f^[b] := by
   obtain ⟨a, b, h, h0⟩ : ∃ a b : ℕ, a ≠ b ∧ f^[a] = f^[b] :=
     Finite.exists_ne_map_eq_of_infinite _
-  exact h.lt_or_lt.elim (λ h ↦ ⟨a, b, h, h0⟩) (λ h ↦ ⟨b, a, h, h0.symm⟩)
+  exact h.lt_or_gt.elim (λ h ↦ ⟨a, b, h, h0⟩) (λ h ↦ ⟨b, a, h, h0.symm⟩)
 
 theorem exists_iterate_idempotent (f : S → S) :
     ∃ n, 0 < n ∧ f^[2 * n] = f^[n] := by

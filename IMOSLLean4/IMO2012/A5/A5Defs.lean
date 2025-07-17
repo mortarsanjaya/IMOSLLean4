@@ -53,7 +53,7 @@ lemma NontrivialGood.map_one {S} [NonAssocSemiring S]
   rw [← zero_add 1, ← zero_mul 0, hf.is_good, zero_add,
     ← add_one_mul (f 0), hf.map_zero_add_one, zero_mul]
 
-structure ReducedGood (f : R → S) extends NontrivialGood f : Prop where
+structure ReducedGood (f : R → S) extends NontrivialGood f where
   period_imp_eq (c d) (_ : ∀ x, f (x + c) = f (x + d)) : c = d
 
 lemma ReducedGood.period_imp_zero {f : R → S} (hf : ReducedGood f)

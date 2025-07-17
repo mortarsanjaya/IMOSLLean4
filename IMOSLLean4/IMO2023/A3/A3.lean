@@ -23,7 +23,7 @@ namespace IMO2023A3
 
 open Finset
 
-structure goodSeq (N : ℕ) (F) [LinearOrderedField F] where
+structure goodSeq (N : ℕ) (F) [Field F] [LinearOrder F] where
   x : ℕ → F
   a : ℕ → ℕ
   x_pos' : ∀ i < N, 0 < x i
@@ -33,7 +33,7 @@ structure goodSeq (N : ℕ) (F) [LinearOrderedField F] where
 
 namespace goodSeq
 
-variable {N : ℕ} {F} [LinearOrderedField F] (X : goodSeq N F)
+variable {N : ℕ} {F} [Field F] [LinearOrder F] (X : goodSeq N F)
 
 lemma x_pos (hi : i < N) : 0 < X.x i :=
   X.x_pos' i hi
@@ -54,17 +54,19 @@ lemma x_ne_zero (hi : i < N) : X.x i ≠ 0 :=
 lemma x_nonneg (hi : i < N) : 0 ≤ X.x i :=
   (X.x_pos hi).le
 
-lemma x_inv_pos (hi : i < N) : 0 < (X.x i)⁻¹ :=
-  inv_pos.mpr (X.x_pos hi)
-
 lemma x_inv_ne_zero (hi : i < N) : (X.x i)⁻¹ ≠ 0 :=
   inv_ne_zero (X.x_ne_zero hi)
 
-lemma x_inv_nonneg (hi : i < N) : 0 ≤ (X.x i)⁻¹ :=
-  (X.x_inv_pos hi).le
-
 lemma x_mul_inv (h : i < N) : X.x i * (X.x i)⁻¹ = 1 :=
   mul_inv_cancel₀ (X.x_ne_zero h)
+
+variable [IsStrictOrderedRing F]
+
+lemma x_inv_pos (hi : i < N) : 0 < (X.x i)⁻¹ :=
+  inv_pos.mpr (X.x_pos hi)
+
+lemma x_inv_nonneg (hi : i < N) : 0 ≤ (X.x i)⁻¹ :=
+  (X.x_inv_pos hi).le
 
 
 
@@ -77,6 +79,7 @@ lemma a_one_eq_one (h : 0 < N) : X.a 1 = 1 := by
   rwa [sum_range_one, sum_range_one, X.x_mul_inv h, ← Nat.cast_pow,
     Nat.cast_eq_one, sq, Nat.mul_self_inj (n := 1)] at h0
 
+omit [IsStrictOrderedRing F] in
 lemma special_formula1 (h : i + 1 ≤ N) :
     (X.a (i + 1) : F) ^ 2 - (X.a i + 1) ^ 2
       = (X.x i)⁻¹ * (range i).sum X.x
@@ -92,6 +95,7 @@ lemma special_formula1 (h : i + 1 ≤ N) :
       add_mul, mul_add, mul_add, X.x_mul_inv h]
   _ = _ := by rw [add_comm _ 1, add_add_add_comm, add_sub_add_left_eq_sub, mul_comm]
 
+omit [IsStrictOrderedRing F] in
 lemma special_formula2 (h : i < N) :
     ((X.x i)⁻¹ * (range i).sum X.x + X.x i * (range i).sum (λ j ↦ (X.x j)⁻¹)) ^ 2
       = ((X.x i)⁻¹ * (range i).sum X.x - X.x i * (range i).sum (λ j ↦ (X.x j)⁻¹)) ^ 2
@@ -125,7 +129,7 @@ lemma a_succ_eq_a_add_one_iff (h : i + 1 ≤ N) :
       (mul_nonneg h0 (sum_nonneg λ j h1 ↦ inv_nonneg.mpr ?_))
     all_goals exact X.x_nonneg ((mem_range.mp h1).trans h)
   _ ↔ (X.x i)⁻¹ * (range i).sum X.x = X.x i * (range i).sum (λ j ↦ (X.x j)⁻¹) := by
-    rw [X.special_formula2 h, add_left_eq_self, sq_eq_zero_iff, sub_eq_zero]
+    rw [X.special_formula2 h, add_eq_right, sq_eq_zero_iff, sub_eq_zero]
   _ ↔ _ := by rw [inv_mul_eq_iff_eq_mul₀ (X.x_ne_zero h), sq, mul_assoc]
 
 lemma three_add_a_le_a_add_two (h : i + 2 ≤ N) : X.a i + 3 ≤ X.a (i + 2) := by
@@ -162,5 +166,5 @@ end goodSeq
 
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedField F] (X : goodSeq N F) : 3 * N / 2 ≤ X.a N :=
+theorem final_solution [Field F] [LinearOrder F] [IsStrictOrderedRing F] (X : goodSeq N F) : 3 * N / 2 ≤ X.a N :=
   X.general_a_bound N.le_refl

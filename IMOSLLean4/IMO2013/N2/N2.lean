@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Multiset
+import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
 import Mathlib.Algebra.Field.Rat
 import Mathlib.Algebra.Ring.Parity
 
@@ -58,7 +58,7 @@ theorem good_two_mul_add_one (h : good k c) : good (k + 1) (2 * c + 1) := λ n h
 
 /-- Final solution -/
 theorem final_solution : ∀ k : ℕ, good k (2 ^ k - 1)
-  | 0 => λ n h ↦ ⟨0, rfl, λ m h ↦ absurd h (not_mem_zero m), by
+  | 0 => λ n h ↦ ⟨0, rfl, λ m h ↦ absurd h (notMem_zero m), by
       rw [pow_zero, Nat.sub_self, add_zero]
       exact div_self (Nat.cast_ne_zero.mpr h.ne.symm)⟩
   | k + 1 => by

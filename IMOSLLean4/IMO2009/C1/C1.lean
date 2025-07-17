@@ -66,7 +66,7 @@ theorem symmDiff_card_mod_two : (symmDiff A B).card % 2 = (A.card + B.card) % 2 
 
 theorem mem_symmDiff_iff_mem_left {B : Finset α} (h : a ∉ B) :
     a ∈ symmDiff A B ↔ a ∈ A :=
-  mem_union.trans <| (or_iff_left <| not_mem_sdiff_of_not_mem_left h).trans <|
+  mem_union.trans <| (or_iff_left (notMem_sdiff_of_notMem_left h)).trans <|
     mem_sdiff.trans <| and_iff_left h
 
 theorem filter_symmDiff (p : α → Prop) [DecidablePred p] :
@@ -126,7 +126,7 @@ theorem Ends_iff {X : GameState n} : X.Ends ↔ X.board ⊆ range n :=
     rw [mem_range, ← not_le]
     refine λ h1 ↦ h _ (ValidMove.flip (i - n) ?_)
     rwa [Nat.sub_add_cancel h1],
-  λ h Y h0 ↦ ValidMove.recOn h0 λ i h1 ↦ (mem_range.mp (h h1)).not_le le_add_self⟩
+  λ h Y h0 ↦ ValidMove.recOn h0 λ i h1 ↦ (mem_range.mp (h h1)).not_ge le_add_self⟩
 
 
 

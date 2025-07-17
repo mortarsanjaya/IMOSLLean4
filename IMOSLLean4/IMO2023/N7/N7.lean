@@ -70,7 +70,7 @@ theorem nice_sum_not_Squarefree (h : nice a b c d) : ¬Squarefree (a + b + c + d
   rw [← pow_add, ← mul_pow, Nat.mod_eq_zero_of_dvd h] at h1
   replace h1 : k + m ∣ k :=
     (h0.dvd_pow_iff_dvd (Nat.succ_ne_zero 3)).mp (Nat.dvd_of_mod_eq_zero h1)
-  exact (Nat.le_of_dvd hab h1).not_lt (Nat.lt_add_of_pos_right hcd)
+  exact (Nat.le_of_dvd hab h1).not_gt (Nat.lt_add_of_pos_right hcd)
 
 /-- Final solution -/
 theorem final_solution (hn : 0 < n) :

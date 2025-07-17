@@ -18,7 +18,7 @@ Show that $a_N ≤ 1$ for all $N ≥ 2$.
 namespace IMOSL
 namespace IMO2022A1
 
-variable [LinearOrderedRing R]
+variable [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 lemma main_ineq {a b c : R} (h : 1 ≤ a) (h0 : 1 < b)
     (h1 : 0 ≤ c) (h2 : b ^ 2 + a * c ≤ a + c) : b < a :=
@@ -43,9 +43,9 @@ theorem final_solution {a : ℕ → R} (h : ∀ i, 0 ≤ a i)
     (main_ineq h1.le h2 (h _) (h0 _)).asymm (main_ineq2 (h i) h1 h2.le (h0 _))
   -- Now use the above to finish
   rcases Nat.exists_eq_add_of_le' h1 with ⟨n, rfl⟩
-  refine le_of_not_lt λ h1 ↦ (h0 (n + 1)).not_lt ?_
+  refine le_of_not_gt λ h1 ↦ (h0 (n + 1)).not_gt ?_
   rw [← sub_lt_iff_lt_add, add_sub_assoc, ← one_sub_mul]
   exact (one_lt_pow₀ h1 (Nat.succ_ne_zero 1)).trans_le' <|
     add_le_of_le_sub_left <| mul_le_of_le_one_right
-      (sub_nonneg_of_le <| le_of_not_lt λ h3 ↦ h2 _ h3 h1)
-      (le_of_not_lt (h2 _ h1))
+      (sub_nonneg_of_le <| le_of_not_gt λ h3 ↦ h2 _ h3 h1)
+      (le_of_not_gt (h2 _ h1))

@@ -18,7 +18,7 @@ $$ a_1 a_2 … a_n (x + 1)^k < (x + a_1) (x + a_2) … (x + a_n). $$
 namespace IMOSL
 namespace IMO2017A1
 
-variable [LinearOrderedCommSemiring R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 /-! ### Bernoulli's inequality -/
 

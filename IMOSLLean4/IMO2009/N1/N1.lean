@@ -24,6 +24,7 @@ theorem easy_lemma {a b c n : ℤ} (h : n ∣ a * (b - 1)) (h0 : n ∣ b * (c - 
     ← Int.emod_eq_emod_iff_emod_sub_eq_zero] at h h0 ⊢
   rw [Int.mul_emod, ← h, ← Int.mul_emod, mul_assoc, Int.mul_emod, h0, ← Int.mul_emod]
 
+open Fin.NatCast in
 theorem main_lemma {a : Fin (Nat.succ k) → ℤ} (ha : ∀ i, n ∣ a i * (a (i + 1) - 1)) :
     ∀ i j, n ∣ a i - a j := by
   have h (i) : ∀ m : ℕ, n ∣ a i * (a (i + (m.succ : Fin k.succ)) - 1) :=

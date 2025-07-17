@@ -8,7 +8,7 @@ import Mathlib.Data.Nat.Bitwise
 import Mathlib.Data.Nat.Size
 import Mathlib.Order.Bounds.Basic
 import Mathlib.Data.Nat.Factorial.Basic
-import Mathlib.Algebra.BigOperators.Group.List
+import Mathlib.Algebra.BigOperators.Group.List.Basic
 
 /-!
 # IMO 2021 A3
@@ -17,7 +17,10 @@ Find the smallest possible value of
 $$ \sum_{j = 1}^n \left\lfloor \frac{a_j}{j} \right\rfloor $$
   across all permutations $(a_1, a_2, \ldots, a_n)$ of $(1, 2, \ldots, n)$.
 
-TODO: Remove occurrence of `Nat.size` and use `Nat.log2` instead.
+### TODO
+
+Remove occurrence of `Nat.size` and use `Nat.log2` instead.
+Also, remove occurrence of `List.iota` and work around the problems.
 -/
 
 namespace IMOSL

@@ -43,7 +43,7 @@ end
 
 section
 
-variable [LinearOrderedCommRing R]
+variable [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
 
 theorem ring_ineq1 (a b : R) : 2 ^ 2 * (a * b) ≤ (a + b) ^ 2 := by
   rw [add_sq', sq, two_mul, add_mul, ← mul_assoc, add_le_add_iff_right]
@@ -107,7 +107,8 @@ end
 
 /-! ### Field inequalities -/
 
-variable [LinearOrderedField F] {a b c : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
+variable [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+  {a b c : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c)
 include ha hb hc
 
 theorem field_ineq1 : ((2 * a + b + c) ^ 2)⁻¹ ≤ (2 ^ 2 * ((a + b) * (a + c)))⁻¹ := by

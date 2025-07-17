@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Int.ModEq
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
@@ -47,7 +47,7 @@ theorem prod_one_modeq_one_mod : S.prod f ≡ 1 [ZMOD n] := by
 theorem prod_one_mod_add_card_modeq_sum_add_one :
     S.prod f + S.card ≡ S.sum f + 1 [ZMOD n ^ 2] := by
   induction' S using Finset.induction with i S h0 h1; rfl
-  rw [prod_insert h0, sum_insert h0, card_insert_of_not_mem h0,
+  rw [prod_insert h0, sum_insert h0, card_insert_of_notMem h0,
     Nat.cast_succ, ← add_assoc, add_right_comm]
   have h2 (j : ι) (h2 : j ∈ S) : f j ≡ 1 [ZMOD n] := h j (mem_insert_of_mem h2)
   have h3 := add_modeq_mul_add_one (h i (mem_insert_self i S)) (prod_one_modeq_one_mod h2)

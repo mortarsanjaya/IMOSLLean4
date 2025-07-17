@@ -89,7 +89,7 @@ theorem exists_add_mul_eq_sq_of_small_sq_mod
     rcases h with ⟨x, hx⟩
     exact ⟨x % p, Nat.mod_lt x hp0, (Nat.pow_mod _ _ _).symm.trans hx⟩
   clear h; obtain h | ⟨m, rfl⟩ : k < p ∨ ∃ m, k = p + m :=
-    (lt_or_le k p).imp_right Nat.exists_eq_add_of_le
+    (lt_or_ge k p).imp_right Nat.exists_eq_add_of_le
   ---- First resolve the case `k < p`
   · refine ⟨x, Nat.le_of_lt hx, exists_eq_add_mul_of_le_of_mod_eq ?_ hx0.symm⟩
     rw [← Nat.mod_eq_of_lt h, ← hx0]; exact Nat.mod_le _ _
@@ -229,7 +229,7 @@ theorem f_zero_left_le_self (k) : f 0 k ≤ k := by
 theorem exists_f_one_iterate_le_two (k) : ∃ n, (f 1)^[n] k ≤ 2 := by
   ---- Strong induction on `k`, clearing the base case `k ≤ 2` immediately
   induction k using Nat.strongRecOn with | ind k k_ih => ?_
-  obtain h | h : k ≤ 2 ∨ 2 < k := le_or_lt k 2
+  obtain h | h : k ≤ 2 ∨ 2 < k := le_or_gt k 2
   · exact ⟨0, h⟩
   ---- For `k > 2`, first find `m` such that `f^m(k) < k`
   obtain ⟨m, hm⟩ : ∃ m, (f 1)^[m] k < k := by
@@ -275,9 +275,9 @@ theorem not_good_of_not_sq_mod (hp : 0 < p) (h : ∀ x, x ^ 2 % p ≠ k % p) : �
 /-- A version of `not_good_of_not_sq_mod` that allows testing non-good numbers by `decide` -/
 theorem not_good_of_not_sq_mod_fin (hp : 0 < p) (h : ∀ x : Fin p, x ^ 2 % p ≠ k % p) :
     ¬good p k := by
-  haveI : NeZero p := ⟨Nat.not_eq_zero_of_lt hp⟩
-  refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat' p x) ?_
-  rw [Fin.val_ofNat', ← Nat.pow_mod, hx]
+  haveI : NeZero p := ⟨Nat.ne_zero_of_lt hp⟩
+  refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat p x) ?_
+  rw [Fin.val_ofNat, ← Nat.pow_mod, hx]
 
 theorem good.exists_mod_eq_sq (hp : 0 < p) (h : good p k) : ∃ x, x ^ 2 % p = k % p := by
   by_contra h0; exact not_good_of_not_sq_mod hp (not_exists.mp h0) h
@@ -288,7 +288,7 @@ theorem good.exists_iterate_le_two_mul (hp : 0 < p) (h : good p N) :
   induction N using Nat.strongRecOn with | ind N N_ih => ?_
   have hp0 : 0 < p := Nat.zero_lt_of_lt hp
   have hN0 : ∃ x, x ^ 2 % p = N % p := h.exists_mod_eq_sq hp0
-  obtain hN | hN : N ≤ 2 * p ∨ 2 * p < N := le_or_lt N (2 * p)
+  obtain hN | hN : N ≤ 2 * p ∨ 2 * p < N := le_or_gt N (2 * p)
   · exact ⟨0, hN⟩
   ---- Now focus on the induction step
   obtain ⟨m, h0⟩ := exists_f_iterate_lt_self_of_big hp0 hN hN0
@@ -301,7 +301,7 @@ theorem good.exists_iterate_le_p (hp : 2 < p) (h : good p N) :
   induction N using Nat.strongRecOn with | ind N N_ih => ?_
   have hp0 : 0 < p := Nat.zero_lt_of_lt hp
   have hN0 : ∃ x, x ^ 2 % p = N % p := h.exists_mod_eq_sq hp0
-  obtain hN | hN : N ≤ 2 * p ∨ 2 * p < N := le_or_lt N (2 * p)
+  obtain hN | hN : N ≤ 2 * p ∨ 2 * p < N := le_or_gt N (2 * p)
   · exact exists_f_iterate_le_p_of_small hp hN hN0
   ---- Now focus on the induction step
   obtain ⟨m, h0⟩ := exists_f_iterate_lt_self_of_big hp0 hN hN0
@@ -320,7 +320,7 @@ theorem good_zero_left (k) : good 0 k := by
 theorem good_one_left (k) : good 1 k := by
   ---- Strong induction on `k`
   induction k using Nat.strongRecOn with | ind k h0 => ?_
-  obtain h | h : 2 < k ∨ k ≤ 2 := lt_or_le 2 k
+  obtain h | h : 2 < k ∨ k ≤ 2 := lt_or_ge 2 k
   ---- First clear the induction step
   · obtain ⟨m, h1⟩ : ∃ m, (f 1)^[m] k ≤ 2 := exists_f_one_iterate_le_two k
     exact good_f_iterate_iff.mp (h0 _ (Nat.lt_of_le_of_lt h1 h))
@@ -429,7 +429,7 @@ theorem squarefree.good_of_dvd (hN : p ∣ N) : good p N := by
   ---- We will instead induct to show that `pN` is good for all `N`
   rcases hN with ⟨N, rfl⟩
   induction N using Nat.strongRecOn with | ind N N_ih => ?_
-  obtain h | h : 2 < N ∨ N ≤ 2 := lt_or_le 2 N
+  obtain h | h : 2 < N ∨ N ≤ 2 := lt_or_ge 2 N
   ---- First clear the induction step
   · obtain ⟨m, h0⟩ : ∃ m, (f p)^[m] (p * N) < p * N := by
       refine exists_f_iterate_lt_self_of_big hp.pos ?_ ⟨0, ?_⟩

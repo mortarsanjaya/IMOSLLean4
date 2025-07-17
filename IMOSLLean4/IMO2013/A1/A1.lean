@@ -85,9 +85,9 @@ theorem f_aux_alt1_prod_description :
 theorem f_aux_matrix_description1 :
     ∀ l : List R, f_aux l = (f_aux_alt1 l 0, f_aux_alt1 l 0 - f_aux_alt1 l 1) := by
   refine List.rec (Prod.ext rfl (sub_zero 1).symm) λ r l h ↦ ?_
-  rw [f_aux_cons, f_aux_alt1_cons, h, Prod.mk.inj_iff,
+  rw [f_aux_cons, f_aux_alt1_cons, h, Prod.mk_inj,
     matrix_fin2_mulVec, matrix_fin2_mulVec, M]
-  simp only [Matrix.head_cons, of_apply, cons_val_one, cons_val_zero]
+  simp only [of_apply, cons_val_one, cons_val_zero]
   refine ⟨?_, ?_⟩
   · rw [one_add_mul, neg_mul, add_assoc, ← sub_eq_add_neg, mul_sub]
   · rw [add_sub_add_right_eq_sub, one_add_mul, add_sub_cancel_right]
@@ -123,9 +123,9 @@ variable [CommRing R]
 theorem f_aux_matrix_description2 :
     ∀ l : List R, f_aux l = (f_aux_alt2 l 0, f_aux_alt2 l 0 + f_aux_alt2 l 1) := by
   refine List.rec (Prod.ext rfl (add_zero 1).symm) λ r l h ↦ ?_
-  rw [f_aux_cons, f_aux_alt2_cons, h, Prod.mk.inj_iff,
+  rw [f_aux_cons, f_aux_alt2_cons, h, Prod.mk_inj,
     matrix_fin2_vecMul, matrix_fin2_vecMul, M]
-  simp only [Matrix.head_cons, of_apply, cons_val_one, cons_val_zero]
+  simp only [of_apply, cons_val_one, cons_val_zero]
   refine ⟨?_, ?_⟩
   · rw [mul_comm, add_mul, mul_one_add, add_assoc]
   · rw [← add_mul, mul_one_add, add_assoc (f_aux_alt2 l 0),
@@ -142,7 +142,6 @@ theorem f_description2 (l : List R) : f l = f_aux_alt2 l 0 :=
 
 /-- Final solution -/
 theorem final_solution (l : List R) : f l.reverse = f l := by
-  rw [f_description2, f_aux_alt2_prod_description, reverse_reverse,
-    matrix_fin2_vecMul, f_description1, f_aux_alt1_prod_description,
-    oneZeroVec, matrix_fin2_mulVec, cons_val_one, Matrix.head_cons,
-    MulZeroClass.zero_mul, add_zero, MulZeroClass.mul_zero, add_zero, mul_comm]
+  rw [f_description2, f_aux_alt2_prod_description, reverse_reverse, matrix_fin2_vecMul,
+    f_description1, f_aux_alt1_prod_description, oneZeroVec, matrix_fin2_mulVec]
+  simp

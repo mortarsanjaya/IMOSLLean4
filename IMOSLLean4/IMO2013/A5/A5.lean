@@ -136,7 +136,7 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
   have h2 (n) : f (f n) ≠ n := λ h2 ↦ by
     apply absurd (iter_four_eq_add_four h n)
     change f (f (f (f n))) ≠ n + 4
-    rw [h2, h2, self_ne_add_right]
+    rw [h2, h2, left_ne_add]
     exact Nat.succ_ne_zero 3
   have h3 (n) : f n ≠ n := λ h3 ↦ h2 n (Function.iterate_fixed h3 2)
   rcases h1 with ⟨h1, h4, (rfl | rfl) | h5⟩

@@ -23,7 +23,7 @@ namespace IMO2021A7
 
 open Finset
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
 
 lemma lemma1 (a b c : R) :
     (b + 2 * c) ^ 2 + 6 * (a * b) ≤ (a + 2 * b) ^ 2 + 6 * c ^ 2 := by
@@ -114,7 +114,7 @@ theorem final_solution {x : ℕ → R} (hx : ∀ n, 0 ≤ x n)
     8 * N ^ 3 < 27 * (range (N + 2)).sum x ^ 2 := by
   let y (n : ℕ) : R := x (n + 1) + 2 * x n
   have h (n) : 0 < x (n + 1) := by
-    refine (hx n.succ).lt_or_eq.resolve_right λ h ↦ (hx0 n).not_lt ?_
+    refine (hx n.succ).lt_or_eq.resolve_right λ h ↦ (hx0 n).not_gt ?_
     rw [← h, zero_mul]; exact add_pos_of_nonneg_of_pos (sq_nonneg _) one_pos
   replace hx0 (n) : y n ^ 2 + 6 ≤ y (n + 1) ^ 2 :=
     lemma1_strict ((hx0 n).trans_eq (mul_comm _ _))

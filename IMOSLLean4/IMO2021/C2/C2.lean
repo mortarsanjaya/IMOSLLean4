@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.Order.Interval.Finset.Nat
 import Mathlib.Data.Nat.ModEq
 
@@ -15,12 +16,16 @@ Fix some positive integer $n$, and denote $[n] = \{0, 1, …, n - 1\}$.
 Find all positive integers $m ∈ ℕ$ such that there exists a
   function $f : ℤ/mℤ → [n]$ with the following property:
   for any $k ∈ ℤ/mℤ$ and $i ∈ [n]$, there exists $j ≤ n$ such that $f(k + j) = i$.
+
+### TODO
+
+Replace `Nat.Icc_insert_succ_right` with `Finset.insert_Icc_eq_Icc_succ_right`
 -/
 
 namespace IMOSL
 namespace IMO2021C2
 
-open Finset
+open Finset Fin.NatCast
 
 def good (f : Fin (m + 1) → Fin n) := ∀ k i, ∃ j ≤ n, f (k + j) = i
 
@@ -55,7 +60,7 @@ theorem good.mod_le_div {f : Fin (m + 1) → Fin n} (hf : good f) :
     by_contra h; simp at h
     have X : ∑ i : Fin (n + 1), ((m + 1) / (n + 1) + 1) ≤ _ :=
       sum_le_sum (s := univ) (λ i _ ↦ h i)
-    apply X.not_lt
+    apply X.not_gt
     simp only [card_eq_sum_ones, sum_fiberwise]
     simp only [sum_const, card_univ, Fintype.card_fin]
     exact m.succ.mul_one.trans_lt (Nat.lt_mul_div_succ m.succ n.succ_pos)

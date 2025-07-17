@@ -5,8 +5,9 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Fin.VecNotation
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Order.Bounds.Defs
 
 /-!
 # IMO 2010 A3
@@ -23,10 +24,10 @@ namespace IMO2010A3
 
 open Finset
 
-def good [OrderedAddCommMonoid M] (c : M) (x : ℕ → M) :=
+def good [AddCommMonoid M] [LinearOrder M] (c : M) (x : ℕ → M) :=
   ∀ i, x i + x (i + 1) + x (i + 2) ≤ 2 • c
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
 
 def targetSum (x : ℕ → R) (n : ℕ) := (range n).sum λ i ↦ x i * x (i + 2)
 
@@ -50,6 +51,7 @@ theorem good_targetSum_le {x : ℕ → R} (h : ∀ i, 0 ≤ x i) {c : R} (h0 : g
       rw [targetSum, Nat.mul_succ, sum_range_succ, sum_range_succ, add_assoc, succ_nsmul]
       exact add_le_add (good_targetSum_le h h0 n) (special_ineq (h _) (h _) (h0 _) (h0 _))
 
+open Fin.NatCast in
 omit [ExistsAddOfLE R] in
 theorem targetSum_of_Fin2Map (c : R) :
     ∀ n, targetSum (λ n ↦ ![c, 0] n) (2 * n) = n • c ^ 2
@@ -74,10 +76,10 @@ structure goodPeriodicSeq (c n) where
   good : good c x
   periodic : ∀ k, x (k + 2 * n) = x k
 
+open Fin.NatCast in
 def Fin2Map_goodPeriodicSeq {c : R} (h : 0 ≤ c) (n) : goodPeriodicSeq c n :=
   { x := λ n ↦ ![c, 0] n
-    nonneg := λ i ↦ by
-      simp only; exact Fin.cases h (λ i ↦ Fin.fin_one_eq_zero i ▸ le_refl 0) i
+    nonneg := λ i ↦ Fin.cases h (λ i ↦ Fin.fin_one_eq_zero i ▸ le_refl 0) i
     good := λ i ↦ by
       have h0 : ((i + 1 : ℕ) : Fin 2) = i + 1 := Fin.val_injective (i.mod_add_mod 2 1).symm
       have h1 : ((i + 2 : ℕ) : Fin 2) = i := Fin.val_injective (i.add_mod_right 2)

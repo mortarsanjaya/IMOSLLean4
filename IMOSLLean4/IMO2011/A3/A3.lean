@@ -83,7 +83,7 @@ theorem step2 [Ring R] (hR : ∀ x y : R, 2 • x = 2 • y → x = y)
   rw [add_mul, h3, sub_eq_add_neg, add_left_inj] at h2
   ---- The rest needs associativity assumption on `R`
   replace h0 : _ * A = _ * A := congrArg (· * A) h1
-  rw [add_mul, mul_assoc, h2, add_right_eq_self, h3, neg_eq_zero] at h0
+  rw [add_mul, mul_assoc, h2, add_eq_left, h3, neg_eq_zero] at h0
   rw [h0, add_zero] at h1; exact ⟨h0, h2, h1⟩
 
 theorem relation_summary [Ring R] (hR : ∀ x y : R, 2 • x = 2 • y → x = y)

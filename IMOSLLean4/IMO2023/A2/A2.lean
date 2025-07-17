@@ -21,7 +21,8 @@ namespace IMOSL
 namespace IMO2023A2
 
 /-- Final solution -/
-theorem final_solution [AddCommGroup G] (hG : ∀ x : G, ∃ y, 2 • y = x) [LinearOrderedRing R]
+theorem final_solution [AddCommGroup G] (hG : ∀ x : G, ∃ y, 2 • y = x)
+    [Ring R] [LinearOrder R] [IsStrictOrderedRing R]
     {f : G → R} (hf : ∀ x y, f x ^ 2 - f y ^ 2 ≤ f (x + y) * f (x - y))
     (hf0 : ∃ x0 y0, f x0 ^ 2 - f y0 ^ 2 < f (x0 + y0) * f (x0 - y0)) :
     (∀ x, 0 ≤ f x) ∨ (∀ x, f x ≤ 0) := by

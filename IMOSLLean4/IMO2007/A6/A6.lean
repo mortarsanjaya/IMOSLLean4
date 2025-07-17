@@ -8,6 +8,7 @@ import IMOSLLean4.Extra.BigInequalities.Finset
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Nat.Cast.Order.Basic
+import Mathlib.Algebra.Group.Fin.Basic
 
 /-!
 # IMO 2007 A6
@@ -37,7 +38,7 @@ theorem Fin_sum_shift [AddCommMonoid M] (a : Fin (n + 1) → M) (k) :
 
 /-! ### The big claim on bounding a cyclic sum `∑ x_i x_{i + 1}` -/
 
-variable [LinearOrderedCommSemiring R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 /-- Nice temporary definition -/
 abbrev niceTuple (a : Fin (n + 1) → R) :=
@@ -63,11 +64,13 @@ theorem sum_sq_add_right_formula (a : Fin (n + 1) → R) (c : R) :
   rw [sum_add_distrib, Fin.sum_const, add_sq, nsmul_eq_mul, mul_left_comm,
     ← nsmul_eq_mul, add_right_inj, nsmul_eq_mul, mul_pow, Nat.cast_pow]
 
+omit [IsStrictOrderedRing R] in
 theorem niceTuple.of_add₁ {n} {a : Fin (n + 1) → R} (ha : niceTuple a) (j) :
     niceTuple (λ i ↦ a (i + j)) := by
   rw [niceTuple, Fin_sum_shift]; simp only [add_right_comm _ 1 j]
   rw [Fin_sum_shift (λ i ↦ a i * a (i + 1))]; exact ha
 
+omit [IsStrictOrderedRing R] in
 theorem niceTuple.of_add₁_iff {n} {a : Fin (n + 1) → R} {j} :
     niceTuple (λ i ↦ a (i + j)) ↔ niceTuple a := by
   refine ⟨λ h ↦ ?_, λ h ↦ h.of_add₁ j⟩
@@ -86,6 +89,7 @@ theorem niceTuple.of_add₂ [ExistsAddOfLE R] (hn : 4 ≤ n + 1) (hc : 0 ≤ c)
   · rw [sq (n + 1), mul_nsmul, nsmul_eq_mul _ (_ • _)]
     exact mul_le_mul_of_nonneg_right h (nsmul_nonneg (sq_nonneg c) _)
 
+omit [LinearOrder R] [IsStrictOrderedRing R] in
 theorem cyclic_cons_zero_formula (a : Fin (n + 1) → R) :
     let b := Fin.cons 0 a
     ∑ i, b i * b (i + 1) = ∑ i ∈ ({Fin.last n} : Finset _)ᶜ, a i * a (i + 1) := by
@@ -112,6 +116,7 @@ theorem niceTuple.of_zero_cons [ExistsAddOfLE R]
   refine (mul_le_mul_of_nonneg_left ?_ (sq_nonneg _)).trans ha
   exact sum_le_univ_sum_of_nonneg λ i ↦ mul_nonneg (ha0 i) (ha0 (i + 1))
 
+omit [IsStrictOrderedRing R] in
 theorem Fin_cons_nonneg {a : Fin (n + 1) → R} (ha : ∀ i, 0 ≤ a i) (i) :
     0 ≤ (Fin.cons 0 a : _ → R) i := by
   obtain (rfl | ⟨j, rfl⟩) := i.eq_zero_or_eq_succ
@@ -151,13 +156,15 @@ theorem main_claim [ExistsAddOfLE R]
 
 /-! ### Start of the problem -/
 
+open Fin.NatCast in
+omit [LinearOrder R] [IsStrictOrderedRing R] in
 theorem id1 (a : Fin (n + 1) → R) :
     3 * ∑ i, a i ^ 2 * a (i + 1) = ∑ i, a (i + 1) * (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) := by
   simp only [mul_add]
   rw [sum_add_distrib, ← two_add_one_eq_three, add_comm, one_add_mul (2 : R), mul_sum]
   refine congrArg₂ _ (sum_congr rfl λ i _ ↦ mul_comm _ _) ?_
   rw [← Fin_sum_shift _ 1]; refine sum_congr rfl λ i _ ↦ ?_
-  rw [add_assoc, one_add_one_eq_two, mul_assoc, sq,
+  rw [add_assoc, one_add_one_eq_two (R := Fin (n + 1)), mul_assoc, sq,
     mul_left_comm _ 2, ← mul_assoc (a (i + 1))]
 
 theorem id2 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
@@ -166,6 +173,7 @@ theorem id2 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
   rw [id1, ← Fin_sum_shift (λ i ↦ a i ^ 2) 1]
   exact CauchySchwarz_squares _ _ _
 
+open Fin.NatCast in
 theorem id3 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
     ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2
       ≤ ∑ i, (a i ^ 2) ^ 2 + 2 * ∑ i, a i ^ 2 * (a (i + 1) ^ 2 + a (i + 2) ^ 2)
@@ -179,6 +187,8 @@ theorem id3 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
     refine congrArg₂ _ rfl (sum_congr rfl λ i _ ↦ ?_)
     rw [add_assoc, one_add_one_eq_two]
 
+open Fin.NatCast in
+omit [LinearOrder R] [IsStrictOrderedRing R] in
 theorem id4 (b : Fin (n + 1) → R) :
     ∑ i, b i ^ 2 + 2 * ∑ i, b i * (b (i + 1) + b (i + 2))
       = ∑ i, b (i + 2) * ∑ j : Fin 5, b (j.val + i) := by

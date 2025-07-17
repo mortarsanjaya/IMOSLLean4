@@ -70,11 +70,11 @@ theorem g_mul₂ (k m : α → Nat) (c x y l) :
 
 theorem g_append (k m : α → Nat) (p l₁ l₂) :
     g k m p (l₁ ++ l₂) = g k m (g k m p l₂) l₁ :=
-  foldr_append _ p l₁ l₂
+  foldr_append
 
 theorem g_append_singleton (k m : α → Nat) (p a l) :
     g k m p (l ++ [a]) = g k m (p.2, k a * p.1 + m a * p.2) l :=
-  foldr_append _ p l [a]
+  foldr_append
 
 /-- The main theorem on `g` -/
 theorem g_reverse {k m : α → Nat} (h : ∀ a, k a * X + m a * Y = Z) :

@@ -43,7 +43,7 @@ theorem general_result [LinearOrder α]
   ---- Finishing
   specialize h0 _ C.le_succ ((C + 1) ^ 2) (Nat.le_self_pow (Nat.succ_ne_zero 1) _)
   rw [hf, max_le_iff] at h0
-  exact h0.1.not_lt (h C C.le_refl)
+  exact h0.1.not_gt (h C C.le_refl)
 
 
 

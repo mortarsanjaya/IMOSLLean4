@@ -57,7 +57,7 @@ theorem bad_pair_descent (hn : 1 < n) (ha : 0 < a) (hb : a < b) (h : bad_pair n 
     replace h : 0 < (N * b - 1) * (N * c - 1) := (pow_pos (X.mpr ha') 2).trans_eq h
     rwa [mul_pos_iff_of_pos_left (X.mpr hb'), X] at h
   lift c to ℕ using h0.le
-  refine ⟨c, Int.ofNat_pos.mp h0, ?_, Dvd.intro_left _ h.symm⟩
+  refine ⟨c, Int.natCast_pos.mp h0, ?_, Dvd.intro_left _ h.symm⟩
   ---- Now it remains to show that `c < a`
   have hNab : N * a - 1 < N * b - 1 :=
     Int.sub_lt_sub_right (mul_lt_mul_of_pos_left (Nat.cast_lt.mpr hb) hn') _
@@ -70,7 +70,7 @@ theorem bad_pair_descent (hn : 1 < n) (ha : 0 < a) (hb : a < b) (h : bad_pair n 
 theorem final_solution (hn : 1 < n) (ha : 0 < a) (hb : 0 < b) (h : bad_pair n a b) :
     a = b := by
   induction' a using Nat.strong_induction_on with a a_ih generalizing b
-  obtain h0 | h0 : b ≤ a ∨ a < b := le_or_lt b a
+  obtain h0 | h0 : b ≤ a ∨ a < b := le_or_gt b a
   · exact h0.eq_or_lt.elim Eq.symm λ h0 ↦ (a_ih b h0 hb ha (bad_pair_comm.mp h)).symm
   · obtain ⟨c, hc, hc0, h1⟩ := bad_pair_descent hn ha h0 h
     exact absurd (a_ih c hc0 hc ha (bad_pair_comm.mp h1)) hc0.ne

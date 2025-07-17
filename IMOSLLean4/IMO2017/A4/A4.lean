@@ -26,7 +26,7 @@ Explicitly, prove that $|a_n| ≤ 2 \max\{B, C - B\}$, where
 namespace IMOSL
 namespace IMO2017A4
 
-variable [LinearOrderedAddCommGroup G]
+variable [AddCommGroup G] [LinearOrder G]
 
 /-! ### Two definitions -/
 
@@ -41,6 +41,8 @@ abbrev good2 {G} [AddCommGroup G] (D : ℕ) (a : ℕ → G) :=
 
 
 /-! ### Main properties of `good1` and `good2` -/
+
+variable [IsOrderedAddMonoid G]
 
 theorem abs_le_max_seqMax (a : ℕ → G) (n : ℕ) :
     |a n| ≤ max (Extra.seqMax (-a) n) (2 • Extra.seqMax a n) := by
@@ -98,7 +100,7 @@ theorem c_succ_eq_D_of_b_bdd (h2 : Monotone c) (h3 : D ≤ K) :
     ((h0 M h3).trans_eq (max_eq_left_of_lt h4)).antisymm (h2 M.le_succ)
   refine Nat.le_induction (X D.le_refl) (λ n h4 h5 h6 ↦ ?_) K h3
   rw [X (Nat.le_step h4) h6]
-  exact h5 (lt_of_not_le λ h7 ↦ h6.not_le (c_bdd h h0 h1 h4 h7).2)
+  exact h5 (lt_of_not_ge λ h7 ↦ h6.not_ge (c_bdd h h0 h1 h4 h7).2)
 
 theorem max_two_nsmul_b_and_c_bdd (h2 : Monotone c) (n : ℕ) :
     max (c n) (2 • b n) ≤ max (2 • b D) (2 • (c D - b D)) := by
@@ -108,7 +110,7 @@ theorem max_two_nsmul_b_and_c_bdd (h2 : Monotone c) (n : ℕ) :
   refine (le_total n D).elim -- Focus on the case `D ≤ n`; induction
     (λ h4 ↦ h3.trans' (max_le_max (h2 h4) (nsmul_le_nsmul_right (h1 h4) 2)))
     (Nat.le_induction h3 (λ n h4 h5 ↦ ?_) n)
-  rcases le_or_lt (c n) (2 • b n) with h6 | h6
+  rcases le_or_gt (c n) (2 • b n) with h6 | h6
   ---- Case 1: `c_n ≤ 2 b_n`
   · rcases c_bdd h h0 h1 h4 h6 with ⟨h7, h8⟩
     rwa [max_eq_right h8, h7, ← max_eq_right h6]

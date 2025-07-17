@@ -21,7 +21,8 @@ $$ \frac{(a - b)(a - c)}{a + b + c} + \frac{(b - c)(b - d)}{b + c + d} +
 namespace IMOSL
 namespace IMO2008A7
 
-theorem group_ineq [LinearOrderedAddCommGroup G] {a b : G} (ha : 0 ≤ a) (hb : 0 ≤ b) :
+theorem group_ineq [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
+    {a b : G} (ha : 0 ≤ a) (hb : 0 ≤ b) :
     |a - b| ≤ max a b := by
   rw [abs_sub_le_iff, le_max_iff, le_max_iff]
   exact ⟨Or.inl (sub_le_self a hb), Or.inr (sub_le_self b ha)⟩
@@ -34,7 +35,7 @@ theorem field_id [Field F] {a b c d : F} (h : a + c + b ≠ 0) (h0 : a + c + d �
 
 
 
-variable [LinearOrderedField F]
+variable [Field F] [LinearOrder F] [IsStrictOrderedRing F]
 
 /-- A form of Cauchy-Schwarz inequality -/
 theorem field_ineq1 (a b : F) (hc : 0 < c) (hd : 0 < d) :

@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Ring.Basic
 namespace IMOSL
 namespace Extra
 
-variable [LinearOrderedCommSemiring R] [ExistsAddOfLE R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
 
 /-- This should eventually get into `mathlib4` -/
 theorem two_sq_AM_GM (x y : R) : 2 ^ 2 * (x * y) ≤ (x + y) ^ 2 := by

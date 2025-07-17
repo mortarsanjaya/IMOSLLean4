@@ -58,7 +58,7 @@ lemma good_neg_right (h : good x y) : good x (-y) := h.trans (neg_sq y).symm
 
 lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
   wlog hy : 0 ≤ y
-  · refine this (good_neg_right h) (neg_nonneg_of_nonpos (le_of_not_le hy))
+  · refine this (good_neg_right h) (neg_nonneg_of_nonpos (le_of_not_ge hy))
   rw [good, two_mul, (x + 1).add_right_comm, pow_add, ← add_one_mul] at h
   rcases x with _ | x
   -- First deal with the case `x = 0`
@@ -98,7 +98,7 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
       rw [← Int.add_one_le_iff, add_assoc, pow_add, add_one_mul _ m, mul_assoc, ← sq]
       refine add_le_add (mul_le_mul_of_nonneg_left ?_ (pow_nonneg X.le x)) ?_
       · have h0 : (2 : ℤ) ^ 3 ≤ 3 ^ 2 := Int.le_add_one (Int.le_refl 8)
-        have h1 : 0 ≤ (3 : ℤ) := Int.sign_nonneg.mp Int.one_nonneg
+        have h1 : 0 ≤ (3 : ℤ) := Int.sign_nonneg_iff.mp Int.one_nonneg
         exact h0.trans (pow_le_pow_left₀ h1 hm 2)
       · exact (Int.lt_of_add_one_le (a := 2) hm).le
   ---- Case 2: `2^x` divides `y + 1`
@@ -122,7 +122,7 @@ lemma good_succ_imp_three (h : good (x + 1) y) : x = 3 := by
         exact sub_neg_of_lt (h2.trans_lt h1)
       -- Case `m > 3`
       · replace h : m ^ 2 - 2 ^ 3 ∣ m + 1 := Dvd.intro_left (2 ^ x) h
-        refine (Int.le_of_dvd (add_pos hy one_pos) h).not_lt ?_
+        refine (Int.le_of_dvd (add_pos hy one_pos) h).not_gt ?_
         rw [lt_sub_iff_add_lt, add_assoc, sq]
         apply (mul_le_mul_of_nonneg_left (Int.add_one_le_of_lt h0) hy.le).trans_lt'
         rw [add_comm 3, mul_one_add m, add_lt_add_iff_left]

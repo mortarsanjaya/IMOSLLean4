@@ -99,7 +99,7 @@ instance : CharTwo 𝔽₂X := ⟨𝔽₂X.add_self_eq_zero⟩
 
 protected theorem poly_induction {p : 𝔽₂X → Prop} (zero : p 0)
     (add_Xpow : ∀ (n : ℕ) {P : 𝔽₂X}, p P → p (Xpow n + P)) (P : 𝔽₂X) : p P :=
-  P.toFinset.induction (p := λ S ↦ p (ofFinset S)) zero λ n _ h h0 ↦
+  P.toFinset.induction (motive := λ S ↦ p (ofFinset S)) zero λ n _ h h0 ↦
     symmDiff_singleton_eq_insert h ▸ add_Xpow n h0
 
 protected theorem Xpow_add_induction {p : 𝔽₂X → Prop}

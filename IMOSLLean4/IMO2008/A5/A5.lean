@@ -20,13 +20,14 @@ $$ \sum_{i = 1}^4 a_i < \sum_{i = 1}^4 \frac{a_{i + 1}}{a_i}. $$
 namespace IMOSL
 namespace IMO2008A5
 
-lemma ring_ineq [LinearOrderedCommSemiring R] [ExistsAddOfLE R] (a b : R) :
+lemma ring_ineq [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
+    [ExistsAddOfLE R] (a b : R) :
     2 ^ 2 * (a * b) ≤ (a + b) ^ 2 := by
   rw [sq, mul_assoc, two_mul, ← mul_assoc, add_sq', add_le_add_iff_right]
   exact two_mul_le_add_sq a b
 
 
-variable [LinearOrderedSemifield F] [ExistsAddOfLE F]
+variable [Semifield F] [LinearOrder F] [IsStrictOrderedRing F] [ExistsAddOfLE F]
   {a b c d : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d)
 include ha hb hc hd
 
@@ -90,6 +91,6 @@ lemma main_ineq : 4 * (a + b + c + d) ≤
 /-- Final solution -/
 theorem final_solution (h0 : a / b + b / c + c / d + d / a < a + b + c + d) :
     a + b + c + d < b / a + c / b + d / c + a / d := by
-  refine lt_of_not_le λ h1 ↦ (main_ineq ha hb hc hd h).not_lt ?_
+  refine lt_of_not_ge λ h1 ↦ (main_ineq ha hb hc hd h).not_gt ?_
   rw [← three_add_one_eq_four, add_one_mul]
   exact add_lt_add_of_lt_of_le (mul_lt_mul_of_pos_left h0 three_pos) h1

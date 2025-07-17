@@ -19,14 +19,13 @@ namespace IMO2007A4
 
 /-! ### Unbundled version of the problem -/
 
-structure weakGood [OrderedAddCommMonoid M] (f : M → M) : Prop where
+structure weakGood [AddCommMonoid M] [LinearOrder M] (f : M → M) : Prop where
   map_pos_of_pos : ∀ x, 0 < x → 0 < f x
   good' : ∀ x y, 0 < x → 0 < y → f (x + f y) = f (x + y) + f y
 
-variable [LinearOrderedAddCommGroup G]
-
 /-- Solution for the unboundled version -/
-theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f x = x + x := by
+theorem weakGood_iff_add_self [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
+    {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f x = x + x := by
   refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   ---- `→` direction
   · rcases hf with ⟨hf, hf₀⟩
@@ -36,11 +35,11 @@ theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f
     replace hf {x} (hx : 0 < x) : 0 < g x := by
       apply (lt_trichotomy 0 (g x)).resolve_right; rintro (h | h)
       · specialize hf₀ x x hx hx
-        rw [← h, zero_add, self_eq_add_right] at hf₀
+        rw [← h, zero_add, left_eq_add] at hf₀
         exact hx.ne hf₀.symm
       · rw [← neg_pos] at h
         specialize hf₀ (-g x) x h hx
-        rw [neg_add_cancel_left, self_eq_add_left] at hf₀
+        rw [neg_add_cancel_left, right_eq_add] at hf₀
         exact hf₀.not_gt (hf _ (add_pos h hx))
     replace hf₀ {t y} (h : 0 < y) (h0 : y < t) : g (t + g y) = g t + y := by
       specialize hf₀ (t - y) y (sub_pos_of_lt h0) h
@@ -82,14 +81,18 @@ theorem weakGood_iff_two_nsmul {f : G → G} : weakGood f ↔ ∀ x, 0 < x → f
 
 /-! ### The main version -/
 
-def posSubtypeExt (f : {x : G // 0 < x} → {x : G // 0 < x}) (x : G) : G :=
+def posSubtypeExt [AddCommMonoid G] [LinearOrder G]
+    (f : {x : G // 0 < x} → {x : G // 0 < x}) (x : G) : G :=
   dite (0 < x) (λ h ↦ f ⟨x, h⟩) (λ _ ↦ 0)
 
-lemma posSubtypeExt_spec (f : {x : G // 0 < x} → {x : G // 0 < x}) (x : {x : G // 0 < x}) :
+lemma posSubtypeExt_spec [AddCommMonoid G] [LinearOrder G]
+    (f : {x : G // 0 < x} → {x : G // 0 < x}) (x : {x : G // 0 < x}) :
     posSubtypeExt f x.1 = f x :=
   dif_pos _
 
 def good [Add G] (f : G → G) := ∀ x y, f (x + f y) = f (x + y) + f y
+
+variable [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
 
 lemma good_iff_posSubtypeExt_weakGood {f : {x : G // 0 < x} → {x : G // 0 < x}} :
     good f ↔ weakGood (posSubtypeExt f) := by
@@ -107,6 +110,6 @@ lemma good_iff_posSubtypeExt_weakGood {f : {x : G // 0 < x} → {x : G // 0 < x}
 /-- Final solution -/
 theorem final_solution {f : {x : G // 0 < x} → {x : G // 0 < x}} :
     good f ↔ f = λ x ↦ x + x := by
-  rw [good_iff_posSubtypeExt_weakGood, weakGood_iff_two_nsmul, funext_iff]
+  rw [good_iff_posSubtypeExt_weakGood, weakGood_iff_add_self, funext_iff]
   exact ⟨λ h x ↦ Subtype.coe_inj.mp ((posSubtypeExt_spec _ _).symm.trans (h x.1 x.2)),
     λ h x hx ↦ (posSubtypeExt_spec f ⟨x, hx⟩).trans (congrArg _ (h ⟨x, hx⟩))⟩

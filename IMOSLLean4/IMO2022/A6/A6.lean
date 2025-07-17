@@ -65,7 +65,7 @@ def mk_of_repFn [AddGroup G] (H : AddSubgroup G) (φ : G ⧸ H → H)
   toFun x := φ x + (-rep x + x)
   infectious_def' x y := by
     have h (x : G) : -rep x + x ∈ H := by rw [← QuotientAddGroup.eq, hrep]
-    dsimp only; rw [← add_assoc x, QuotientAddGroup.mk_add_of_mem _ (h y), add_assoc,
+    rw [← add_assoc x, QuotientAddGroup.mk_add_of_mem _ (h y), add_assoc,
       QuotientAddGroup.mk_add_of_mem _ (SetLike.coe_mem _), add_assoc, add_assoc]
 
 end InfectiousFun

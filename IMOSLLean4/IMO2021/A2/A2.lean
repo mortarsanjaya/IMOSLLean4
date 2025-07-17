@@ -132,7 +132,7 @@ theorem main_ineq (n) : (n + 1) ^ 2 * n ≤ targetSum (n + 1) :=
   Nat.le_of_add_right_le (targetSum_formula n).ge
 
 theorem eq_case (n) : targetSum (n + 1) = (n + 1) ^ 2 * n ↔ (n + 2).Prime := by
-  rw [targetSum_formula, add_right_eq_self, Nat.mul_eq_zero,
+  rw [targetSum_formula, add_eq_left, Nat.mul_eq_zero,
     or_iff_right (Nat.succ_ne_zero 1), sum_eq_zero_iff]
   simp only [mem_range, sum_eq_zero_iff, ite_eq_right_iff, one_ne_zero, imp_false]
   exact (succ_prime_iff_not_dvd_lt_mul n.succ_pos).symm

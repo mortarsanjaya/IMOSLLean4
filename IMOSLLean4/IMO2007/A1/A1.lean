@@ -28,7 +28,7 @@ namespace IMO2007A1
 
 open Extra
 
-variable [LinearOrderedAddCommGroup G] (a : ℕ → G) (n : ℕ)
+variable [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G] (a : ℕ → G) (n : ℕ)
 
 /-- Final solution, part 1 -/
 theorem final_solution_part1 {x : ℕ → G} (h : Monotone x) (h0 : k ≤ m) (h1 : m ≤ n) :

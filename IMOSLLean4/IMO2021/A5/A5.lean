@@ -30,7 +30,7 @@ def targetSumPair [Field F] (r : F) (l : List F) : F × F :=
 
 section
 
-variable [OrderedAddCommMonoid M] {l : List M} (hl : ∀ x ∈ l, 0 ≤ x)
+variable [AddCommMonoid M] [LinearOrder M] [IsOrderedAddMonoid M] {l : List M} (hl : ∀ x ∈ l, 0 ≤ x)
 include hl
 
 lemma foldr_add_nonneg : 0 ≤ l.foldr (· + ·) 0 := by
@@ -41,7 +41,7 @@ lemma foldr_add_nonneg : 0 ≤ l.foldr (· + ·) 0 := by
 
 lemma foldr_add_pos (hl0 : ∃ x ∈ l, x ≠ 0) : 0 < l.foldr (· + ·) 0 := by
   induction' l with a l l_ih
-  · exact hl0.elim λ c h ↦ absurd h.1 (List.not_mem_nil c)
+  · exact hl0.elim λ c h ↦ absurd h.1 List.not_mem_nil
   · replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
     simp only [List.mem_cons, exists_eq_or_imp] at hl0
     rcases hl0 with h | h
@@ -63,7 +63,8 @@ lemma ring_id [CommRing R] (x y : R) :
     rw [sq, sq, mul_right_comm, ← mul_rotate x y y, ← mul_add]
   _ = _ := by rw [← one_add_mul, add_comm, two_add_one_eq_three]
 
-lemma field_ineq [LinearOrderedField F] {r : F} (ha : 0 ≤ a) (hs : 0 ≤ s) (h : a + s ≤ r) :
+lemma field_ineq [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+    {r : F} (ha : 0 ≤ a) (hs : 0 ≤ s) (h : a + s ≤ r) :
     a / (r - a) * s ^ 2 ≤ ((a + s) ^ 3 - s ^ 3 - a ^ 3) / (3 * r) := calc
   _ = a * s * (s / (r - a)) := by rw [sq, ← mul_div_right_comm, ← mul_assoc, mul_div_assoc]
   _ ≤ a * s * ((a + s) / r) := by
@@ -103,12 +104,9 @@ lemma targetSumPair_replicate_zero : ∀ n, targetSumPair r (List.replicate n 0)
   | n + 1 => by rw [targetSumPair, List.replicate_succ, List.foldr_cons,
     ← targetSumPair, targetSumPair_replicate_zero n, zero_div, zero_mul, zero_add]
 
-end
 
-
-
-theorem targetSumPair_main_ineq [LinearOrderedField F] {l : List F}
-    (hl : ∀ x ∈ l, 0 ≤ x) (hr : l.foldr (· + ·) 0 ≤ r) :
+theorem targetSumPair_main_ineq [LinearOrder F] [IsStrictOrderedRing F] {l : List F}
+    (hl : ∀ x ∈ l, 0 ≤ x) {r : F} (hr : l.foldr (· + ·) 0 ≤ r) :
     (targetSumPair r l).1 ≤ ((l.foldr (· + ·) 0) ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) := by
   induction' l with a l l_ih generalizing r
   · rw [List.foldr, List.foldr, sub_zero, pow_succ', zero_mul, zero_div, targetSumPair_nil]
@@ -124,7 +122,7 @@ theorem targetSumPair_main_ineq [LinearOrderedField F] {l : List F}
       _ = _ := by rw [← add_div, sub_sub, sub_add, add_sub_sub_cancel, h]; rfl
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedField F] {r : F} (hr : 0 < r)
+theorem final_solution [LinearOrder F] [IsStrictOrderedRing F] {r : F} (hr : 0 < r)
     (hl : ∀ x ∈ l, 0 ≤ x) (h : l.foldr (· + ·) 0 ≤ r) :
     (targetSumPair r l).1 < r ^ 2 / 3 := by
   have X : 0 < (3 : F) := three_pos
@@ -135,8 +133,8 @@ theorem final_solution [LinearOrderedField F] {r : F} (hr : 0 < r)
   ---- Case 2: `l` contains a positive element
   · replace X : 0 < 3 * r := mul_pos X hr
     suffices 0 < (l.map (· ^ 3)).foldr (· + ·) 0 by calc
-      _ ≤ ((l.foldr (· + ·) 0) ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) :=
-        targetSumPair_main_ineq hl h
+      _ ≤ ((l.foldr (· + ·) 0) ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) := by
+        exact targetSumPair_main_ineq hl h
       _ < (l.foldr (· + ·) 0) ^ 3 / (3 * r) := by
         refine div_lt_div_of_pos_right ?_ X
         rwa [sub_lt_self_iff, ← l.foldr_map]
@@ -147,6 +145,6 @@ theorem final_solution [LinearOrderedField F] {r : F} (hr : 0 < r)
     apply foldr_add_pos
     · simp only [List.mem_map]; rintro _ ⟨a, ha, rfl⟩
       exact pow_nonneg (hl a ha) 3
-    · simp only [not_forall, _root_.not_imp] at h0
+    · simp only [not_forall] at h0
       rcases h0 with ⟨a, ha, h0⟩
-      exact ⟨a ^ 3, List.mem_map_of_mem (· ^ 3) ha, pow_ne_zero 3 h0⟩
+      exact ⟨a ^ 3, List.mem_map_of_mem ha, pow_ne_zero 3 h0⟩

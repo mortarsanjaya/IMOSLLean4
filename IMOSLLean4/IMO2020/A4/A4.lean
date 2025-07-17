@@ -35,7 +35,7 @@ theorem NNReal_rpow_sum (a : NNReal) (S : Finset ι) (f : ι → NNReal) :
 theorem general_ineq
     (hS : 1 < card S) (hS0 : ∀ x ∈ S, 0 < x) (hSa : ∀ x ∈ S, x ≤ a) (h : a + S.sum = 1) :
     (a + 3 * S.sum) * ((a ::ₘ S).map λ x ↦ (x : NNReal) ^ (x : ℝ)).prod < 1 := by
-  obtain h0 | h0 : 2 * a < 1 ∨ 1 ≤ 2 * a := lt_or_le _ _
+  obtain h0 | h0 : 2 * a < 1 ∨ 1 ≤ 2 * a := lt_or_ge _ _
   ---- Case 1: `a < 1/2`
   · have h1 : ((a ::ₘ S).map λ x ↦ (x : NNReal) ^ (x : ℝ)).prod ≤ a := calc
       _ = ∏ x : a ::ₘ S, (x : NNReal) ^ (x : ℝ) := by rw [← map_univ]; rfl

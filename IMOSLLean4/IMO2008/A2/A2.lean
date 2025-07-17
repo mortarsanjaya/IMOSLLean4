@@ -42,13 +42,13 @@ theorem field_eq2 [Field F]
     div_mul_div_comm, h, ← one_div_mul_one_div, ← one_div_mul_one_div]
 
 /-- The main inequality -/
-theorem ring_ineq1 [LinearOrderedCommRing R]
+theorem ring_ineq1 [CommRing R] [LinearOrder R] [IsOrderedRing R]
     {a b c : R} (h : a * b * c = (a - 1) * (b - 1) * (c - 1)) :
     1 ≤ a ^ 2 + b ^ 2 + c ^ 2 := by
   rw [← sub_nonneg, ring_id1 h]; exact sq_nonneg _
 
 /-- Final solution, part 1 -/
-theorem final_solution_part1 [LinearOrderedField F]
+theorem final_solution_part1 [Field F] [LinearOrder F] [IsOrderedRing F]
     {x y z : F} (hx : x ≠ 1) (hy : y ≠ 1) (hz : z ≠ 1) (h : x * y * z = 1) :
     1 ≤ (x / (x - 1)) ^ 2 + (y / (y - 1)) ^ 2 + (z / (z - 1)) ^ 2 :=
   ring_ineq1 (field_eq2 hx hy hz h)
@@ -90,7 +90,7 @@ theorem field_eq5 [Field F] {t : F} (h : t ≠ 0) (h0 : t + 1 ≠ 0) (h1 : t * (
 
 section
 
-variable [LinearOrderedField F] {t : F} (h : 0 < t)
+variable [Field F] [LinearOrder F] [IsStrictOrderedRing F] {t : F} (h : 0 < t)
 include h
 
 theorem field_ineq1 : -(t + 1) / t ^ 2 ≠ 1 :=

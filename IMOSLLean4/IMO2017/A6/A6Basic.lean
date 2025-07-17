@@ -289,7 +289,7 @@ theorem incl_map_zero_comm_incl_map [Ring R] [AddCancelMonoid G]
   rwa [map_incl_map_zero_mul_incl_map_eq_map_one_sub, map_incl_map_comm_incl_map_zero,
     map_incl_map_zero_mul_incl_map_eq_map_one_sub, X, sub_sub_cancel, mul_one_sub,
     mul_assoc, ← mul_assoc (ι (f 0)), incl_map_zero_mul_self, one_mul, X, one_sub_mul,
-    add_right_eq_self, map_eq_zero_iff_eq_one ι, ← add_right_inj (a := ι (f x) * ι (f 0)),
+    add_eq_left, map_eq_zero_iff_eq_one ι, ← add_right_inj (a := ι (f x) * ι (f 0)),
     ← add_assoc, ← add_mul, ← ι.map_add, map_add_map_one_sub ι, incl_map_zero_mul_self,
     add_comm, add_left_inj] at h
 
@@ -303,5 +303,5 @@ theorem NonperiodicGoodFun.injective_of_TwoTorsionFree
     exact map_mul_eq_of_map_eq_of_map_add_eq ι h.symm h (congrArg f (add_comm b a))
   replace h : f (a - b) = f 0 :=
     hG2 _ _ (by rw [← map_neg_add_map ι, h, two_nsmul])
-  rwa [← map_zero_add_map_add_one ι, add_right_eq_self,
-    map_eq_zero_iff_eq_one ι, add_left_eq_self, sub_eq_zero] at h
+  rwa [← map_zero_add_map_add_one ι, add_eq_left,
+    map_eq_zero_iff_eq_one ι, add_eq_right, sub_eq_zero] at h

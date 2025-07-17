@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Order.Group.Unbundled.Abs
 
 /-!
@@ -76,12 +76,12 @@ theorem final_solution : ∀ n : ℕ, (n : ℤ) ≤ a b n ∨ (n : ℤ) ≤ a b 
       have h0 (n) : 0 ≤ a b n := (a_and_sum_nonneg b_pos n).1
       refine (Int.add_one_le_of_lt (b_pos n)).lt_or_eq.imp (λ h ↦ ?_) (λ h ↦ ?_)
       ---- Case 1: `b_n > 1`
-      · rw [main_equality b_pos, Int.natCast_succ, Int.succ, add_le_add_iff_right]
+      · rw [main_equality b_pos, Int.natCast_succ, add_le_add_iff_right]
         refine (a_plus_sum_ge b_pos n).trans (add_le_add_right ?_ _)
         rw [Int.mul_sub, Int.mul_one, le_sub_iff_add_le, ← Int.two_mul, Int.mul_comm]
         exact Int.mul_le_mul_of_nonneg_left h (h0 n)
       ---- Case 2: `b_n = 1`
-      · rw [Int.natCast_succ, Int.succ, main_equality b_pos, add_le_add_iff_right]
+      · rw [Int.natCast_succ, main_equality b_pos, add_le_add_iff_right]
         apply le_add_of_nonneg_of_le (Int.mul_nonneg (h0 _) (Int.le_sub_one_of_lt (b_pos _)))
         apply (a_plus_sum_ge b_pos n).trans_eq
         rw [sum_range_succ_comm, add_left_inj, ← h]

@@ -8,6 +8,8 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Data.Nat.Periodic
 import Mathlib.Algebra.Ring.Regular
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2018 A2 (P2)
@@ -43,6 +45,8 @@ def good [NonAssocSemiring R] (a : ℕ → R) := ∀ k, a (k + 2) = a k * a (k +
 
 section
 
+open Fin.NatCast
+
 variable (R) [NonAssocRing R] (d : Fin 3)
 
 def stdGoodSeq : ℕ → R := λ n ↦ ![2, -1, -1] (n + d)
@@ -67,7 +71,9 @@ theorem stdGoodSeq_periodic_three_mul : ∀ k, (stdGoodSeq R d).Periodic (3 * k)
 theorem stdGoodSeq_periodic_of_three_dvd (h : 3 ∣ k) : (stdGoodSeq R d).Periodic k := by
   rcases h with ⟨k, rfl⟩; exact stdGoodSeq_periodic_three_mul R d k
 
-theorem stdGoodSeq_periodic_iff_three_dvd (R) [LinearOrderedRing R] {n} :
+open Fin.CommRing in
+theorem stdGoodSeq_periodic_iff_three_dvd (R)
+    [Ring R] [LinearOrder R] [IsStrictOrderedRing R] {n} :
     (stdGoodSeq R d).Periodic n ↔ 3 ∣ n := by
   refine ⟨λ h ↦ ?_, λ ⟨k, hk⟩ ↦ hk ▸ stdGoodSeq_periodic_three_mul R d k⟩
   replace h : ![2, -1, -1] n = (2 : R) := by
@@ -112,9 +118,11 @@ lemma eq3 [CommRing R] {a : ℕ → R} (ha : good a) (hn : a.Periodic (n + 1)) :
   _ = _ := by rw [ha.eq2 hn, sub_self]
 
 
-variable [LinearOrderedCommRing R] {a : ℕ → R} (ha : good a) (hn : a.Periodic (n + 1))
+variable [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+  {a : ℕ → R} (ha : good a) (hn : a.Periodic (n + 1))
 include ha
 
+open Fin.NatCast in
 theorem exists_eq_stdGoodSeq_of_periodic3 (h : a.Periodic 3) : ∃ d, a = stdGoodSeq R d := by
   have X {x y z : R} (h : x * y + 1 = z) (h0 : y * z + 1 = x) : y = -1 ∨ x = z := by
     replace h0 : _ - _ = _ - _ := congrArg₂ (· - ·) h h0
@@ -154,6 +162,7 @@ lemma periodic3_Fin_of_periodic (k : Fin (n + 1)) : a (k + 3) = a k := by
   have h := (sum_eq_zero_iff_of_nonneg λ k _ ↦ sq_nonneg _).mp (ha.eq3 hn) k (mem_univ k)
   rwa [sq_eq_zero_iff, sub_eq_zero, eq_comm] at h
 
+open Fin.NatCast in
 lemma periodic3_of_periodic : a.Periodic 3 := by
   intro m; have h := ha.periodic3_Fin_of_periodic hn m
   rwa [Fin.val_natCast, hn.map_mod_nat, ← hn.map_mod_nat,
@@ -171,12 +180,12 @@ end good
 
 /-! ### Final solution -/
 
-theorem final_solution_general [LinearOrderedCommRing R] {a : ℕ → R} :
-    (good a ∧ ∃ n, a.Periodic (n + 1)) ↔ ∃ d, a = stdGoodSeq R d :=
+theorem final_solution_general [CommRing R] [LinearOrder R] [IsStrictOrderedRing R]
+    {a : ℕ → R} : (good a ∧ ∃ n, a.Periodic (n + 1)) ↔ ∃ d, a = stdGoodSeq R d :=
   ⟨λ ⟨ha, _, hn⟩ ↦ ha.exists_eq_stdGoodSeq_of_periodic3 (ha.periodic3_of_periodic hn),
     λ ⟨d, h⟩ ↦ h ▸ ⟨stdGoodSeq_is_good R d, 2, stdGoodSeq_periodic3 R d⟩⟩
 
-theorem final_solution [LinearOrderedCommRing R] {n : ℕ} :
+theorem final_solution [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] {n : ℕ} :
     (∃ a : ℕ → R, good a ∧ a.Periodic (n + 1)) ↔ 3 ∣ n + 1 :=
   ⟨λ ⟨_, ha, hn⟩ ↦ ha.three_dvd_period hn,
   λ h ↦ ⟨stdGoodSeq R 0, stdGoodSeq_is_good R 0, stdGoodSeq_periodic_of_three_dvd R 0 h⟩⟩

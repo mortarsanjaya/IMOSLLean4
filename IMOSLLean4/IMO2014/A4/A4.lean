@@ -34,11 +34,11 @@ theorem exists_ne_pow_eq (h : k ≠ 0) (b : ℤ) : ∃ m n, m ≠ n ∧ b ^ m % 
   · apply card_image_le.trans_lt
     rw [card_range, card_range]
     exact k.natAbs.lt_succ_self
-  · rintro n -; simp only [mem_image, mem_range]
+  · rintro n -; simp only [coe_image, coe_range, Set.mem_image, Set.mem_Iio]
     have h0 := Int.natAbs_of_nonneg (Int.emod_nonneg (b ^ n) h)
     refine ⟨(b ^ n % k).natAbs, ?_, h0⟩
     rw [← Int.ofNat_lt, h0, Int.natCast_natAbs]
-    exact Int.emod_lt _ h
+    exact (Int.emod_lt _ h).trans_eq k.natCast_natAbs
 
 end
 

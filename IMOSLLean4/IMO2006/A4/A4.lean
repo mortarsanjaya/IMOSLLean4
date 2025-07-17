@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Ring
+import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
@@ -110,8 +110,8 @@ end
 /-! ### Final solution -/
 
 /-- Final solution, unordered version -/
-theorem final_solution_unordered [LinearOrderedField F] [DecidableEq ι]
-    (a : ι → F) {S : Finset ι} (hS : ∀ i ∈ S, 0 < a i) :
+theorem final_solution_unordered [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+    [DecidableEq ι] (a : ι → F) {S : Finset ι} (hS : ∀ i ∈ S, 0 < a i) :
     S.offDiag.sum (λ p ↦ a p.1 * a p.2 / (a p.1 + a p.2))
       ≤ S.card • S.offDiag.sum (λ p ↦ a p.1 * a p.2) / (2 * S.sum a) := by
   ---- First resolve the case where `S` is empty
@@ -131,8 +131,8 @@ theorem final_solution_unordered [LinearOrderedField F] [DecidableEq ι]
   exact mul_le_mul_of_nonneg_left (add_le_sum (λ k hk ↦ (hS k hk).le) hi hj h) (sq_nonneg _)
 
 /-- Final solution -/
-theorem final_solution [LinearOrderedField F] [LinearOrder ι]
-    (a : ι → F) {S : Finset ι} (hS : ∀ i ∈ S, 0 < a i) :
+theorem final_solution [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+    [LinearOrder ι] (a : ι → F) {S : Finset ι} (hS : ∀ i ∈ S, 0 < a i) :
     let T := (S ×ˢ S).filter λ p ↦ p.1 < p.2
     T.sum (λ p ↦ a p.1 * a p.2 / (a p.1 + a p.2))
       ≤ S.card • T.sum (λ p ↦ a p.1 * a p.2) / (2 * S.sum a) := by

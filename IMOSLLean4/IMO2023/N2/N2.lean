@@ -104,21 +104,21 @@ lemma good_alt_imp (hxy : 0 < x + y) (h : good_alt x y p) :
   rcases hp with rfl | rfl | rfl | hp
   ---- Case 1: `p = 2`
   · replace h0 : y < 10 := Nat.lt_of_not_le λ h1 ↦
-      h0.not_lt ((y_bound₂ h1).trans_eq (Nat.one_mul _).symm)
+      h0.not_gt ((y_bound₂ h1).trans_eq (Nat.one_mul _).symm)
     exfalso; revert x; revert y
     unfold good_alt; decide
   ---- Case 2: `p = 3`
   · replace h0 : y < 5 := Nat.lt_of_not_le λ h1 ↦
-      h0.not_lt (y_bound₀ (by decide) (by decide) (by decide) h1)
+      h0.not_gt (y_bound₀ (by decide) (by decide) (by decide) h1)
     revert x; revert y
     unfold good_alt; decide
   ---- Case 3: `p = 4`
   · replace h0 : y < 3 := Nat.lt_of_not_le λ h1 ↦
-      h0.not_lt (y_bound₀ (by decide) (by decide) (by decide) h1)
+      h0.not_gt (y_bound₀ (by decide) (by decide) (by decide) h1)
     exfalso; revert x; revert y
     unfold good_alt; decide
   ---- Case 4: `p ≥ 5`
-  · exact absurd (y_bound₁ hp y) h0.not_lt
+  · exact absurd (y_bound₁ hp y) h0.not_gt
 
 /-- Final solution -/
 theorem final_solution {a p : ℕ} (ha : 0 < a) (hp : p.Prime) :

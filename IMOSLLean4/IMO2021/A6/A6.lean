@@ -55,7 +55,7 @@ lemma Fin_digits_map_injOn' (m n : ℕ) :
       λ c : (i : Fin n) → ℕ ↦ ∑ i : Fin n, c i * (m : ℤ) ^ (i.1 + 1) := by
   obtain rfl | hm : m = 0 ∨ 0 < m := m.eq_zero_or_pos
   · rintro c hc _ - -; funext i
-    simp only [Set.InjOn, mem_coe, Fintype.mem_piFinset, mem_range] at hc
+    simp only [mem_coe, Fintype.mem_piFinset, mem_range] at hc
     exact absurd (hc i) (c i).not_lt_zero
   · intro c hc d hd h
     simp only [← Int.natCast_pow, ← Int.natCast_mul, Nat.pow_succ, ← Nat.mul_assoc] at h
@@ -79,9 +79,10 @@ theorem general_ineq {B : Fin n → Finset κ} [∀ i j, Decidable (j ∈ B i)]
   let f (c : (i : Fin n) → ℕ) (j : κ) : ℕ := (univ.filter (j ∈ B ·)).sum c
   refine Finset.card_le_card_of_injOn f ?_ ?_
   ---- `f` maps `Fin n → [m]` to `κ → [n(m - 1) + 1]`
-  · simp only [Fintype.mem_piFinset, mem_univ, mem_range, forall_true_left]
-    intro c hc j; calc
-      _ ≤ ∑ i ∈ univ.filter (j ∈ B ·), (m - 1) := sum_le_sum λ i _ ↦ Nat.le_pred_of_lt (hc i)
+  · simp only [Fintype.coe_piFinset, coe_range]
+    rintro c hc j -; calc
+      _ ≤ ∑ i ∈ univ.filter (j ∈ B ·), (m - 1) :=
+        sum_le_sum λ i _ ↦ Nat.le_pred_of_lt (hc i trivial)
       _ = (univ.filter (j ∈ B ·)).card * (m - 1) := sum_const _
       _ ≤ Fintype.card (Fin n) * (m - 1) := Nat.mul_le_mul_right (m - 1) (card_le_univ _)
       _ = n * (m - 1) := by rw [Fintype.card_fin]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # IMO 2018 C1
@@ -38,7 +38,7 @@ lemma good_iff {S : Finset ℕ} :
     obtain ⟨T, hT, hT0, hT1⟩ := hS m hm hm0
     exact ⟨T, hT, hT0, (X hT).mp hT1⟩
   ---- `←` direction
-  · obtain hm1 | hm1 : m ≤ S.card / 2 ∨ S.card / 2 < m := le_or_lt _ _
+  · obtain hm1 | hm1 : m ≤ S.card / 2 ∨ S.card / 2 < m := le_or_gt _ _
     · obtain ⟨T, hT, hT0, hT1⟩ := hS m hm hm1
       exact ⟨T, hT, hT0, (X hT).mpr hT1⟩
     · replace hm : m ≤ S.card := Nat.le_of_add_right_le hm0
@@ -137,7 +137,7 @@ lemma mul_three_pow_add_inj (n K : ℕ) : (λ k ↦ n.succ * 3 ^ (K + k)).Inject
   λ _ _ h ↦ Nat.add_left_cancel (mul_three_pow_inj n h)
 
 lemma GoodSubsetBase_card (K m) : (GoodSubsetBase K m).card = m + 1 := by
-  rw [GoodSubsetBase, card_insert_of_not_mem (GoodSubsetBase_disjoint' K m),
+  rw [GoodSubsetBase, card_insert_of_notMem (GoodSubsetBase_disjoint' K m),
     card_image_of_injective _ (mul_three_pow_add_inj 3 _), card_range]
 
 lemma GoodSubsetBase_sum (K m) : (GoodSubsetBase K m).sum id = 2 * 3 ^ (K + m) := by
@@ -222,7 +222,7 @@ theorem OddGoodSet_disjoint (hN : 2 < N) : 3 ^ N + 3 ∉ GoodSetBase N := by
       exact h.not_gt (Nat.pow_lt_pow_right (by decide : 1 < 3) (Nat.lt_of_succ_lt_succ hN))
 
 theorem OddGoodSet_card (hN : 2 < N) : (OddGoodSet N).card = 2 * N + 1 := by
-  rw [OddGoodSet, card_insert_of_not_mem (OddGoodSet_disjoint hN)]
+  rw [OddGoodSet, card_insert_of_notMem (OddGoodSet_disjoint hN)]
   exact congrArg₂ _ (GoodSetBase_card N) rfl
 
 theorem OddGoodSet_pos (hx : x ∈ OddGoodSet N) : 0 < x := by
@@ -254,7 +254,7 @@ theorem OddGoodSet_good (hN : 2 < N) : good (OddGoodSet N) := by
 /-- Final solution -/
 theorem final_solution (n : ℕ) : ∃ S : Finset ℕ, S.card = n ∧ (∀ x ∈ S, 0 < x) ∧ good S := by
   ---- First eliminate the case `n < 4`
-  obtain hn | hn : n / 2 < 2 ∨ 2 ≤ n / 2 := lt_or_le _ _
+  obtain hn | hn : n / 2 < 2 ∨ 2 ≤ n / 2 := lt_or_ge _ _
   · have h : ((range n).image Nat.succ).card = n := by
       rw [card_image_of_injective _ Nat.succ_injective, card_range]
     exact ⟨(range n).image Nat.succ, h, forall_mem_image.mpr λ k _ ↦ k.succ_pos,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Order.Field.Basic
 
 /-!
@@ -30,7 +30,8 @@ namespace IMO2015A1
 
 open Finset
 
-theorem final_solution [LinearOrderedField F]
+/-- Final solution -/
+theorem final_solution [Field F] [LinearOrder F] [IsStrictOrderedRing F]
     {a : ℕ → F} (h : ∀ k : ℕ, 0 < a k)
     (h0 : ∀ k : ℕ, (k.succ : F) * a k / (a k ^ 2 + k) ≤ a k.succ) :
     ∀ n : ℕ, 2 ≤ n → (n : F) ≤ (range n).sum a := by

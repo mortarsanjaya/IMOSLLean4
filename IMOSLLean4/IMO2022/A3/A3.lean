@@ -18,7 +18,7 @@ Find all functions $f : R_{>0} → R_{>0}$ such that for any $x ∈ R_{>0}$,
 namespace IMOSL
 namespace IMO2022A3
 
-variable [LinearOrderedCommSemiring R]
+variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
 
 /-! ### Extra lemmas -/
 
@@ -54,12 +54,12 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} : weakGood f ↔ ∀ x > 0,
       by_contra h0
       have h1 : 1 < x * f x := by
         rw [← mul_lt_mul_iff_of_pos_left two_pos, mul_one, two_mul]
-        exact lt_of_not_le λ h1 ↦ h0 (h x ⟨hx, h1⟩)
+        exact lt_of_not_ge λ h1 ↦ h0 (h x ⟨hx, h1⟩)
       have h2 : 1 < y * f y := by
         rw [← mul_lt_mul_iff_of_pos_left two_pos, mul_one, two_mul]
-        refine lt_of_not_le λ h2 ↦ h0 ((hf y hy).unique ⟨hx, ?_⟩ ⟨hy, h2⟩)
+        refine lt_of_not_ge λ h2 ↦ h0 ((hf y hy).unique ⟨hx, ?_⟩ ⟨hy, h2⟩)
         rwa [add_comm] at hy0
-      refine hy0.not_lt (lt_of_mul_lt_mul_of_nonneg_right ?_ (mul_pos hx hy).le)
+      refine hy0.not_gt (lt_of_mul_lt_mul_of_nonneg_right ?_ (mul_pos hx hy).le)
       calc
         _ = 2 * x * y := (mul_assoc 2 x y).symm
         _ ≤ x ^ 2 + y ^ 2 := two_mul_le_add_sq x y
@@ -75,7 +75,7 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} : weakGood f ↔ ∀ x > 0,
     intro x hx; have h := hf0 hx
     obtain ⟨M, h0⟩ : ∃ M, 1 = x * f x + M := exists_add_of_le h
     suffices (1 + M) * x = x by
-      rw [one_add_mul, add_right_eq_self, mul_eq_zero, or_iff_left hx.ne.symm] at this
+      rw [one_add_mul, add_eq_left, mul_eq_zero, or_iff_left hx.ne.symm] at this
       rw [h0, this, add_zero]
     replace h : 0 ≤ M := by rwa [h0, le_add_iff_nonneg_right] at h
     have h1 : 0 < 1 + M := add_pos_of_pos_of_nonneg one_pos h
@@ -110,6 +110,7 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} : weakGood f ↔ ∀ x > 0,
 def posSubtypeExt (f : {x : R // 0 < x} → {x : R // 0 < x}) (x : R) : R :=
   dite (0 < x) (λ h ↦ f ⟨x, h⟩) (λ _ ↦ 0)
 
+omit [IsStrictOrderedRing R] in
 lemma posSubtypeExt_spec (f : {x : R // 0 < x} → {x : R // 0 < x}) (x : {x : R // 0 < x}) :
     posSubtypeExt f x.1 = f x :=
   dif_pos _

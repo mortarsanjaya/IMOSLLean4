@@ -157,28 +157,28 @@ lemma good_two_mul_imp₂ (h : 7 ^ a + 3 ^ b ∣ 8 * a ^ 4 + 2 * b ^ 2) :
     ← Nat.succ_le, Nat.le_iff_lt_or_eq] at ha
   rcases ha with (((ha : 4 ≤ a) | (rfl : 3 = a)) | (rfl : 2 = a)) | (rfl : 1 = a)
   ---- Case 1: `a ≥ 4`
-  · exfalso; refine h0.not_lt (Nat.add_lt_add ?_ (b_bound₁ b))
+  · exfalso; refine h0.not_gt (Nat.add_lt_add ?_ (b_bound₁ b))
     exact a_bound₀ (n := 4) (k := 0) (by decide) (by decide) a ha
   ---- Case 2: `a = 3`
-  · exfalso; obtain h1 | h1 : b < 6 ∨ 6 ≤ b := lt_or_le b 6
+  · exfalso; obtain h1 | h1 : b < 6 ∨ 6 ≤ b := lt_or_ge b 6
     -- Subcase 1: `b < 6`
     · clear h0; revert h
       revert h1 b; decide
     -- Subcase 2: `b ≥ 6`
-    · refine h0.not_lt (?_ : 343 + 305 + 2 * b ^ 2 < 343 + 3 ^ b)
+    · refine h0.not_gt (?_ : 343 + 305 + 2 * b ^ 2 < 343 + 3 ^ b)
       rw [Nat.add_assoc, Nat.add_lt_add_iff_left, Nat.add_comm]
       exact b_bound₀ (by decide) (by decide) b h1
   ---- Case 3: `a = 2`
-  · exfalso; obtain h1 | h1 : b < 5 ∨ 5 ≤ b := lt_or_le b 5
+  · exfalso; obtain h1 | h1 : b < 5 ∨ 5 ≤ b := lt_or_ge b 5
     -- Subcase 1: `b < 5`
     · clear h0; revert h
       revert h1 b; decide
     -- Subcase 2: `b ≥ 5`
-    · refine h0.not_lt (?_ : 49 + 79 + 2 * b ^ 2 < 49 + 3 ^ b)
+    · refine h0.not_gt (?_ : 49 + 79 + 2 * b ^ 2 < 49 + 3 ^ b)
       rw [Nat.add_assoc, Nat.add_lt_add_iff_left, Nat.add_comm]
       exact b_bound₀ (by decide) (by decide) b h1
   ---- Case 4: `a = 1`
-  · refine ⟨rfl, Nat.le_of_not_lt λ h1 ↦ h0.not_lt (?_ : 7 + 1 + 2 * b ^ 2 < 7 + 3 ^ b)⟩
+  · refine ⟨rfl, Nat.le_of_not_lt λ h1 ↦ h0.not_gt (?_ : 7 + 1 + 2 * b ^ 2 < 7 + 3 ^ b)⟩
     rw [Nat.add_assoc, Nat.add_lt_add_iff_left, Nat.add_comm]
     exact b_bound₀ (by decide) (by decide) b h1
 

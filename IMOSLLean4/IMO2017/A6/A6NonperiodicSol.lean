@@ -78,8 +78,7 @@ variable [Ring R] [Add G] (ι : G → R) (a : CentralInvolutive R)
 def ofCenterExcellent (φ : {φ : ExcellentFun R G // ∀ x, ι (φ x) = a * x}) :
     NonperiodicGoodFun ι where
   toFun x := φ.1 (1 - x)
-  good_def' x y := by
-    dsimp only; rw [φ.2, φ.2, a.mul_mul_mul_cancel_left,
+  good_def' x y := by rw [φ.2, φ.2, a.mul_mul_mul_cancel_left,
       one_sub_mul_one_sub, sub_sub_cancel, excellent_def]
   period_imp_eq' c d h := a.mul_left_inj.mp (by simpa [φ.2] using congrArg ι (h 1))
 

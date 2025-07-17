@@ -56,11 +56,11 @@ theorem of_sorted_ineq : ∀ {l},
     l.Sorted GT.gt → (∀ a ∈ l, ∀ b ∈ l, a < b → 3 * (c - b) ≤ 2 * (c - a)) → good c l
   | [] => λ _ _ ↦ trivial
   | [_] => λ _ _ ↦ trivial
-  | b₀ :: a₀ :: l => λ h h0 ↦
+  | b₀ :: a₀ :: _ => λ h h0 ↦
       ⟨of_sorted_ineq h.of_cons λ a ha b hb ↦
         h0 a (mem_cons_of_mem _ ha) b (mem_cons_of_mem _ hb),
-      h0 a₀ (mem_cons_of_mem _ (l.mem_cons_self a₀)) b₀
-        (mem_cons_self b₀ _) (List_sorted_cons_cons_imp h).lt⟩
+      h0 a₀ (mem_cons_of_mem _ mem_cons_self) b₀
+        mem_cons_self (List_sorted_cons_cons_imp h).lt⟩
 
 
 end good
@@ -80,7 +80,7 @@ theorem final_solution (hn : n ≠ 0) {A : Finset ℕ}
   ---- Grab the head of `A.sort` and pick that to be the element greater than `5^n`
   obtain ⟨c, l, h⟩ : ∃ c l, A.sort GE.ge = c :: l :=
     exists_cons_of_length_pos ((4 * n + 1).succ_pos.trans_eq hA.symm)
-  refine ⟨c, by rw [← Finset.mem_sort GE.ge, h]; exact mem_cons_self c _, ?_⟩
+  refine ⟨c, by rw [← Finset.mem_sort GE.ge, h]; exact mem_cons_self, ?_⟩
   rw [h, l.length_cons, Nat.succ_inj] at hA
   ---- Grab the second element and simplify `hA`
   obtain ⟨b, l, rfl⟩ : ∃ b l', l = b :: l' :=
@@ -91,13 +91,13 @@ theorem final_solution (hn : n ≠ 0) {A : Finset ℕ}
     sorted_cons.mp (h ▸ A.sort_sorted_gt)
   suffices good c (b :: l) by
     refine Nat.lt_of_mul_lt_mul_left ((five_pow_bound hn).trans_le ?_)
-    rw [← hA]; exact this.general_ineq₂ (h0.1 b (l.mem_cons_self b))
+    rw [← hA]; exact this.general_ineq₂ (h0.1 b mem_cons_self)
   refine good.of_sorted_ineq h0.2 λ x hx y hy h1 ↦ ?_
   replace hA0 : c + 2 * x ≤ 3 * y := by
     have X {a} (ha : a ∈ b :: l) : a ∈ A := by
       rw [← A.mem_sort GE.ge, h]; exact mem_cons_of_mem c ha
     refine hA0 x (X hx) y (X hy) c ?_ h1 (h0.1 y hy)
-    rw [← A.mem_sort GE.ge, h]; exact mem_cons_self c _
+    rw [← A.mem_sort GE.ge, h]; exact mem_cons_self
   replace hx : 2 * x ≤ 2 * c := Nat.mul_le_mul_left 2 (h0.1 x hx).le
   rw [Nat.mul_sub, Nat.mul_sub, Nat.sub_le_iff_le_add, Nat.succ_mul,
     ← Nat.sub_add_comm hx, Nat.add_sub_assoc (((2 * x).le_add_left c).trans hA0)]

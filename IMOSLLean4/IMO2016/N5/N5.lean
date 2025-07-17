@@ -132,9 +132,9 @@ theorem exists_x_sq_le_a (h : ∃ x y, nice k a x y) :
       add_assoc, one_add_one_eq_two, ← mul_add_one 2 k, mul_lt_mul_iff_of_pos_left h2]
   ---- Goal 2: `(2k + 1) |x| - 2(k + 1) |y| < |x|`
   · rw [add_neg_lt_iff_lt_add, add_one_mul _ |x|, add_comm]
-    refine add_lt_add_left (lt_of_not_le λ h2 ↦ ?_) _
+    refine add_lt_add_left (lt_of_not_ge λ h2 ↦ ?_) _
     rw [mul_assoc, mul_assoc, mul_le_mul_iff_of_pos_left two_pos] at h2
-    apply (mul_le_mul h2 h1.le (abs_nonneg y) (mul_nonneg hk (abs_nonneg x))).not_lt
+    apply (mul_le_mul h2 h1.le (abs_nonneg y) (mul_nonneg hk (abs_nonneg x))).not_gt
     rwa [mul_assoc, mul_assoc, ← sq, sq_abs, ← sq, sq_abs, ← sub_pos, h0]
 
 

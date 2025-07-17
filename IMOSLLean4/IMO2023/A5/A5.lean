@@ -57,7 +57,7 @@ theorem mod_two_sq_eq_self (N) : (N % 2) ^ 2 = N % 2 := by
 
 theorem add_div_two_lt_max_of_ne {x y : ℕ} (h : x ≠ y) : (x + y) / 2 < x.max y := by
   rw [Nat.div_lt_iff_lt_mul Nat.two_pos, Nat.mul_two]
-  obtain h | h : x < y ∨ y < x := h.lt_or_lt
+  obtain h | h : x < y ∨ y < x := h.lt_or_gt
   · exact Nat.add_lt_add_of_lt_of_le (lt_sup_of_lt_right h) (x.le_max_right y)
   · exact Nat.add_lt_add_of_le_of_lt (x.le_max_left y) (lt_sup_of_lt_left h)
 

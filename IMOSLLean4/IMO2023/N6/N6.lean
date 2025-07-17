@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.Set.Operations
-import Mathlib.Data.Nat.Defs
+import Mathlib.Data.Nat.Init
 
 /-!
 # IMO 2023 N6
@@ -113,7 +113,7 @@ def drop_tail_of_pos (h : 0 < X.tail_coeff.1) : KawaiiSequence S where
   a_one := by simp only [X.a_two]; exact Nat.div_self h
   a_step := λ n ↦ by
     obtain ⟨c, hc⟩ := X.a_sub_one_step n
-    refine ⟨c, ?_⟩; simp only
+    refine ⟨c, ?_⟩
     obtain ⟨k, hk⟩ := X.tail_coeff_dvd_a_sub_one (n + 1)
     obtain ⟨l, hl⟩ := X.tail_coeff_dvd_a_sub_one (n + 2)
     obtain ⟨m, hm⟩ := X.tail_coeff_dvd_a_sub_one (n + 3)
@@ -190,7 +190,7 @@ theorem isKawaii.eq_zero_or_rec_mul_succ :
 theorem isKawaii.succ_imp (h : isKawaii S (k + 1)) :
     ∃ (c : S) (n : ℕ), isKawaii S n ∧ k = c * n := by
   obtain ⟨c, n, h0, h1⟩ := (h.eq_zero_or_rec_mul_succ _).resolve_left k.succ_ne_zero
-  exact ⟨c, n, h0, Nat.succ_injective h1⟩
+  exact ⟨c, n, h0, Nat.succ_inj.mp h1⟩
 
 theorem KawaiiSequence.a_isKawaii : ∀ (k : ℕ) (X : KawaiiSequence S), isKawaii S (X.a k) :=
   Nat.rec (λ X ↦ X.a_zero.symm ▸ isKawaii.zero S)

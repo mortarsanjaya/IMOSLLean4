@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finsupp.Defs
-import Mathlib.Data.Finset.Order
 import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Finsupp.Single
+import Mathlib.Data.Finset.Order
+import Mathlib.Data.Finset.Range
+import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.Algebra.Order.Ring.Int
 
 /-!
@@ -63,6 +65,7 @@ theorem mem_of_Finset_range_sup_eq {f : ℕ → α} (hf : ∀ k, f k ∈ S) {x :
     (hx : x = (Finset.range (n + 1)).sup' Finset.nonempty_range_succ f) : x ∈ S :=
   hx ▸ Finset_range_sup_mem hS hf n
 
+open Fin.NatCast in
 theorem Fin_univ_sup_mem {f : Fin (n + 1) → α} (hf : ∀ k, f k ∈ S) :
     Finset.univ.sup' Finset.univ_nonempty f ∈ S := by
   have h : (Finset.range n.succ).image (λ k : ℕ ↦ (k : Fin (n + 1))) = Finset.univ :=
@@ -138,9 +141,10 @@ theorem ofPreimage {S : Set (α → ℤ)} (hS : AddMaxClosed S) (i : α → β) 
 theorem Nat_Finsupp_mem_of_zero_single_mem [DecidableEq ι] {S : Set (ι → ℤ)}
     (hS : AddMaxClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, ⇑(Finsupp.single i 1) ∈ S) :
     ∀ v : ι →₀ ℕ, Nat.cast ∘ v ∈ S := by
-  intro v; apply v.induction_linear hS0
-  · intro f g hf hg; exact hS.add_mem _ hf _ hg
-  · intro i k; obtain rfl | h : k = 0 ∨ 0 < k := k.eq_zero_or_pos
+  intro v; induction' v using Finsupp.induction_linear with f g hf hg i k
+  · exact hS0
+  · exact hS.add_mem _ hf _ hg
+  · obtain rfl | h : k = 0 ∨ 0 < k := k.eq_zero_or_pos
     · rw [Finsupp.single_zero]; exact hS0
     · have h0 : (Nat.cast : ℕ → ℤ) ∘ ⇑(Finsupp.single i k) = k • ⇑(Finsupp.single i 1) := by
         funext j; rw [Function.comp_apply, Pi.smul_apply, nsmul_eq_mul]
@@ -287,7 +291,7 @@ theorem doubleton_AddSupGenerator_imp₂ (h0 : i ≠ j) : v i * v j < 0 := by
     have h2 := doubleton_AddSupGenerator_imp₁ h
     right; exact ⟨h2 i, h2 j⟩
   ---- Contradiction setup
-  refine mul_neg_of_pos_of_neg hvi (lt_of_not_le λ hvj ↦ ?_)
+  refine mul_neg_of_pos_of_neg hvi (lt_of_not_ge λ hvj ↦ ?_)
   replace hvj : 0 < v j :=
     hvj.lt_of_ne λ h1 ↦ (doubleton_AddSupGenerator_imp₁ h j).ne (by rw [← h1, zero_mul])
   have hwi : w i < 0 := neg_of_mul_neg_right (doubleton_AddSupGenerator_imp₁ h i) hvi.le
@@ -304,7 +308,7 @@ theorem doubleton_AddSupGenerator_imp₂ (h0 : i ≠ j) : v i * v j < 0 := by
   replace h2 : Pi.single i 1 ∈ {x : ι → ℤ | v j * x i ≤ v i * x j} := h2 ▸ Set.mem_univ _
   rw [Set.mem_setOf_eq, Pi.single_eq_same, mul_one,
     Pi.single_eq_of_ne h0.symm, mul_zero] at h2
-  exact hvj.not_le h2
+  exact hvj.not_ge h2
 
 end
 
@@ -315,7 +319,7 @@ theorem Fin3_doubleton_not_AddSupGenerator (v w : Fin 3 → ℤ) : ¬AddSupGener
   have h0 : (v 0 * v 1) * (v 1 * v 2) * (v 2 * v 0) < 0 :=
     mul_neg_of_pos_of_neg (mul_pos_of_neg_of_neg (h 0) (h 1)) (h 2)
   rw [mul_mul_mul_comm, mul_rotate (v 0), ← sq] at h0
-  exact h0.not_le (sq_nonneg _)
+  exact h0.not_ge (sq_nonneg _)
 
 theorem Fin_general_AddSupGenerator (n : ℕ) :
     AddSupGenerator {-1, λ k ↦ k.1, λ k : Fin (n + 1) ↦ 1 - (k.1 : ℤ) ^ 2} := by

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Digits
+import Mathlib.Data.Nat.Digits.Defs
 import Mathlib.Data.Int.Bitwise
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # IMO 2010 A4
@@ -74,7 +75,7 @@ theorem S_succ (a : ℕ) : S a.succ = S a + cond (x a) (-1) 1 :=
   sum_range_succ _ a
 
 theorem S_mul4_add2 (k : ℕ) : S (4 * k + 2) = S (4 * k) := by
-  rw [S_succ, S_succ, add_assoc, add_right_eq_self, x_mul4_add1]
+  rw [S_succ, S_succ, add_assoc, add_eq_left, x_mul4_add1]
   exact (x (4 * k)).recOn rfl rfl
 
 theorem S_mul4 : ∀ k : ℕ, S (4 * k) = 2 * S k :=
@@ -152,7 +153,7 @@ theorem final_solution_extra (k : ℕ) :
   · rw [S_zero, eq_self_iff_true, true_and, MulZeroClass.mul_zero, zero_add]
     rcases r.eq_zero_or_pos with (rfl | h0)
     rw [eq_self_iff_true, true_or, true_iff, Nat.digits_zero]
-    intro c h0; exact absurd h0 (by exact List.not_mem_nil c)
+    intro c h0; exact absurd h0 List.not_mem_nil
     rw [Nat.digits_def' (Nat.succ_lt_succ <| Nat.succ_pos 2) h0,
       Nat.mod_eq_of_lt h, Nat.div_eq_of_lt h, Nat.digits_zero]
     simp only [List.mem_singleton]; rw [forall_eq]

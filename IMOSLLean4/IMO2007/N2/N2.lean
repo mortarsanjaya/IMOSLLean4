@@ -32,11 +32,11 @@ theorem final_solution_explicit (h : 0 < b) (h0 : ∃ c : ℤ, (b ^ 2 : ℤ) ∣
   rw [Int.associated_iff, eq_neg_iff_add_eq_zero, add_comm, ← eq_neg_iff_add_eq_zero] at h1
   rcases h1 with rfl | rfl
   · exact ⟨c, rfl⟩
-  · refine ⟨-c, ((Nat.not_even_iff_odd.mp λ h1 ↦ h.not_le ?_).neg_pow c).symm⟩
+  · refine ⟨-c, ((Nat.not_even_iff_odd.mp λ h1 ↦ h.not_ge ?_).neg_pow c).symm⟩
     exact Int.neg_nonpos_of_nonneg (h1.pow_nonneg c)
 
 /-- Final solution -/
 theorem final_solution (h : 0 < b) (h0 : ∀ k : ℕ, 0 < k → ∃ c : ℤ, (k : ℤ) ∣ b - c ^ n) :
     ∃ a : ℤ, b = a ^ n := by
   lift b to ℕ using h.le
-  exact final_solution_explicit h (h0 (b ^ 2) (Nat.pow_pos (Int.ofNat_pos.mp h)))
+  exact final_solution_explicit h (h0 (b ^ 2) (Nat.pow_pos (Int.natCast_pos.mp h)))
