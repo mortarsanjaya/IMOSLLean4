@@ -4,33 +4,34 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Basic
-import Mathlib.Order.Monotone.Defs
-import Mathlib.Tactic.ByContra
+import Mathlib.Order.Monotone.Basic
 
 /-!
 # Antitone sequence of naturals
 
 Let `a : ℕ → ℕ` be an antitone sequence of natural numbers.
 We show that `a` must be eventually constant.
+
+### TODO
+
+Delete this file once the result to be proved is up on `mathlib`.
 -/
 
 namespace IMOSL
 namespace Extra
 
+/-- An antitone sequence of natural numbers converge to a constant. -/
+theorem NatSeq_antitone_converges {a : ℕ → ℕ} (ha : Antitone a) :
+    ∃ C N, ∀ n ≥ N, a n = C := by
+  obtain ⟨D, N, h⟩ : ∃ D N, ∀ n ≥ N, a 0 - a n = D :=
+    converges_of_monotone_of_bounded (c := a 0)
+      (monotone_nat_of_le_succ λ n ↦ Nat.sub_le_sub_left (ha n.le_succ) _)
+      (λ n ↦ Nat.sub_le _ _)
+  refine ⟨a 0 - D, N, λ n hn ↦ ?_⟩
+  rw [← h n hn, Nat.sub_sub_self (ha n.zero_le)]
+
+@[deprecated NatSeq_antitone_converges (since := "2025-07-17")]
 theorem NatSeq_antitone_imp_const {a : ℕ → ℕ} (ha : Antitone a) :
     ∃ C N : ℕ, ∀ n, a (n + N) = C := by
-  by_contra! h
-  suffices ∀ C, ∃ N, ∀ n, a (n + N) + C ≤ a 0 by
-    rcases this (a 0).succ with ⟨N, h0⟩
-    exact (h0 0).not_gt (Nat.lt_add_left _ (a 0).lt_succ_self)
-  refine Nat.rec ⟨0, λ n ↦ ha n.zero_le⟩ (λ C hC ↦ ?_)
-  rcases hC with ⟨N, hC⟩; rcases (hC 0).lt_or_eq with h0 | h0
-  · refine ⟨N, λ n ↦ h0.trans_le' (Nat.add_le_add_right (ha ?_) C)⟩
-    exact Nat.add_le_add_right n.zero_le N
-  · rcases h (a 0 - C) N with ⟨K, h1⟩
-    rw [← h0, Nat.add_sub_cancel, Nat.zero_add] at h1
-    refine ⟨K + N, λ n ↦ Nat.add_one_le_iff.mpr ?_⟩
-    rw [← h0, Nat.zero_add]
-    refine Nat.add_lt_add_right ((ha <| (K + N).le_add_left n).trans_lt ?_) C
-    exact (ha (N.le_add_left K)).lt_of_ne h1
+  obtain ⟨C, N, h⟩ : ∃ C N, ∀ n ≥ N, a n = C := NatSeq_antitone_converges ha
+  exact ⟨C, N, λ n ↦ h _ (Nat.le_add_left N n)⟩
