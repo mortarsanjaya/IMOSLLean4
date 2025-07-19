@@ -5,15 +5,22 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Algebra.Field.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Field.Rat
+import Mathlib.Data.Nat.Cast.Order.Ring
 
 /-!
 # IMO 2006 A2
 
-Consider the sequence $(a_n)_{n ≥ 0}$ of rational nuimbers defined by $a_0 = 1$ and
+Let $F$ be a totally ordered field.
+Consider the sequence $(a_n)_{n ≥ 0}$ of elements of $F$ defined by $a_0 = 1$ and
 $$ a_n = -\sum_{k = 0}^{n - 1} \frac{a_k}{n + 1 - k}. $$
-Prove that $a_n > 0$ for all $n ≠ 0$.
+Prove that $a_{n + 1} ≥ 0$ for all $n ≥ 0$.
+
+### Solution
+
+We follow the official solution.
+See [here](https://www.imo-official.org/problems/IMO2006SL.pdf.)
 -/
 
 namespace IMOSL
@@ -21,67 +28,80 @@ namespace IMO2006A2
 
 open Finset
 
-def a : ℕ → ℚ
+/-- The sequence `(a_n)_{n ≥ 0}`. -/
+abbrev a (F) [Field F] : ℕ → F
   | 0 => -1
-  | n + 1 => -(univ : Finset (Fin (n + 1))).sum λ i ↦ a i / (n + 2 - i : ℕ)
+  | n + 1 => -∑ i : Fin (n + 1), a F i / (n + 2 - i : ℕ)
 
-lemma a_zero : a 0 = -1 := by rw [a]
 
-lemma a_succ (n) : a (n + 1) = -(range (n + 1)).sum λ i ↦ a i / (n + 2 - i : ℕ) := by
+variable {F} [Field F]
+
+/-- `a_0 = -1`. -/
+lemma a_zero : a F 0 = -1 := rfl
+
+/-- `a_{n + 1} = -∑ i ≤ n, a_i/(n + 2 - i)`. -/
+lemma a_succ (n) : a F (n + 1) = -∑ i ∈ range (n + 1), a F i / (n + 2 - i : ℕ) := by
   rw [a, ← Fin.sum_univ_eq_sum_range]
 
-lemma a_one : a 1 = 1 / 2 := by
-  rw [a, Fin.sum_univ_one, Fin.val_zero, a_zero, neg_div, neg_neg]; rfl
+/-- `a_1 = 1/2`. -/
+lemma a_one : a F 1 = 2⁻¹ := by
+  rw [a, Fin.sum_univ_one, Fin.val_zero, a_zero, neg_div, neg_neg, one_div]; rfl
 
-lemma a_nonzero (h : n ≠ 0) : a n = -(range n).sum λ i ↦ a i / (n + 1 - i : ℕ) :=
-  Nat.succ_pred_eq_of_ne_zero h ▸ a_succ n.pred
+/-- Recursive formula for `a_{n + 1}` across all `n > 0`. -/
+lemma a_rec (hn : 0 < n) : ∑ i ∈ range (n + 1), a F i / (n + 1 - i : ℕ) = 0 := by
+  rw [← Nat.succ_pred_eq_of_pos hn, sum_range_succ, add_eq_zero_iff_eq_neg',
+    ← a_succ, Nat.add_sub_cancel_left, Nat.cast_one, div_one]
 
-lemma a_nonzero' (h : n ≠ 0) : (range (n + 1)).sum (λ i ↦ a i / (n + 1 - i : ℕ)) = 0 := by
-  rw [sum_range_succ, ← neg_eq_iff_add_eq_zero, ← a_nonzero h,
-    Nat.add_sub_cancel_left, Rat.div_def, Rat.inv_def]
-  exact (a n).mul_one.symm
-
-lemma Rat_formula {k n : ℕ} (h : k < n) :
-    (n : ℚ) / (n - k : ℕ) - (n + 1 : ℕ) / (n + 1 - k : ℕ)
-      = k / ((n - k) * (n + 1 - k) : ℕ) := by
-  obtain ⟨c, hc, rfl⟩ : ∃ c ≠ 0, n = k + c := by
-    obtain ⟨c, rfl⟩ := Nat.exists_eq_add_of_lt h
-    exact ⟨c + 1, c.succ_ne_zero, k.add_assoc c 1⟩
-  rw [Nat.add_sub_cancel_left, Nat.add_assoc, Nat.add_sub_cancel_left, Nat.cast_mul]
-  rw [div_sub_div _ _ (Nat.cast_ne_zero.mpr hc) (Nat.cast_ne_zero.mpr c.succ_ne_zero)]
-  refine congrArg (· / _) ?_
-  rw [k.cast_add, k.cast_add, add_mul, mul_add, add_sub_add_right_eq_sub,
-    mul_comm, Nat.cast_succ, add_one_mul (c : ℚ), add_sub_cancel_left]
-
-lemma a_formula (h : n ≠ 0) :
-    (n + 2 : ℕ) * a (n + 1) =
-      (range (n + 1)).sum λ i ↦ a i * (i / ((n + 1 - i) * (n + 2 - i) : ℕ)) :=
-  calc
-  _ = (n + 1 : ℕ) * (range (n + 1)).sum (λ i ↦ a i / (n + 1 - i : ℕ))
-      - (n + 2 : ℕ) * (range (n + 1)).sum (λ i ↦ a i / (n + 2 - i : ℕ)) := by
-    rw [a_nonzero' h, Rat.mul_zero, zero_sub, a_nonzero n.succ_ne_zero, mul_neg]
-  _ = (range (n + 1)).sum λ i ↦
-      (n + 1 : ℕ) * (a i / (n + 1 - i : ℕ)) - (n + 2 : ℕ) * (a i / (n + 2 - i : ℕ)) := by
+/-- Main formula for `a_{n + 1}` as a positive linear combination of `a_1, …, a_n`. -/
+lemma main_formula (hn : 0 < n) :
+    (n + 2 : ℕ) * a F (n + 1) =
+      ∑ i ∈ range (n + 1), a F i * ((n + 1 : ℕ) / (n + 1 - i : ℕ)
+        - (n + 2 : ℕ) / ((n + 2 - i) : ℕ)) := calc
+  _ = (n + 1 : ℕ) * ∑ i ∈ range (n + 1), a F i / (n + 1 - i : ℕ)
+      - (n + 2 : ℕ) * ∑ i ∈ range (n + 1), a F i / (n + 2 - i : ℕ) := by
+    rw [a_rec hn, mul_zero, zero_sub, ← mul_neg, ← a_succ]
+  _ = ∑ i ∈ range (n + 1), ((n + 1 : ℕ) * (a F i / (n + 1 - i : ℕ))
+      - (n + 2 : ℕ) * (a F i / (n + 2 - i : ℕ))) := by
     rw [sum_sub_distrib, mul_sum, mul_sum]
-  _ = _ := sum_congr rfl λ i h0 ↦ by
-    rw [mul_div_left_comm, mul_div_left_comm _ (a i),
-      ← mul_sub, Rat_formula (mem_range.mp h0)]
+  _ = _ := sum_congr rfl λ i h ↦ by simp only [mul_div_left_comm _ (a F i), mul_sub]
 
 
+variable [LinearOrder F] [IsStrictOrderedRing F]
+
+/-- We have `(n + 1)/(n + 1 - i) < n/(n - i)` if `0 < i < n`. -/
+lemma coeff_pos (hi : 0 < i) (hin : i < n) :
+    ((n + 1 : ℕ) / (n + 1 - i : ℕ) : F) < n / (n - i : ℕ) := by
+  have h : 0 < ((n - i : ℕ) : F) := by rwa [Nat.cast_pos, Nat.sub_pos_iff_lt]
+  have h0 : ((n - i : ℕ) : F) < (n + 1 - i : ℕ) :=
+    Nat.cast_lt.mpr (Nat.sub_lt_sub_right hin.le n.lt_succ_self)
+  calc
+  _ = (1 : F) + (i : ℕ) / (n + 1 - i : ℕ) := by
+    rw [one_add_div (h.trans h0).ne.symm, ← Nat.cast_add,
+      Nat.sub_add_cancel (Nat.le_succ_of_le hin.le)]
+  _ < (1 : F) + (i : ℕ) / (n - i : ℕ) :=
+    add_lt_add_left (div_lt_div_of_pos_left (Nat.cast_pos.mpr hi) h h0) 1
+  _ = _ := by rw [one_add_div h.ne.symm, ← Nat.cast_add, Nat.sub_add_cancel hin.le]
 
 /-- Final solution -/
-theorem final_solution (h : n ≠ 0) : 0 < a n := by
-  induction' n using Nat.strong_induction_on with n h0
-  obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero h
-  clear h; rcases eq_or_ne n 0 with rfl | h
-  ---- `a_1 > 0`
-  · exact (div_pos one_pos two_pos).trans_eq a_one.symm
-  ---- If `a_i > 0` for all `0 < i ≤ n`, then `a_{n + 1} > 0`
-  · refine pos_of_mul_pos_right ?_ (n + 2).cast_nonneg
-    rw [a_formula h, sum_range_succ', Nat.cast_zero, zero_div, mul_zero, add_zero]
-    refine sum_pos (λ i h1 ↦ ?_) (nonempty_range_iff.mpr h)
-    rw [mem_range] at h1
-    refine mul_pos (h0 i.succ (Nat.succ_lt_succ h1) i.succ_ne_zero)
-      (div_pos (Nat.cast_pos.mpr i.succ_pos) (Nat.cast_pos.mpr ?_))
-    rw [Nat.succ_sub_succ, Nat.succ_sub_succ]
-    exact Nat.mul_pos (Nat.sub_pos_of_lt h1) (Nat.sub_pos_of_lt (Nat.lt_add_right 1 h1))
+theorem final_solution (n) : 0 < a F (n + 1) := by
+  ---- Proceed by strong induction on `n`.
+  induction' n using Nat.strong_induction_on with n n_ih
+  ---- The base case `n = 0` is obvious.
+  obtain rfl | hn : n = 0 ∨ 0 < n := n.eq_zero_or_pos
+  · rw [a_one, inv_pos]; exact two_pos
+  ---- Let `b_i = a_i ((n + 1)/(n + 1 - i) - (n + 2)/(n + 2 - i)` for all `i ≤ n`.
+  let b (i) := a F i * ((n + 1 : ℕ) / (n + 1 - i : ℕ) - (n + 2 : ℕ) / ((n + 2 - i) : ℕ))
+  ---- By main formula, it suffices to show that `∑_i b_i > 0`.
+  suffices 0 < ∑ i ∈ range (n + 1), b i from
+    pos_of_mul_pos_right (this.trans_eq (main_formula hn).symm) (n + 2).cast_nonneg
+  ---- First, show that `b_0 = 0`.
+  have h : b 0 = 0 := by
+    have X (k : ℕ) : (k.succ : F) / ((k + 1 - 0 : ℕ) : F) = 1 :=
+      div_self (Nat.cast_ne_zero.mpr k.succ_ne_zero)
+    dsimp only [b]; rw [X, X, sub_self, mul_zero]
+  ---- Second, show that `b_{i + 1} > 0` for any `i < n` (replace the induction hypothesis).
+  replace n_ih {i} (hi : i < n) : 0 < b (i +1 ) :=
+    mul_pos (n_ih i hi) (sub_pos.mpr (coeff_pos i.succ_pos (Nat.succ_lt_succ hi)))
+  ---- Finally, prove that `∑_i b_i > 0`.
+  rw [sum_range_succ', h, add_zero]
+  exact sum_pos (λ i hi ↦ n_ih (mem_range.mp hi)) (nonempty_range_iff.mpr hn.ne.symm)
