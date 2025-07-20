@@ -22,7 +22,7 @@ $$ f^{k + 2}(r) = f^k(r). $$
 ### Solution
 
 We follow the official solution with some twists.
-See [here](https://www.imo-official.org/problems/IMO2006SL.pdf.)
+See [here](https://www.imo-official.org/problems/IMO2006SL.pdf).
 We prove more: the sequence $(f^k(r))_{k ≥ 0}$ either stabilizes to a constant
   sequence or $-s, s - 1, -s, s - 1, …$ for some $s ∈ R$ with $0 < s < 1$.
 

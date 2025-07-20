@@ -24,7 +24,7 @@ $n ↦ cν_p(n)$, where $c$ is a fixed positive integer and $p$ is a prime numbe
 ### Solution
 
 We follow Solution 1 of the official solution.
-See [here](https://www.imo-official.org/problems/IMO2020SL.pdf.)
+See [here](https://www.imo-official.org/problems/IMO2020SL.pdf).
 
 ### Generalization
 
