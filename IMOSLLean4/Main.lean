@@ -1,0 +1,19 @@
+---- Root for the main formalization project
+import IMOSLLean4.Main.IMO2006
+import IMOSLLean4.Main.IMO2007
+import IMOSLLean4.Main.IMO2008
+import IMOSLLean4.Main.IMO2009
+import IMOSLLean4.Main.IMO2010
+import IMOSLLean4.Main.IMO2011
+import IMOSLLean4.Main.IMO2012
+import IMOSLLean4.Main.IMO2013
+import IMOSLLean4.Main.IMO2014
+import IMOSLLean4.Main.IMO2015
+import IMOSLLean4.Main.IMO2016
+import IMOSLLean4.Main.IMO2017
+import IMOSLLean4.Main.IMO2018
+import IMOSLLean4.Main.IMO2019
+import IMOSLLean4.Main.IMO2020
+import IMOSLLean4.Main.IMO2021
+import IMOSLLean4.Main.IMO2022
+import IMOSLLean4.Main.IMO2023
