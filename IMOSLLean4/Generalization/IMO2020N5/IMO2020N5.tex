@@ -1,0 +1,177 @@
+Let $(M, \cdot)$ be an abelian monoid.
+Suppose that $M$ is \textit{cancellative}: that is, for any $a, b, c \in M$, $ac = bc$ implies $a = b$ and $ab = ac$ implies $b = c$.
+
+Given a monoid homomorphism $f : \N^+ \to M$, we say that a positive integer $n$ is $f$-\textit{nice} if for any $a, b \in \N^+$ with $a + b = n$, we have $f(a) = f(b)$.
+A monoid homomorphism $f : \N^+ \to M$ is called \textit{good} if there are infinitely many $f$-nice positive integers.
+Find all good monoid homomorphisms.
+
+
+
+\subsection*{References}
+
+The author has put up a solution on AoPS.
+See \href{https://artofproblemsolving.com/community/c6h2625925p29340833}{this thread}, post \#40 by \textbf{BlazingMuddy}.
+We implement this solution to classify good homomorphisms when $M$ is torsion-free.
+We put a little generalization and prove some results without assuming that $M$ is cancellative.
+
+Note that the official solution (and most short solutions) rely on the fact that $\N_0$ is ordered and has a minimal element.
+These won't work here, and it won't even work if $M = \Z$.
+
+
+
+\subsection*{Main results}
+
+First, we say that a monoid homomorphism $f : \N^+ \to M$ is:
+\begin{itemize}
+    \item   $p$-\textit{locally good}, given a prime $p$, if $p^k$ is $f$-nice for every $k \geq 0$;
+    \item   \textit{locally good} if $f$ is $p$-locally good for some prime $p$;
+    \item   \textit{globally good} if there are infinitely $f$-nice primes.
+\end{itemize}
+
+We list the main results to be proved here.
+
+\begin{theorem}\label{2020n5-main1}
+A good homomorphism is either locally good or globally good.
+\end{theorem}
+
+\begin{theorem}\label{2020n5-main2}
+A monoid homomorphism $f : \N^+ \to M$ is $p$-locally good if and only if the following holds:
+    there exists a monoid homomorphism $\chi : \F_p^{\times} \to M$ with $\chi(-1) = 1$ and $c \in M$ such that for any $k \geq 0$ and $m \in \N$ coprime with $p$,
+\[ f(p^k m) = c^k \chi(\overline{m}). \]
+\end{theorem}
+
+\begin{theorem}\label{2020n5-main3}
+If $M$ is torsion-free, then:
+\begin{itemize}
+    \item   the only $p$-locally good homomorphisms are those of the form $n \mapsto c^{\nu_p(n)}$ for some $c \in M$;
+    \item   the only globally good homomorphism is the all-one map.
+\end{itemize}
+Thus the only good homomorphisms are those of the form $n \mapsto c^{\nu_p(n)}$ for some $c \in M$ and prime $p$.
+\end{theorem}
+
+\begin{theorem}\label{2020n5-main4}
+The all-one map is the only homomorphism that is globally good and locally good.
+It is also the only homomorphism that is $p$-locally good for two distinct primes $p$.
+\end{theorem}
+
+
+
+\subsection*{Solution}
+
+For this solution, we denote by $n \% p$ the remainder when $n$ is divided by $p$.
+
+Let $f$ be a good monoid homomorphism.
+Let $S_f$ be the set of $f$-nice positive integers.
+It is easy to show that if $n \in S_f$ and $d$ is a positive divisor of $n$, then $d \in S_f$.
+From this, one can show that $S_f$ either contains infinitely many primes or contains all powers of a fixed prime.
+Indeed, if not, let $p_1, \ldots, p_m$ be all the primes in $S_f$ and for each $i$, let $e_i$ be the largest integer such that $p_i^{e_i} \in S_f$.
+Then every element of $S_f$ divides $p_1^{e_1} p_2^{e_2} \ldots p_m^{e_m}$; contradiction.
+This is the \textit{only} step that requires $M$ to be cancellative, although the cancellative property shortens other steps.
+The above discussion implies Theorem~\ref{2020n5-main1}.
+
+We now prove several important results regarding the information on $f$ based on $f$-nice primes.
+
+\begin{lemma}\label{2020n5-1}
+Let $p$ be an $f$-nice prime.
+Then for any $1 < n < p$, $f(n) \in M$ is invertible.
+\end{lemma}
+\begin{proof}
+We proceed by strong induction on $n$.
+The base case $n = 1$ is obvious since $f(1) = 1$.
+If $n > 1$, write $p = nq + r$ with $0 < r < p$.
+Then $f(n) f(q) = f(r)$ since $p$ is $f$-nice.
+By induction hypothesis, $f(r)$ is invertible; then so is $f(n)$.
+\end{proof}
+
+\begin{lemma}\label{2020n5-2}
+Let $p$ be an $f$-nice prime.
+Then for any $m, n < p$, we have $f(mn \% p) = f(m) f(n)$.
+\end{lemma}
+\begin{proof}
+Double strong induction; first on $m$, and then on $n$.
+To properly do the induction, we should describe the setup.
+Consider positive integers $m_0, n_0 < p$ such that:
+\begin{enumerate}
+    \item   for any $m < m_0$ and $n < p$, we have $f(mn \% p) = f(m) f(n)$;
+    \item   for any $n < n_0$, we have $f(m_0 n \% p) = f(m_0) f(n)$.
+\end{enumerate}
+The goal is to show that $f(m_0 n_0 \% p) = f(m_0) f(n_0)$.
+This equality is obvious if $m_0 n_0 < p$, and in particular, if $m_0 = 1$.
+Thus, from now on, we assume that $m_0 n_0 \geq p$.
+
+Write $p = qm_0 + r$ where $q$ and $r$ are positive integers with $r < m_0$.
+Note that $q < n_0$, since $m_0 n_0 \geq p$.
+By induction hypothesis 2 and the fact that $p$ is $f$-nice, we have
+\[ f(r n_0 \% p) = f(r) f(n_0) = f(qm_0) f(n_0) = f(q) f(m_0) f(n_0). \]
+On the other hand, by induction hypothesis 1, since $q < n_0$, we have
+\[ f(qm_0 n_0 \% p) = f(q) f(m_0 n_0 \% p). \]
+Now $r n_0$ and $qm_0 n_0$ are two positive integers that are not divisible by $p$ whose sum, $p n_0$, is divisible by $p$.
+Therefore, $r n_0 \% p$ and $qm_0 n_0 \% p$ are positive integers whose sum is $p$.
+Since $p$ is $f$-nice, we get $f(r n_0 \% p) = f(qm_0 n_0 \% p)$, and so
+\[ f(q) f(m_0) f(n_0) = f(q) f(m_0 n_0 \% p). \]
+
+If $M$ is cancellative, we are done now by cancelling $f(q)$ from both sides.
+Otherwise, by Lemma~\ref{2020n5-1}, $f(q)$ is invertible.
+Therefore cancelling $f(q)$ from both sides is still possible.
+\end{proof}
+
+\begin{corollary}\label{2020n5-3}
+Let $p$ be an $f$-nice prime.
+Define the function $\chi : \F_p^{\times} \to M$ by $\chi(\overline{n}) = f(n)$ for all $n < p$.
+Then $\chi$ is a monoid homomorphism and $\chi(-1) = 1$.
+\end{corollary}
+
+\begin{corollary}\label{2020n5-4}
+If $M$ is torsion-free and $p$ is an $f$-nice prime, then $f(n) = 1$ for all $n < p$.
+\end{corollary}
+
+In particular, Corollary~\ref{2020n5-4} immediately implies the second statement of Theorem~\ref{2020n5-main3}.
+We now classify $p$-locally good homomorphisms, proving Theorem~\ref{2020n5-main2} and the first statement of Theorem~\ref{2020n5-main3}.
+The key result is the following lemma, which immediately implies both statements.
+
+\begin{lemma}\label{2020n5-5}
+Suppose that $f$ is $p$-locally good.
+Then $f(n) = f(n \% p)$ for any $n > 0$ coprime with $p$.
+\end{lemma}
+\begin{proof}
+We proceed by strong induction on $n$.
+Let $n_0$ be a positive integer.
+Suppose that $f(n) = f(n \% p)$ for any positive integer $n < n_0$ coprime with $p$.
+Let $a$ be the largest non-negative integer such that $p^a \leq n_0$.
+If $a = 0$, then $n_0 < p$ and we are done.
+So now, suppose that $a > 0$.
+
+Write $p^{a + 1} = qn_0 + r$, where $q$ and $r$ are positive integers with $r < n_0$.
+Since $n_0 \geq p^a$, we have $q < p$.
+Since $p^a$ is $f$-nice, we have $f(qn_0) = f(r)$, which is equal to $f(r \% p)$ by induction hypothesis.
+Since $qn_0$ and $r$ are not divisible by $p$ but their sum is, we have $qn_0 \% p + r \% p = p$.
+Since $p$ is $f$-nice, we get $f(r \% p) = f(qn_0 \% p)$.
+Thus we get $f(qn_0) = f(qn_0 \% p)$.
+By Lemma~\ref{2020n5-2}, this equality can be rewritten as $f(q) f(n_0) = f(q) f(n_0 \% p)$.
+Finally, we just cancel out $f(q)$ from both sides using Lemma~\ref{2020n5-1}.
+\end{proof}
+
+It remains to prove Theorem~\ref{2020n5-main4}, using the classification of $p$-locally good homomorphisms.
+The theorem follows by the following lemma.
+
+\begin{lemma}\label{2020n5-6}
+Let $f$ be a $p$-locally good homomorphism.
+Suppose that there exists an $f$-nice integer $k > p^2$ coprime with $p$.
+Then $f = 1$.
+\end{lemma}
+\begin{proof}
+It suffices to show that $f(n) = 1$ for all $n \leq p$.
+Since $k$ is $f$-nice, we have $f(p) f(n) = f(pn) = f(k - pn)$.
+Since $f$ is $p$-locally good, by Lemma~\ref{2020n5-5}, we have $f(k - pn) = f((k - pn) \% p) = f(k \% p) = f(k)$.
+In particular, we have $f(p) f(n) = f(k) = f(p) f(1)$, and so $f(n) = f(1) = 1$, for all $n \leq p$.
+\end{proof}
+
+
+
+
+\subsection*{Globally good homomorphisms over non-torsion-free monoids}
+
+As it turns out, the above corollary is true if \textbf{and only if} $M$ is torsion-free.
+The proof requires Chebotarev density theorem and Kummer theory, so we won't look into that.
+However, Dirichlet's theorem on arithmetic progression plus quadratic reciprocity suffices if $M$ has a $2$-torsion element.
+We implement this in the case $M = C_2$ at some point later.

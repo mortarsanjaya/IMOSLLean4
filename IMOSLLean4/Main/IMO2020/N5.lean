@@ -31,11 +31,7 @@ See [here](https://www.imo-official.org/problems/IMO2020SL.pdf).
 It is possible to generalize $ℕ$ to any (additive) abelian monoid $M$.
 The answer functions are (again) of the form $n ↦ ν_p(n) c$ if $M$ is torsion-free.
 However, this is not the case if $M$ is not torsion-free.
-See `Generalizations/IMO2020N5.lean` for more details.
-
-### TODO
-
-Implement the generalization.
+See `Generalization/IMO2020N5/IMO2020N5.lean` for more details.
 -/
 
 namespace IMOSL
@@ -198,7 +194,7 @@ theorem base_prime_pow_is_nice (k) : nice f (hf.base_prime_PNat ^ k) := by
   obtain ⟨n, hn, hn0⟩ : ∃ n ≥ hf.base_prime_PNat ^ k, nice f n := hf.infinite_nice _
   exact hf.nice_of_dvd_nice hn0 (hf.base_prime_pow_dvd_of_le_of_nice hn hn0)
 
-/-- If `gcd(n, p) = 1`, then `f(n) = 0`. -/
+/-- If `p ∤ n`, then `f(n) = 0`. -/
 theorem map_eq_zero_of_coprime_base_prime (hn : ¬hf.base_prime_PNat ∣ n) : f n = 0 := by
   ---- Assume `n > 1`; we are done otherwise.
   obtain rfl | hn0 : n = 1 ∨ 1 < n := n.one_le.eq_or_lt'
