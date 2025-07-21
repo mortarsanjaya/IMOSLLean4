@@ -17,3 +17,4 @@ import IMOSLLean4.Main.IMO2020
 import IMOSLLean4.Main.IMO2021
 import IMOSLLean4.Main.IMO2022
 import IMOSLLean4.Main.IMO2023
+import IMOSLLean4.Main.IMO2024
