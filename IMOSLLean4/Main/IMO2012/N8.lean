@@ -29,9 +29,13 @@ Using the double-counting technique from Solution 1, we get that the number of e
   of $F$ of the form $a^2 + b^n$ is at least $\dfrac{q^3}{(q - 1)(q + n) + 1}$.
 We simplify the bound to $q - (n - 1)$.
 Thus, we proved that number of elements **not** of the form $a^2 + b^n$ is at most $n - 1$.
-To give a lower bound on the number of such elements, we consider the action of $Fˣ$
-  only on the **units** $u$ not of the form $a^2 + b^n$, given by $g • u = g^{2n} u$.
-By ...
+To give a lower bound on the number of such elements, we notice that the **units**
+  $u$ that are not of the form $a^2 + b^n$ form a set that is invariant under
+  left multiplication by $g^{2n}$, where $g ∈ Fˣ$ is a primitive element.
+Thus the number of such $u$ is divisible by $\dfrac{q - 1}{\gcd(q - 1, 2n)}$,
+So it is either $0$ or at least $\dfrac{q - 1}{\gcd(q - 1, 2n)} ≥ \dfrac{q - 1}{2n}$;
+  the latter of which is impossible of $q > 2n(n - 1)$ since the number of such $u$
+  is bounded above by $n - 1$.
 
 Note that the case where $F$ has characteristic $2$ is trivial, as squaring is surjective.
 We deal with this characteristic $2$ case separately in the beginning.
@@ -41,14 +45,16 @@ We deal with this characteristic $2$ case separately in the beginning.
 Actually, we can show more when $n = 5$: any $q ≠ 11$ works.
 The map $a ↦ a^n$ is bijective on $F$ if $\gcd(q - 1, n) = 1$.
 Thus, we are also done if $q$ is even or if $5 ∤ q - 1$.
-The remaining case is $q ≡ 1 (mod 10)$, for which $q ≤ 40$ implies $q ∈ \{11, 31\}$.
+The remaining case is $q ≡ 1 \pmod{10}$, for which $q ≤ 40$ implies $q ∈ \{11, 31\}$.
 By computer search, $q = 31$ succeeds, while $q = 11$ fails with $r = 7$.
 
 See `Generalization/IMO2012N8/IMO2012N8.lean` for the implementation.
 
 ### TODO
 
-Implement the generalization.
+Implement a theorem that computes `#{(a, b) ∈ F^2 | a^2 - b^2 = r}` when `char(F) = 2`.
+That is, a version of `FiniteField_card_sq_sub_sq_fiber_of_two_ne_zero` with `char(F) = 2`.
+After that, remove `char(F) ≠ 2` assumption from `card_sq_add_fn_fiber_lower_bound`.
 -/
 
 namespace IMOSL
@@ -63,8 +69,8 @@ local notation "q" => Fintype.card F
 
 omit [DecidableEq F] in
 /-- If `char(F) = 2`, then every element is of the form `a^2 + f(b)`, whatever `f` is. -/
-theorem exists_eq_sq_add_map_of_char_eq_two (hF : ringChar F = 2)
-    [hβ : Nonempty β] (f : β → F) (r : F) :
+theorem exists_eq_sq_add_map_of_char_eq_two
+    (hF : ringChar F = 2) [hβ : Nonempty β] (f : β → F) (r : F) :
     ∃ a b, a ^ 2 + f b = r := by
   refine Nonempty.elim hβ λ b : β ↦ ?_
   obtain ⟨a, ha⟩ : IsSquare (r - f b) := FiniteField.isSquare_of_char_two hF _
@@ -210,9 +216,10 @@ theorem card_mul_eq_unit [CommRing R] [Fintype R] [DecidableEq R] (r : Rˣ) :
 /-- Number of pairs `(a, b) ∈ F^2` such that `ab = r`. -/
 theorem FiniteField_card_mul_fiber (r : F) :
     #{p : F × F | p.1 * p.2 = r} = if r = 0 then 2 * q - 1 else q - 1 := by
-  ---- If `r = 0`, then the count holds since `F` is a domain. If `r ≠ 0`, `r` is a unit.
   split_ifs with h
+  ---- If `r = 0`, then the number is `2q - 1` since `F` is a domain.
   · exact h ▸ card_mul_eq_zero
+  ---- If `r ≠ 0`, then the number is `q - 1` since `r` is a unit.
   · lift r to Fˣ using isUnit_iff_ne_zero.mpr h
     rw [card_mul_eq_unit, Fintype.card_units]
 
@@ -274,7 +281,7 @@ theorem card_sq_add_fn_fiber_lower_bound (hF : ringChar F ≠ 2) (f : F → F) :
       ((q - 1) * q + #{p : F × F | f p.1 = f p.2}) := by
   ---- First de-cancel a factor of `q` from both sides.
   refine Nat.le_of_mul_le_mul_right (c := q) ?_ Fintype.card_pos
-  ---- Reduce to evaluating `∑ r, #{(a, b) | a^2 - b^2 = r} #{(a, b) | f(a) - f(b) = r}`.
+  ---- Now estimate.
   calc q ^ 4
     _ = (q * q) ^ 2 := by rw [← Nat.pow_two, ← Nat.pow_mul]
     _ ≤ #{r | ∃ a b, a ^ 2 + f b = r} *
@@ -282,7 +289,7 @@ theorem card_sq_add_fn_fiber_lower_bound (hF : ringChar F ≠ 2) (f : F → F) :
       Fintype_quad_fiber_product_CauchySchwarz _ f
     _ = _ * (((q - 1) * q + #{p : F × F | f p.1 = f p.2}) * q) := congrArg (_ * ·) ?_
     _ = _ := (Nat.mul_assoc _ _ _).symm
-  ---- Now evaluate `∑ r, #{(a, b) | a^2 - b^2 = r} #{(a, b) | f(a) - f(b) = r}`.
+  ---- Remaining step: calculate `∑ r, #{(a, b) | a^2 - b^2 = r} #{(a, b) | f(a) - f(b) = r}`.
   calc ∑ r, #{p : F × F | p.1 ^ 2 - p.2 ^ 2 = r} * #{p : F × F | f p.1 - f p.2 = r}
     _ = ∑ r, ((q - 1) * #{p : F × F | f p.1 - f p.2 = r} +
           if 0 = r then q * #{p : F × F | f p.1 - f p.2 = r} else 0) := by
@@ -376,8 +383,6 @@ end
 
 /-! ### Lower bound on the number of elements of `Fˣ` not of the form `a^2 + b^n` -/
 
-section
-
 /-- Two distinct orbits of `⟨x₀⟩` above any subset is pairwise disjoint. -/
 theorem orbit_zpowers_PairwiseDisjoint
     [Group G] [DecidableEq G] (H : Subgroup G) [Fintype H] [DecidableEq H] :
@@ -398,8 +403,11 @@ theorem orbit_zpowers_PairwiseDisjoint
     rw [mul_assoc, ← mul_assoc _ _ x, inv_mul_cancel, one_mul]
   · rintro ⟨a, rfl⟩; exact ⟨a * v, mul_assoc _ _ _⟩
 
+
+section
+
 variable [Group G] [Fintype G] [DecidableEq G] {x₀ : G}
-variable {S : Finset G} (hS : ∀ n : ℤ, ∀ s ∈ S, x₀ ^ n * s ∈ S)
+  {S : Finset G} (hS : ∀ n : ℤ, ∀ s ∈ S, x₀ ^ n * s ∈ S)
 include hS
 
 /-- If `S` is invariant under left multiplication by `x₀`, then the
