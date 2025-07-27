@@ -13,11 +13,11 @@
 \foreach \Year in {\StartYear, ..., \EndYear} {
     \foreach \Subject in {A, C, N} {
     \foreach \Number in {1, ..., \MaxSLNumber} {
-    \IfFileExists{../IMOSLLean4/Generalization/IMO\Year\Subject\Number/IMO\Year\Subject\Number} {
-        \section{IMO Shortlist \Year \Subject\Number}
-        \input{../IMOSLLean4/Generalization/IMO\Year\Subject\Number/IMO\Year\Subject\Number}
-        \newpage
-    } } }
+        \IfFileExists{../IMOSLLean4/Generalization/IMO\Year\Subject\Number/IMO\Year\Subject\Number} {
+            \section{\Subject\Number}
+            \input{../IMOSLLean4/Generalization/IMO\Year\Subject\Number/IMO\Year\Subject\Number}
+        } {}
+    } }
 }
 
 \end{document}

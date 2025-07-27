@@ -15,14 +15,15 @@ A ring with floor is a totally ordered ring $R$ with a floor function $⌊⬝⌋
 (See `FloorRing` for the formal definition.)
 
 Let $R$ be an archimedean ring with floor.
-Define the function $f : R → R$ by $f(x) = ⌊x⌋ (x - ⌊x⌋)$.
+Define the function $f : R → R$ by
+$$ f(x) = ⌊x⌋ (x - ⌊x⌋). $$
 Prove that for any $r ∈ R$, there exists $N ∈ ℕ$ such that for all $k ≥ N$,
 $$ f^{k + 2}(r) = f^k(r). $$
 
 ### Solution
 
-We follow the official solution with some twists.
-See [here](https://www.imo-official.org/problems/IMO2006SL.pdf).
+We follow the [official solution](https://www.imo-official.org/problems/IMO2006SL.pdf)
+  with some twists.
 We prove more: the sequence $(f^k(r))_{k ≥ 0}$ either stabilizes to a constant
   sequence or $-s, s - 1, -s, s - 1, …$ for some $s ∈ R$ with $0 < s < 1$.
 

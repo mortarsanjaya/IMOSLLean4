@@ -1,0 +1,62 @@
+Let $F$ be a finite field of cardinality $q \neq 11$.
+Prove that for any $r \in F$, there exists $a, b \in F$ such that $a^2 + b^5 = r$.
+
+\textbf{Note.}
+The original formulation corresponds to $F = \F_p$, where $p$ is a prime number with $p > 100$.
+
+
+
+\subsection*{Solution}
+
+We extend Solution 1 of the \href{https://www.imo-official.org/problems/IMO2012SL.pdf}{official solution}.
+The official solution actually works for any finite field of cardinality $q$ if $q$ is odd and $q > 40$.
+However, the case where $q$ is even is trivial, as then every element of $F$ is a square.
+In our formalization in \texttt{IMOSLLean4/Main/IMO2012/N8.lean}, we removed the parity condition on $q$.
+We first describe an adapted version of the official solution to solve the case where $q > 40$ is odd.
+
+
+
+\subsubsection*{Solution for the original problem}
+
+Throughout this solution, we let $S \subseteq F$ denote the set of elements $r \in F$ that do \textbf{not} take the form $a^2 + b^5$ for some $a, b \in F$.
+Note that $S \subseteq F^{\times}$, since $0 = 0^2 + 0^5$.
+
+The main input is double-counting quadruples $(a, b, c, d) \in F^4$ such that $a^2 + b^5 = c^2 + d^5$.
+From this idea, we get
+\[ \sum_{r \in F} \#\{(a, c) \in F^2 : a^2 - c^2 = r\} \cdot \#\{(b, d) \in F^2 : d^5 - b^5 = r\} = \sum_{r \in F} \{(a, b) \in F^2 : a^2 + b^5 = r\}^2. \tag{1}\label{2012n8-eq1} \]
+Since $q$ is odd, $\rchar(F)$ is odd, so there is a bijection from $F \times F$ to itself given by $(a, b) \mapsto (a + b, a - b)$.\footnote{This is the only step that requires $\rchar(F) \neq 2$.}
+For each $r \in F$, this bijection sends $\{(a, c) \in F^2 : a^2 - c^2 = r\}$ to $\{(a, c) \in F^2 : ac = r\}$, which has size $2q - 1$ if $r = 0$ and $q - 1$ otherwise.
+As a result, we get
+\begin{align*}
+  & \sum_{r \in F} \#\{(a, c) \in F^2 : a^2 - c^2 = r\} \cdot \#\{(b, d) \in F^2 : d^5 - b^5 = r\} \\
+  =\;& (q - 1) \sum_{r \in F \setminus \{0\}} \#\{(b, d) \in F^2 : d^5 - b^5 = r\} + (2q - 1) \cdot \#\{(b, d) \in F^2 : d^5 - b^5 = 0\} \\
+  =\;& (q - 1) q^2 + q \cdot \#\{(b, d) \in F^2 : d^5 = b^5\} \\
+  =\;& (q - 1) q^2 + q \sum_{r \in F} \#\{b \in F : b^5 = r\}^2 \\
+  \leq\;& (q - 1) q^2 + 5q^2 \\
+  =\;& (q + 4) q^2,
+\end{align*}
+  since $\#\{b \in F : b^5 = r\} \leq 5$ for every $r \in F$.
+As a result,~\eqref{2012n8-eq1} becomes
+\[ \sum_{r \in F} \{(a, b) \in F^2 : a^2 + b^5 = r\}^2 \leq (q + 4) q^2. \tag{2}\label{2012n8-eq2} \]
+On the other hand, by Cauchy-Schwarz inequality, we get
+\[ \sum_{r \in F} \{(a, b) \in F^2 : a^2 + b^5 = r\}^2 \geq \frac{(\#F^2)^2}{\#\{r \in F : \exists a, b \in F, a^2 + b^5 = r\}} = \frac{q^4}{q - \#S}. \]
+Combining this inequality with~\eqref{2012n8-eq2} gives
+\[ \frac{q^4}{q - \#S} \leq (q + 4) q^2 \implies \#S < 4. \]
+
+Finally, notice that if $r \in F$ takes the form $a^2 + b^5$ for some $a, b \in F$, then so is $rg^{10}$, where $g \in F^{\times}$ is arbitrary, and vice versa.
+Thus, the subgroup $H = \{g^{10} : g \in F^{\times}\} \subseteq F^{\times}$ has a natural action on $S$ by left multiplication.
+To put it simply, the set $S$ can be written as the disjoint union of sets of the form $\{ag^{10} : g \in F^{\times}\}$ for some $a \in F^{\times}$.
+Since $0 \notin S$, all such sets have size equal to $\#H$, and so we have $\#H \mid \#S < 4$.
+But $\#H = \dfrac{q - 1}{\gcd(q - 1, 10)} \geq (q - 1)/10$.
+If $q > 40$, then $\#H \geq 4 > \#S$, forcing $\#S = 0$ since $\#S < 4$.
+By definition of $S$, this means every element of $F$ are of the form $a^2 + b^5$ for some $a, b \in F$.
+
+
+
+\subsubsection*{Extension to all cases}
+
+First note that the map $x \mapsto x^5$ is surjective on $F$ whenever $\gcd(q - 1, 5) = 1 \iff 5 \nmid q - 1$.
+Also, the map $x \mapsto x^2$ is surjective on $F$ if $q$ is even.
+It follows that if $q \not\equiv 1 \pmod{10}$, then every element of $F$ is of the form $a^2 + b^5$ for some $a, b \in F$.
+As $21$ is not a prime power, the only remaining cases with $q \leq 40$ is $q \in \{11, 31\}$.
+The case $q = 11$ fails with $r = 7$, while the case $q = 31$ succeeds by computer search.
