@@ -16,26 +16,26 @@ $$ p ∣ a^2 + b^5 - r. $$
 
 ### Solution
 
-We follow Solution 1 of the official solution, with some simplification.
-See [here](https://www.imo-official.org/problems/IMO2012SL.pdf).
-However, we do things more generally, as follows.
+We follow Solution 1 of the
+  [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf).
+We make some simplifications and we also do things more generally, as follows.
 
 Let $F$ be a finite field with $q$ elements.
 Let $n$ be a positive integer, and suppose that $q$ is odd and $q > 2n(n - 1)$.
 We show that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^n = r$.
 The original statement is recovered by taking $F = 𝔽_p$ and $n = 5$.
 
-Using the double-counting technique from Solution 1, we get that the number of elements
-  of $F$ of the form $a^2 + b^n$ is at least $\dfrac{q^3}{(q - 1)(q + n) + 1}$.
-We simplify the bound to $q - (n - 1)$.
+Using the double-counting technique from the official solution, we get that the
+  number of elements of $F$ of the form $a^2 + b^n$ is
+$$ ≥ \dfrac{q^3}{(q - 1)(q + n) + 1} ≥ q - (n - 1). $$
 Thus, we proved that number of elements **not** of the form $a^2 + b^n$ is at most $n - 1$.
-To give a lower bound on the number of such elements, we notice that the **units**
-  $u$ that are not of the form $a^2 + b^n$ form a set that is invariant under
+To give a lower bound on the number of such elements, we notice that the units $u ∈ Fˣ$
+  that are not of the form $a^2 + b^n$ form a set that is invariant under
   left multiplication by $g^{2n}$, where $g ∈ Fˣ$ is a primitive element.
-Thus the number of such $u$ is divisible by $\dfrac{q - 1}{\gcd(q - 1, 2n)}$,
-So it is either $0$ or at least $\dfrac{q - 1}{\gcd(q - 1, 2n)} ≥ \dfrac{q - 1}{2n}$;
-  the latter of which is impossible of $q > 2n(n - 1)$ since the number of such $u$
-  is bounded above by $n - 1$.
+Thus the number of such units $u$ is divisible by
+$$ k = \dfrac{q - 1}{\gcd(q - 1, 2n)}. $$
+For $q > 2n(n - 1)$, we have $k > n - 1$.
+Thus all units must be of the form $a^2 + b^n$.
 
 Note that the case where $F$ has characteristic $2$ is easier, as squaring is surjective.
 We do not deal with the characteristic $2$ case here.
@@ -46,9 +46,10 @@ Actually, we can show more when $n = 5$: any $q ≠ 11$ works.
 The map $a ↦ a^n$ is bijective on $F$ if $\gcd(q - 1, n) = 1$.
 Thus, we are also done if $q$ is even or if $5 ∤ q - 1$.
 The remaining case is $q ≡ 1 \pmod{10}$, for which $q ≤ 40$ implies $q ∈ \{11, 31\}$.
-By computer search, $q = 31$ succeeds, while $q = 11$ fails with $r = 7$.
+By direct search, $q = 31$ succeeds, while $q = 11$ fails with
+  $r = 7 ≠ a^2 + b^5$ for any $a, b ∈ 𝔽_{11}$.
 
-See `Generalization/IMO2012N8/IMO2012N8.lean` for the implementation.
+See `IMOSLLean4/Generalization/IMO2012N8/IMO2012N8.lean` for the implementation.
 -/
 
 namespace IMOSL
@@ -62,7 +63,7 @@ local notation "q" => Fintype.card F
 /-! ### Results using double counting method and Cauchy-Schwarz inequality -/
 
 /-- Cardinality of pairs `(i, j)` with `f(i) = g(j)` in
-  a product of finite two sets as a sum over fibers. -/
+  a product of two finite sets as a sum over fibers. -/
 theorem Finset_card_fiber_product_eq_fiberwise
     (A : Finset α) (B : Finset β) [Fintype κ] [DecidableEq κ] (f : α → κ) (g : β → κ) :
     #{x ∈ A ×ˢ B | f x.1 = g x.2} = ∑ k, #{a ∈ A | f a = k} * #{b ∈ B | g b = k} :=
@@ -161,7 +162,7 @@ end
 
 
 
-/- ### Counting pairs `(a, b) ∈ F^2` such that `a^2 - b^2 = r` when `char(F) ≠ 2` -/
+/-! ### Counting pairs `(a, b) ∈ F^2` such that `a^2 - b^2 = r` when `char(F) ≠ 2` -/
 
 /-- Number of pairs `(a, b) ∈ R^2` such that `ab = 0`, where `R` is a domain. -/
 theorem card_mul_eq_zero [Ring R] [IsDomain R] [Fintype R] [DecidableEq R] :
@@ -342,7 +343,7 @@ theorem card_sq_add_Polynomial_fiber_lower_bound_simple
 
 
 
-/-! ### Upper bound on the number of elements of `Fˣ` not of the form `a^2 + b^n` -/
+/-! ### Upper bound on the number of units not of the form `a^2 + b^n` when `char(F) ≠ 2` -/
 
 /-- Simple bound on the number elements of `F` not of the form `a^2 + P(b)`, `P ∈ F[X]`. -/
 theorem card_sq_add_Polynomial_not_fiber_upper_bound
@@ -374,7 +375,7 @@ end
 
 
 
-/-! ### Lower bound on the number of elements of `Fˣ` not of the form `a^2 + b^n` -/
+/-! ### Lower bound on the number of units not of the form `a^2 + b^n` -/
 
 /-- Two distinct orbits of `⟨x₀⟩` above any subset is pairwise disjoint. -/
 theorem orbit_zpowers_PairwiseDisjoint
@@ -404,13 +405,13 @@ variable [Group G] [Fintype G] [DecidableEq G] {x₀ : G}
 include hS
 
 /-- If `S` is invariant under left multiplication by `x₀`, then the
-  binary image of `⟨x₀⟩ × S` under pointwise multiplication is exactly `S`. -/
+  image of `⟨x₀⟩ × S` under pointwise multiplication is exactly `S`. -/
 theorem image_mul_zpowers_eq_self_of_mul_invariant :
     image₂ (λ (x : Subgroup.zpowers x₀) (s : G) ↦ x * s) univ S = S := by
   ext x; simp only [mem_image₂, mem_univ, true_and, Subgroup.exists_zpowers]
   exact ⟨λ ⟨m, y, hy, h⟩ ↦ h ▸ hS m y hy, λ hx ↦ ⟨0, x, hx, by rw [zpow_zero, one_mul]⟩⟩
 
-/-- If `S` is invariant under left multiplication by `x₀`, then `ord(x_0) ∣ S`. -/
+/-- If `S` is invariant under left multiplication by `x₀`, then `ord(x₀) ∣ S`. -/
 theorem order_dvd_card_Finset_of_mul_invariant : orderOf x₀ ∣ #S :=
   calc orderOf x₀
   _ = Fintype.card (Subgroup.zpowers x₀) := Fintype.card_zpowers.symm

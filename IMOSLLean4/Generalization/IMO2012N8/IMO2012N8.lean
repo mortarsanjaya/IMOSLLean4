@@ -23,10 +23,9 @@ As we have solved the problem for $q$ odd with $q > 40$,
   we only need to check the case where $q$ is even or $q ≤ 40$.
 By looking at the unit group $Fˣ$, a finite field of cardinality $q ≢ 1 \pmod{10}$ is good.
 Thus the remaining cases are $q = 11$ and $q = 31$, for which we use direct search.
-* `ZMod 11` is not good, as $7$ cannot be represented as $a^2 + b^5$.
-* On the other hand, `ZMod 31` is good.
-  Every element of `ZMod 31`, other than $22 = 4^2 - 5^5$ and $27 = 1^2 + 6^5$,
-    can be represented by either $a^2$, $a^2 + 1$, or $a^2 + 5 = a^2 - 6^5$.
+* $𝔽_{11}$ is not good; $7 ∈ 𝔽_{11}$ cannot be represented as $a^2 + b^5$.
+* $F_{31}$ is good; every element of $F_{31}$, other than $22 = 4^2 - 5^5$ and
+    $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 + 5 = a^2 - 6^5$.
 -/
 
 namespace IMOSL
@@ -57,7 +56,7 @@ theorem good.of_RingEquiv [Semiring R] [Semiring S] (hR : good R) (φ : R ≃+* 
 variable {F} [Field F] [Fintype F] [DecidableEq F]
 local notation "q" => Fintype.card F
 
-/-- A finite field of cardinality `q > 40` is good. -/
+/-- A finite field of cardinality `q > 40` is `good`. -/
 theorem good_of_card_big_enough (hF : 40 < q) : good F := by
   obtain hF0 | hF0 : ringChar F ≠ 2 ∨ ringChar F = 2 := ne_or_eq _ _
   ---- We have done the `char(F) ≠ 2` case.
@@ -88,7 +87,7 @@ theorem exists_eq_pow_n_of_gcd_eq_one (hn : n ≠ 0) (h : n.Coprime (q - 1)) (x 
       rw [zpow_sub, h, Int.natCast_one, zpow_one, zpow_mul, zpow_natCast]
     _ = x := by rw [← Fintype.card_units, pow_card_eq_one, one_zpow, inv_one, mul_one]
 
-/-- A finite field of cardinality `q ≢ 1 (mod 2)` is good. -/
+/-- A finite field of cardinality `q ≢ 1 (mod 2)` is `good`. -/
 theorem good_of_card_mod_2_ne_one (hF : ¬2 ∣ q - 1) : good F := by
   intro r
   ---- Find `a ∈ F` such that `a^2 = r`.
@@ -99,7 +98,7 @@ theorem good_of_card_mod_2_ne_one (hF : ¬2 ∣ q - 1) : good F := by
   refine ⟨a, 0, ?_⟩
   rw [zero_pow (Nat.succ_ne_zero 4), add_zero]
 
-/-- A finite field of cardinality `q ≢ 1 (mod 5)` is good. -/
+/-- A finite field of cardinality `q ≢ 1 (mod 5)` is `good`. -/
 theorem good_of_card_mod_5_ne_one (hF : ¬5 ∣ q - 1) : good F := by
   intro r
   ---- Find `b ∈ F` such that `b^5 = r`.
@@ -110,23 +109,23 @@ theorem good_of_card_mod_5_ne_one (hF : ¬5 ∣ q - 1) : good F := by
   refine ⟨0, b, ?_⟩
   rw [zero_pow (Nat.succ_ne_zero 1), zero_add]
 
-/-- A finite field of cardinality `q ≢ 1 (mod 10)` is good. -/
+/-- A finite field of cardinality `q ≢ 1 (mod 10)` is `good`. -/
 theorem good_of_card_mod_10_ne_one (hF : ¬10 ∣ q - 1) : good F := by
   ---- `10 ∤ q - 1` implies `2 ∤ q - 1` or `5 ∤ q - 1`, for which we are done.
   obtain h | h : ¬2 ∣ q - 1 ∨ ¬5 ∣ q - 1 := by rwa [← not_and_or, ← Nat.lcm_dvd_iff]
   exacts [good_of_card_mod_2_ne_one h, good_of_card_mod_5_ne_one h]
 
-/-- `𝔽_{11}` is **not** good. -/
+/-- `ZMod 11` is not `good`. -/
 theorem ZMod11_is_not_good : ¬good (ZMod 11) :=
   not_forall_of_exists_not ⟨7, by decide⟩
 
 omit [DecidableEq F] in
-/-- A field of cardinality `11` is not good. -/
+/-- A field of cardinality `11` is not `good`. -/
 theorem not_good_of_card_eq_11 (hF : q = 11) : ¬good F :=
   λ h ↦ ZMod11_is_not_good
     (h.of_RingEquiv (ZMod.ringEquivOfPrime F Nat.prime_eleven hF).symm)
 
-/-- `𝔽_{31}` is good. -/
+/-- `ZMod 31` is `good`. -/
 theorem ZMod31_is_good : good (ZMod 31) := by
   intro r
   /- All elements of `𝔽_{31}` are of the form
@@ -138,7 +137,7 @@ theorem ZMod31_is_good : good (ZMod 31) := by
   exacts [⟨a, 0, add_zero _⟩, ⟨a, 1, rfl⟩, ⟨a, -6, rfl⟩, ⟨4, -5, rfl⟩, ⟨1, 6, rfl⟩]
 
 omit [DecidableEq F] in
-/-- A field of cardinality `31` is good. -/
+/-- A field of cardinality `31` is `good`. -/
 theorem good_of_card_eq_31 (hF : q = 31) : good F :=
   ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F (by decide) hF)
 
