@@ -23,15 +23,15 @@ $n ↦ cν_p(n)$, where $c$ is a fixed positive integer and $p$ is a prime numbe
 
 ### Solution
 
-We follow Solution 1 of the official solution.
-See [here](https://www.imo-official.org/problems/IMO2020SL.pdf).
+We follow Solution 1 of the
+  [official solution](https://www.imo-official.org/problems/IMO2020SL.pdf).
 
 ### Generalization
 
 It is possible to generalize $ℕ$ to any (additive) abelian monoid $M$.
 The answer functions are (again) of the form $n ↦ ν_p(n) c$ if $M$ is torsion-free.
 However, this is not the case if $M$ is not torsion-free.
-See `Generalizations/IMO2020N5.lean` for more details.
+See `IMOSLLean4/Generalization/IMO2020N5/IMO2020N5.lean` for more details.
 
 ### TODO
 

@@ -19,8 +19,7 @@ Prove that $a_{n + 1} ≥ 0$ for all $n ≥ 0$.
 
 ### Solution
 
-We follow the official solution.
-See [here](https://www.imo-official.org/problems/IMO2006SL.pdf).
+We follow the [official solution](https://www.imo-official.org/problems/IMO2006SL.pdf).
 -/
 
 namespace IMOSL

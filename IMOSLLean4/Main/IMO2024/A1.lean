@@ -16,8 +16,8 @@ A ring with floor is a totally ordered ring $R$ with a floor function $⌊⬝⌋
 (See `FloorRing` for the formal definition.)
 
 Let $R$ be an archimedean ring with floor.
-Determine all $α ∈ R$ such that for any non-negative integer $n$,
-$$ n ∣ \sum_{k = 0}^n \lfloor kα \rfloor. $$
+Determine all $α ∈ R$ such that for any non-negative integer $n$, $n$ divides
+$$ \sum_{k = 0}^n \lfloor kα \rfloor. $$
 
 ### Answer
 
@@ -25,13 +25,14 @@ Even integers.
 
 ### Solution
 
-We follow Solution 1 of the official solution, with a small twist.
-See [here](https://www.imo-official.org/problems/IMO2024SL.pdf).
+We follow Solution 1 of the
+  [official solution](https://www.imo-official.org/problems/IMO2024SL.pdf),
+  with a small twist.
 Before proceeding into cases as in Solution 1, we assume WLOG that $-1 ≤ α < 1$.
 In particular, when $⌊α⌋ = -1$, we show that $⌊nα⌋ = -1$ for all $n > 0$.
 Note that the original condition assumes $n > 0$, but the case $n = 0$ is obvious.
 
-Throughout this file, we say that $α ∈ R$ satisfying the requirement is *good*.
+Throughout this file, we say that $α ∈ R$ satisfying the requirement is `good`.
 -/
 
 namespace IMOSL
@@ -41,7 +42,7 @@ open Finset
 
 variable [Ring R] [LinearOrder R] [FloorRing R] [IsStrictOrderedRing R]
 
-/-- We say that `α ∈ R` is *good* if `n ∣ ∑_{k = 0}^n ⌊kα⌋` for all `n ∈ ℕ`. -/
+/-- We say that `α ∈ R` is *good* if `n ∣ ∑ k ≤ n, ⌊kα⌋` for all `n ∈ ℕ`. -/
 def good (α : R) := ∀ n : ℕ, (n : ℤ) ∣ ∑ k ∈ range (n + 1), ⌊k • α⌋
 
 

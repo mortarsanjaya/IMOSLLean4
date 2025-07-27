@@ -18,8 +18,8 @@ $(1, 1)$.
 
 ### Solution
 
-We follow the AoPS solution ♯9 in the following thread by **Tintarn**.
-See [here](https://artofproblemsolving.com/community/c6h3358926p31206647).
+We follow the AoPS solution ♯9 by **Tintarn** in
+  [this thread](https://artofproblemsolving.com/community/c6h3358926p31206647).
 We make it even simpler by only substituting twice.
 That is, pick some $n₀ ≥ N$ such that $a^{n₀ + 1} ≡ b^{n₀ + 1} ≡ 1 \pmod{ab + 1}$,
   then plug $n = n₀$ and $n = n₀ + 1$ (typically one chooses $n₀ ≡ -1 \pmod{φ(ab + 1)}$).

@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.ModEq
 Find all sequences $(a_n)_{n ≥ 0}$ of positive integers such that for any integers
   $m, k ≥ 0$, there exist positive integers $A$ and $G$ such that
 \begin{align*}
-  a_m + a_{m + 1} + … + a_{m + k - 1} &= kA, \\
+  a_m + a_{m + 1} + … + a_{m + k - 1} &= kA, \\\\
   a_m a_{m + 1} … a_{m + k - 1} &= G^k.
 \end{align*}
 
@@ -24,8 +24,8 @@ Constant sequences.
 
 ### Solution
 
-We follow Solution 1 of the official solution.
-See [here](https://www.imo-official.org/problems/IMO2024SL.pdf).
+We follow Solution 1 of the
+  [official solution](https://www.imo-official.org/problems/IMO2024SL.pdf).
 Note that the existence of $A$ and $G$ are vacuous if $k = 0$.
 We assume that an empty sum and product evaluates to $0$ and $1$, respectively.
 -/

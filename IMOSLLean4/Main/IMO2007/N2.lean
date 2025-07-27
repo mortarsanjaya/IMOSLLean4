@@ -20,7 +20,7 @@ Prove that $b = A^n$ for some non-negative integer $A$.
 We use the following very short solution.
 Take $k = b^2$, and write $b - a^n = b^2 d$ for some integers $a$ and $d$.
 Then rearranging gives $a^n = b(1 - bd)$.
-But $\gcd(b, 1 - bd) = 1$, so $b$ must be an $n$th power since $b > 0$.
+Since $b > 0$ and $\gcd(b, 1 - bd) = 1$, so $b$ must be an $n$th power.
 -/
 
 namespace IMOSL
@@ -45,7 +45,7 @@ theorem final_solution_explicit {b n : ℕ} (h : ∃ a, (b : ℤ) ^ 2 ∣ b - a 
   rw [Int.associated_iff_natAbs, Int.natAbs_pow, Int.natAbs_cast] at hc
   exact ⟨c.natAbs, hc.symm⟩
 
-/-- Final solution. -/
+/-- Final solution -/
 theorem final_solution {b n : ℕ} (hb : 0 < b) (h : ∀ k > 0, ∃ c : ℤ, k ∣ b - c ^ n) :
     ∃ A, b = A ^ n :=
   final_solution_explicit (h (b ^ 2) (sq_pos_of_pos (Int.natCast_pos.mpr hb)))

@@ -18,8 +18,8 @@ $f(n) = n$.
 
 ### Solution
 
-We follow both Solution 1 and Solution 2 of the official solution.
-See [here](https://www.imo-official.org/problems/IMO2013SL.pdf).
+We follow both Solution 1 and Solution 2 of the
+  [official solution](https://www.imo-official.org/problems/IMO2013SL.pdf).
 For the → direction, we use Solution 2 for $f(n) ≤ n$ and we use Solution 1 for $f(n) ≥ n$.
 -/
 
