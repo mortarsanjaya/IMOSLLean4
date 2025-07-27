@@ -21,9 +21,9 @@ See [here](https://www.imo-official.org/problems/IMO2012SL.pdf).
 However, we do things more generally, as follows.
 
 Let $F$ be a finite field with $q$ elements.
-Let $n$ be a positive integer, and suppose that $q > 2n(n - 1)$.
-Then we show that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^n = r$.
-The original statement is recovered by taking $F = 𝔽_p$.
+Let $n$ be a positive integer, and suppose that $q$ is odd and $q > 2n(n - 1)$.
+We show that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^n = r$.
+The original statement is recovered by taking $F = 𝔽_p$ and $n = 5$.
 
 Using the double-counting technique from Solution 1, we get that the number of elements
   of $F$ of the form $a^2 + b^n$ is at least $\dfrac{q^3}{(q - 1)(q + n) + 1}$.
@@ -37,8 +37,8 @@ So it is either $0$ or at least $\dfrac{q - 1}{\gcd(q - 1, 2n)} ≥ \dfrac{q - 1
   the latter of which is impossible of $q > 2n(n - 1)$ since the number of such $u$
   is bounded above by $n - 1$.
 
-Note that the case where $F$ has characteristic $2$ is trivial, as squaring is surjective.
-We deal with this characteristic $2$ case separately in the beginning.
+Note that the case where $F$ has characteristic $2$ is easier, as squaring is surjective.
+We do not deal with the characteristic $2$ case here.
 
 ### Generalization
 
@@ -52,9 +52,9 @@ See `Generalization/IMO2012N8/IMO2012N8.lean` for the implementation.
 
 ### TODO
 
-Implement a theorem that computes `#{(a, b) ∈ F^2 | a^2 - b^2 = r}` when `char(F) = 2`.
-That is, a version of `FiniteField_card_sq_sub_sq_fiber_of_two_ne_zero` with `char(F) = 2`.
-After that, remove `char(F) ≠ 2` assumption from `card_sq_add_fn_fiber_lower_bound`.
+Some of these results over `Fintype`s can actually be generalized to `Finset`s.
+Please check one by one.
+Also, general clean-up might be necessary for better code.
 -/
 
 namespace IMOSL
@@ -65,62 +65,72 @@ open Finset
 variable {F} [Field F] [Fintype F] [DecidableEq F]
 local notation "q" => Fintype.card F
 
-/-! ### The characteristic 2 case -/
+/-! ### Results using double counting method and Cauchy-Schwarz inequality -/
 
-omit [DecidableEq F] in
-/-- If `char(F) = 2`, then every element is of the form `a^2 + f(b)`, whatever `f` is. -/
-theorem exists_eq_sq_add_map_of_char_eq_two
-    (hF : ringChar F = 2) [hβ : Nonempty β] (f : β → F) (r : F) :
-    ∃ a b, a ^ 2 + f b = r := by
-  refine Nonempty.elim hβ λ b : β ↦ ?_
-  obtain ⟨a, ha⟩ : IsSquare (r - f b) := FiniteField.isSquare_of_char_two hF _
-  refine ⟨a, b, ?_⟩
-  rw [sq, ← ha, sub_add_cancel]
-
-
-
-
-
-/-! ### Double counting methods -/
-
-/-- `Finset.card_eq_sum_card_fiberwise` with both sides being `Finset.univ`.
-  TODO: Remove this lemma once it gets into `mathlib`, because it should. -/
-theorem Fintype_card_eq_sum_card_fiberwise
-    [Fintype α] [Fintype β] [DecidableEq β] (f : α → β) :
-    Fintype.card α = ∑ b, #{a | f a = b} :=
-  card_eq_sum_card_fiberwise λ _ _ ↦ mem_univ _
+/-- Cardinality of pairs `(i, j)` with `f(i) = g(j)` in
+  a product of finite two sets as a sum over fibers. -/
+theorem Finset_card_fiber_product_eq_fiberwise
+    (A : Finset α) (B : Finset β) [Fintype κ] [DecidableEq κ] (f : α → κ) (g : β → κ) :
+    #{x ∈ A ×ˢ B | f x.1 = g x.2} = ∑ k, #{a ∈ A | f a = k} * #{b ∈ B | g b = k} :=
+  calc #{x ∈ A ×ˢ B | f x.1 = g x.2}
+  _ = ∑ x ∈ A ×ˢ B, if f x.1 = g x.2 then 1 else 0 := (sum_boole _ _).symm
+  _ = ∑ a ∈ A, ∑ b ∈ B, if f a = g b then 1 else 0 := sum_product _ _ _
+  _ = ∑ k, ∑ a ∈ A with f a = k, ∑ b ∈ B, if f a = g b then 1 else 0 :=
+    (sum_fiberwise _ _ _).symm
+  _ = ∑ k, #{a ∈ A | f a = k} * #{b ∈ B | g b = k} :=
+    ---- Term-wise matching
+    Fintype.sum_congr _ _ λ k ↦
+      calc ∑ a ∈ A with f a = k, ∑ b ∈ B, if f a = g b then 1 else 0
+      _ = ∑ a ∈ A with f a = k, ∑ b ∈ B, if g b = k then 1 else 0 :=
+        sum_congr rfl λ a ha ↦ sum_congr rfl λ _ _ ↦
+          if_congr (by rw [eq_comm, (mem_filter.mp ha).2]) rfl rfl
+      _ = #{a ∈ A | f a = k} * #{b ∈ B | g b = k} := by
+        rw [sum_const, smul_eq_mul, sum_boole, Nat.cast_id]
 
 /-- Cardinality of pairs `(i, j)` with `f(i) = g(j)` as a sum over fibers. -/
 theorem Fintype_card_fiber_product_eq_fiberwise
     [Fintype α] [Fintype β] [Fintype κ] [DecidableEq κ] (f : α → κ) (g : β → κ) :
     #{x : α × β | f x.1 = g x.2} = ∑ k, #{a | f a = k} * #{b | g b = k} :=
-  calc #{x : α × β | f x.1 = g x.2}
-  _ = ∑ x : α × β, if f x.1 = g x.2 then 1 else 0 := (sum_boole _ _).symm
-  _ = ∑ a, ∑ b, if f a = g b then 1 else 0 := Fintype.sum_prod_type _
-  _ = ∑ k, ∑ a : {a // f a = k}, ∑ b, if f a = g b then 1 else 0 :=
-    (Fintype.sum_fiberwise _ _).symm
-  _ = ∑ k, #{a : α | f a = k} * #{b : β | g b = k} :=
-    ---- Term-wise matching
-    Fintype.sum_congr _ _ λ k ↦
-      calc ∑ a : {a // f a = k}, ∑ b, if f a = g b then 1 else 0
-      _ = ∑ a : {a // f a = k}, ∑ b, if g b = k then 1 else 0 :=
-        Fintype.sum_congr _ _ λ i ↦ Fintype.sum_congr _ _ λ j ↦
-          if_congr (by rw [i.2, eq_comm]) rfl rfl
-      _ = #{a | f a = k} * #{b | g b = k} := by
-        rw [sum_const, card_univ, Fintype.card_subtype,
-          smul_eq_mul, sum_boole, Nat.cast_id]
+  Finset_card_fiber_product_eq_fiberwise univ univ f g
+
+
+section
+
+variable [Fintype ι] [Fintype κ] [DecidableEq κ] (f : ι → κ)
+
+/-- `Finset.card_eq_sum_card_fiberwise` with both sides being `Finset.univ`.
+  TODO: Remove this lemma once it gets into `mathlib`, because it should. -/
+theorem Fintype_card_eq_sum_card_fiberwise : Fintype.card ι = ∑ k, #{i | f i = k} :=
+  card_eq_sum_card_fiberwise λ _ _ ↦ mem_univ _
 
 /-- Cardinality of pairs `(i, j)` with `f(i) = f(j)` as a sum of squares. -/
-theorem Fintype_card_eqpair_eq_fiberwise
-    [Fintype ι] [Fintype κ] [DecidableEq κ] (f : ι → κ) :
+theorem Fintype_card_eqpair_eq_fiberwise :
     #{x : ι × ι | f x.1 = f x.2} = ∑ k, #{i | f i = k} ^ 2 := by
   conv => right; right; ext; rw [sq]
   exact Fintype_card_fiber_product_eq_fiberwise f f
 
+/-- Cauchy-Schwarz inequality for bounding image of a function. -/
+theorem Fintype_card_image_CauchySchwarz :
+    Fintype.card ι ^ 2 ≤ #{k | ∃ i, f i = k} * ∑ k, #{i | f i = k} ^ 2 :=
+  calc Fintype.card ι ^ 2
+  _ = (∑ k with #{i | f i = k} ≠ 0, #{i | f i = k}) ^ 2 := by
+    rw [sum_filter_ne_zero, ← Fintype_card_eq_sum_card_fiberwise]
+  _ ≤ #{k | #{i | f i = k} ≠ 0} * ∑ k with #{i | f i = k} ≠ 0, #{i | f i = k} ^ 2 :=
+    sq_sum_le_card_mul_sum_sq
+  _ = #{k | ∃ i, f i = k} * ∑ k, #{i | f i = k} ^ 2 :=
+    congrArg₂ _ (by simp only [mem_filter_univ, card_ne_zero, Finset.Nonempty])
+      (by rw [sum_filter_of_ne λ x _ ↦ by exact Nat.ne_zero_of_mul_ne_zero_right])
+
+end
+
+
+section
+
+variable [Fintype α] [Fintype β] [AddCommGroup G] [Fintype G] [DecidableEq G]
+
 /-- Double-counting `4`-tuples `(i, j, i', j')` such that `f(i) + g(j) = f(i') + g(j')`,
   where `f : α → G` and `g : β → G` are functions to a finite abelian group `G`. -/
-theorem Fintype_quad_fiber_product_double_count [Fintype α] [Fintype β]
-    [AddCommGroup G] [Fintype G] [DecidableEq G] (f : α → G) (g : β → G) :
+theorem Fintype_quad_fiber_product_double_count (f : α → G) (g : β → G) :
     ∑ x, #{p : α × α | f p.1 - f p.2 = x} * #{p : β × β | g p.1 - g p.2 = x}
       = ∑ x, #{p : α × β | f p.1 + g p.2 = x} ^ 2 :=
   calc ∑ x, #{p : α × α | f p.1 - f p.2 = x} * #{p : β × β | g p.1 - g p.2 = x}
@@ -138,30 +148,20 @@ theorem Fintype_quad_fiber_product_double_count [Fintype α] [Fintype β]
   _ = ∑ x, #{p : α × β | f p.1 + g p.2 = x} ^ 2 :=
     Fintype_card_eqpair_eq_fiberwise (λ p : α × β ↦ f p.1 + g p.2)
 
-/-- Cauchy-Schwarz inequality on the double-counting formula for `4`-tuples
-  `(i, j, i', j')` such that `f(i) + g(j) = f(i') + g(j')`. -/
-theorem Fintype_quad_fiber_product_CauchySchwarz [Fintype α] [Fintype β]
-    [AddCommGroup G] [Fintype G] [DecidableEq G] (f : α → G) (g : β → G) :
+/-- Cauchy-Schwarz inequality on the number of elements of the form `f(a) + g(b)`. -/
+theorem Fintype_quad_fiber_product_CauchySchwarz (f : α → G) (g : β → G) :
     (Fintype.card α * Fintype.card β) ^ 2 ≤
       #{x | ∃ a b, f a + g b = x} *
         ∑ x, #{p : α × α | f p.1 - f p.2 = x} * #{p : β × β | g p.1 - g p.2 = x} :=
   calc (Fintype.card α * Fintype.card β) ^ 2
-  _ = (∑ x with #{p : α × β | f p.1 + g p.2 = x} ≠ 0,
-        #{p : α × β | f p.1 + g p.2 = x}) ^ 2 := by
-    rw [sum_filter_ne_zero, ← Fintype.card_prod, ← Fintype_card_eq_sum_card_fiberwise]
-  _ ≤ #{x | #{p : α × β | f p.1 + g p.2 = x} ≠ 0} *
-        ∑ x with #{p : α × β | f p.1 + g p.2 = x} ≠ 0,
-          #{p : α × β | f p.1 + g p.2 = x} ^ 2 :=
-    sq_sum_le_card_mul_sum_sq
-  _ = #{x | ∃ a b, f a + g b = x} * ∑ x, _ := by
-    ---- Split into two parts.
-    refine congrArg₂ _ ?_ ?_
-    ---- `#{(a, b) : f(a) + g(b) = x} ≠ 0` iff `f(a) + g(b) = x` for some `a` and `b`.
-    · refine congrArg _ (ext λ x ↦ ?_)
-      simp only [mem_filter_univ, card_ne_zero, Finset.Nonempty, Prod.exists]
-    ---- Show a double counting identity.
-    · rw [sum_filter_of_ne λ x _ ↦ by exact Nat.ne_zero_of_mul_ne_zero_right,
-        Fintype_quad_fiber_product_double_count]
+  _ = Fintype.card (α × β) ^ 2 := by rw [Fintype.card_prod]
+  _ ≤ #{x | ∃ p : α × β, f p.1 + g p.2 = x} * ∑ x, #{p : α × β | f p.1 + g p.2 = x} ^ 2 :=
+    Fintype_card_image_CauchySchwarz _
+  _ = #{x | ∃ a b, f a + g b = x} * _ :=
+    congrArg₂ _ (by simp only [Prod.exists])
+      (Fintype_quad_fiber_product_double_count _ _).symm
+
+end
 
 
 
@@ -198,19 +198,20 @@ theorem card_group_antidiagonal [Group G] [Fintype G] [DecidableEq G] (g : G) :
 /-- Number of pairs `(a, b) ∈ R^2` such that `ab = r`, where `r ∈ Rˣ`. -/
 theorem card_mul_eq_unit [CommRing R] [Fintype R] [DecidableEq R] (r : Rˣ) :
     #{p : R × R | p.1 * p.2 = r} = Fintype.card Rˣ := by
-  ---- Consider the map `f : Rˣ → R × R` defined by `x ↦ (x, x⁻¹ r)`.
+  /- Consider the map `f : Rˣ → R × R` defined by `x ↦ (x, x⁻¹ r)`.
+    It suffices to show that `f` is a bijection to `{(a, b) : R × R | ab = r}`. -/
   refine (card_nbij (λ x : Rˣ ↦ (x.val, (x⁻¹ * r).val)) ?_ ?_ ?_).symm
-  ---- We first need to show that the image of the map is in `{(a, b) : R × R | ab = r}`.
+  ---- First, any pair `(a, b)` in the image of `f` satisfies `ab = r`.
   · rintro x -; rw [mem_coe, mem_filter_univ, ← Units.val_mul, mul_inv_cancel_left]
-  ---- Next we need to show that the map is injective.
+  ---- Second, `f` is injective.
   · rintro x - y - h; exact Units.val_inj.mp (congrArg Prod.fst h)
-  ---- Finally, we need to show that the map surjects into `{(a, b) : R × R | ab = r}`.
-  · rintro ⟨x, y⟩ h
+  ---- Third, any `(a, b)` with `ab = r` is in the image of `f`.
+  · rintro ⟨a, b⟩ h
     rw [mem_coe, mem_filter_univ] at h
-    -- First lift `x` to a unit.
-    lift x to Rˣ using isUnit_of_mul_eq_one x (y * r⁻¹) (by rw [← mul_assoc, h, r.mul_inv])
-    refine ⟨x, mem_univ _, Prod.ext rfl ?_⟩
-    -- Now it remains to show that `y = x⁻¹ r`.
+    -- First lift `a` to a unit.
+    lift a to Rˣ using isUnit_of_mul_eq_one a (b * r⁻¹) (by rw [← mul_assoc, h, r.mul_inv])
+    refine ⟨a, mem_univ _, Prod.ext rfl ?_⟩
+    -- Now it remains to show that `b = a⁻¹ r`.
     dsimp only; rw [Units.val_mul, ← h, Units.inv_mul_cancel_left]
 
 /-- Number of pairs `(a, b) ∈ F^2` such that `ab = r`. -/
@@ -249,37 +250,13 @@ theorem FiniteField_card_sq_sub_sq_fiber_of_two_ne_zero' (hF : ringChar F ≠ 2)
 
 
 
-/-! ### Lower bound on the number of elements of the form `a^2 + b^n`, `n > 1` -/
+/-! ### Lower bound on the number of elements of the form `a^2 + b^n` when `char(F) ≠ 2` -/
 
-section
-
-open Polynomial
-
-/-- Bound on the number of `a ∈ F` such that `P(a) = r`. -/
-theorem card_Polynomial_fiber_le_degree {P : F[X]} (hP : 0 < P.natDegree) (r : F) :
-    #{a : F | P.eval a = r} ≤ P.natDegree :=
-  have hP0 : 0 < P.degree := natDegree_pos_iff_degree_pos.mp hP
-  calc #{a | P.eval a = r}
-  _ ≤ (P - C r).roots.card :=
-    Multiset.card_le_card <| Finset.val_le_iff_val_subset.mpr λ a ↦ by
-      rw [mem_val, mem_filter_univ, mem_roots_sub_C hP0]; exact id
-  _ ≤ P.natDegree := card_roots_sub_C' hP0
-
-/-- Bound on the number of `(a, b) ∈ F^2` such that `P(a) = P(b)`. -/
-theorem card_Polynomial_eqpair_le_of_degree_mul_q {P : F[X]} (hP : 0 < P.natDegree) :
-    #{p : F × F | P.eval p.1 = P.eval p.2} ≤ P.natDegree * q :=
-  calc #{p : F × F | P.eval p.1 = P.eval p.2}
-  _ = ∑ r, #{a | P.eval a = r} * #{b | P.eval b = r} :=
-    Fintype_card_fiber_product_eq_fiberwise P.eval P.eval
-  _ ≤ ∑ r, P.natDegree * #{b | P.eval b = r} :=
-    Finset.sum_le_sum λ r _ ↦ Nat.mul_le_mul_right _ (card_Polynomial_fiber_le_degree hP r)
-  _ = P.natDegree * q := by rw [← mul_sum, ← Fintype_card_eq_sum_card_fiberwise]
-
-/-- Bound on the number of elements of `F` of the form `a^2 + f(b)`. -/
+/-- General bound on the number of elements of `F` of the form `a^2 + f(b)`. -/
 theorem card_sq_add_fn_fiber_lower_bound (hF : ringChar F ≠ 2) (f : F → F) :
     q ^ 3 ≤ #{r | ∃ a b, a ^ 2 + f b = r} *
       ((q - 1) * q + #{p : F × F | f p.1 = f p.2}) := by
-  ---- First de-cancel a factor of `q` from both sides.
+  ---- De-cancel a factor of `q` from both sides.
   refine Nat.le_of_mul_le_mul_right (c := q) ?_ Fintype.card_pos
   ---- Now estimate.
   calc q ^ 4
@@ -289,7 +266,7 @@ theorem card_sq_add_fn_fiber_lower_bound (hF : ringChar F ≠ 2) (f : F → F) :
       Fintype_quad_fiber_product_CauchySchwarz _ f
     _ = _ * (((q - 1) * q + #{p : F × F | f p.1 = f p.2}) * q) := congrArg (_ * ·) ?_
     _ = _ := (Nat.mul_assoc _ _ _).symm
-  ---- Remaining step: calculate `∑ r, #{(a, b) | a^2 - b^2 = r} #{(a, b) | f(a) - f(b) = r}`.
+  ---- Remaining step: compute `∑ r, #{(a, b) | a^2 - b^2 = r} #{(a, b) | f(a) - f(b) = r}`.
   calc ∑ r, #{p : F × F | p.1 ^ 2 - p.2 ^ 2 = r} * #{p : F × F | f p.1 - f p.2 = r}
     _ = ∑ r, ((q - 1) * #{p : F × F | f p.1 - f p.2 = r} +
           if 0 = r then q * #{p : F × F | f p.1 - f p.2 = r} else 0) := by
@@ -305,16 +282,36 @@ theorem card_sq_add_fn_fiber_lower_bound (hF : ringChar F ≠ 2) (f : F → F) :
     _ = ((q - 1) * q + #{p : F × F | f p.1 = f p.2}) * q := by
       rw [Nat.add_mul, Nat.mul_assoc]
 
+
+section
+
+open Polynomial
+
+/-- Bound on the number of `a ∈ F` such that `P(a) = r`. -/
+theorem card_Polynomial_fiber_le_degree {P : F[X]} (hP : 0 < P.natDegree) (r : F) :
+    #{a : F | P.eval a = r} ≤ P.natDegree :=
+  have hP0 : 0 < P.degree := natDegree_pos_iff_degree_pos.mp hP
+  calc #{a | P.eval a = r}
+  _ ≤ (P - C r).roots.card :=
+    Multiset.card_le_card <| val_le_iff_val_subset.mpr λ a ↦ by
+      rw [mem_val, mem_filter_univ, mem_roots_sub_C hP0]; exact id
+  _ ≤ P.natDegree := card_roots_sub_C' hP0
+
+/-- Bound on the number of `(a, b) ∈ F^2` such that `P(a) = P(b)`. -/
+theorem card_Polynomial_eqpair_le_of_degree_mul_q {P : F[X]} (hP : 0 < P.natDegree) :
+    #{p : F × F | P.eval p.1 = P.eval p.2} ≤ P.natDegree * q :=
+  calc #{p : F × F | P.eval p.1 = P.eval p.2}
+  _ = ∑ r, #{a | P.eval a = r} * #{b | P.eval b = r} :=
+    Fintype_card_fiber_product_eq_fiberwise P.eval P.eval
+  _ ≤ ∑ r, P.natDegree * #{b | P.eval b = r} :=
+    sum_le_sum λ r _ ↦ Nat.mul_le_mul_right _ (card_Polynomial_fiber_le_degree hP r)
+  _ = P.natDegree * q := by rw [← mul_sum, ← Fintype_card_eq_sum_card_fiberwise]
+
 /-- Bound on the number of elements of `F` of the form `a^2 + P(b)`, `P ∈ F[X]`. -/
-theorem card_sq_add_Polynomial_fiber_lower_bound {P : F[X]} (hP : 0 < P.natDegree) :
+theorem card_sq_add_Polynomial_fiber_lower_bound
+    (hF : ringChar F ≠ 2) {P : F[X]} (hP : 0 < P.natDegree) :
     q ^ 2 ≤ #{r | ∃ a b, a ^ 2 + P.eval b = r} * (q + (P.natDegree - 1)) := by
-  ---- The case `char(F) = 2` is easier.
-  obtain hF | hF : ringChar F = 2 ∨ ringChar F ≠ 2 := eq_or_ne _ _
-  · have h : ({r : F | ∃ a b, a ^ 2 + P.eval b = r} : Finset F) = univ :=
-      eq_univ_of_forall λ r ↦ (mem_filter_univ _).mpr <|
-        exists_eq_sq_add_map_of_char_eq_two hF _ _
-    rw [h, sq, Nat.mul_add]; exact Nat.le_add_right _ _
-  ---- Now assume `char(F) ≠ 2`. First de-cancel a factor of `q` from both sides.
+  ---- First de-cancel a factor of `q` from both sides.
   have hq : 1 ≤ q := Fintype.card_pos
   refine Nat.le_of_mul_le_mul_right (c := q) ?_ hq
   ---- Now estimate.
@@ -330,7 +327,8 @@ theorem card_sq_add_Polynomial_fiber_lower_bound {P : F[X]} (hP : 0 < P.natDegre
       rw [Nat.add_comm, ← Nat.add_sub_assoc hq, Nat.add_comm, Nat.add_sub_assoc hP]
 
 /-- Simple bound on the number of elements of `F` of the form `a^2 + P(b)`, `P ∈ F[X]`. -/
-theorem card_sq_add_Polynomial_fiber_lower_bound_simple {P : F[X]} (hP : 1 < P.natDegree) :
+theorem card_sq_add_Polynomial_fiber_lower_bound_simple
+    (hF : ringChar F ≠ 2) {P : F[X]} (hP : 1 < P.natDegree) :
     q < #{r | ∃ a b, a ^ 2 + P.eval b = r} + (P.natDegree - 1) := by
   ---- Let `n' = deg(P) - 1`, and first write down `n' > 0`.
   set n' : ℕ := P.natDegree - 1
@@ -342,7 +340,7 @@ theorem card_sq_add_Polynomial_fiber_lower_bound_simple {P : F[X]} (hP : 1 < P.n
     _ = q ^ 2 + q * n' := by rw [Nat.mul_add, Nat.pow_two]
     _ < #{r | ∃ a b, a ^ 2 + P.eval b = r} * (q + n') + (q + n') * n' :=
       Nat.add_lt_add_of_le_of_lt
-        (card_sq_add_Polynomial_fiber_lower_bound (Nat.zero_lt_of_lt hP))
+        (card_sq_add_Polynomial_fiber_lower_bound hF (Nat.zero_lt_of_lt hP))
         (Nat.mul_lt_mul_of_pos_right (Nat.lt_add_of_pos_right hn') hn')
     _ = _ := by rw [Nat.mul_comm _ n', Nat.add_mul]
 
@@ -353,27 +351,28 @@ theorem card_sq_add_Polynomial_fiber_lower_bound_simple {P : F[X]} (hP : 1 < P.n
 /-! ### Upper bound on the number of elements of `Fˣ` not of the form `a^2 + b^n` -/
 
 /-- Simple bound on the number elements of `F` not of the form `a^2 + P(b)`, `P ∈ F[X]`. -/
-theorem card_sq_add_Polynomial_not_fiber_upper_bound {P : F[X]} (hP : 1 < P.natDegree) :
+theorem card_sq_add_Polynomial_not_fiber_upper_bound
+    (hF : ringChar F ≠ 2) {P : F[X]} (hP : 1 < P.natDegree) :
     #{r | ¬∃ a b, a ^ 2 + P.eval b = r} < P.natDegree - 1 := by
   rw [← Nat.add_lt_add_iff_left, filter_card_add_filter_neg_card_eq_card]
-  exact card_sq_add_Polynomial_fiber_lower_bound_simple hP
+  exact card_sq_add_Polynomial_fiber_lower_bound_simple hF hP
 
 /-- Simple bound on the number elements of `F` not of the form `a^2 + b^n`, `n > 1`. -/
-theorem card_sq_add_pow_not_fiber_upper_bound (hn : 1 < n) :
+theorem card_sq_add_pow_not_fiber_upper_bound (hF : ringChar F ≠ 2) (hn : 1 < n) :
     #{r : F | ¬∃ a b, a ^ 2 + b ^ n = r} < n - 1 := by
   have hn0 : (X ^ n : F[X]).natDegree = n := natDegree_X_pow n
   simpa only [eval_pow, eval_X, hn0] using
-    card_sq_add_Polynomial_not_fiber_upper_bound (hn.trans_eq hn0.symm)
+    card_sq_add_Polynomial_not_fiber_upper_bound hF (hn.trans_eq hn0.symm)
 
 /-- Simple bound on the number elements of `Fˣ` not of the form `a^2 + b^n`, `n > 1`. -/
-theorem card_sq_add_pow_not_unit_fiber_upper_bound (hn : 1 < n) :
+theorem card_sq_add_pow_not_unit_fiber_upper_bound (hF : ringChar F ≠ 2) (hn : 1 < n) :
     #{r : Fˣ | ¬∃ a b, a ^ 2 + b ^ n = r.val} < n - 1 :=
   calc #{r : Fˣ | ¬∃ a b, a ^ 2 + b ^ n = r.val}
   _ ≤ #{r : F | ¬∃ a b, a ^ 2 + b ^ n = r} :=
     card_le_card_of_injOn Units.val
       (λ r hr ↦ by simpa only [mem_coe, mem_filter_univ] using hr)
       (Set.injOn_of_injective Units.val_injective)
-  _ < n - 1 := card_sq_add_pow_not_fiber_upper_bound hn
+  _ < n - 1 := card_sq_add_pow_not_fiber_upper_bound hF hn
 
 end
 
@@ -471,8 +470,8 @@ theorem dvd_two_mul_exp_mul_card_sq_add_pow_not_unit_fiber (hn : 0 < n) :
 
 /-! ### Summary -/
 
-/-- If `q > 2n(n - 1)`, every element of `F` is of the form `a^2 + b^n`. -/
-theorem exists_eq_sq_add_pow (hn : 1 < n) (h : 2 * n * (n - 1) < q) :
+/-- If `char(F) ≠ 2` and `q > 2n(n - 1)`, every element of `F` is of the form `a^2 + b^n`. -/
+theorem exists_eq_sq_add_pow (hF : ringChar F ≠ 2) (hn : 1 < n) (h : 2 * n * (n - 1) < q) :
     ∀ r : F, ∃ a b : F, a ^ 2 + b ^ n = r := by
   ---- Reduce to just the units.
   suffices ∀ r : Fˣ, ∃ a b : F, a ^ 2 + b ^ n = r by
@@ -487,7 +486,7 @@ theorem exists_eq_sq_add_pow (hn : 1 < n) (h : 2 * n * (n - 1) < q) :
     simpa only [N, card_filter_eq_zero_iff, mem_univ, forall_const, not_not] using this
   ---- We have `N < n - 1` and `q - 1 ∣ 2nN`.
   have hn0 : 0 < n := Nat.zero_lt_of_lt hn
-  replace hn : N < n - 1 := card_sq_add_pow_not_unit_fiber_upper_bound hn
+  replace hn : N < n - 1 := card_sq_add_pow_not_unit_fiber_upper_bound hF hn
   have h0 : q - 1 ∣ 2 * n * N := dvd_two_mul_exp_mul_card_sq_add_pow_not_unit_fiber hn0
   ---- Then `2nN < 2n(n - 1) ≤ q - 1`, so `2nN = 0` and thus `N = 0`.
   replace hn0 : 0 < 2 * n := Nat.mul_pos Nat.two_pos hn0
@@ -497,14 +496,17 @@ theorem exists_eq_sq_add_pow (hn : 1 < n) (h : 2 * n * (n - 1) < q) :
       _ ≤ q - 1 := Nat.le_sub_one_of_lt h
   exact (Nat.mul_eq_zero.mp h0).resolve_left hn0.ne.symm
 
-/-- If `q > 40`, every element of `F` is of the form `a^2 + b^5`. -/
-theorem exists_eq_sq_add_pow_five (hF : 40 < q) :
+/-- If `char(F) ≠ 2` and `q > 40`, every element of `F` is of the form `a^2 + b^5`. -/
+theorem exists_eq_sq_add_pow_five (hF : ringChar F ≠ 2) (hF0 : 40 < q) :
     ∀ r : F, ∃ a b : F, a ^ 2 + b ^ 5 = r :=
-  exists_eq_sq_add_pow (n := 5) (Nat.one_lt_succ_succ 3 : 1 < 5) hF
+  exists_eq_sq_add_pow hF (n := 5) (Nat.one_lt_succ_succ 3) hF0
 
 /-- Final solution -/
 theorem final_solution {p : ℕ} [Fact p.Prime] (hp : 40 < p) (r : ℤ) :
     ∃ a b : ℤ, a ^ 2 + b ^ 5 ≡ r [ZMOD p] := by
+  have hp0 : ringChar (ZMod p) ≠ 2 := by
+    rw [ZMod.ringChar_zmod_n p]
+    exact Nat.ne_of_gt (hp.trans' (by norm_num))
   obtain ⟨a, b, h0⟩ : ∃ a b : ZMod p, a ^ 2 + b ^ 5 = r :=
-    exists_eq_sq_add_pow_five (hp.trans_eq (ZMod.card p).symm) r
+    exists_eq_sq_add_pow_five hp0 (hp.trans_eq (ZMod.card p).symm) r
   exact ⟨a.val, b.val, (ZMod.intCast_eq_intCast_iff _ _ _).mp (by simpa using h0)⟩

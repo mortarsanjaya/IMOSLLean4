@@ -15,14 +15,15 @@ Prove that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^5 = r
 Throughout this file, we say that $F$ is `good` if for any $r ∈ F$,
   there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
 By adapting the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf),
-  we have proved in the main file that a finite field of cardinality $> 40$ is good.
-Here we extend this result to any finite field of cardinality $≠ 11$.
+  we proved that a finite field of cardinality $q > 40$ with $q$ odd is good.
+Here we extend this result to any finite field of cardinality $q ≠ 11$.
 In addition, we prove that the given statement does not work when $q = 11$.
 
-As we have solved the problem for $q > 40$, we only need to check the case $q ≤ 40$.
+As we have solved the problem for $q$ odd with $q > 40$,
+  we only need to check the case where $q$ is even or $q ≤ 40$.
 By looking at the unit group $Fˣ$, a finite field of cardinality $q ≢ 1 \pmod{10}$ is good.
 Thus the remaining cases are $q = 11$ and $q = 31$.
-Finally, by direct search, `ZMod 31` is good, while `ZMod 11` is not ($a^2 + b^5 ≠ 7$).
+Finally, by direct search, `ZMod 31` is good, while `ZMod 11` is not ($7$ is unattainable).
 
 ### TODO
 
@@ -57,9 +58,16 @@ theorem good.of_RingEquiv [Semiring R] [Semiring S] (hR : good R) (φ : R ≃+* 
 variable {F} [Field F] [Fintype F] [DecidableEq F]
 local notation "q" => Fintype.card F
 
-/-- A finite field of cardinality `> 40` is good. -/
-theorem good_of_card_big_enough (hF : 40 < q) : good F :=
-  IMO2012N8.exists_eq_sq_add_pow_five hF
+/-- A finite field of cardinality `q > 40` is good. -/
+theorem good_of_card_big_enough (hF : 40 < q) : good F := by
+  obtain hF0 | hF0 : ringChar F ≠ 2 ∨ ringChar F = 2 := ne_or_eq _ _
+  ---- We have done the `char(F) ≠ 2` case.
+  · exact IMO2012N8.exists_eq_sq_add_pow_five hF0 hF
+  ---- If `char(F) = 2`, then everything is already a square and we are done.
+  · intro r
+    obtain ⟨a, rfl⟩ : ∃ a, r = a ^ 2 := (FiniteField.isSquare_of_char_two hF0 r).exists_sq r
+    refine ⟨a, 0, ?_⟩
+    rw [zero_pow (Nat.succ_ne_zero 4), add_zero]
 
 /-- If `n` is coprime with `q - 1`, then every element of `F` is an `n`th power. -/
 theorem exists_eq_pow_n_of_gcd_eq_one (hn : n ≠ 0) (h : n.Coprime (q - 1)) (x : F) :
@@ -114,16 +122,17 @@ theorem ZMod11_is_not_good : ¬good (ZMod 11) :=
   not_forall_of_exists_not ⟨7, by decide⟩
 
 omit [DecidableEq F] in
-/-- A field of characteristic `11` is not good. -/
+/-- A field of cardinality `11` is not good. -/
 theorem not_good_of_card_eq_11 (hF : q = 11) : ¬good F :=
-  λ h ↦ ZMod11_is_not_good (h.of_RingEquiv (ZMod.ringEquivOfPrime F Nat.prime_eleven hF).symm)
+  λ h ↦ ZMod11_is_not_good
+    (h.of_RingEquiv (ZMod.ringEquivOfPrime F Nat.prime_eleven hF).symm)
 
 /-- `𝔽_{31}` is good. -/
 theorem ZMod31_is_good : good (ZMod 31) := by
   unfold good; decide
 
 omit [DecidableEq F] in
-/-- A field of characteristic `31` is good. -/
+/-- A field of cardinality `31` is good. -/
 theorem good_of_card_eq_31 (hF : q = 31) : good F :=
   ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F (by decide) hF)
 
