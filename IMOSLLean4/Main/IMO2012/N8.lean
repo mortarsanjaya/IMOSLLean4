@@ -49,12 +49,6 @@ The remaining case is $q ≡ 1 \pmod{10}$, for which $q ≤ 40$ implies $q ∈ \
 By computer search, $q = 31$ succeeds, while $q = 11$ fails with $r = 7$.
 
 See `Generalization/IMO2012N8/IMO2012N8.lean` for the implementation.
-
-### TODO
-
-Some of these results over `Fintype`s can actually be generalized to `Finset`s.
-Please check one by one.
-Also, general clean-up might be necessary for better code.
 -/
 
 namespace IMOSL
