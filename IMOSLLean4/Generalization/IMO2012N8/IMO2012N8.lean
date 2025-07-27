@@ -22,12 +22,11 @@ In addition, we prove that the given statement does not work when $q = 11$.
 As we have solved the problem for $q$ odd with $q > 40$,
   we only need to check the case where $q$ is even or $q ≤ 40$.
 By looking at the unit group $Fˣ$, a finite field of cardinality $q ≢ 1 \pmod{10}$ is good.
-Thus the remaining cases are $q = 11$ and $q = 31$.
-Finally, by direct search, `ZMod 31` is good, while `ZMod 11` is not ($7$ is unattainable).
-
-### TODO
-
-Devise a faster proof of `ZMod31_is_good`.
+Thus the remaining cases are $q = 11$ and $q = 31$, for which we use direct search.
+* `ZMod 11` is not good, as $7$ cannot be represented as $a^2 + b^5$.
+* On the other hand, `ZMod 31` is good.
+  Every element of `ZMod 31`, other than $22 = 4^2 - 5^5$ and $27 = 1^2 + 6^5$,
+    can be represented by either $a^2$, $a^2 + 1$, or $a^2 + 5 = a^2 - 6^5$.
 -/
 
 namespace IMOSL
@@ -129,7 +128,14 @@ theorem not_good_of_card_eq_11 (hF : q = 11) : ¬good F :=
 
 /-- `𝔽_{31}` is good. -/
 theorem ZMod31_is_good : good (ZMod 31) := by
-  unfold good; decide
+  intro r
+  /- All elements of `𝔽_{31}` are of the form
+    `a^2`, `a^2 + 1`, or `a^2 + 5`, except `22` and `27`. -/
+  obtain ⟨a, rfl | rfl | rfl⟩ | rfl | rfl :
+    (∃ a, a ^ 2 = r ∨ a ^ 2 + 1 = r ∨ a ^ 2 + 5 = r) ∨ (r = 22 ∨ r = 27) := by
+      revert r; decide
+  ---- Now just brute force all the cases.
+  exacts [⟨a, 0, add_zero _⟩, ⟨a, 1, rfl⟩, ⟨a, -6, rfl⟩, ⟨4, -5, rfl⟩, ⟨1, 6, rfl⟩]
 
 omit [DecidableEq F] in
 /-- A field of cardinality `31` is good. -/
