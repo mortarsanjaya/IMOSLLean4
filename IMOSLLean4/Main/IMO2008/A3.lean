@@ -110,12 +110,12 @@ theorem final_solution_part1 : IsEmpty (SpanishCouple ℕ) := by
 
 /-! ### Part 2 -/
 
-/-- Constructing a sfunction on `α × β` from a function on `α` and an `α`-indexed
+/-- Construct a function on `α × β` from a function on `α` and an `α`-indexed
   collection of function son `β`. For naming reasons, compare to `Equiv.prodShear`. -/
 def ProdShear (f : α → α) (g : α → β → β) (p : α × β) : α × β :=
   (f p.1, g p.1 p.2)
 
-/-- Constructing a strictly increasing function on `α ×ₗ β` from a strictly increasing
+/-- Construct a strictly increasing function on `α ×ₗ β` from a strictly increasing
   function on `α` and an `α`-indexed collection of strictly increasing functions on `β`. -/
 theorem ProdShearLex_strictMono [Preorder α] [Preorder β]
     {f : α → α} (hf : StrictMono f) {g : α → β → β} (hg : ∀ a : α, StrictMono (g a)) :
@@ -125,17 +125,24 @@ theorem ProdShearLex_strictMono [Preorder α] [Preorder β]
   change (a₁ < a₂ ∨ a₁ = a₂ ∧ b₁ < b₂) → (f a₁ < f a₂ ∨ f a₁ = f a₂ ∧ g a₁ b₁ < g a₂ b₂)
   exact Or.imp (λ h ↦ hf h) (λ h ↦ h.1 ▸ ⟨rfl, hg _ h.2⟩)
 
+/-- Construct a strictly increasing function on `α ×ₗ β` from a
+  strictly increasing function on `α`, using identity on `β`. -/
+theorem ProdMapLex_strictMono [Preorder α] [Preorder β]
+    {f : α → α} {g : β → β} (hf : StrictMono f) (hg : StrictMono g) :
+    StrictMono (toLex.conj (Prod.map f g)) :=
+  ProdShearLex_strictMono hf λ _ ↦ hg
+
 /-- Constructing a Spanish Couple `(f, g)` on `ℕ ×ₗ α` from a
   strictly increasing function `φ : α → α` with `φ(x) > x` for all `x`.
   It is defined by `f(n, a) = (2n + 1, a)` and `g(n, a) = (n, φ^n(a))`. -/
 def SpanishCouple_NatLex_of_strictMono_id_lt
     [Preorder α] {φ : α → α} (hφ : StrictMono φ) (hφ0 : ∀ x, x < φ x) :
     SpanishCouple (ℕ ×ₗ α) where
-  f := toLex.conj (ProdShear (2 * · + 1) λ _ ↦ id)
+  f := toLex.conj (Prod.map (2 * · + 1) id)
   f_strictMono :=
-    ProdShearLex_strictMono
+    ProdMapLex_strictMono
       (λ k m h ↦ Nat.succ_lt_succ (Nat.mul_lt_mul_of_pos_left h Nat.two_pos))
-      (λ _ ↦ strictMono_id)
+      strictMono_id
   g := toLex.conj (ProdShear id (φ^[·]))
   g_strictMono := ProdShearLex_strictMono strictMono_id hφ.iterate
   spec := by

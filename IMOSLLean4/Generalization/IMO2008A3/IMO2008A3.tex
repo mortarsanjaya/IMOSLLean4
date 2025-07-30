@@ -1,0 +1,52 @@
+A \textbf{Spanish couple} on a totally ordered set $S$ is a pair $(f, g)$ of strictly increasing functions from $S$ to $S$ such that for all $x \in S$,
+\[ f(g(g(x))) < g(f(x)). \]
+We say that set $S$ is \textbf{good} if there exists a Spanish couple on $S$.
+Find all good well-ordered sets.
+
+
+
+\subsection*{Answer}
+
+A well-ordered set $S$ is good if and only if $S$ is order-isomorphic to $T \times \N \times \N$ for some well-ordered set $T$.
+Here the lexicographical order prioritizes $T$; that is, $(t_1, m_1, n_1) < (t_2, m_2, n_2)$ whenever $t_1, t_2 \in T$ satisfies $t_1 < t_2$.
+In the language of ordinal numbers, this is equivalent to the ordinal number of $S$ taking the form of $\omega^2 o$ for some ordinal number $o$, where $\omega$ is the ordinal number of $\N$.
+
+
+
+\subsection*{Solution}
+
+In the original formulation, we proved that $\N$ is not good (part 1) and $\N \times \N$ is good (part 2).
+We extend the proof of part 1 to show that is $S$ is good, then $S$ is order-isomorphic to $T \times \N \times \N$ for some well-ordered set $T$.
+For the other direction, we use a very general construction and combine with part 2 of the original formulation.
+In the implementation, we generalize some definitions to over preorders.
+
+First, let $S$ and $T$ be totally ordered sets.
+Let $(f, g)$ be a Spanish couple on $S$.
+Then it is easy to check that that the pair $(\id \times f, \id \times g)$ is a Spanish couple on $T \times S$.
+Thus, if $S$ is good, then $T \times S$ is good.
+In particular, for any well-ordered set $T$, $T \times \N \times \N$ is good.
+
+The converse relies mainly on the following claim.
+
+\begin{claim}
+Let $T$ a be well-ordered set and $S$ be an upper set of $T$.
+That is, $S$ is a subset of $T$ such that for any $x \in S$ and $y \in T$ with $x \leq y$, we have $y \in S$.
+Then $S$ is well-ordered and any Spanish couple $(f, g)$ on $T$ restricts to a Spanish couple $(f|_S, g|_S)$ on $S$.
+In particular, if $T$ is good, then $S$ is good.
+\end{claim}
+\begin{proof}
+Indeed, since $T$ is well-ordered, $S$ is well-ordered.
+Also, it implies $f(x), g(x) \geq x$ for any $x \in T$.
+Since $S$ is an upper set, this implies $f(S), g(S) \subseteq S$.
+It is now easy to check that $(f|_S, g|_S)$ is a Spanish couple.
+\end{proof}
+
+Now let $S$ be a well-ordered set such that there exists a Spanish couple on $S$.
+Since a singleton is not good, the claim implies that any well-ordered set with a maximal element is not good.
+Thus $S$ has no maximal elements.
+By the theory of well-ordered sets, $S$ is isomorphic to $S' \times \N$ for some well-ordered set $S'$.
+
+Now apply the same argument to $S'$.
+If $S'$ has a maximal element, then $S' \times \N$ being good implies that $\N$ is good; contradiction.
+Then $S'$ has no maximal element, and so $S'$ is order-isomorphic to $T \times \N$ for some well-ordered set $T$.
+In summary, $S$ is order-isomorphic to $T \times \N \times \N$ for some well-ordered set $T$.
