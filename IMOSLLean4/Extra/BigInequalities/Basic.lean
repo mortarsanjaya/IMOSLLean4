@@ -14,6 +14,7 @@ namespace Extra
 variable [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R] [ExistsAddOfLE R]
 
 /-- This should eventually get into `mathlib4` -/
+@[deprecated four_mul_le_sq_add (since := "2025-01-08")]
 theorem two_sq_AM_GM (x y : R) : 2 ^ 2 * (x * y) ≤ (x + y) ^ 2 := by
   rw [sq, mul_assoc, two_mul, ← mul_assoc, add_sq', add_le_add_iff_right]
   exact two_mul_le_add_sq x y

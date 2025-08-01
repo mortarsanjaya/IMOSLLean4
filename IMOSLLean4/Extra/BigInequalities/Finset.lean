@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Extra.BigInequalities.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # Big inequalities over `Finset`
@@ -43,7 +43,8 @@ theorem CauchySchwarz_univ [Fintype ι] {f g₁ g₂ : ι → R}
     univ.sum f ^ 2 ≤ univ.sum g₁ * univ.sum g₂ :=
   CauchySchwarz (λ i _ ↦ hg₁ i) (λ i _ ↦ hg₂ i) (λ i _ ↦ hf i)
 
-/-- Cauchy-Schwarz inequality, stated in the usual way -/
+/-- Cauchy-Schwarz inequality, stated in the usual way. -/
+@[deprecated Finset.sum_mul_sq_le_sq_mul_sq (since := "2025-01-08")]
 theorem CauchySchwarz_squares (f g : ι → R) (S : Finset ι) :
     S.sum (λ i ↦ f i * g i) ^ 2 ≤ S.sum (λ i ↦ f i ^ 2) * S.sum (λ i ↦ g i ^ 2) :=
   CauchySchwarz (λ _ _ ↦ sq_nonneg _) (λ _ _ ↦ sq_nonneg _) (λ _ _ ↦ (mul_pow _ _ 2).le)
