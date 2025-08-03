@@ -15,7 +15,7 @@ $$ f(x - f(y)) = f(f(x)) - f(y) - 1. $$
 ### Solution
 
 We follow Solution 1 of the
-  [official solution](https://www.imo-official.org/problems/IMO2024SL.pdf).
+  [official solution](https://www.imo-official.org/problems/IMO2015SL.pdf).
 We simplify the computations when checking which linear functions work,
   by dividing into cases of whether the slope is zero or not.
 If the slope is zero, then $f$ is constant, and $f(-f(f(0))) = -1$ yields $f = -1$.
