@@ -9,25 +9,26 @@ import IMOSLLean4.Main.IMO2012.N8
 /-!
 # IMO 2012 N8 (Generalization)
 
-Let $F$ be a finite field of cardinality $q ≠ 11$.
-Prove that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
+Find all finite fields $F$ with the following property:
+  for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
+
+### Answer
+
+Any field of cardinality $q ≠ 11$.
 
 ### Implementation
 
-Throughout this file, we say that $F$ is `good` if for any $r ∈ F$,
+We say that a finite field $F$ is `good` if for any $r ∈ F$,
   there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
-By adapting the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf),
-  we proved that a finite field of cardinality $q > 40$ with $q$ odd is good.
-Here we extend this result to any finite field of cardinality $q ≠ 11$.
-In addition, we prove that the given statement does not work when $q = 11$.
-
-As we have solved the problem for $q$ odd with $q > 40$,
-  we only need to check the case where $q$ is even or $q ≤ 40$.
-By looking at the unit group $Fˣ$, a finite field of cardinality $q ≢ 1 \pmod{10}$ is good.
-Thus the remaining cases are $q = 11$ and $q = 31$, for which we use direct search.
-* $𝔽_{11}$ is not good; $7 ∈ 𝔽_{11}$ cannot be represented as $a^2 + b^5$.
-* $F_{31}$ is good; every element of $F_{31}$, other than $22 = 4^2 - 5^5$ and
-    $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 + 5 = a^2 - 6^5$.
+We implement the case $\#F = q ∉ {11, 31}$ as described in our solution in LaTeX.
+For the case $q = 11$ and $q = 31$, we use the fact that two finite fields of equal
+  cardinality are isomorphic, and show that two isomorphic fields are either both
+  good or both not good in `good.of_RingEquiv`.
+Thus it suffices to decide whether `ZMod 11` and `ZMod 31` are good or not.
+For `ZMod 11`, we let the machine decide that $7$ does not take the form $a^2 + b^5$.
+For `ZMod 31`, we show that every element of $𝔽_{31}$, other than $22 = 4^2 - 5^5$ and
+  $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 + 5$ for some $a ∈ 𝔽_{31}$.
+Note that $5 = (-6)^5$ is a fifth power in $𝔽_{31}$.
 -/
 
 namespace IMOSL
