@@ -19,6 +19,13 @@ We follow Solution 1 of the
 ### Implementation details
 
 We implement $f$ as a function from $ℤ$ to $ℤ$ such that $f(x) > 0$ for all $x ∈ ℤ$.
+
+### Generalization
+
+It is possible to generalize the functional equation and find all functions $f : G → ℕ⁺$
+  such that $f(x - y) ∣ f(x) - f(y)$ for all $x, y ∈ G$, where $G$ is an additive group.
+
+See `IMOSLLean4/Generalization/IMO2011N5/IM2011N5.lean` for the implementation.
 -/
 
 namespace IMOSL
@@ -47,18 +54,19 @@ theorem final_solution {f : Int → Int}
   obtain h0 | h0 : f x = f y ∨ f x < f y := Int.le_iff_eq_or_lt.mp h
   · exact ⟨1, h0.symm.trans (f x).mul_one.symm⟩
   ---- First, show that `f(x - y) ∣ f(y) - f(x)`.
-  replace h : f (x - y) ∣ f y - f x := calc
-    f (x - y) ∣ -(f x - f y) := Int.dvd_neg.mpr (hf0 x y)
+  replace h : f (x - y) ∣ f y - f x :=
+    calc f (x - y)
+    _ ∣ -(f x - f y) := Int.dvd_neg.mpr (hf0 x y)
     _ = f y - f x := Int.neg_sub _ _
   ---- Next, show that `f(x - y) < f(y)`.
-  replace h : f (x - y) < f y := calc
+  have h1 : f (x - y) < f y :=
+    calc f (x - y)
     _ ≤ f y - f x := Int.le_of_dvd (Int.sub_pos_of_lt h0) h
     _ < f y := Int.sub_lt_self (f y) (hf x)
   ---- Next, show that `f(x) = f(x - y)` via `f(y) ∣ f(x) - f(x - y)`.
   replace h0 : f x = f (x - y) :=
     Int.eq_of_sub_eq_zero <| Int.eq_zero_of_dvd_of_natAbs_lt_natAbs
       (by simpa only [Int.sub_sub_self] using hf0 x (x - y))
-      (natAbs_sub_lt_of_nonneg_of_lt (Int.le_of_lt (hf x)) h0 (Int.le_of_lt (hf _)) h)
-  ---- Finally, since `f(x) = f(x - y) ∣ f(x) - f(y)`, we get `f(x) ∣ f(y)`.
-  replace hf0 : f (x - y) ∣ f x - f y := hf0 x y
-  rwa [← h0, Int.sub_eq_add_neg, Int.dvd_add_right (Int.dvd_refl _), Int.dvd_neg] at hf0
+      (natAbs_sub_lt_of_nonneg_of_lt (Int.le_of_lt (hf x)) h0 (Int.le_of_lt (hf _)) h1)
+  ---- Finally, since `f(x) = f(x - y) ∣ f(y) - f(x)`, we get `f(x) ∣ f(y)`.
+  rwa [← h0, Int.sub_eq_add_neg, Int.dvd_add_left (Int.dvd_neg.mpr (Int.dvd_refl _))] at h

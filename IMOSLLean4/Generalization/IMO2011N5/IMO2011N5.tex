@@ -1,0 +1,52 @@
+Let $G$ be an additive group.
+Find all functions $f : G \to \N^+$ such that for any $x, y \in G$,
+\[ f(x - y) \mid f(x) - f(y) \quad \forall x, y \in G. \tag{*}\label{2011n5-eq0} \]
+
+
+
+\subsection*{Answer}
+
+Consider a strict chain $G = G_0 > G_1 > G_2 > \ldots > G_k$ of subgroups of $G$.
+Let $n_0, n_1, n_2, \ldots, n_k$ be positive integers with $n_1, n_2, \ldots, n_k > 1$. 
+Set $f(x) = n_0 n_1 \ldots n_j$, where $j$ is the largest index such that $x \in G_j$.
+Then $f$ is a good function, and all good functions arise uniquely via this construction.
+
+
+
+\subsection*{Solution}
+
+We say that $f : G \to \N^+$ is \textbf{good} if it satisfies~\eqref{2011n5-eq0} for all $x, y \in G$.
+First, we check that all functions given in the answer description are good.
+Indeed, let $j_x, j_y, j$ be the largest index such that $x \in G_{j_x}$, $y \in G_{j_y}$ and $x - y \in G_j$, respectively.
+Then two of $j_x, j_y, j$ are equal and less than or equal to the third one.
+If $j_x = j_y$, then $f(x) = f(y)$.
+If $j_x < j_y$, then $j_x = j$, so $f(x) = f(x - y)$ divides $f(y)$.
+If $j_y < j_x$, then $j_y = j$ and $f(y) = f(x - y)$ divides $f(x)$.
+In all three cases, we get $f(x - y) \mid f(x) - f(y)$.
+
+For the other direction, we use the original problem as a subclaim to describe all good functions.
+First, by setting $y = 0$ in~\eqref{2011n5-eq0} yields $f(x) \mid f(0)$ for any $x \in G$.
+Then setting $x = 0$ instead yields $f(-y) \mid f(0) - f(y)$ and thus $f(-y) \mid f(y)$ for any $y \in G$.
+Since $f(-y)$ and $f(y)$ divides each other and are positive integers, we get $f(-y) = f(y)$ for all $y \in G$.
+From these observations, it is easy to see that for each $n \in \N^+$ such that $n \mid f(0)$, the set $\{x \in G : n \mid f(x)\}$ is a subgroup of $G$.
+We now prove the following claim, which corresponds to the original problem.
+
+\begin{claim}
+For any $x, y \in G$, if $f(x) \leq f(y)$, then $f(x) \mid f(y)$.
+\end{claim}
+\begin{proof}
+First note that $f(x) < f(y)$ and $f(y - x) \mid f(y) - f(x)$ implies $f(y) - f(x) \geq f(y - x)$.
+Thus we get $f(y) \geq f(y - x) + f(x) > |f(y - x) - f(x)|$.
+On the other hand,~\eqref{2011n5-eq0} yields
+\[ f(y) = f(y - x - (-x)) \mid f(y - x) - f(-x) = f(y - x) - f(x). \]
+Since $f(y) > |f(y - x) - f(x)|$, this forces $f(y - x) = f(x)$.
+Then $f(x) = f(y - x) \mid f(y) - f(x)$ implies $f(x) \mid f(y)$, as desired.
+\end{proof}
+
+Now we describe $f$ as in the description in the answer section.
+Since $f(x) \mid f(0)$ for all $x \in G$, the image $f(G) = \{f(x) : x \in G\}$ is finite.
+Now enumerate the elements of $f(G)$ as $m_0 < m_1 < \ldots < m_k$.
+By the claim, we have $m_i | m_{i + 1}$ for each $i < k$.
+Thus we can write $m_i = n_0 n_1 \ldots n_i$, where $n_0, n_1, \ldots, n_k$ are positive integers with $n_1, \ldots, n_k > 1$.
+Finally, take $G_i = \{x \in G : n_0 n_1 \ldots n_i \mid f(x)\}$ for each $i \leq k$.
+One can check that $f(x) = n_0 n_1 \ldots n_j$, where $j$ is the largest index such that $x \in G_j$.
