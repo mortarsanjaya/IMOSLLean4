@@ -17,24 +17,27 @@ namespace IMOSL
 namespace Extra
 namespace LinearSolver
 
-theorem NatNat {f : Nat → Nat} (h : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0
-  | 0 => by rw [Nat.mul_zero, Nat.zero_add]
-  | n + 1 => by rw [h, Nat.mul_succ, NatNat h, Nat.add_left_comm, Nat.add_assoc]
+/-- Linear solver for functions from `Nat` to `Nat`. -/
+theorem NatNat {f : Nat → Nat} (hf : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0 :=
+  Nat.rec (by rw [Nat.mul_zero, Nat.zero_add]) λ n hn ↦ by
+    rw [hf, Nat.mul_succ, hn, Nat.add_left_comm, Nat.add_assoc]
 
-theorem NatInt {f : Nat → Int} (h : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0
-  | 0 => by rw [Int.natCast_zero, c.mul_zero, Int.zero_add]
-  | n + 1 => by rw [Int.natCast_add, Int.natCast_one, c.mul_add,
-      c.mul_one, h, Int.add_comm _ c, NatInt h, Int.add_assoc]
+/-- Linear solver for functions from `Nat` to `Int`. -/
+theorem NatInt {f : Nat → Int} (hf : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0 :=
+  Nat.rec (by rw [Int.natCast_zero, Int.mul_zero, Int.zero_add]) λ n hn ↦ by
+    rw [Int.natCast_succ, Int.mul_add, Int.mul_one, hf, Int.add_comm _ c, hn, Int.add_assoc]
 
-theorem IntInt {f : Int → Int} (h : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0
-  | Int.ofNat n => by
-      revert n; apply NatInt (f := λ n ↦ f n)
-      intro n; rw [Int.natCast_add, Int.natCast_one, h]
-  | Int.negSucc n => by
-      replace h (n) : f (n + -1) = -c + f n := by
-        specialize h (n + -1); rw [Int.neg_add_cancel_right] at h
-        rw [h, c.neg_add_cancel_left]
-      rw [Int.negSucc_eq, Int.neg_add, Int.mul_add, Int.mul_neg_one,
-        Int.add_assoc, ← h, Int.mul_neg, ← Int.neg_mul]
-      revert n; refine NatInt λ n ↦ ?_
-      rw [h, Int.natCast_add, Int.natCast_one, Int.neg_add]
+/-- Linear solver for functions from `Int` to `Int`. -/
+theorem IntInt {f : Int → Int} (hf : ∀ n, f (n + 1) = c + f n) : ∀ n, f n = c * n + f 0 := by
+  refine Int.rec ?_ ?_
+  ---- Solve the case `n ≥ 0`.
+  · refine NatInt λ n ↦ ?_
+    rw [Int.ofNat_eq_coe, Int.ofNat_eq_coe, Int.natCast_succ, hf]
+  ---- Solve the case `n < 0`.
+  · -- First replace the given condition with a version we can apply `NatInt` on.
+    replace hf (n : Nat) : f (-(n + 1 : Nat)) = -c + f (-n) := by
+      rw [← Int.sub_eq_iff_eq_add'.mpr (hf _), Int.natCast_succ, Int.neg_add,
+        Int.neg_add_cancel_right, Int.sub_eq_add_neg, Int.add_comm]
+    -- Now do the calc using `NatInt`.
+    intro n; rw [Int.negSucc_eq, ← Int.natCast_add_one, NatInt (f := λ n ↦ f (-n)) hf,
+      Int.neg_mul, Int.mul_neg, Int.natCast_zero, Int.neg_zero]
