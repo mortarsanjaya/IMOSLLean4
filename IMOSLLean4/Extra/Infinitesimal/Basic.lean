@@ -22,6 +22,7 @@ Use relative infinitesimal (`ε` is infinitesimal with respect to an element `g`
 namespace IMOSL
 namespace Extra
 
+@[deprecated (since := "2025-03-08")]
 def Infinitesimal [AddGroupWithOne R] [Lattice R] (ε : R) := ∀ k : ℕ, k • |ε| < 1
 
 
