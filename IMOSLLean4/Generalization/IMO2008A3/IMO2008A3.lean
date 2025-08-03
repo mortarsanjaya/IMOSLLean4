@@ -15,12 +15,6 @@ A *Spanish couple* on an ordered set $S$ is a pair of strictly increasing functi
 $$ f(g(g(x))) < g(f(x)). $$
 Determine all **well-ordered sets** $S$ such that there exists a Spanish couple on $S$.
 
-### Answer
-
-Those order-isomorphic to lexicographic $T × ℕ × ℕ$, with order prioritizing $T$.
-In terms of ordinals, this holds if and only if the ordinal number $o_S$ of $S$ is
-  of the form $ω^2 o$ for some ordinal $o$, where $ω$ is the ordinal number of $ℕ$.
-
 ### Implementation
 
 We define an ordered set $S$ to be `good` if there exists a Spanish couple on $S$.

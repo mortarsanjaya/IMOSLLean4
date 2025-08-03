@@ -12,6 +12,8 @@ import IMOSLLean4.Main.IMO2012.N8
 Let $F$ be a finite field of cardinality $q ≠ 11$.
 Prove that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
 
+### Implementation
+
 Throughout this file, we say that $F$ is `good` if for any $r ∈ F$,
   there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
 By adapting the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf),
