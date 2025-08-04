@@ -12,6 +12,10 @@ import IMOSLLean4.Extra.IntLinearSolver
 Find all functions $f : ℤ → ℤ$ such that, for any $x, y ∈ ℤ$,
 $$ f(x - f(y)) = f(f(x)) - f(y) - 1. $$
 
+### Answer
+
+$x ↦ -1$ and $x ↦ x + 1$.
+
 ### Solution
 
 We follow Solution 1 of the
