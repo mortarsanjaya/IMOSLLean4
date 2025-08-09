@@ -34,13 +34,9 @@ namespace IMO2024A3
 
 open Finset NNReal
 
-set_option trace.profiler.threshold 200
-set_option trace.profiler true
-
 /-- Given real numbers `x_1, x_2, …, x_n ≥ 0` and `p ≥ 1`,
   we have `x_1^p + x_2^p + … + x_n^p ≤ (x_1 + x_2 + … + x_n)^p`. -/
-theorem Finset_sum_rpow_le_rpow_sum
-    {p : ℝ} (hp : 1 ≤ p) [DecidableEq ι] (I : Finset ι) (x : ι → ℝ≥0) :
+theorem Finset_sum_rpow_le_rpow_sum {p : ℝ} (hp : 1 ≤ p) (I : Finset ι) (x : ι → ℝ≥0) :
     ∑ i ∈ I, x i ^ p ≤ (∑ i ∈ I, x i) ^ p :=
   have hp0 : p - 1 + 1 = p := sub_add_cancel p 1
   have hp1 : p - 1 + 1 ≠ 0 := hp0.trans_ne (one_pos.trans_le hp).ne.symm
