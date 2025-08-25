@@ -4,3 +4,4 @@ import IMOSLLean4.Main.IMO2024.A3
 import IMOSLLean4.Main.IMO2024.N1
 import IMOSLLean4.Main.IMO2024.N3
 import IMOSLLean4.Main.IMO2024.N4
+import IMOSLLean4.Main.IMO2024.N6
