@@ -16,19 +16,14 @@ Find all finite fields $F$ with the following property:
 
 Any field of cardinality $q ≠ 11$.
 
-### Implementation
+### Implementation details
 
-We say that a finite field $F$ is `good` if for any $r ∈ F$,
-  there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
-We implement the case $\#F = q ∉ {11, 31}$ as described in our solution in LaTeX.
-For the case $q = 11$ and $q = 31$, we use the fact that two finite fields of equal
-  cardinality are isomorphic, and show that two isomorphic fields are either both
-  good or both not good in `good.of_RingEquiv`.
-Thus it suffices to decide whether `ZMod 11` and `ZMod 31` are good or not.
-For `ZMod 11`, we let the machine decide that $7$ does not take the form $a^2 + b^5$.
+The condition being asked on $F$ is implemented via the predicate `good`.
+For the case $q = 11$ and $q = 31$, we show that `good` is preserved under field isomorphisms
+  via `good.of_RingEquiv`, so we just have to check the fields `ZMod 11` and `ZMod 31`.
+For `ZMod 11`, we show by computer search that $a^2 + b^5 ≠ 7$ for any $a, b ∈ F$.
 For `ZMod 31`, we show that every element of $𝔽_{31}$, other than $22 = 4^2 - 5^5$ and
-  $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 + 5$ for some $a ∈ 𝔽_{31}$.
-Note that $5 = (-6)^5$ is a fifth power in $𝔽_{31}$.
+  $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 - 6^5$ for some $a ∈ 𝔽_{31}$.
 -/
 
 namespace IMOSL
