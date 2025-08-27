@@ -21,16 +21,17 @@ Those order-isomorphic to lexicographic $T × ℕ × ℕ$, with order prioritizi
 In terms of ordinals, this holds if and only if the ordinal number $o_S$ of $S$ is
   of the form $ω^2 o$ for some ordinal $o$, where $ω$ is the ordinal number of $ℕ$.
 
-### Implementation
+### Implementation details
 
 We define an ordered set $S$ to be `good` if there exists a Spanish couple on $S$.
-We show that given order isomorphic sets $S$ and $T$, $S$ is good iff $T$ is good.
-Then we define `isGoodOrdinal` to be the quotient predicate of `good` on ordinal.
+The theorem `good.conjOrderIso_iff` shows that `good` is preserved under order isomorphisms.
+We define `isGoodOrdinal` to be the quotient predicate of `good` on ordinals.
 We state the main result in terms of both ordinals and well-ordered sets;
   see `final_solution_ordinal` and `final_solution` (only on `Type 0`).
 
-The construction of Spanish couple on an upper subset is implemented via
-  `SpanishCouple.sumLexRestrictRight`, where we view the whole set as a
+The construction of Spanish couple on lexicographical product is implemented via
+  `SpanishCouple.prodLexLeft`, while the construction of Spanish couple on an upper subset
+  is implemented via `SpanishCouple.sumLexRestrictRight`, where we view the whole set as a
   disjoint union `α ⊕ₗ β` with the subset being `β`.
 -/
 
