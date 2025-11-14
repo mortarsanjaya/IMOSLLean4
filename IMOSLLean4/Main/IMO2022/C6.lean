@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Multiset.Defs
-import Mathlib.Algebra.Order.Group.Multiset
+import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
 import Mathlib.Data.Nat.Factors
 import Mathlib.Order.Bounds.Defs
 
@@ -42,11 +41,10 @@ open Multiset
 /-- `canReach X Y` means we can transform `X` to `Y` after several moves.
   We also allow adding and removing empty piles, for convenience. -/
 inductive canReach : Multiset ℕ → Multiset ℕ → Prop
-  | refl' (X) : canReach X X
+  /-- We can add and delete empty piles as we want. (This implies reflexivity to)-/
+  | manip_zeroes (X m n) : canReach (X + replicate m 0) (X + replicate n 0)
+  /-- Transitivity. -/
   | trans' (X Y Z) : canReach X Y → canReach Y Z → canReach X Z
-  /-- We can add or delete empty piles. -/
-  | cons_zero (X) : canReach X (0 ::ₘ X)
-  | delete_zero (X) : canReach (0 ::ₘ X) X
   /-- The actual operation. -/
   | op (a b c X) : canReach ((a + c) ::ₘ (b + c) ::ₘ X) (2 * c ::ₘ a ::ₘ b ::ₘ X)
 
@@ -55,16 +53,15 @@ namespace canReach
 
 instance : Trans canReach canReach canReach := ⟨trans' _ _ _⟩
 
-/-- `canReach X Y` means we can transform `X` to `Y` after several moves.
-  We also allow adding and removing empty piles, for convenience. -/
-infix : 50 " ==> " => canReach
+@[inherit_doc canReach]
+scoped infix : 50 " ==> " => canReach
 
 
 
 /-! ### Basic statements -/
 
-@[refl] protected lemma refl (X) : X ==> X :=
-  canReach.refl' X
+@[refl] protected lemma refl (X) : X ==> X := by
+  simpa only [replicate_zero, Multiset.add_zero] using manip_zeroes X 0 0
 
 @[trans] protected lemma trans (h : X ==> Y) (h0 : Y ==> Z) : X ==> Z :=
   trans' X Y Z h h0
@@ -72,11 +69,9 @@ infix : 50 " ==> " => canReach
 /-- If `X` can reach `Y`, then `X + Z` can reach `Y + Z`. -/
 theorem add_right (h : X ==> Y) (Z) : X + Z ==> Y + Z := by
   induction h with
-  | refl' X => rfl
+  | manip_zeroes X m n => simpa only [add_right_comm X _ Z] using manip_zeroes (X + Z) m n
   | trans' _ _ _ _ _ h h0 => exact h.trans h0
-  | cons_zero X => rw [X.cons_add]; exact canReach.cons_zero (X + Z)
-  | delete_zero X => rw [X.cons_add]; exact canReach.delete_zero (X + Z)
-  | op a b c X => simpa [X.cons_add] using canReach.op a b c (X + Z)
+  | op a b c X => simpa only [cons_add] using canReach.op a b c (X + Z)
 
 /-- If `Y` can reach `Z`, then `X + Y` can reach `X + Z`. -/
 theorem add_left (X) (h : Y ==> Z) : X + Y ==> X + Z := by
@@ -88,50 +83,40 @@ theorem add_left (X) (h : Y ==> Z) : X + Y ==> X + Z := by
 theorem cons (h : X ==> Y) (n) : n ::ₘ X ==> n ::ₘ Y :=
   h.add_left {n}
 
-/-- From a state `X`, we can reach the state by adding empty piles to `X`. -/
+/-- Adding empty piles to a state. -/
 theorem add_zeroes (X n) : X ==> X + replicate n 0 := by
-  induction n with
-  | zero => rw [replicate_zero, add_zero]
-  | succ n hn => rw [replicate_succ, add_cons]; exact hn.trans (cons_zero _)
+  simpa only [replicate_zero, Multiset.add_zero] using manip_zeroes X 0 n
 
-/-- From a state `X`, we can reach a new state by removing some empty piles from `X`. -/
+/-- Removing empty piles from a state. -/
 theorem delete_zeroes (X n) : X + replicate n 0 ==> X := by
-  induction n with
-  | zero => rw [replicate_zero, add_zero]
-  | succ n hn => rw [replicate_succ, add_cons]; exact (delete_zero _).trans hn
+  simpa only [replicate_zero, Multiset.add_zero] using manip_zeroes X n 0
 
-/-- From a state `X`, we can reach a new state by removing all empty piles from `X`. -/
-theorem self_to_filter_ne_zero (X) : X ==> X.filter (· ≠ 0) := calc
-  X = X.filter (· ≠ 0) + replicate (X.count 0) 0 := by
-    rw [← filter_eq', add_comm, filter_add_not]
-  _ ==> X.filter (· ≠ 0) := delete_zeroes _ _
+/-- Adding one empty pile from a state. -/
+theorem cons_zero (X) : X ==> 0 ::ₘ X :=
+  calc X
+  _ ==> X + replicate 1 0 := add_zeroes X 1
+  _ = 0 ::ₘ X := by rw [replicate_one, add_comm, singleton_add]
 
-/-- If `X` can reach `Y`, the state `X'` obtained by multiplying the size of
-  all piles in `X` by `n` can reach the state `Y'`, defined analogously. -/
-theorem map_mul_left (h : X ==> Y) (n) : X.map (n * ·) ==> Y.map (n * ·) := by
-  induction h with
-  | refl' X => rfl
-  | trans' _ _ _ _ _ h h0 => exact h.trans h0
-  | cons_zero X => rw [map_cons, Nat.mul_zero]; exact cons_zero _
-  | delete_zero X => rw [map_cons, Nat.mul_zero]; exact delete_zero _
-  | op a b c X =>
-      simp only [map_cons]
-      rw [Nat.mul_left_comm, Nat.mul_add, Nat.mul_add]
-      exact op _ _ _ _
+/-- Removing one empty pile from a state. -/
+theorem delete_zero (X) : 0 ::ₘ X ==> X :=
+  calc 0 ::ₘ X
+  _ = X + replicate 1 0 := by rw [replicate_one, add_comm, singleton_add]
+  _ ==> X := delete_zeroes X 1
 
-/-- `{2, a + b} + X ==> {2, a, 1, 1, …, 1} + X`.
-  That is, a pile of size `2` can be used to pull out singletons. -/
-theorem add_replicate_ones_from_two (a b X) :
-    2 ::ₘ (a + b) ::ₘ X ==> 2 ::ₘ a ::ₘ (replicate b 1 + X) := by
-  induction b generalizing X with
-  | zero => rw [replicate_zero, zero_add, Nat.add_zero]
-  | succ b hb =>
-      calc 2 ::ₘ (a + b + 1) ::ₘ X
-        _ ==> 2 ::ₘ 1 ::ₘ (a + b) ::ₘ X := op _ _ _ _
-        _ = 2 ::ₘ (a + b) ::ₘ 1 ::ₘ X := by rw [cons_swap (a + b)]
-        _ ==> 2 ::ₘ a ::ₘ (replicate b 1 + (1 ::ₘ X)) := hb _
-        _ = 2 ::ₘ a ::ₘ (replicate (b + 1) 1 + X) := by
-          rw [replicate_succ, add_cons, cons_add]
+/-- Doubling a pile by depleting another pile. -/
+theorem pile_doubling (X a b) : (a + b) ::ₘ b ::ₘ X ==> a ::ₘ (2 * b) ::ₘ X :=
+  calc (a + b) ::ₘ b ::ₘ X
+  _ = (a + b) ::ₘ (0 + b) ::ₘ X := by rw [Nat.zero_add]
+  _ ==> 2 * b ::ₘ a ::ₘ 0 ::ₘ X := op a 0 b X
+  _ = 0 ::ₘ a ::ₘ (2 * b) ::ₘ X := by rw [cons_swap, cons_swap (2 * b), cons_swap]
+  _ ==> a ::ₘ (2 * b) ::ₘ X := delete_zero _
+
+/-- Combining two piles of equal size into one pile. -/
+theorem pile_merge (X a) : a ::ₘ a ::ₘ X ==> 2 * a ::ₘ X :=
+  calc a ::ₘ a ::ₘ X
+  _ = (0 + a) ::ₘ a ::ₘ X := by rw [Nat.zero_add]
+  _ ==> 0 ::ₘ (2 * a) ::ₘ X := pile_doubling X 0 a
+  _ ==> (2 * a) ::ₘ X := delete_zero _
 
 
 
@@ -140,46 +125,63 @@ theorem add_replicate_ones_from_two (a b X) :
 /-- The number of pebbles in the board is invariant under operations. -/
 theorem sum_eq (h : X ==> Y) : X.sum = Y.sum := by
   induction h with
-  | refl' X => rfl
+  | manip_zeroes X m n => simp only [sum_add, sum_replicate, nsmul_zero]
   | trans' _ _ _ _ _ h h0 => exact h.trans h0
-  | cons_zero X => rw [X.sum_cons, Nat.zero_add]
-  | delete_zero X => rw [X.sum_cons, Nat.zero_add]
   | op a b c X =>
       repeat rw [sum_cons]
       rw [← Nat.add_assoc, Nat.add_add_add_comm, ← Nat.two_mul,
         Nat.add_assoc, Nat.add_left_comm, Nat.add_assoc]
 
-/-- If `X` contains a pile of size not divisible by `n`, where `n` is odd, then for
-  any state `Y` reachable from `X`, `Y` contains a pile of size not divisible by `n`. -/
-theorem odd_not_dvd (hn : Odd n) (h : X ==> Y) (hX : ∃ a ∈ X, ¬n ∣ a) :
-    ∃ a ∈ Y, ¬n ∣ a := by
+/-- If `X` contains a pile of size not divisible by `t`, where `t` is odd, then for
+  any state `Y` reachable from `X`, `Y` contains a pile of size not divisible by `t`. -/
+theorem odd_not_dvd (ht : Odd t) (h : X ==> Y) (hX : ∃ a ∈ X, ¬t ∣ a) : ∃ a ∈ Y, ¬t ∣ a := by
   induction h with
-  | refl' X => exact hX
+  | manip_zeroes X m n =>
+      rcases hX with ⟨a, haX, hta⟩
+      refine ⟨a, ?_, hta⟩
+      rw [mem_add, mem_replicate] at haX ⊢
+      left; exact haX.resolve_right λ ⟨h, h0⟩ ↦ hta ⟨0, h0⟩
   | trans' X Y Z h h0 hXY hYZ => exact hYZ (hXY hX)
-  | cons_zero X =>
-      rcases hX with ⟨t, htX, hnt⟩
-      exact ⟨t, mem_cons_of_mem htX, hnt⟩
-  | delete_zero X =>
-      rcases hX with ⟨t, htX, hnt⟩
-      exact ⟨t, (mem_cons.mp htX).resolve_left λ h ↦ hnt (h ▸ n.dvd_zero), hnt⟩
   | op a b c X =>
-      ---- Suppose `t ∈ {a + c, b + c} + X` and `n ∤ t`.
-      rcases hX with ⟨t, htX, hnt⟩
-      ---- If `n ∤ c`, then we are done since `n ∤ 2c`.
-      obtain hnc | hnc : ¬n ∣ c ∨ n ∣ c := dec_em' _
-      · refine ⟨2 * c, mem_cons_self _ _, λ hnc0 ↦ hnc ?_⟩
-        exact (Nat.coprime_two_right.mpr hn).dvd_of_dvd_mul_left hnc0
-      ---- If `n ∣ c`, then split into three cases: `t = a + c, t = b + c, t ∈ X`.
-      rw [mem_cons, mem_cons] at htX
-      rcases htX with rfl | rfl | htX
-      ---- Case 1: `t = a + c`; then `n ∤ a ∈ X`.
+      ---- Suppose `x ∈ {a + c, b + c} + X` and `t ∤ x`.
+      rcases hX with ⟨x, hxX, htx⟩
+      ---- If `t ∤ c`, then we are done since `t ∤ 2c`.
+      obtain htc | htc : ¬t ∣ c ∨ t ∣ c := dec_em' _
+      · refine ⟨2 * c, mem_cons_self _ _, λ hnc0 ↦ htc ?_⟩
+        exact (Nat.coprime_two_right.mpr ht).dvd_of_dvd_mul_left hnc0
+      ---- If `t ∣ c`, then split into three cases: `x = a + c, x = b + c, x ∈ X`.
+      rw [mem_cons, mem_cons] at hxX
+      rcases hxX with rfl | rfl | hxX
+      ---- Case 1: `x = a + c`; then `t ∤ a ∈ X`.
       · refine ⟨a, mem_cons_of_mem (mem_cons_self a _), ?_⟩
-        rwa [Nat.dvd_add_left hnc] at hnt
-      ---- Case 2: `t = b + c`; then `n ∤ b ∈ X`.
+        rwa [Nat.dvd_add_left htc] at htx
+      ---- Case 2: `x = b + c`; then `t ∤ b ∈ X`.
       · refine ⟨b, mem_cons_of_mem (mem_cons_of_mem (X.mem_cons_self b)), ?_⟩
-        rwa [Nat.dvd_add_left hnc] at hnt
-      ---- Case 3: `t ∈ X`; then pick `t`.
-      · exact ⟨t, mem_cons_of_mem (mem_cons_of_mem (mem_cons_of_mem htX)), hnt⟩
+        rwa [Nat.dvd_add_left htc] at htx
+      ---- Case 3: `x ∈ X`; then `t ∤ x ∈ x`.
+      · exact ⟨x, mem_cons_of_mem (mem_cons_of_mem (mem_cons_of_mem hxX)), htx⟩
+
+
+
+/-! ### Deconstruction algorithm using a pile of size two -/
+
+/-- `{2, a + 1} + X ==> {2, a, 1} + X`; pulling out singletons with a pile of size `2`. -/
+theorem deconstruct_succ (a X) : 2 ::ₘ (a + 1) ::ₘ X ==> 2 ::ₘ a ::ₘ 1 ::ₘ X :=
+  calc 2 ::ₘ (a + 1) ::ₘ X
+  _ ==> 2 ::ₘ 1 ::ₘ a ::ₘ X := op 1 a 1 X
+  _ = 2 ::ₘ a ::ₘ 1 ::ₘ X := by rw [cons_swap 1 a]
+
+/-- `{2, a + b} + X ==> {2, a, 1, 1, …, 1} + X`, with `1` appearing `b` times. -/
+theorem deconstruct_add (a b X) :
+    2 ::ₘ (a + b) ::ₘ X ==> 2 ::ₘ a ::ₘ (replicate b 1 + X) := by
+  induction b generalizing X with
+  | zero => rw [replicate_zero, zero_add, Nat.add_zero]
+  | succ b hb =>
+      calc 2 ::ₘ (a + b + 1) ::ₘ X
+        _ ==> 2 ::ₘ (a + b) ::ₘ 1 ::ₘ X := deconstruct_succ (a + b) X
+        _ ==> 2 ::ₘ a ::ₘ (replicate b 1 + (1 ::ₘ X)) := hb _
+        _ = 2 ::ₘ a ::ₘ (replicate (b + 1) 1 + X) := by
+          rw [replicate_succ, add_cons, cons_add]
 
 
 
@@ -192,13 +194,9 @@ theorem two_nsmul_to_map_two_mul (X) : 2 • X ==> X.map (2 * ·) := by
   induction X using Multiset.induction with | empty => rfl | cons a X hX => ?_
   ---- Induction step follows from `{a, a} ==> {2a}`.
   calc 2 • (a ::ₘ X)
-    _ = 2 • {a} + 2 • X := nsmul_cons _ _
-    _ = (0 + a) ::ₘ (0 + a) ::ₘ 2 • X := by
-      rw [Nat.zero_add, two_nsmul, singleton_add, cons_add, singleton_add]
-    _ ==> 2 * a ::ₘ 0 ::ₘ 0 ::ₘ 2 • X := op 0 0 a _
-    _ = 0 ::ₘ 0 ::ₘ 2 * a ::ₘ 2 • X := by rw [cons_swap (2 * a), cons_swap (2 * a)]
-    _ ==> 0 ::ₘ 2 * a ::ₘ 2 • X := delete_zero _
-    _ ==> 2 * a ::ₘ 2 • X := delete_zero _
+    _ = a ::ₘ a ::ₘ 2 • X := by
+      rw [nsmul_cons, two_nsmul, singleton_add, cons_add, singleton_add]
+    _ ==> 2 * a ::ₘ 2 • X := pile_merge _ _
     _ ==> 2 * a ::ₘ X.map (2 * ·) := hX.cons _
     _ = (a ::ₘ X).map (2 * ·) := (X.map_cons _ _).symm
 
@@ -217,10 +215,10 @@ theorem replicate_two_pow_mul_left_to_right (k n a) :
   | zero => rw [Nat.pow_zero, Nat.one_mul, Nat.one_mul]
   | succ k hk =>
       calc replicate (2 ^ (k + 1) * n) a
-        _ = replicate (2 * (2 ^ k * n)) a := by rw [Nat.pow_succ', Nat.mul_assoc]
-        _ ==> replicate (2 ^ k * n) (2 * a) := replicate_two_mul_left_to_right _ _
-        _ ==> replicate n (2 ^k * (2 * a)) := hk _
-        _ = replicate n (2 ^ (k + 1) * a) := by rw [Nat.pow_succ, Nat.mul_assoc]
+      _ = replicate (2 * (2 ^ k * n)) a := by rw [Nat.pow_succ', Nat.mul_assoc]
+      _ ==> replicate (2 ^ k * n) (2 * a) := replicate_two_mul_left_to_right _ _
+      _ ==> replicate n (2 ^k * (2 * a)) := hk _
+      _ = replicate n (2 ^ (k + 1) * a) := by rw [Nat.pow_succ, Nat.mul_assoc]
 
 /-- The state with `2^k` piles of size `1` reaches one with a single pile of size `2^k`. -/
 theorem replicate_two_pow_of_one_to_singleton (k) : replicate (2 ^ k) 1 ==> {2 ^ k} :=
@@ -247,14 +245,11 @@ theorem replicate_two_pow_add_of_one_to_doubleton (h : m ≤ 2 ^ k) :
   obtain ⟨r, hr⟩ : ∃ r, m + r = 2 ^ k := Nat.le.dest h
   ---- Now note that `LHS ==> {2^k, 2, 1, 1, ...} ==> {m, 2, 1, 1, ...} ==> RHS`.
   calc 1 ::ₘ 1 ::ₘ replicate (2 ^ k + m'') 1
-    _ ==> 2 ::ₘ (replicate 2 0 + replicate (2 ^ k + m'') 1) := op 0 0 1 _
-    _ = 2 ::ₘ (replicate (2 ^ k) 1 + replicate m'' 1) + replicate 2 0 := by
-      rw [add_comm, replicate_add, cons_add]
-    _ ==> 2 ::ₘ (replicate (2 ^ k) 1 + replicate m'' 1) := delete_zeroes _ _
+    _ ==> 2 ::ₘ (replicate (2 ^ k + m'') 1) := pile_merge _ _
+    _ = 2 ::ₘ (replicate (2 ^ k) 1 + replicate m'' 1) := by rw [replicate_add]
     _ ==> 2 ::ₘ 2 ^ k ::ₘ replicate m'' 1 := (h0.add_right _).cons 2
     _ = 2 ::ₘ (m + r) ::ₘ replicate m'' 1 := by rw [hr]
-    _ ==> 2 ::ₘ m ::ₘ (replicate r 1 + replicate m'' 1) :=
-      add_replicate_ones_from_two m r _
+    _ ==> 2 ::ₘ m ::ₘ (replicate r 1 + replicate m'' 1) := deconstruct_add m r _
     _ = m ::ₘ 2 ::ₘ replicate (2 * (2 ^ k' - 1)) 1 := by
       rw [cons_swap, ← replicate_add, Nat.add_comm, Nat.mul_sub_one,
         ← Nat.pow_succ', ← hr, Nat.add_right_comm, Nat.add_sub_cancel]
@@ -270,12 +265,12 @@ theorem replicate_two_pow_add_of_one_to_doubleton (h : m ≤ 2 ^ k) :
 theorem replicate_ones_to_doubleton (hn : n ≠ 0) :
     replicate n 1 ==> {n - 2 ^ n.log2, 2 ^ n.log2} :=
   calc replicate n 1
-    _ = replicate (2 ^ n.log2 + (n - 2 ^ n.log2)) 1 := by
-      rw [Nat.add_sub_cancel' (Nat.log2_self_le hn)]
-    _ ==> {n - 2 ^ n.log2, 2 ^ n.log2} := by
-      refine replicate_two_pow_add_of_one_to_doubleton (Nat.sub_le_of_le_add ?_)
-      rw [← Nat.mul_two, ← Nat.pow_succ]
-      exact Nat.lt_log2_self.le
+  _ = replicate (2 ^ n.log2 + (n - 2 ^ n.log2)) 1 := by
+    rw [Nat.add_sub_cancel' (Nat.log2_self_le hn)]
+  _ ==> {n - 2 ^ n.log2, 2 ^ n.log2} := by
+    refine replicate_two_pow_add_of_one_to_doubleton (Nat.sub_le_of_le_add ?_)
+    rw [← Nat.mul_two, ← Nat.pow_succ]
+    exact Nat.lt_log2_self.le
 
 end canReach
 
