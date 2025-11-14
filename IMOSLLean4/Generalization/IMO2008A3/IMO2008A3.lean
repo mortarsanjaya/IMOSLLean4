@@ -36,7 +36,6 @@ The construction of Spanish couple on lexicographical product is implemented via
 -/
 
 namespace IMOSL
-namespace Generalization
 namespace IMO2008A3
 
 /-! ### Miscelanneous lemmas on ordered sets -/
@@ -91,10 +90,6 @@ end
 
 /-! ### More properties of Spanish couples -/
 
-/-- Transferring definition of `SpanishCouple` through namespace. -/
-alias SpanishCouple := IMOSL.IMO2008A3.SpanishCouple
-
-
 namespace SpanishCouple
 
 /-- Given a Spanish couple `f` on `α` and an order isomorphism `e : α ≃o β`,
@@ -107,7 +102,6 @@ def conjOrderIso [Preorder α] [Preorder β] (X : SpanishCouple α) (e : α ≃o
   g_strictMono := StrictMono_conjOrderIso X.g_strictMono e
   spec x := by simpa using X.spec (e.symm x)
 
-open IMOSL.IMO2008A3 in
 /-- Given a Spanish couple `(f, g)` on `β`, make a Spanish couple `(f', g')` on `α ×ₗ β`,
   defined by `f'(a, b) = (a, f(b))` and `g'(a, b) = (a, g(b))`. -/
 def prodLexLeft (α) [Preorder α] [Preorder β] (X : SpanishCouple β) :
@@ -147,11 +141,11 @@ theorem PUnit_is_not_good : ¬good PUnit :=
 
 /-- `ℕ` is not good. -/
 theorem Nat_is_not_good : ¬good ℕ :=
-  λ ⟨X⟩ ↦ IMO2008A3.final_solution_part1.elim X
+  λ ⟨X⟩ ↦ final_solution_part1.elim X
 
 /-- `ℕ ×ₗ ℕ` is good. -/
 theorem NatNatLex_is_good : good (ℕ ×ₗ ℕ) :=
-  ⟨IMO2008A3.final_solution_part2⟩
+  ⟨final_solution_part2⟩
 
 
 namespace good
@@ -306,8 +300,8 @@ end isGoodOrdinal
 /-- Final solution, ordinal form -/
 alias final_solution_ordinal := isGoodOrdinal.iff_omega0_sq_dvd
 
-/-- Final solution -/
-theorem final_solution {α : Type} [LinearOrder α] [WellFoundedLT α] :
+/-- Final solution to the generalized version -/
+theorem final_solution_general {α : Type} [LinearOrder α] [WellFoundedLT α] :
     good α ↔ ∃ (β : Type) (_ : LinearOrder β) (_ : WellFoundedLT β),
       Nonempty (α ≃o β ×ₗ ℕ ×ₗ ℕ) := by
   ---- The backwards direction is more straightforward.

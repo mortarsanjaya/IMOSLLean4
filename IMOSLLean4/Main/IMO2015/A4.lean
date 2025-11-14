@@ -160,7 +160,7 @@ theorem map_neg_of_map_zero_map_one (hf0 : f 0 = 0) (hf1 : f 1 = 1) (x) :
   replace h0 : f (x + f (x + -1)) + f (x * -1) = x + f (x + -1) + f x * -1 := hf x (-1)
   rwa [← sub_eq_add_neg, h, add_right_inj, mul_neg_one, mul_neg_one] at h0
 
-/-- If `f(0) = 0` and `f(1) = 1`, then `2 f(y) = 2y` for all `x ∈ R`. -/
+/-- If `f(0) = 0` and `f(1) = 1`, then `2 f(y) = 2y` for all `y ∈ R`. -/
 theorem two_mul_map_of_map_zero_eq_zero (hf0 : f 0 = 0) (hf1 : f 1 = 1) (y) :
     2 * f y = 2 * y := by
   ---- Recall that `f(-x) = -f(x)` for all `x ∈ R`.
@@ -181,7 +181,7 @@ end
 
 
 /-- If `2` is not a zero divisor in `R` and `f(0) = 0`, then `f = id`. -/
-theorem eq_id_of_map_zero_eq_zero (hR : ∀ x y : R, 2 * x = 2 * y → x = y)
+theorem eq_id_of_map_zero_eq_zero2 (hR : ∀ x y : R, 2 * x = 2 * y → x = y)
     {f : R → R} (hf : good f) (hf0 : f 0 = 0) : f = id :=
   funext λ y ↦ hR _ _
     (hf.two_mul_map_of_map_zero_eq_zero hf0 (map_one_of_twoNZD_map_zero hR hf hf0) y)
@@ -195,7 +195,7 @@ theorem final_solution [DecidableEq R] [NoZeroDivisors R] (hR : (2 : R) ≠ 0) {
   refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   ---- The `→` direction.
   · refine (Decidable.em (f 0 = 0)).symm.imp hf.eq_two_sub_of_map_zero_ne_zero
-      (hf.eq_id_of_map_zero_eq_zero λ x y h ↦ ?_)
+      (hf.eq_id_of_map_zero_eq_zero2 λ x y h ↦ ?_)
     -- We just need to show that `2 ≠ 0` implies that `2` is not a zero divisor.
     rw [← sub_eq_zero, ← mul_sub, mul_eq_zero, sub_eq_zero] at h
     exact h.resolve_left hR

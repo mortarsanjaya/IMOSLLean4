@@ -27,7 +27,6 @@ For `ZMod 31`, we show that every element of $𝔽_{31}$, other than $22 = 4^2 -
 -/
 
 namespace IMOSL
-namespace Generalization
 namespace IMO2012N8
 
 open Finset
@@ -139,8 +138,8 @@ omit [DecidableEq F] in
 theorem good_of_card_eq_31 (hF : q = 31) : good F :=
   ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F (by decide) hF)
 
-/-- Final solution -/
-theorem final_solution : good F ↔ ¬q = 11 := by
+/-- Final solution to the generalized version -/
+theorem final_solution_general : good F ↔ ¬q = 11 := by
   ---- As fields of cardinality `11` are not good, we now assume `q ≠ 11`.
   refine ⟨λ hF hF0 ↦ not_good_of_card_eq_11 hF0 hF, λ hF ↦ ?_⟩
   ---- If `10 ∤ q - 1`, then we proved that `F` is good.

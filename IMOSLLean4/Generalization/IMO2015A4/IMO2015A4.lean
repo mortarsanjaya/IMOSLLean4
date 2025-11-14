@@ -19,41 +19,21 @@ If $R$ is a domain, then the answer is $x ↦ x$ and $x ↦ 2 - x$.
 -/
 
 namespace IMOSL
-namespace Generalization
 namespace IMO2015A4
-
-variable [Ring R]
-
-/-- A function `f : R → R` is good if for any `x, y ∈ R`,
-  we have `f(x + f(x + y)) + f(xy) = x + f(x + y) + f(x) y`. -/
-abbrev good (f : R → R) := IMOSL.IMO2015A4.good f
-
-
-/-- The identity function is good. -/
-theorem id_is_good : good (id : R → R) :=
-  IMOSL.IMO2015A4.id_is_good
-
-/-- The function `x ↦ 2 - x` is good. -/
-theorem two_sub_is_good : good (λ x : R ↦ 2 - x) :=
-  IMOSL.IMO2015A4.two_sub_is_good
-
 
 namespace good
 
-variable {f : R → R} (hf : good f)
+variable [Ring R] {f : R → R} (hf : good f)
 include hf
 
-/-- (1) For any `x ∈ R`, we have `f(x + f(x + 1)) = x + f(x + 1)`. -/
-theorem eq1_map_add_map_add_one_fixed (x) : f (x + f (x + 1)) = x + f (x + 1) :=
-  IMOSL.IMO2015A4.good.map_add_map_add_one_fixed hf x
+@[inherit_doc map_add_map_add_one_fixed]
+alias eq1_map_add_map_add_one_fixed := map_add_map_add_one_fixed
 
-/-- (2) For any `y ∈ R`, we have `f(f(y)) + f(0) = f(y) + f(0) y`. -/
-theorem eq2_map_map_add_map_zero (y) : f (f y) + f 0 = f y + f 0 * y :=
-  IMOSL.IMO2015A4.good.map_map_add_map_zero hf y
+@[inherit_doc map_map_add_map_zero]
+alias eq2_map_map_add_map_zero := map_map_add_map_zero
 
-/-- (3) For any `x ∈ R`, we have `f(x + f(x)) + f(0) = x + f(x)`. -/
-theorem eq3_map_self_add_map_self (x) : f (x + f x) + f 0 = x + f x :=
-  IMOSL.IMO2015A4.good.map_self_add_map_self hf x
+@[inherit_doc map_self_add_map_self]
+alias eq3_map_self_add_map_self := map_self_add_map_self
 
 /-- (4) We have `f(f(0)) = 0`. -/
 theorem eq4_map_map_zero_eq_zero : f (f 0) = 0 := by
@@ -118,7 +98,7 @@ theorem map_one_eq_one : f 1 = 1 := by
 /-- If `f(y) = y` and `f(y + 1) = y + 1`, then `f(y + 2) = y + 2`. -/
 theorem fixed_pt_add_two_of_fixed_pt (hy : f y = y) (hy0 : f (y + 1) = y + 1) :
     f (y + 2) = y + 2 :=
-  IMOSL.IMO2015A4.good.fixed_pt_add_two_of_map_one hf hf.map_one_eq_one hy hy0
+  fixed_pt_add_two_of_map_one hf hf.map_one_eq_one hy hy0
 
 /-- If `(y) = y` and `f(y + 1) = y + 1`, then `f(y + 2) = y + n` for every `n ∈ ℕ`. -/
 theorem fixed_pt_add_nat_of_fixed_pt (hy : f y = y) (hy0 : f (y + 1) = y + 1) (n : ℕ) :
@@ -144,7 +124,7 @@ include hf0
 
 /-- (7) If `f(0) = 0`, then `f(-x) = -f(x)` for every `x ∈ R`. -/
 theorem eq7_map_neg (x) : f (-x) = -f x :=
-  IMOSL.IMO2015A4.good.map_neg_of_map_zero_map_one hf hf0 hf.map_one_eq_one x
+  map_neg_of_map_zero_map_one hf hf0 hf.map_one_eq_one x
 
 /-- (8) If `f(0) = 0`, then `f(nx) = nf(x)` for every `n ∈ ℕ` and `x ∈ R`. -/
 theorem eq8_map_nsmul (n : ℕ) (x : R) : f (x * n) = f x * n := by
@@ -173,7 +153,7 @@ theorem eq8_map_two_mul (x : R) : f (2 * x) = 2 * f x := by
 
 /-- (9) If `f(0) = 0`, then `2f(t) = 2t` for all `t ∈ R`. -/
 theorem eq9_two_mul_map (t : R) : 2 * f t = 2 * t :=
-  IMOSL.IMO2015A4.good.two_mul_map_of_map_zero_eq_zero hf hf0 hf.map_one_eq_one t
+  two_mul_map_of_map_zero_eq_zero hf hf0 hf.map_one_eq_one t
 
 /-- If `f(0) = 0`, then `f` is the identity map. -/
 theorem eq_id_of_map_zero_eq_zero : f = id := by
@@ -254,8 +234,8 @@ theorem eq_id_of_map_zero_eq_zero : f = id := by
 end good
 
 
-/-- Final solution -/
-theorem final_solution [DecidableEq R] [NoZeroDivisors R] {f : R → R} :
+/-- Final solution to the generalized version -/
+theorem final_solution_general [Ring R] [DecidableEq R] [NoZeroDivisors R] {f : R → R} :
     good f ↔ f = (λ x ↦ 2 - x) ∨ f = id := by
   refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   ---- The `→` direction.
