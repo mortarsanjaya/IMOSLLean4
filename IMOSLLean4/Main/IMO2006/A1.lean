@@ -77,14 +77,14 @@ lemma abs_sub_lt_one_of_floor_eq_floor {a b : R} (h : ⌊a⌋ = ⌊b⌋) : |a - 
 theorem floor_f_abs_le_floor_abs (r : R) : |⌊f r⌋| ≤ |⌊r⌋| := by
   have hr0 : 0 ≤ Int.fract r := Int.fract_nonneg r
   have hr1 : Int.fract r ≤ 1 := (Int.fract_lt_one r).le
-  rcases le_total 0 r with hr | hr
-  ---- Case 1: `r ≥ 0`
+  obtain hr | hr : 0 ≤ r ∨ r ≤ 0 := le_total 0 r
+  ---- Case 1: `r ≥ 0`.
   · have hr2 : 0 ≤ ⌊r⌋ := Int.floor_nonneg.mpr hr
     replace hr : (0 : R) ≤ ⌊r⌋ := Int.cast_nonneg hr2
     replace hr0 : 0 ≤ ⌊f r⌋ := Int.floor_nonneg.mpr (mul_nonneg hr hr0)
     rw [abs_of_nonneg hr2, abs_of_nonneg hr0, ← Int.cast_le (R := R)]
     exact (Int.floor_le (f r)).trans (mul_le_of_le_one_right hr hr1)
-  ---- Case 2: `r ≤ 0`
+  ---- Case 2: `r ≤ 0`.
   · have hr2 : ⌊r⌋ ≤ 0 := Int.floor_nonpos hr
     replace hr : (⌊r⌋ : R) ≤ 0 := Int.cast_nonpos.mpr hr2
     replace hr0 : ⌊f r⌋ ≤ 0 := Int.floor_nonpos (mul_nonpos_of_nonpos_of_nonneg hr hr0)
@@ -105,8 +105,8 @@ theorem floor_f_iter_converges (r : R) : ∃ (C N : ℕ), ∀ n ≥ N, ⌊f^[n] 
   · exact h0
   ---- We claim and show that `|⌊f^{n + 1}(r)⌋| < C`, thus yielding a contradiction.
   refine absurd ?_ (h (n + 1) (Nat.le_succ_of_le hn)).not_lt
-  rw [← Int.natAbs_natCast C, f.iterate_succ_apply', f, h0, Int.cast_natCast]
   replace hC : 0 < (C : R) := Nat.cast_pos.mpr hC
+  rw [← Int.natAbs_natCast C, f.iterate_succ_apply', f, h0, Int.cast_natCast]
   exact Int.natAbs_lt_natAbs_of_nonneg_of_lt
     (Int.floor_nonneg.mpr (mul_nonneg hC.le (Int.fract_nonneg _)))
     (by simpa [Int.floor_lt] using mul_lt_of_lt_one_right hC (Int.fract_lt_one _))
@@ -130,8 +130,10 @@ theorem f_iter_alt_of_floor_f_iter_lim_one {r : R} (h : ∃ N, ∀ n ≥ N, ⌊f
     rw [f.iterate_succ_apply', h2, f, h, mul_zero, Int.floor_zero] at h0
     exact absurd h0 (Int.zero_ne_negSucc 0)
   ---- Now show using induction that `f^n(r)` takes the desired formula for `n ≥ 2N`.
-  · refine Nat.le_induction (by simp) λ n hn hn0 ↦ ?_
-    -- Base case is trivial (by `simp`), so now just do the induction step.
+  · intro n hn; induction n, hn using Nat.le_induction with
+    | base => rw [if_pos (Nat.mul_mod_right _ _), neg_neg]
+    | succ n hn hn0 => ?_
+    -- Base case is obvious, so now we just do the induction step.
     simp_rw [Nat.succ_mod_two_eq_zero_iff, ← Nat.mod_two_ne_zero]
     rw [f.iterate_succ_apply', f, Int.fract, h hn, hn0, ite_not, neg_neg,
       Int.cast_neg, Int.cast_one, sub_neg_eq_add, ite_add, mul_ite,
