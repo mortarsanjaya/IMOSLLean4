@@ -60,7 +60,7 @@ theorem not_good_one (f) : ¬good 1 f := by
     · rw [Nat.succ_mod_two_eq_one_iff, Nat.add_mul_mod_self_right _ 1 2] at h0
       exact ⟨2, h0⟩
   ---- Then `f(2m) + (2n + 1)` and `f(2n + 1) + 2m` are both even; contradiction.
-  apply Nat.zero_ne_one
+  refine Nat.zero_ne_one ?_
   obtain h0 | h0 :
       (f (2 * m) + (2 * n + 1) : ℕ) % 2 = 1 ∨ (f (2 * n + 1) + 2 * m : ℕ) % 2 = 1 :=
     h (2 * m) (2 * n + 1) λ h0 ↦ Nat.two_mul_ne_two_mul_add_one (PNat.coe_inj.mpr h0)
@@ -109,7 +109,6 @@ theorem succ_lt_two_pow_goodHelperNat_succ (n) : n + 1 < 2 ^ (goodHelperNat n + 
   calc n + 1
   _ < goodHelperNat n + 1 := Nat.succ_lt_succ (goodHelperNat_gt_self n)
   _ < 2 ^ (goodHelperNat n + 1) := Nat.lt_two_pow_self
-
 
 
 /-- The function `f(n) = 2^{g(n) + 1} - (n + 1)`, which we claim is `2`-good. -/
@@ -214,7 +213,6 @@ theorem gcd_goodFnNat_cross_add_le_two (h : m ≠ n) :
   exact hk.trans_le (Nat.pow_le_pow_of_le h0 h)
 
 
-
 /-- `goodFnNat`, but over `ℕ+`. -/
 def goodFn (n : ℕ+) : ℕ+ := ⟨goodFnNat n, goodFnNat_pos n⟩
 
@@ -229,10 +227,6 @@ theorem good_two_goodFn : good 2 goodFn :=
 /-! ### Summary -/
 
 /-- Final solution -/
-theorem final_solution : (∃ f, good k f) ↔ k ≥ 2 := by
-  refine ⟨?_, λ hk ↦ ?_⟩
-  · change _ → 1 < k
-    rw [lt_iff_not_ge, PNat.le_one_iff]
-    rintro ⟨f, hf⟩ rfl
-    exact not_good_one f hf
-  · exact ⟨goodFn, good_two_goodFn.of_ge hk⟩
+theorem final_solution : (∃ f, good k f) ↔ k ≥ 2 :=
+  ⟨λ ⟨f, hf⟩ ↦ k.one_le.eq_or_lt'.resolve_left λ hk ↦ not_good_one f (hk ▸ hf),
+  λ hk ↦ ⟨goodFn, good_two_goodFn.of_ge hk⟩⟩
