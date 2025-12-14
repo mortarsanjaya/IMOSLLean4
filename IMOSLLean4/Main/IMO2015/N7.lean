@@ -5,8 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Data.PNat.Prime
-import Mathlib.Data.Nat.Factorial.Basic
-import Mathlib.Data.Nat.Factors
 import Mathlib.FieldTheory.Finite.Basic
 
 /-!
