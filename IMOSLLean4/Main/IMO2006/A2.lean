@@ -28,7 +28,7 @@ namespace IMO2006A2
 open Finset
 
 /-- The sequence `(a_n)_{n ≥ 0}`. -/
-abbrev a (F) [Field F] : ℕ → F
+def a (F) [Field F] : ℕ → F
   | 0 => -1
   | n + 1 => -∑ i : Fin (n + 1), a F i / (n + 2 - i : ℕ)
 
@@ -36,7 +36,8 @@ abbrev a (F) [Field F] : ℕ → F
 variable {F} [Field F]
 
 /-- `a_0 = -1`. -/
-lemma a_zero : a F 0 = -1 := rfl
+lemma a_zero : a F 0 = -1 := by
+  rw [a]
 
 /-- `a_{n + 1} = -∑ i ≤ n, a_i/(n + 2 - i)`. -/
 lemma a_succ (n) : a F (n + 1) = -∑ i ∈ range (n + 1), a F i / (n + 2 - i : ℕ) := by
@@ -78,13 +79,13 @@ lemma coeff_pos (hi : 0 < i) (hin : i < n) :
     rw [one_add_div (h.trans h0).ne.symm, ← Nat.cast_add,
       Nat.sub_add_cancel (Nat.le_succ_of_le hin.le)]
   _ < (1 : F) + (i : ℕ) / (n - i : ℕ) :=
-    add_lt_add_left (div_lt_div_of_pos_left (Nat.cast_pos.mpr hi) h h0) 1
+    add_lt_add_right (div_lt_div_of_pos_left (Nat.cast_pos.mpr hi) h h0) 1
   _ = _ := by rw [one_add_div h.ne.symm, ← Nat.cast_add, Nat.sub_add_cancel hin.le]
 
 /-- Final solution -/
 theorem final_solution (n) : 0 < a F (n + 1) := by
   ---- Proceed by strong induction on `n`.
-  induction' n using Nat.strong_induction_on with n n_ih
+  induction n using Nat.strong_induction_on with | h n n_ih => ?_
   ---- The base case `n = 0` is obvious.
   obtain rfl | hn : n = 0 ∨ 0 < n := n.eq_zero_or_pos
   · rw [a_one, inv_pos]; exact two_pos

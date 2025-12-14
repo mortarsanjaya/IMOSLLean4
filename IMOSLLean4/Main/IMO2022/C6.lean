@@ -307,7 +307,7 @@ theorem final_solution (n) :
       _ = 2 ^ k * 1 := sum_replicate _ _
       _ = 2 ^ k := Nat.mul_one _
       _ ≠ 0 := hn0
-    rw [Nat.succ_le, card_pos]
+    rw [Nat.succ_le_iff, card_pos]
     rintro rfl; exact hX rfl
   ---- Case 3: `n ≠ 0` is not a power of `2`.
   · refine ⟨⟨{n - 2 ^ n.log2, 2 ^ n.log2}, replicate_ones_to_doubleton hn0, rfl⟩, ?_⟩
@@ -322,7 +322,8 @@ theorem final_solution (n) :
         _ = n * 1 := sum_replicate _ _
         _ = n := Nat.mul_one n
       -- Now do the casework.
-      rw [Nat.lt_succ, Nat.le_one_iff_eq_zero_or_eq_one, card_eq_zero, card_eq_one] at hX0
+      rw [Nat.lt_succ_iff, Nat.le_one_iff_eq_zero_or_eq_one,
+        card_eq_zero, card_eq_one] at hX0
       rcases hX0 with rfl | ⟨a, rfl⟩
       exacts [absurd hX1.symm hn0, congrArg _ hX1]
     -- Now pick any **odd** prime divisor `p` of `n`.

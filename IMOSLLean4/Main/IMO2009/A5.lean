@@ -62,7 +62,7 @@ theorem final_solution [Ring R] [LinearOrder R] [IsStrictOrderedRing R] (f : R �
   ---- Next show that `f(y) ≥ -f(0) - 1` whenever `y > 0`.
   have hf2 (y) (hy : 0 < y) : -(f 0 + 1) ≤ f y := by
     replace hf : f (f y - f y) ≤ y * f (f y) + (y + f 0) :=
-      (hf (f y) y).trans (add_le_add_left (hf1 y) _)
+      (hf (f y) y).trans (add_le_add_right (hf1 y) _)
     rw [sub_self, ← add_assoc, le_add_iff_nonneg_left, ← mul_add_one y,
       mul_nonneg_iff_of_pos_left hy, ← neg_le_iff_add_nonneg] at hf
     rw [neg_add, neg_add_le_iff_le_add, add_comm]
@@ -95,6 +95,7 @@ theorem final_solution [Ring R] [LinearOrder R] [IsStrictOrderedRing R] (f : R �
     replace hf1 : A > 0 := h.trans_le ((one_mul (f x)).symm.trans_le (hf 1))
     specialize hf (A * y)
     rwa [mul_assoc, mul_le_iff_le_one_right hf1] at hf
+
   ---- Specialize to the case `y = 3`; we have `3f(x) ≤ 1` for any `x ∈ R`.
   replace hf2 (x) : 3 * f x ≤ 1 := hf2 3 zero_le_three x
 
@@ -106,7 +107,7 @@ theorem final_solution [Ring R] [LinearOrder R] [IsStrictOrderedRing R] (f : R �
       f (-1) = f (f y - 1 - f y) := by rw [sub_sub_cancel_left]
       _ ≤ y * f (f y - 1) + (f y - 1) := hf (f y - 1) y
       _ ≤ y * (f y - 1 + f 0) + (f y - 1) :=
-        add_le_add_right (mul_le_mul_of_nonneg_left (hf1 (f y - 1)) hy) _
+        add_le_add_left (mul_le_mul_of_nonneg_left (hf1 (f y - 1)) hy) _
     -- Next, multiply both sides by `3` and use the inequality `3f(x) ≤ 1` for all `x`.
     replace h : 3 * f (-1) ≤ -y - 2 := by
       calc 3 * f (-1)

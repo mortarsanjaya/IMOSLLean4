@@ -72,7 +72,7 @@ end
 /-- The general claim -/
 theorem general_claim (hn : 0 < n) (b) : ∀ N r, ∃ m ≥ N, (b ^ m + m) % n = r % n := by
   ---- Step 1: Set up the induction and immediately solve the base case
-  induction' n using Nat.strong_induction_on with n n_ih
+  induction n using Nat.strong_induction_on with | h n n_ih => ?_
   rw [← Nat.succ_le_iff, le_iff_eq_or_lt] at hn
   rcases hn with rfl | hn
   · refine λ N _ ↦ ⟨N, N.le_refl, ?_⟩

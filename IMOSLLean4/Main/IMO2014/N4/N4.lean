@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.NumberTheory.Basic
+import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2014 N4
@@ -28,8 +29,8 @@ lemma case_odd_succ (hn : 1 < n) (h : Odd n) (k : ℕ) :
       rw [← one_pow (n ^ k.succ)]; apply dvd_sub_pow_of_dvd_sub
       rw [Nat.cast_succ, add_sub_cancel_right]
     have h1 : 0 ≤ C := by
-      rw [← mul_nonneg_iff_of_pos_left (pow_pos (Nat.cast_pos.mpr hn') k.succ), ← h0]
-      exact Int.le_sub_one_of_lt (pow_pos (Nat.cast_pos.mpr n.succ_pos) _)
+      rw [← mul_nonneg_iff_of_pos_left (pow_pos (Int.natCast_pos.mpr hn') k.succ), ← h0]
+      exact Int.le_sub_one_of_lt (pow_pos (Int.natCast_pos.mpr n.succ_pos) _)
     lift C to ℕ using h1
     rw [sub_eq_iff_eq_add, ← Nat.cast_pow, ← Nat.cast_pow,
       ← Nat.cast_mul, ← Nat.cast_succ, Nat.cast_inj] at h0
@@ -79,3 +80,5 @@ theorem final_solution (hn : 1 < n) (N) : ∃ k > N, Odd (n ^ k / k) := by
     rw [Nat.even_add_one, Nat.not_even_iff_odd] at h0
     refine ⟨n ^ N.succ, ?_, case_odd_succ h h0 _⟩
     exact N.lt_succ_self.trans (Nat.lt_pow_self h)
+
+#min_imports

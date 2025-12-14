@@ -30,23 +30,26 @@ def targetSumPair [Field F] (r : F) (l : List F) : F × F :=
 
 section
 
-variable [AddCommMonoid M] [LinearOrder M] [IsOrderedAddMonoid M] {l : List M} (hl : ∀ x ∈ l, 0 ≤ x)
+variable [AddCommMonoid M] [LinearOrder M] [IsOrderedAddMonoid M]
+  {l : List M} (hl : ∀ x ∈ l, 0 ≤ x)
 include hl
 
 lemma foldr_add_nonneg : 0 ≤ l.foldr (· + ·) 0 := by
-  induction' l with a l l_ih
-  · exact le_refl 0
-  · replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
-    exact add_nonneg hl.1 (l_ih hl.2)
+  induction l with
+  | nil => exact le_refl 0
+  | cons a l l_ih =>
+      replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
+      exact add_nonneg hl.1 (l_ih hl.2)
 
 lemma foldr_add_pos (hl0 : ∃ x ∈ l, x ≠ 0) : 0 < l.foldr (· + ·) 0 := by
-  induction' l with a l l_ih
-  · exact hl0.elim λ c h ↦ absurd h.1 List.not_mem_nil
-  · replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
-    simp only [List.mem_cons, exists_eq_or_imp] at hl0
-    rcases hl0 with h | h
-    exacts [add_pos_of_pos_of_nonneg (hl.1.lt_of_ne h.symm) (foldr_add_nonneg hl.2),
-      (add_pos_of_pos_of_nonneg (l_ih hl.2 h) hl.1).trans_eq (add_comm _ _)]
+  induction l with
+  | nil => exact hl0.elim λ c h ↦ absurd h.1 List.not_mem_nil
+  | cons a l l_ih =>
+      replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
+      simp only [List.mem_cons, exists_eq_or_imp] at hl0
+      rcases hl0 with h | h
+      exacts [add_pos_of_pos_of_nonneg (hl.1.lt_of_ne h.symm) (foldr_add_nonneg hl.2),
+        (add_pos_of_pos_of_nonneg (l_ih hl.2 h) hl.1).trans_eq (add_comm _ _)]
 
 end
 
@@ -108,18 +111,20 @@ lemma targetSumPair_replicate_zero : ∀ n, targetSumPair r (List.replicate n 0)
 theorem targetSumPair_main_ineq [LinearOrder F] [IsStrictOrderedRing F] {l : List F}
     (hl : ∀ x ∈ l, 0 ≤ x) {r : F} (hr : l.foldr (· + ·) 0 ≤ r) :
     (targetSumPair r l).1 ≤ ((l.foldr (· + ·) 0) ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) := by
-  induction' l with a l l_ih generalizing r
-  · rw [List.foldr, List.foldr, sub_zero, pow_succ', zero_mul, zero_div, targetSumPair_nil]
-  · replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
-    let s : F := (targetSumPair r l).2
-    have h : s = l.foldr (· + ·) 0 := targetSumPair_snd_eq r l
-    calc
-      _ = a / (r - a) * s ^ 2 + (targetSumPair r l).1 := rfl
-      _ ≤ ((a + s) ^ 3 - s ^ 3 - a ^ 3) / (3 * r) +
-          (s ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) :=
-        add_le_add (field_ineq hl.1 ((foldr_add_nonneg hl.2).trans_eq h.symm) (h ▸ hr))
-          (h ▸ l_ih hl.2 (le_of_add_le_of_nonneg_right hr hl.1))
-      _ = _ := by rw [← add_div, sub_sub, sub_add, add_sub_sub_cancel, h]; rfl
+  induction l generalizing r with
+  | nil => rw [List.foldr, List.foldr, sub_zero,
+      pow_succ', zero_mul, zero_div, targetSumPair_nil]
+  | cons a l l_ih =>
+      replace hl : 0 ≤ a ∧ ∀ x ∈ l, 0 ≤ x := List.forall_mem_cons.mp hl
+      let s : F := (targetSumPair r l).2
+      have h : s = l.foldr (· + ·) 0 := targetSumPair_snd_eq r l
+      calc
+        _ = a / (r - a) * s ^ 2 + (targetSumPair r l).1 := rfl
+        _ ≤ ((a + s) ^ 3 - s ^ 3 - a ^ 3) / (3 * r) +
+            (s ^ 3 - l.foldr (· ^ 3 + ·) 0) / (3 * r) :=
+          add_le_add (field_ineq hl.1 ((foldr_add_nonneg hl.2).trans_eq h.symm) (h ▸ hr))
+            (h ▸ l_ih hl.2 (le_of_add_le_of_nonneg_right hr hl.1))
+        _ = _ := by rw [← add_div, sub_sub, sub_add, add_sub_sub_cancel, h]; rfl
 
 /-- Final solution -/
 theorem final_solution [LinearOrder F] [IsStrictOrderedRing F] {r : F} (hr : 0 < r)

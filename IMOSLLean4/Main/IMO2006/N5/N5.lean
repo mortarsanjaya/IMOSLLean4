@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.Algebra.Field.GeomSum
 
 /-!
 # IMO 2006 N5

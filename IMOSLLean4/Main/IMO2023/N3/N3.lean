@@ -24,11 +24,11 @@ namespace IMO2023N3
 lemma le_padicValNat_iff (ha : 1 < a) (hb : 0 < b) : n ≤ padicValNat a b ↔ a ^ n ∣ b :=
   padicValNat.padicValNat_eq_maxPowDiv ▸
     ⟨λ h ↦ Nat.pow_dvd_of_le_of_pow_dvd h (Nat.maxPowDiv.pow_dvd a b),
-    Nat.maxPowDiv.le_of_dvd ha hb⟩
+    Nat.maxPowDiv.le_of_dvd ha hb.ne.symm⟩
 
 lemma padicValNat_eq_iff (ha : 1 < a) (hb : 0 < b) :
     padicValNat a b = n ↔ a ^ n ∣ b ∧ ¬a ^ (n + 1) ∣ b := by
-  rw [← le_padicValNat_iff ha hb, ← le_padicValNat_iff ha hb, Nat.not_le, Nat.lt_succ]
+  rw [← le_padicValNat_iff ha hb, ← le_padicValNat_iff ha hb, Nat.not_le, Nat.lt_succ_iff]
   exact ⟨λ h ↦ by rw [h, and_self], λ h ↦ Nat.le_antisymm h.2 h.1⟩
 
 lemma padicValNat_pow_left (a b k) : padicValNat (a ^ k) b = padicValNat a b / k := by

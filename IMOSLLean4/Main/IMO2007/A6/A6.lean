@@ -128,7 +128,7 @@ theorem niceTuple.of_three_le [ExistsAddOfLE R] :
   wlog h : ∀ i, a 0 ≤ a i
   · obtain ⟨j, hj⟩ : ∃ j, ∀ i, a j ≤ a i := Fin_exists_minimal a
     exact of_add₁_iff.mp <| this _ hn n_ih (a := λ i ↦ a (i + j))
-      (λ i ↦ ha _) (λ i ↦ (hj _).trans_eq' (congrArg a j.zero_add))
+      (λ i ↦ ha _) (λ i ↦ (hj _).trans_eq' (congrArg a j.zero_add.symm))
   specialize ha 0
   obtain ⟨b, hb, h0⟩ : ∃ b : Fin (n + 1) → R,
       (∀ i, 0 ≤ b i) ∧ ∀ i, a i = (Fin.cons 0 b : _ → R) i + a 0 := by
@@ -171,7 +171,7 @@ theorem id2 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
     (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2
       ≤ (∑ i, a i ^ 2) * ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2 := by
   rw [id1, ← Fin_sum_shift (λ i ↦ a i ^ 2) 1]
-  exact CauchySchwarz_squares _ _ _
+  exact sum_mul_sq_le_sq_mul_sq _ _ _
 
 open Fin.NatCast in
 theorem id3 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
@@ -212,9 +212,11 @@ theorem id5 (hn : 5 ≤ n + 1) {b : Fin (n + 1) → R} (hb : ∀ i, 0 ≤ b i) :
     ∑ i, b i ^ 2 + 2 * ∑ i, b i * (b (i + 1) + b (i + 2)) ≤ (∑ i, b i) ^ 2 := by
   rw [id4, sq, sum_mul, ← Fin_sum_shift (λ i ↦ b i * _) 2]
   refine sum_le_sum λ i _ ↦ mul_le_mul_of_nonneg_left ?_ (hb _)
-  rw [← Fin_sum_shift _ i]
-  apply (sum_le_univ_sum_of_nonneg (s := image (Fin.castLE hn) univ) (λ _ ↦ hb _)).trans_eq'
-  refine Finset.sum_of_injOn (Fin.castLE hn) ?_ ?_ (λ j ↦ ?_) (λ j _ ↦ ?_)
+  calc ∑ j : Fin 5, b (_ + i)
+    _ = ∑ j ∈ image (Fin.castLE hn) univ, b (j + i) :=
+      Finset.sum_of_injOn (Fin.castLE hn) ?_ ?_ (λ j ↦ ?_) (λ j _ ↦ ?_)
+    _ ≤ ∑ j : Fin (n + 1), b (j + i) := sum_le_univ_sum_of_nonneg λ _ ↦ hb _
+    _ = ∑ j : Fin (n + 1), b j := Fin_sum_shift b i
   · exact Set.injOn_of_injective (Fin.castLE_injective _)
   · rw [coe_image]; exact Set.mapsTo_image (Fin.castLE hn) _
   · rw [coe_univ, Set.image_univ, mem_image_univ_iff_mem_range]; exact absurd

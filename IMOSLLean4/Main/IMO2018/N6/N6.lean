@@ -30,15 +30,16 @@ lemma PNat_exists_greatest_infinite_fiber {f : ℕ+ → ℕ+} (h : ∃ N, ∀ n,
   suffices ∀ M N, ∃ n ≥ N, M ≤ f n by
     intro N; obtain ⟨n, -, hn⟩ := this (N + 1) 1
     exact ⟨n, PNat.add_one_le_iff.mp hn⟩
-  intro M; induction' M using PNat.recOn with M M_ih
-  · intro N; exact ⟨N, le_refl N, (f N).one_le⟩
-  · by_contra! h0; rcases h0 with ⟨K, hK⟩
-    have h0 (N) : ∃ n ≥ N, f n = M := by
-      obtain ⟨n, hn, h1⟩ := M_ih (N + K)
-      exact ⟨n, (N.lt_add_right K).le.trans hn,
-        h1.antisymm' <| PNat.lt_add_one_iff.mp <| hK n <| (K.lt_add_left N).le.trans hn⟩
-    obtain ⟨n, h1, h2⟩ := h _ h0 K
-    exact (PNat.add_one_le_iff.mpr h2).not_gt (hK n h1)
+  intro M; induction M using PNat.recOn with
+  | one => intro N; exact ⟨N, le_refl N, (f N).one_le⟩
+  | succ M M_ih =>
+      by_contra! h0; rcases h0 with ⟨K, hK⟩
+      have h0 (N) : ∃ n ≥ N, f n = M := by
+        obtain ⟨n, hn, h1⟩ := M_ih (N + K)
+        exact ⟨n, (N.lt_add_right K).le.trans hn,
+          h1.antisymm' <| PNat.lt_add_one_iff.mp <| hK n <| (K.lt_add_left N).le.trans hn⟩
+      obtain ⟨n, h1, h2⟩ := h _ h0 K
+      exact (PNat.add_one_le_iff.mpr h2).not_gt (hK n h1)
 
 lemma PNat_exists_big_not_dvd {d : ℕ+} (hd : d > 1) (N : ℕ+) : ∃ n ≥ N, ¬d.val ∣ n := by
   refine (em' (d.val ∣ N)).elim (λ h ↦ ⟨N, le_refl N, h⟩)
@@ -204,7 +205,7 @@ theorem eq_smul_id_of_unbounded {f : GoodFun ℕ+} (hf : ∀ N, ∃ n, N < f n) 
   obtain ⟨M, rfl⟩ : ∃ M, M + (n + 1) = N :=
     ⟨N - (n + 1), PNat.sub_add_of_lt <| lt_of_not_ge λ h ↦
       hN.not_ge <| (f.map_le_mul_map_one N).trans <|
-        mul_le_mul_left' (h.trans (PNat.lt_add_left _ _).le) _⟩
+        mul_le_mul_right (h.trans (PNat.lt_add_left _ _).le) _⟩
   ---- We get `f(M) + f(n + 1) = f(M + 1) + f(n)`
   replace hf : f M + f (n + 1) = f (M + 1) + f n :=
     (hf rfl).trans (hf (by rw [add_right_comm, add_assoc])).symm
@@ -216,16 +217,16 @@ theorem eq_smul_id_of_unbounded {f : GoodFun ℕ+} (hf : ∀ N, ∃ n, N < f n) 
   replace hN0 : f M ≤ f 1 * (n + (n + 1)) := hN0 _ (PNat.lt_add_right _ _)
   replace hN : f 1 * (n + 1) < f (M + 1) :=
     lt_of_add_lt_add_right (a := f n) <| calc f 1 * (n + 1) + f n
-      _ ≤ f 1 * (n + 1) + f 1 * n := add_le_add_left (f.map_le_mul_map_one n) _
+      _ ≤ f 1 * (n + 1) + f 1 * n := add_le_add_right (f.map_le_mul_map_one n) _
       _ = f 1 * (n + (n + 1)) := by rw [← mul_add, add_comm]
       _ < f (M + (n + 1)) := hN
       _ = f (M + 1 + n) := by rw [add_right_comm, add_assoc]
       _ ≤ f (M + 1) + f n := PNat.le_of_dvd (f.good_def _ _)
   calc f M + f 1
-    _ ≤ f 1 * (n + (n + 1)) + f 1 := add_le_add_right hN0 (f 1)
+    _ ≤ f 1 * (n + (n + 1)) + f 1 := add_le_add_left hN0 (f 1)
     _ = f 1 * (n + 1) * (1 + 1) := by
       rw [← mul_add_one, add_right_comm, mul_assoc, mul_add_one, mul_one]
-    _ < f (M + 1) * 2 := mul_lt_mul_right' hN 2
+    _ < f (M + 1) * 2 := mul_lt_mul_left hN 2
 
 theorem dvd_map_add_imp_iff {f : GoodFun ℕ+} {M : ℕ}
     (h : M ∣ f (m + n)) (h0 : M ∣ f m) : M ∣ f n :=
@@ -235,8 +236,9 @@ theorem dvd_map_dvd_map_mul_add_imp {f : GoodFun ℕ+} {M : ℕ}
     (h : M ∣ f d) (h0 : M ∣ f (d * (m + k))) : M ∣ f (d * m) := by
   have h1 {m} (h1 : M ∣ f (d * (m + 1))) : M ∣ f (d * m) := by
     rw [mul_add_one, add_comm] at h1; exact dvd_map_add_imp_iff h1 h
-  induction' k using PNat.caseStrongInductionOn with k k_ih
-  exacts [h1 h0, k_ih _ (le_refl k) (h1 (add_assoc m k 1 ▸ h0))]
+  induction k using PNat.caseStrongInductionOn with
+  | hz => exact h1 h0
+  | hi k k_ih => exact k_ih _ (le_refl k) (h1 (add_assoc m k 1 ▸ h0))
 
 theorem dvd_map_dvd_map_mul_imp {f : GoodFun ℕ+} {M : ℕ}
     (h : M ∣ f d) (h0 : M ∣ f (d * k)) (h1 : m ≤ k) : M ∣ f (d * m) :=
@@ -248,7 +250,7 @@ theorem exists_dvd_dvd_imp {f : GoodFun ℕ+} {M : ℕ} (h : ∃ n, M ∣ f n) :
   let d := PNat.find h
   have d_spec : M ∣ f d := PNat.find_spec h
   refine ⟨d, d_spec, λ n hn ↦ ?_⟩
-  induction' n using PNat.strongInductionOn with n n_ih
+  induction n using PNat.strongInductionOn with | _ n n_ih => ?_
   obtain rfl | ⟨m, rfl⟩ : d = n ∨ ∃ m, m + d = n :=
     (PNat.find_min' h hn).eq_or_lt.imp_right λ h0 ↦ ⟨n - d, PNat.sub_add_of_lt h0⟩
   exacts [d.val.dvd_refl, Nat.dvd_add_self_right.mpr <| n_ih _ (m.lt_add_right d) <|

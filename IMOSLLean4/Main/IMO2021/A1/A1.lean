@@ -16,8 +16,8 @@ Prove that there exists $a, b, c ∈ A$ such that $a < b < c$ and $c + 2a > 3b$.
 namespace IMOSL
 namespace IMO2021A1
 
-lemma List_sorted_cons_cons_imp (h : List.Sorted r (a :: b :: l)) : r a b :=
-  (List.forall_mem_cons.mp (List.sorted_cons.mp h).1).1
+lemma List_sorted_cons_cons_imp (h : List.Pairwise r (a :: b :: l)) : r a b :=
+  (List.forall_mem_cons.mp (List.pairwise_cons.mp h).1).1
 
 
 
@@ -53,7 +53,7 @@ theorem general_ineq₂ (h : b < c) (h0 : good c (b :: l)) :
     rw [l.length_concat]; exact (h0.general_ineq₁).trans (Nat.mul_le_mul_left _ (c.sub_le a))
 
 theorem of_sorted_ineq : ∀ {l},
-    l.Sorted GT.gt → (∀ a ∈ l, ∀ b ∈ l, a < b → 3 * (c - b) ≤ 2 * (c - a)) → good c l
+    l.Pairwise GT.gt → (∀ a ∈ l, ∀ b ∈ l, a < b → 3 * (c - b) ≤ 2 * (c - a)) → good c l
   | [] => λ _ _ ↦ trivial
   | [_] => λ _ _ ↦ trivial
   | b₀ :: a₀ :: _ => λ h h0 ↦
@@ -87,8 +87,9 @@ theorem final_solution (hn : n ≠ 0) {A : Finset ℕ}
     exists_cons_of_length_pos ((4 * n).succ_pos.trans_eq hA.symm)
   rw [l.length_cons, Nat.succ_inj] at hA
   ---- Now prove that `c > 5^n`
-  have h0 : (∀ x ∈ b :: l, c > x) ∧ (b :: l).Sorted GT.gt :=
-    sorted_cons.mp (h ▸ A.sort_sorted_gt)
+  have h0 : (∀ x ∈ b :: l, c > x) ∧ (b :: l).Pairwise GT.gt := by
+    rw [← pairwise_cons, ← h, ← sortedGT_iff_pairwise]
+    exact A.sortedGT_sort
   suffices good c (b :: l) by
     refine Nat.lt_of_mul_lt_mul_left ((five_pow_bound hn).trans_le ?_)
     rw [← hA]; exact this.general_ineq₂ (h0.1 b mem_cons_self)

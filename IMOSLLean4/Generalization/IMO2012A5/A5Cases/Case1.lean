@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
 import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map1
 import Mathlib.Algebra.Ring.Equiv
+import Mathlib.Data.Int.Cast.Basic
 
 /-!
 # IMO 2012 A5 (Case 1: `f(-1) ≠ 0`)
@@ -38,7 +39,7 @@ theorem Eq1 (x : R) : f (-x) = f (x + 1) * f (-1) + f x := by
 theorem Eq2 (x : R) : f (-x) = -f (x + 2) := by
   replace hf := Eq1 hf
   have h0 := hf (-(x + 1))
-  rw [neg_neg, hf (x + 1), neg_add, neg_add_cancel_right, ← add_assoc, self_eq_add_left,
+  rw [neg_neg, hf (x + 1), neg_add, neg_add_cancel_right, ← add_assoc, right_eq_add,
     ← add_mul, mul_eq_zero, or_iff_left h, add_assoc, one_add_one_eq_two] at h0
   exact eq_neg_of_add_eq_zero_left h0
 
@@ -119,7 +120,7 @@ end
 
 /-! ### Subcase 1.2: `f(-1) = 1`, `char(S) ∤ 3` -/
 
-structure GoodSubcase12 (f : R → S) extends ReducedGood f : Prop where
+structure GoodSubcase12 (f : R → S) : Prop extends ReducedGood f where
   map_neg_one : f (-1) = 1
   Schar : (3 : S) ≠ 0
 
@@ -141,7 +142,7 @@ lemma eq_zero_of_map_add_one (h : f (x + 1) = 0) : x = 0 := by
   have h2 := Eq3 hf.toNontrivialGood x (y - 1)
   rwa [h1, Case1.Eq6 hf.toNontrivialGood (map_neg_one_ne_zero hf) h, neg_one_mul,
     neg_one_mul, h0, h0 (x + _), add_assoc, sub_add_cancel, ← add_assoc, add_left_inj,
-    neg_add_rev, add_assoc, add_right_eq_self, neg_add_eq_zero, eq_comm, add_comm] at h2
+    neg_add_rev, add_assoc, add_eq_left, neg_add_eq_zero, eq_comm, add_comm] at h2
 
 lemma eq_zero_or_map_neg_add_self (x) : x = 0 ∨ f x + f (-x) = 1 :=
   (Case1.Eq5 hf.toNontrivialGood (map_neg_one_ne_zero hf) x).imp

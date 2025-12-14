@@ -32,7 +32,7 @@ theorem IntInt {f : Int → Int} (hf : ∀ n, f (n + 1) = c + f n) : ∀ n, f n 
   refine Int.rec ?_ ?_
   ---- Solve the case `n ≥ 0`.
   · refine NatInt λ n ↦ ?_
-    rw [Int.ofNat_eq_coe, Int.ofNat_eq_coe, Int.natCast_succ, hf]
+    rw [Int.ofNat_eq_natCast, Int.ofNat_eq_natCast, Int.natCast_succ, hf]
   ---- Solve the case `n < 0`.
   · -- First replace the given condition with a version we can apply `NatInt` on.
     replace hf (n : Nat) : f (-(n + 1 : Nat)) = -c + f (-n) := by

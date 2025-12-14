@@ -81,10 +81,10 @@ variable {R : I → Type*} [(i : I) → Ring (R i)] [(i : I) → LinearOrder (R 
   [(i : I) → IsOrderedRing (R i)]
 
 instance : CovariantClass ((i : I) → R i) ((i : I) → R i) (· + ·) (· ≤ ·) :=
-  ⟨λ f _ _ h i ↦ add_le_add_left (h i) (f i)⟩
+  ⟨λ f _ _ h i ↦ add_le_add_right (h i) (f i)⟩
 
 instance : CovariantClass ((i : I) → R i) ((i : I) → R i) (Function.swap (· + ·)) (· ≤ ·) :=
-  ⟨λ f _ _ h i ↦ add_le_add_right (h i) (f i)⟩
+  ⟨λ f _ _ h i ↦ add_le_add_left (h i) (f i)⟩
 
 section
 

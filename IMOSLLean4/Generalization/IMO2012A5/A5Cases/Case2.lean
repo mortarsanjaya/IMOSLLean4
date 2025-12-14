@@ -183,13 +183,13 @@ end CommCase
 
 /-! ### Restriction to the case `f(2) ≠ -1` -/
 
-structure GoodCase2 [NonAssocRing R] [NonAssocRing S] (f : R → S)
-    extends NontrivialGood f : Prop where
+structure GoodCase2 [NonAssocRing R] [NonAssocRing S] (f : R → S) : Prop
+    extends NontrivialGood f where
   map_even : ∀ x, f (-x) = f x
   map_two_ne_neg_one : f 2 ≠ -1
 
-structure RGoodCase2 [NonAssocRing R] [NonAssocRing S] (f : R → S)
-    extends ReducedGood f, GoodCase2 f : Prop
+structure RGoodCase2 [NonAssocRing R] [NonAssocRing S] (f : R → S) : Prop
+    extends ReducedGood f, GoodCase2 f
 
 
 namespace GoodCase2
@@ -334,9 +334,9 @@ theorem Rchar' : (2 : R) = -1 := by
 
 /-- (2.2.2) -/
 theorem Eq2 (x) : f (x + 1) * f (x - 1) = (f x + 1) * f x := by
-  have h0 : f 2 ≠ 1 := λ h0 ↦ hf.map_two_ne_neg_one <| by rw [h, zero_eq_neg, ← h, ← h0]
+  have h0 : f 2 ≠ 1 := λ h0 ↦ hf.map_two_ne_neg_one (by rw [h, zero_eq_neg, ← h, ← h0])
   rw [add_one_mul (f x), ← sq, ← hf.toGoodCase2.Eq7 h0, add_one_mul (f _),
-    mul_add_one (f _), add_assoc, add_assoc, self_eq_add_right,
+    mul_add_one (f _), add_assoc, add_assoc, left_eq_add,
     add_right_comm, ← add_assoc, ← add_assoc, Eq1 hf h, neg_add_cancel]
 
 theorem map_eq_neg_one_imp (h0 : f x = -1) : x = 0 := by
@@ -494,7 +494,7 @@ lemma Eq2 (x y) : g (x * y + 1) - g (x * y - 1) = g (x + y) - g (x - y) := by
 lemma Eq3_1 (x) : g (x + 1) * g (x - 1) = (g x - 1) ^ 2 := by
   have h : (g - 1) 2 ≠ 1 := λ h0 ↦ by
     rw [Pi.sub_apply, hg.map_two, sub_eq_of_eq_add three_add_one_eq_four.symm,
-      ← two_add_one_eq_three, add_left_eq_self] at h0
+      ← two_add_one_eq_three, add_eq_right] at h0
     exact hg.Schar_ne_two h0
   replace h := hg.shift_good.Eq7 h x
   simp only [Pi.sub_apply, Pi.one_apply, sub_add_cancel] at h; exact h
@@ -543,8 +543,8 @@ end ShiftGood23
 
 
 
-structure RShiftGood23 [NonAssocRing R] [NonAssocRing S] (g : R → S)
-  extends RGoodCase2 (g - 1), ShiftGood23 g : Prop
+structure RShiftGood23 [NonAssocRing R] [NonAssocRing S] (g : R → S) : Prop
+  extends RGoodCase2 (g - 1), ShiftGood23 g
 
 namespace RShiftGood23
 
@@ -673,7 +673,7 @@ lemma Eq7 : ∀ x y, g (x * y) = g x * g y := by
   rw [add_one_mul x, h0, zero_add] at h1
   rw [sub_one_mul, h0, zero_sub, hg.toShiftGood23.map_even] at h2
   have h3 : _ + _ = _ + _ := congrArg₂ (· + ·) h1 h2
-  rw [← two_mul, ← add_mul, hg.Eq1, mul_add_one (α := S), add_mul, self_eq_add_left,
+  rw [← two_mul, ← add_mul, hg.Eq1, mul_add_one (α := S), add_mul, right_eq_add,
     mul_assoc, mul_eq_zero, or_iff_right hg.Schar_ne_two] at h3
   rw [h0, hg.toShiftGood23.map_zero, h3]
 

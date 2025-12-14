@@ -45,7 +45,7 @@ theorem general_ineq
         exacts [h2.le, hSa _ h2]
       _ = a := by rw [← NNReal_rpow_sum, Finset.sum, map_univ_coe,
         sum_cons, h, NNReal.coe_one, NNReal.rpow_one]
-    apply (mul_le_mul_left' h1 _).trans_lt
+    apply (mul_le_mul_right h1 _).trans_lt
     -- Remains to show that `(a + 3 Σ_S) a = 1`
     rw [← two_add_one_eq_three, add_one_mul, add_left_comm, h,
       add_one_mul, mul_right_comm, ← h, add_comm, add_lt_add_iff_left]
@@ -53,9 +53,9 @@ theorem general_ineq
     rw [two_mul, ← h, add_lt_add_iff_left] at h0
     exact pos_of_gt h0
   ---- Case 2: `a ≥ 1/2`
-  · apply (mul_le_mul_left' (Multiset_weighted_AM_GM ((sum_cons _ _).trans h)) _).trans_lt
+  · apply (mul_le_mul_right (Multiset_weighted_AM_GM ((sum_cons _ _).trans h)) _).trans_lt
     rw [← two_add_one_eq_three, add_one_mul, add_left_comm, h, map_cons, sum_cons]
-    apply (mul_lt_mul_of_pos_left (add_lt_add_left (sq_sum_lt_sum_sq hS0 hS) _)
+    apply (mul_lt_mul_of_pos_left (add_lt_add_right (sq_sum_lt_sum_sq hS0 hS) _)
       (add_pos_of_nonneg_of_pos (zero_le _) one_pos)).trans_le
     rw [← add_le_add_iff_right ((2 * S.sum + 1) * (2 * a * S.sum)), ← mul_add, ← add_sq',
       h, one_pow, mul_one, add_comm, add_le_add_iff_left, mul_right_comm, mul_left_comm]

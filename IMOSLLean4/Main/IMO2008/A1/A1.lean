@@ -93,7 +93,7 @@ theorem weakGood_iff [ExistsAddOfLE R] {f : R → R} :
   ---- `←` direction
   · rcases hf with hf | hf
     -- Check `f(x) = x`
-    · refine ⟨λ x hx ↦ (hf x hx).symm.trans_gt hx, λ p hp q hq r hr s hs _ ↦ ?_⟩
+    · refine ⟨λ x hx ↦ hx.trans_eq (hf x hx).symm, λ p hp q hq r hr s hs _ ↦ ?_⟩
       rw [hf p hp, hf q hq, hf _ (pow_pos hr 2), hf _ (pow_pos hs 2)]
     -- Check `f(x) = 1/x`
     · refine ⟨λ x hx ↦ pos_of_mul_pos_right (one_pos.trans_eq (hf x hx).symm) hx.le,

@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Multiset
 import Mathlib.Algebra.BigOperators.Ring.Multiset
+import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 
 /-!
 # IMO 2019 A2

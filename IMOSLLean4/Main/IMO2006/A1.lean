@@ -80,7 +80,7 @@ theorem floor_f_abs_le_floor_abs (r : R) : |⌊f r⌋| ≤ |⌊r⌋| := by
   rcases le_total 0 r with hr | hr
   ---- Case 1: `r ≥ 0`
   · have hr2 : 0 ≤ ⌊r⌋ := Int.floor_nonneg.mpr hr
-    replace hr : (0 : R) ≤ ⌊r⌋ := Int.cast_nonneg.mpr hr2
+    replace hr : (0 : R) ≤ ⌊r⌋ := Int.cast_nonneg hr2
     replace hr0 : 0 ≤ ⌊f r⌋ := Int.floor_nonneg.mpr (mul_nonneg hr hr0)
     rw [abs_of_nonneg hr2, abs_of_nonneg hr0, ← Int.cast_le (R := R)]
     exact (Int.floor_le (f r)).trans (mul_le_of_le_one_right hr hr1)
@@ -137,6 +137,7 @@ theorem f_iter_alt_of_floor_f_iter_lim_one {r : R} (h : ∃ N, ∀ n ≥ N, ⌊f
       Int.cast_neg, Int.cast_one, sub_neg_eq_add, ite_add, mul_ite,
       neg_one_mul, sub_add_cancel, neg_add', neg_mul_neg, one_mul]
 
+omit [IsStrictOrderedRing R] in
 /-- If `⌊r⌋ = -C`, then `(C + 1) f(r) + C^2 = -C ((C + 1)r + C^2)`. -/
 theorem f_formula_of_floor_eq_neg {r : R} {C : ℕ} (h : ⌊r⌋ = -C) :
     (C + 1) * f r + C ^ 2 = (-C) * ((C + 1) * r + C ^ 2) := by

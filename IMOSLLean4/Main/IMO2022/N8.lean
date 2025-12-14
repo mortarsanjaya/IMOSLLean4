@@ -30,7 +30,7 @@ theorem pow_odd'_eq_self_of_zero_or_one_or_neg_one
     {a : ℤ} (ha : a = 0 ∨ a = 1 ∨ a = -1) (n) :
     a ^ (2 * n + 1) = a := by
   rcases ha with rfl | ha
-  · exact Int.mul_zero _
+  · rw [Int.pow_succ, Int.mul_zero]
   · rw [Int.pow_succ, pow_mul, sq_eq_one_iff.mpr ha, Int.one_pow, Int.one_mul]
 
 /-- `J(a | b)^{2n + 1} = J(a | b)`. -/

@@ -137,9 +137,9 @@ theorem SCharNeTwo_cases (h : (2 : S) ≠ 0) (x) :
   rw [sub_eq_zero, eq_comm] at h0
   ---- Step 2: If `f(x)^2 + f(x + 1)^2 = 3`, then `x` is 𝔽₄-primitive.
   refine (Thm1 hf x).elim (λ h1 ↦ Not.elim h ?_) (λ h1 ↦ ⟨h1, ?_⟩)
-  · rwa [h0, add_left_eq_self] at h1
+  · rwa [h0, add_eq_right] at h1
   apply congrArg (λ y ↦ y ^ 2) at h1
-  rw [one_pow, add_sq', h0, add_right_comm, add_left_eq_self,
+  rw [one_pow, add_sq', h0, add_right_comm, add_eq_right,
      mul_assoc, ← mul_one_add (2 : S), mul_eq_zero] at h1
   exact eq_neg_of_add_eq_zero_right (h1.resolve_left h)
 
@@ -328,7 +328,7 @@ theorem R_elts_claim1 {r s : R} (hr : r * r = 0) (hs : s * s = 0) :
           mul_one, mul_assoc, mul_assoc, ← mul_assoc] at h0
       rcases R_elts_cases hS hf (r * s) with (h2 | h2) | h2
       · rw [add_one_mul_self, h1, add_eq_zero_iff_eq] at h2
-        rw [h2, add_right_eq_self] at h0
+        rw [h2, add_eq_left] at h0
         apply congrArg (r * ·) at h0
         rw [mul_zero, ← mul_assoc, h2, one_mul] at h0
         rw [h0, zero_mul, zero_mul]
@@ -364,7 +364,7 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
       rw [h, add_one_mul s, add_eq_zero_iff_eq] at hr
       rw [hr, add_add_cancel_right] at hs
       rwa [← h, hs, zero_mul, eq_comm] at hr
-    · rw [add_assoc, self_eq_add_right] at h0
+    · rw [add_assoc, left_eq_add] at h0
       rw [h0, mul_zero, zero_add] at hs
       rw [← mul_one r, hs, mul_zero]
   ---- Case 2: `(r + s)^2 = 0`
@@ -373,7 +373,7 @@ theorem R_elts_claim2 {r s : R} (hr : r * r = 0) (hs : s * (s + 1) + 1 = 0) : r 
     · rw [← add_eq_zero_iff_eq.mp h, mul_add_one r, hr, zero_add] at hs
       rw [add_eq_zero_iff_eq.mp hs, mul_one] at hr
       rwa [hr, add_zero] at hs
-    · rw [self_eq_add_right] at h0
+    · rw [left_eq_add] at h0
       rw [h0, zero_mul, zero_add] at hs
       rw [← mul_one r, hs, mul_zero]
   ---- Case 3: `(r + s)^2 = (r + s) + 1`

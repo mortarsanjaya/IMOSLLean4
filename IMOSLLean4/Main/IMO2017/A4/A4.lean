@@ -99,7 +99,7 @@ theorem c_succ_eq_D_of_b_bdd (h2 : Monotone c) (h3 : D ≤ K) :
   have X {M : ℕ} : D ≤ M → 2 • b M < c M → c (M + 1) = c M := λ h3 h4 ↦
     ((h0 M h3).trans_eq (max_eq_left_of_lt h4)).antisymm (h2 M.le_succ)
   refine Nat.le_induction (X D.le_refl) (λ n h4 h5 h6 ↦ ?_) K h3
-  rw [X (Nat.le_step h4) h6]
+  rw [X (Nat.le_succ_of_le h4) h6]
   exact h5 (lt_of_not_ge λ h7 ↦ h6.not_ge (c_bdd h h0 h1 h4 h7).2)
 
 theorem max_two_nsmul_b_and_c_bdd (h2 : Monotone c) (n : ℕ) :

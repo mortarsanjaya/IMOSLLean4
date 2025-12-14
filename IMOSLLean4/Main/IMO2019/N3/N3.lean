@@ -87,7 +87,7 @@ theorem rootiful_induction_of_nat_dvd_nat (h0 : 1 < n) (h1 : ∀ k : ℕ, k < n 
       rw [mem_map] at h5; rcases h5 with ⟨d, h5, rfl⟩
       exact h1 d (Nat.digits_lt_base h0 h5)⟩)
     ⟨-N, mem_cons_self, by rw [Int.neg_ne_zero, Nat.cast_ne_zero]; exact h2.ne.symm⟩
-    (by rw [List.foldr, foldr_map, ← Nat.ofDigits_eq_foldr, ← Nat.coe_int_ofDigits,
+    (by rw [List.foldr, foldr_map, ← Nat.ofDigits_eq_foldr, ← Nat.coe_ofDigits,
       Nat.ofDigits_digits, h3, Nat.cast_mul, neg_add_cancel])
 
 theorem rootiful_induction_of_nat_dvd_int (h0 : 1 < n) (h1 : ∀ k : ℕ, k < n → (k : ℤ) ∈ S)
@@ -99,7 +99,7 @@ theorem rootiful_induction_of_nat_dvd_int (h0 : 1 < n) (h1 : ∀ k : ℕ, k < n 
 
 theorem rootiful_nat_subset (h0 : (0 : ℤ) ∈ S) (h1 : (1 : ℤ) ∈ S)
     (h2 : ∀ k : ℕ, 0 < k → ∃ N : ℤ, N ≠ 0 ∧ (k : ℤ) ∣ N ∧ N ∈ S) (k : ℕ) : (k : ℤ) ∈ S := by
-  induction' k using Nat.strong_induction_on with k h3
+  induction k using Nat.strong_induction_on with | h k h3 => ?_
   match k with
   | 0 => exact h0
   | 1 => exact h1

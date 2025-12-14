@@ -134,7 +134,7 @@ lemma good_iff_posSubtypeExt_weakGood {f : {x : R // 0 < x} → {x : R // 0 < x}
     lift y to {x : R // 0 < x} using hy
     refine ⟨y, ?_, λ z hz ↦ ?_⟩
     · rwa [posSubtypeExt_spec, posSubtypeExt_spec] at hy0
-    · refine Subtype.eq (hy1 z.1 ⟨z.2, ?_⟩)
+    · refine Subtype.ext (hy1 z.1 ⟨z.2, ?_⟩)
       rwa [posSubtypeExt_spec, posSubtypeExt_spec]
 
 /-- Final solution -/
@@ -144,6 +144,6 @@ theorem final_solution [ExistsAddOfLE R] {f : {x : R // 0 < x} → {x : R // 0 <
   refine ⟨λ h x ↦ ?_, λ h x hx ↦ ?_⟩
   · specialize h x.1 x.2
     rw [posSubtypeExt_spec] at h
-    exact Subtype.eq h
+    exact Subtype.ext h
   · lift x to {x : R // 0 < x} using hx
     rw [posSubtypeExt_spec]; exact congrArg (λ x ↦ x.1) (h x)

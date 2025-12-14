@@ -69,7 +69,7 @@ theorem final_solution_Nat : good f ↔ f = λ x ↦ x := by
     exact h1.zero_left_imp
   ---- Next, show that `f(n f(1)) = n` for all `n : ℕ`
   replace h0 (n) : f (f 1 * n) = n := by
-    induction' n using Nat.strongRecOn with n n_ih
+    induction n using Nat.strongRecOn with | ind n n_ih => ?_
     cases n with | zero => exact h0 | succ n => ?_
     -- Focus on the case `n > 0`
     replace h0 : f 1 ≠ 0 := λ h2 ↦ absurd (h1 1) (by rw [h2, h0]; exact Nat.zero_ne_one)

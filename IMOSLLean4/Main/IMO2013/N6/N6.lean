@@ -51,7 +51,7 @@ lemma const_of_not_int_id {n : ℤ} (h : f n ≠ n) : ∃ C, f = λ _ ↦ C := b
     specialize hf n (k * |f n - n| - n) _ (Int.natAbs_pos.mpr h)
     rw [← abs_ne_zero, ← Int.cast_ne_zero (α := ℚ)] at h
     rwa [Int.cast_sub, add_sub_cancel, Int.cast_mul, add_sub_left_comm,
-      Int.cast_natAbs, add_div, mul_div_cancel_right₀ _ h, ← Int.cast_sub] at hf
+      Nat.cast_natAbs, add_div, mul_div_cancel_right₀ _ h, ← Int.cast_sub] at hf
   replace h0 (k : ℤ) : f (k + 1) = f k := by
     generalize f n - n = t at h h0
     have h1 : (t : ℚ) ≠ 0 := Int.cast_ne_zero.mpr h
@@ -87,13 +87,13 @@ lemma eq_floor_of_map_half_nonpos (h0 : f 2⁻¹ ≤ 0) : f = Int.floor := by
       rw [← x.num_div_den, div_lt_one (Nat.cast_pos.mpr x.den_pos)] at h2
       exact Int.cast_lt.mp h2
     specialize this x.den x.num.natAbs h2
-    rwa [Int.cast_natAbs, h1, Rat.num_div_den] at this
+    rwa [Nat.cast_natAbs, h1, Rat.num_div_den] at this
   replace h0 : f 2⁻¹ = 0 := by
     replace h0 : 0 < 1 - 2 * f 2⁻¹ := by
       rw [sub_pos, ← Int.zero_add 1, Int.lt_add_one_iff]
       exact mul_nonpos_of_nonneg_of_nonpos zero_le_two h0
     specialize hf 2⁻¹ (-f 2⁻¹) (1 - 2 * f 2⁻¹).natAbs (Int.natAbs_pos.mpr h0.ne.symm)
-    rw [Int.cast_neg, add_neg_cancel, zero_div, Int.cast_natAbs, abs_eq_self.mpr h0.le,
+    rw [Int.cast_neg, add_neg_cancel, zero_div, Nat.cast_natAbs, abs_eq_self.mpr h0.le,
       inv_eq_one_div, ← sub_eq_add_neg, div_sub' two_ne_zero, one_div] at hf
     have h1 : (1 - 2 * f 2⁻¹ : ℚ) = (1 - 2 * f 2⁻¹ : ℤ) := by
       rw [Int.cast_sub, Int.cast_mul, Int.cast_one, Int.cast_two]

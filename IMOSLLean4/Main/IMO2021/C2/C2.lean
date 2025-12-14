@@ -72,7 +72,7 @@ theorem good.mod_le_div {f : Fin (m + 1) → Fin n} (hf : good f) :
       rw [sum_const, card_univ, Fintype.card_fin]; exact m.succ.mul_one.symm
     _ ≤ ∑ k : Fin m.succ, ∑ j ∈ range (n + 2), if f (k + j) = i then 1 else 0 := by
       refine sum_le_sum λ k _ ↦ ?_
-      rw [← card_filter, Nat.succ_le, card_pos]
+      rw [← card_filter, Nat.succ_le_iff, card_pos]
       obtain ⟨j, hj⟩ := hf k i; refine ⟨j, ?_⟩
       rwa [mem_filter, mem_range, Nat.lt_succ_iff]
     _ = ∑ j ∈ range (n + 2), ∑ k : Fin m.succ, if f (k + j) = i then 1 else 0 := sum_comm

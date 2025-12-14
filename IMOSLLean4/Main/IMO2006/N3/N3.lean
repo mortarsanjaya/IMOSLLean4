@@ -8,7 +8,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
 import Mathlib.Algebra.BigOperators.Intervals
 import Mathlib.NumberTheory.Divisors
 import IMOSLLean4.Extra.NatSequence.SeqMax
-import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.Ineq
 
 /-!
 # IMO 2006 N3

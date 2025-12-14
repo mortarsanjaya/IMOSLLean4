@@ -73,14 +73,15 @@ lemma sum_Ico_fin_boole_last (a : M) (n k m : ℕ) :
   · have h0 : m / n.succ ≤ k / n.succ := Nat.div_le_div_right h
     rw [Ico_eq_empty h.not_gt, Nat.sub_eq_zero_of_le h0, zero_nsmul, sum_empty]
   ---- Case `m ≥ k` follows by induction on `k - m`
-  induction' j with j j_ih
-  · rw [Nat.add_zero, Ico_self, Nat.sub_self, zero_nsmul, sum_empty]
-  · have h : k ≤ k + j := k.le_add_right j
-    have h0 : k / n.succ ≤ (k + j) / n.succ := Nat.div_le_div_right h
-    rw [← Nat.add_assoc, sum_Ico_succ_top h, j_ih, Nat.succ_div,
-      (_ / n.succ).add_comm, Nat.add_sub_assoc h0, add_comm, add_nsmul, ite_smul]
-    refine congrArg₂ _ (if_congr ?_ (one_nsmul a).symm (zero_nsmul a).symm) rfl
-    rw [Fin.ext_iff, Fin.val_natCast, Fin.val_last, mod_succ_eq_iff]
+  induction j with
+  | zero => rw [Nat.add_zero, Ico_self, Nat.sub_self, zero_nsmul, sum_empty]
+  | succ j j_ih =>
+      have h : k ≤ k + j := k.le_add_right j
+      have h0 : k / n.succ ≤ (k + j) / n.succ := Nat.div_le_div_right h
+      rw [← Nat.add_assoc, sum_Ico_succ_top h, j_ih, Nat.succ_div,
+        (_ / n.succ).add_comm, Nat.add_sub_assoc h0, add_comm, add_nsmul, ite_smul]
+      refine congrArg₂ _ (if_congr ?_ (one_nsmul a).symm (zero_nsmul a).symm) rfl
+      rw [Fin.ext_iff, Fin.val_natCast, Fin.val_last, mod_succ_eq_iff]
 
 lemma sum_Ico_fin_add {n : ℕ} (f : Fin n.succ → M) (i : ℕ) :
     ∑ j ∈ Ico i (i + n.succ), f j = ∑ j : Fin n.succ, f j := by

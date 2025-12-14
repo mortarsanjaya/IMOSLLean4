@@ -71,7 +71,7 @@ theorem eq_zero_or_hom_of_map_add_map_sq [CommRing S] [IsDomain S] [CharZero S] 
     specialize h1 (x * y * x) y; rwa [h2, mul_assoc, ← sq, h0, mul_assoc,
       ← mul_assoc, ← sq, h0, mul_assoc, ← sq, ← mul_pow] at h1
   replace h2 : f (x * y) = f (y * x) := by
-    refine eq_of_sub_eq_zero (pow_eq_zero (n := 2) ?_)
+    refine eq_of_sub_eq_zero (sq_eq_zero_iff.mp ?_)
     have h3 : _ ^ 2 = _ ^ 2 := congrArg₂ _ (h1 x y) rfl
     rw [add_sq', h2, mul_pow 2, sq 2, mul_assoc 2 2, two_mul (2 * _), add_right_inj] at h3
     rw [sub_sq', h2, h3, sub_self]
@@ -91,7 +91,7 @@ theorem good_map_zero [Ring S] [LinearOrder S] [IsStrictOrderedRing S]
 theorem good_map_main_ineq [Ring S] [LinearOrder S] [IsOrderedRing S]
     {f : R → S} (hf : good f) (x y : R) :
     2 * f x * f y + (f (x ^ 2) + f (y ^ 2)) ≤ f (x + y) ^ 2 :=
-  (add_le_add_left (le_max_left _ _) _).trans_eq (hf x y).symm
+  (add_le_add_right (le_max_left _ _) _).trans_eq (hf x y).symm
 
 end
 
@@ -190,8 +190,8 @@ theorem good_case_two (hf : good f) (h : f 0 = -1) : f = -1 ∨ ∃ φ : R →+*
       · have h4 : -1 ≤ f x := by
           rw [← neg_neg (f x), neg_le_neg_iff]
           refine le_of_not_gt λ h4 ↦ hf.not_lt
-            ((add_le_add_left (le_max_right _ _) _).trans_lt' ?_)
-          rw [lt_add_neg_iff_add_lt, ← two_mul, ← neg_sq, mul_lt_mul_left X, sq]
+            ((add_le_add_right (le_max_right _ _) _).trans_lt' ?_)
+          rw [lt_add_neg_iff_add_lt, ← two_mul, ← neg_sq, mul_lt_mul_iff_right₀ X, sq]
           exact one_lt_mul h4.le h4
         rw [max_eq_left h3, ← mul_add, ← add_assoc, ← two_mul, ← mul_add, ← mul_assoc] at hf
         refine ⟨lt_of_not_ge λ h5 ↦ hf.not_gt (zero_lt_one.trans_le' ?_), hf.symm⟩

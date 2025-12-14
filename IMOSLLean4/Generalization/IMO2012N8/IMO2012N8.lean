@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Main.IMO2012.N8
+import Mathlib.Data.Nat.Factorization.PrimePow
 
 /-!
 # IMO 2012 N8 (Generalization)
@@ -153,7 +154,7 @@ theorem final_solution_general : good F ↔ ¬q = 11 := by
     calc 40 ≤ 10 * k := Nat.mul_le_mul_left 10 h0
          _  < 10 * k + 1 := Nat.lt_succ_self _
          _  = q := h.symm
-  ---- If `k < 4`, then divide into four cases
+  ---- If `k < 4`, then divide into four cases.
   lift k to Fin 4 using h0
   fin_cases k
   ---- If `k = 0`, then `q = 1`. Contradiction, as a field cannot have cardinality `1`.
@@ -161,7 +162,11 @@ theorem final_solution_general : good F ↔ ¬q = 11 := by
   ---- If `k = 1`, then `q = 11`. Contradiction, as we assumed `q ≠ 11`.
   · exact absurd h hF
   ---- If `k = 2`, then `q = 21`. Contradiction, as `21` is not a prime power.
-  · replace h : IsPrimePow 21 := by simpa [h] using FiniteField.isPrimePow_card F
-    exact absurd h (by decide : ¬IsPrimePow 21)
+  · refine absurd (FiniteField.isPrimePow_card F) (h ▸ ?_)
+    -- Somehow direct decision procedute doesn't work anymore...
+    clear h; intro h
+    replace hF : Nat.Coprime 3 7 := rfl
+    replace h : 21 ∣ 3 ∨ 21 ∣ 7 := (hF.isPrimePow_dvd_mul h).mp (Nat.dvd_refl 21)
+    revert h; decide
   ---- If `k = 3`, then `q = 31`, which works.
   · exact good_of_card_eq_31 h

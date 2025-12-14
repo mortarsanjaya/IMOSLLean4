@@ -35,8 +35,10 @@ theorem exists_mem_ge_of_card {S : Finset ℕ} (hS : n + 1 ≤ S.card) : ∃ k �
 
 theorem card_choose_le_nat_sum (S : Finset ℕ) : S.card.choose 2 ≤ S.sum id := by
   ---- Induction on `|S|`, with the base case trivial
-  generalize hn : S.card = n; induction' n with n n_ih generalizing S
-  · exact Nat.zero_le _
+  generalize hn : S.card = n
+  induction n generalizing S with
+  | zero => exact Nat.zero_le _
+  | succ n n_ih => ?_
   ---- Start by writing `S = {m} ∪ T` for some `m ≥ n`
   obtain ⟨m, T, rfl, hm, hm0⟩ : ∃ m T, insert m T = S ∧ n ≤ m ∧ m ∉ T := by
     obtain ⟨m, hm, hm0⟩ := exists_mem_ge_of_card hn.ge

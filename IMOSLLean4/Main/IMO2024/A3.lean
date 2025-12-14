@@ -45,9 +45,8 @@ theorem Finset_sum_rpow_le_rpow_sum {p : ℝ} (hp : 1 ≤ p) (I : Finset ι) (x 
       sum_congr rfl λ i _ ↦ by rw [← rpow_add_one' hp1, hp0]
     _ ≤ ∑ i ∈ I, (∑ j ∈ I, x j) ^ (p - 1) * x i := by
       -- This follows from the trivial bound `f(i) ≤ ∑ j, f(j)`.
-      refine sum_le_sum λ i hi ↦ mul_le_mul_right' ?_ _
-      exact rpow_le_rpow
-        (CanonicallyOrderedAddCommMonoid.single_le_sum hi) (sub_nonneg_of_le hp)
+      refine sum_le_sum λ i hi ↦ mul_le_mul_left ?_ _
+      exact rpow_le_rpow (single_le_sum_of_canonicallyOrdered hi) (sub_nonneg_of_le hp)
     _ = (∑ i ∈ I, x i) ^ p := by rw [← mul_sum, ← rpow_add_one' hp1, hp0]
 
 /-- Given real numbers `p` and `q` with `1 ≤ q < p` and `ε > 0`, there exists an

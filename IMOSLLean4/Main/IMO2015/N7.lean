@@ -169,7 +169,7 @@ theorem odd_dvd_gcd_goodFnNat_cross_add_imp (h : m ≠ n) (ht : Odd t)
     _ ≤ 2 ^ (goodHelperNat (m - (n + 1) + n) + 1) := by
       have h2 : StrictMono (λ t ↦ 2 ^ (goodHelperNat t + 1)) :=
         (pow_right_strictMono₀ Nat.one_lt_two).comp
-          (add_right_strictMono.comp goodHelperNat_strictMono)
+          (add_left_strictMono.comp goodHelperNat_strictMono)
       exact h2.add_le_nat _ _
     _ = 2 ^ (goodHelperNat (m - 1) + 1) := by
       rw [← Nat.sub_add_comm h1, Nat.succ_eq_one_add, Nat.add_sub_add_right]
@@ -210,7 +210,7 @@ theorem gcd_goodFnNat_cross_add_le_two (h : m ≠ n) :
   replace h : ¬2 ^ 2 ∣ (goodFnNat m + n).gcd (goodFnNat n + m) :=
     not_four_dvd_gcd_goodFnNat_cross_add m n
   have h0 : 1 < 2 := Nat.one_lt_two
-  rw [hk, Nat.pow_dvd_pow_iff_le_right h0, Nat.not_le, Nat.lt_succ] at h
+  rw [hk, Nat.pow_dvd_pow_iff_le_right h0, Nat.not_le, Nat.lt_succ_iff] at h
   exact hk.trans_le (Nat.pow_le_pow_of_le h0 h)
 
 
@@ -220,7 +220,7 @@ def goodFn (n : ℕ+) : ℕ+ := ⟨goodFnNat n, goodFnNat_pos n⟩
 
 /-- `goodFn` is indeed `2`-good. -/
 theorem good_two_goodFn : good 2 goodFn :=
-  λ _ _ h ↦ gcd_goodFnNat_cross_add_le_two λ h0 ↦ h (PNat.eq h0)
+  λ _ _ h ↦ gcd_goodFnNat_cross_add_le_two (mt PNat.eq h)
 
 
 

@@ -130,7 +130,7 @@ theorem final_solution {f g : ℕ+ → ℕ+} :
     apply lt_of_add_lt_add_right (a := 1)
     -- Now do the calc.
     calc f^[g n + 1] n + 1
-      _ ≤ f^[g n + 1] n + g^[f n] n := add_le_add_left (PNat.one_le _) _
+      _ ≤ f^[g n + 1] n + g^[f n] n := add_le_add_right (PNat.one_le _) _
       _ < f^[g n + 1] n + g^[f n] n + g (n + 1) := PNat.lt_add_right _ _
       _ = f (n + 1) + 1 := h n
   ---- Thus it remains to show that `g(n) = 1` for all `n ∈ ℕ+`.

@@ -77,7 +77,7 @@ lemma exists_dvd_a_of_pos (hN : 0 < N) : ∃ k, N ∣ X.a k := by
     have h2 := Nat.lt_of_not_le (Nat.find_min h (k.lt_succ_self.trans_eq h1.symm))
     have h3 : X.b (k + 1) ≤ X.b k + 1 := X.b_succ_le k
     replace h0 : X.b (k + 1) = N := Nat.le_antisymm (h3.trans h2) (h1 ▸ h0)
-    exact ⟨k, h0, Nat.le_antisymm h2 (h3.trans_eq' h0.symm)⟩
+    exact ⟨k, h0, Nat.le_antisymm h2 (h3.trans_eq' h0)⟩
   refine ⟨k, (Nat.dvd_add_right ⟨X.a k, rfl⟩).mp ⟨X.a (k + 1), ?_⟩⟩
   calc _ = (X.b k + 1 + 1) * X.a k := by rw [hk0, Nat.succ_mul]
        _ = _ := by rw [← X.b_formula, hk]

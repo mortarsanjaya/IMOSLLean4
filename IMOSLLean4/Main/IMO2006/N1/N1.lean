@@ -23,7 +23,7 @@ lemma sq_eq_two_pow_mul_add_one_imp {a : ℤ} (h : 2 ^ (k + 1) ∣ a ^ 2 - 1) :
   have h0 : Odd a := by
     rw [← Int.odd_pow' (Nat.succ_ne_zero 1), ← Int.not_even_iff_odd,
       ← Int.even_sub_one, even_iff_two_dvd]
-    exact dvd_of_mul_left_dvd h
+    exact dvd_of_mul_left_dvd (a := 2 ^ k) h
   rw [← one_pow (M := ℤ) 2, sq_sub_sq] at h
   refine (Int.four_dvd_add_or_sub_of_odd h0 odd_one).symm.imp (λ h1 ↦ ?_) (λ h1 ↦ ?_)
   ---- Prove that if `4 ∣ a - 1`, then `2^k ∣ a - 1`

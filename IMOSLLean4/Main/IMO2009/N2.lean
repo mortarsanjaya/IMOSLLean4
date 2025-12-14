@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.ArithmeticFunction
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
@@ -26,6 +26,7 @@ namespace IMOSL
 namespace IMO2009N2
 
 open ArithmeticFunction
+open scoped ArithmeticFunction.Omega
 
 /-- Given `a, b ∈ ℕ`, `a + b` is even if and only if `a ≡ b (mod 2)`. -/
 theorem even_add_iff_mod_two_eq {a b : ℕ} : Even (a + b) ↔ a % 2 = b % 2 := by
@@ -69,7 +70,7 @@ theorem final_solution_part1 (N) :
   replace hab (k) (hk : k < N) : Ω (a + 1 + k) % 2 = Ω (b + 1 + k) % 2 :=
     congrArg Fin.val (congrFun hab ⟨k, hk⟩)
   ---- Then the pair `(a + 1, b + 1)` works.
-  refine ⟨a + 1, b.succ, Nat.succ_ne_succ.mpr h, λ k hk ↦ ?_⟩
+  refine ⟨a + 1, b.succ, Nat.succ_ne_succ_iff.mpr h, λ k hk ↦ ?_⟩
   have X (c : ℕ) : c + 1 + k ≠ 0 := (c.succ_add k).trans_ne (c + k).succ_ne_zero
   rw [cardFactors_mul (X _) (X _), even_add_iff_mod_two_eq, hab k hk]
 

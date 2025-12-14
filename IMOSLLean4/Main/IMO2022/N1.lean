@@ -57,7 +57,7 @@ theorem q_eq_zero_or_d_eq_six_of_Diophantine
   ---- Case 1: `p ∣ d`.
   · -- Then `3q + 2 ∣ 12`, forcing `q = 0`.
     replace hp : 0 < d :=
-      Nat.pos_of_mul_pos_left (h.symm.trans_gt (Nat.mul_pos (Nat.zero_lt_succ 11) hp.pos))
+      Nat.pos_of_mul_pos_left ((Nat.mul_pos (Nat.zero_lt_succ 11) hp.pos).trans_eq h.symm)
     replace h : (3 * q + 2) * d ∣ 12 * d := h.dvd.trans (Nat.mul_dvd_mul_left 12 h0)
     replace h : 3 * q + 2 ∣ 12 := Nat.dvd_of_mul_dvd_mul_right hp h
     exact eq_zero_of_three_mul_add_two_dvd_12 h

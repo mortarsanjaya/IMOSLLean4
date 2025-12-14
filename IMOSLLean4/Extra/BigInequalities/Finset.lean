@@ -30,12 +30,13 @@ theorem CauchySchwarz {f g₁ g₂ : ι → R} {S : Finset ι}
     (hg₁ : ∀ i ∈ S, 0 ≤ g₁ i) (hg₂ : ∀ i ∈ S, 0 ≤ g₂ i)
     (hf : ∀ i ∈ S, f i ^ 2 ≤ g₁ i * g₂ i) :
     S.sum f ^ 2 ≤ S.sum g₁ * S.sum g₂ := by
-  induction' S using Finset.induction with i S h h0
-  · rw [sum_empty, sum_empty, sq, sum_empty]
-  · rw [forall_mem_insert] at hg₁ hg₂ hf
-    rw [sum_insert h, sum_insert h, sum_insert h]
-    exact CauchySchwarz_two hg₁.1 hg₂.1 hf.1
-      (sum_nonneg hg₁.2) (sum_nonneg hg₂.2) (h0 hg₁.2 hg₂.2 hf.2)
+  induction S using Finset.induction with
+  | empty => rw [sum_empty, sum_empty, sq, sum_empty]
+  | insert i S h h0 =>
+      rw [forall_mem_insert] at hg₁ hg₂ hf
+      rw [sum_insert h, sum_insert h, sum_insert h]
+      exact CauchySchwarz_two hg₁.1 hg₂.1 hf.1
+        (sum_nonneg hg₁.2) (sum_nonneg hg₂.2) (h0 hg₁.2 hg₂.2 hf.2)
 
 /-- Cauchy-Schwarz inequality for universal set -/
 theorem CauchySchwarz_univ [Fintype ι] {f g₁ g₂ : ι → R}

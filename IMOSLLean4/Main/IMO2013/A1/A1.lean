@@ -4,18 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Matrix.Notation
-import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
 # IMO 2013 A1
 
 Let $R$ be a commutative ring.
 Given $a_1, …, a_n ∈ R$, we define $f(a_1, a_2, …, a_n)$ as follows:
-
-Let $u_0 = u_1 = 1$, and define $u_{k + 2} = u_{k + 1} + a_k u_k$ for each $0 ≤ k < n$.
-Then set $$f(a_1, a_2, …, a_n) = u_{n + 1}. $$
-
+  let $u_0 = u_1 = 1$, and define $u_{k + 2} = u_{k + 1} + a_k u_k$ for each $0 ≤ k < n$.
+Then set $$ f(a_1, a_2, …, a_n) = u_{n + 1}. $$
 Prove that, for any $a_1, a_2, a_3, …, a_n ∈ R$, we have
 $$ f(a_1, a_2, …, a_n) = f(a_n, a_{n - 1}, …, a_1). $$
 -/
@@ -27,11 +24,6 @@ open List Matrix
 open scoped Matrix
 
 /-! ### Extra stuffs -/
-
-/-- `![1, 0]` -/
-abbrev oneZeroVec (R) [Zero R] [One R] : Fin 2 → R := ![1, 0]
-
-
 
 section NoncommRing
 
@@ -70,16 +62,16 @@ def f (l : List R) : R := (f_aux l).1
 /-- The matrix `M_r` as in the LaTeX document -/
 def M (r : R) : Matrix (Fin 2) (Fin 2) R := !![1 + r, -r; r, -r]
 
-def f_aux_alt1 (l : List R) : Fin 2 → R := foldr (λ r ↦ (M r).mulVec) (oneZeroVec R) l
+def f_aux_alt1 (l : List R) : Fin 2 → R := foldr (λ r ↦ (M r).mulVec) ![1, 0] l
 
-theorem f_aux_alt1_nil : f_aux_alt1 nil = oneZeroVec R := rfl
+theorem f_aux_alt1_nil : f_aux_alt1 nil = ![(1 : R), 0] := rfl
 
 theorem f_aux_alt1_cons (r : R) (l : List R) :
     f_aux_alt1 (r :: l) = (M r).mulVec (f_aux_alt1 l) := rfl
 
 theorem f_aux_alt1_prod_description :
-    ∀ l : List R, f_aux_alt1 l = (l.map M).prod.mulVec (oneZeroVec R) := by
-  refine List.rec (one_mulVec (oneZeroVec R)).symm λ r l h ↦ ?_
+    ∀ l : List R, f_aux_alt1 l = (l.map M).prod.mulVec ![1, 0] := by
+  refine List.rec (one_mulVec ![1, 0]).symm λ r l h ↦ ?_
   rw [map_cons, prod_cons, f_aux_alt1_cons, h, mulVec_mulVec]
 
 theorem f_aux_matrix_description1 :
@@ -100,16 +92,16 @@ theorem f_description1 (l : List R) : f l = f_aux_alt1 l 0 :=
 /-! ### Alternative calculation 2 -/
 
 def f_aux_alt2 (l : List R) : Fin 2 → R :=
-  foldr (λ r v ↦ vecMul v (M r)) (oneZeroVec R) l
+  foldr (λ r v ↦ vecMul v (M r)) ![1, 0] l
 
-theorem f_aux_alt2_nil : f_aux_alt2 nil = oneZeroVec R := rfl
+theorem f_aux_alt2_nil : f_aux_alt2 nil = ![(1 : R), 0] := rfl
 
 theorem f_aux_alt2_cons (r : R) (l : List R) :
     f_aux_alt2 (r :: l) = vecMul (f_aux_alt2 l) (M r) := rfl
 
 theorem f_aux_alt2_prod_description :
-    ∀ l : List R, f_aux_alt2 l = vecMul (oneZeroVec R) (l.reverse.map M).prod := by
-  refine List.rec (vecMul_one (oneZeroVec R)).symm λ r l h ↦ ?_
+    ∀ l : List R, f_aux_alt2 l = vecMul ![1, 0] (l.reverse.map M).prod := by
+  refine List.rec (vecMul_one ![1, 0]).symm λ r l h ↦ ?_
   rw [f_aux_alt2_cons, reverse_cons, map_append, map_singleton,
     prod_append, prod_singleton, h, vecMul_vecMul]
 
@@ -143,5 +135,5 @@ theorem f_description2 (l : List R) : f l = f_aux_alt2 l 0 :=
 /-- Final solution -/
 theorem final_solution (l : List R) : f l.reverse = f l := by
   rw [f_description2, f_aux_alt2_prod_description, reverse_reverse, matrix_fin2_vecMul,
-    f_description1, f_aux_alt1_prod_description, oneZeroVec, matrix_fin2_mulVec]
+    f_description1, f_aux_alt1_prod_description, matrix_fin2_mulVec]
   simp

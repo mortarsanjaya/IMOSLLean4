@@ -100,7 +100,8 @@ theorem lower_bound :
     replace X {u v : F} (h : 0 < u) (h0 : 0 < v) : 0 < 2 * u + v :=
       add_pos (mul_pos zero_lt_two h) h0
     refine (field_ineq1 _ _ (X hy hz) (X hz hy)).trans_eq' (congrArg₂ _ rfl ?_)
-    rw [add_add_add_comm (2 * _), ← mul_add, add_comm, ← add_one_mul, two_add_one_eq_three]
+    rw [add_add_add_comm (2 * _), ← mul_add, add_comm (a + c),
+      ← add_one_mul, two_add_one_eq_three]
   ---- `|y/((y + b)(y + d)) - z/((z + a)(z + c))| ≤ 1/(y + z)`
   · replace X : (9 : F) = 3 * 3 := by norm_num
     rw [X, mul_assoc, mul_div_mul_left _ _ (three_ne_zero' F), mul_right_comm 3 (b - d),
