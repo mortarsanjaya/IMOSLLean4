@@ -4,11 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.BigInequalities.Finset
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Data.Nat.Cast.Order.Basic
-import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # IMO 2007 A6
@@ -21,7 +19,7 @@ $$ \left(3 \sum_{i = 1} a_i^2 a_{i + 1}\right)^2 ≤ 2 \left(\sum_{i = 1}^n a_i^
 namespace IMOSL
 namespace IMO2007A6
 
-open Finset Extra.Finset
+open Finset
 
 /-! ### Extra lemmas on sums over `Fin` -/
 
@@ -45,11 +43,12 @@ abbrev niceTuple (a : Fin (n + 1) → R) :=
   2 ^ 2 * ∑ i, a i * a (i + 1) ≤ (∑ i, a i) ^ 2
 
 theorem niceTuple.of_four [ExistsAddOfLE R] (a : Fin 4 → R) : niceTuple a := by
-  rw [niceTuple, Fin.sum_univ_four, Fin.sum_univ_four]
-  change 2 ^ 2 * (a 0 * a 1 + a 1 * a 2 + a 2 * a 3 + a 3 * a 0) ≤ _
-  rw [mul_comm (a 0), ← mul_add, add_assoc, mul_comm (a 2), ← mul_add,
-    add_comm (a 2), ← add_mul, add_assoc, add_add_add_comm, add_comm (a 0 + a 2)]
-  exact Extra.two_sq_AM_GM _ _
+  have h : (2 : R) ^ 2 = 4 := by norm_num
+  rw [niceTuple, Fin.sum_univ_four, Fin.sum_univ_four, h]
+  change 4 * (a 0 * a 1 + a 1 * a 2 + a 2 * a 3 + a 3 * a 0) ≤ _
+  rw [mul_comm (a 0), ← mul_add, add_assoc, mul_comm (a 2), ← mul_add, add_comm (a 2),
+    ← add_mul, ← mul_assoc, add_assoc, add_add_add_comm, add_comm (a 0 + a 2)]
+  exact four_mul_le_sq_add _ _
 
 theorem cyclic_add_right_formula (a : Fin (n + 1) → R) (c : R) :
     ∑ i, (a i + c) * (a (i + 1) + c)
@@ -221,7 +220,7 @@ theorem id5 (hn : 5 ≤ n + 1) {b : Fin (n + 1) → R} (hb : ∀ i, 0 ≤ b i) :
   · rw [coe_image]; exact Set.mapsTo_image (Fin.castLE hn) _
   · rw [coe_univ, Set.image_univ, mem_image_univ_iff_mem_range]; exact absurd
   · refine congrArg b (congrArg₂ _ ?_ rfl)
-    rw [← Fin.val_inj, Fin.coe_castLE, Fin.val_natCast, Nat.mod_succ_eq_iff_lt]
+    rw [← Fin.val_inj, Fin.val_castLE, Fin.val_natCast, Nat.mod_succ_eq_iff_lt]
     exact j.2.trans_le hn
 
 /-- Final solution -/
