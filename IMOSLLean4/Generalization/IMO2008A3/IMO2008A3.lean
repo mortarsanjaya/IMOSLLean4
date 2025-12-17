@@ -27,7 +27,7 @@ We define an ordered set $S$ to be `good` if there exists a Spanish couple on $S
 The theorem `good.conjOrderIso_iff` shows that `good` is preserved under order isomorphisms.
 We define `isGoodOrdinal` to be the quotient predicate of `good` on ordinals.
 We state the main result in terms of both ordinals and well-ordered sets;
-  see `final_solution_ordinal` and `final_solution` (only on `Type 0`).
+  see `final_solution_ordinal` and `final_solution_general` (only on `Type 0`).
 
 The construction of Spanish couple on lexicographical product is implemented via
   `SpanishCouple.prodLexLeft`, while the construction of Spanish couple on an upper subset
