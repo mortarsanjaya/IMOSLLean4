@@ -7,4 +7,4 @@ import IMOSLLean4.Main.IMO2021.A7.A7
 import IMOSLLean4.Main.IMO2021.C1.C1
 import IMOSLLean4.Main.IMO2021.C2.C2
 import IMOSLLean4.Main.IMO2021.N1.N1
-import IMOSLLean4.Main.IMO2021.N2.N2
+import IMOSLLean4.Main.IMO2021.N2
