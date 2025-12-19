@@ -86,7 +86,8 @@ theorem RGraph_disconnected_of_cyclotomic3_has_root
       refine (card_union_of_disjoint (disjoint_right.mpr λ t ht ↦ ?_)).symm
       rw [mem_filter, and_iff_right (mem_univ _), Decidable.not_not]
       rw [mem_insert, mem_singleton] at ht
-      rcases ht with rfl | rfl <;> assumption
+      rcases ht with rfl | rfl
+      exacts [hx, hx1]
     _ ≤ #(univ : Finset R) := card_le_card (subset_univ _)
     _ = Nat.card R := by rw [card_univ, Fintype.card_eq_nat_card]
 
