@@ -136,14 +136,14 @@ theorem good.prod_eq_sq_imp' (h : ∃ a, (v 0 * v 1) * (v 2 * v 3) = a ^ 2) :
       refine sq_eq_one_iff.mp (h0.1.antisymm ?_).symm
       replace h : k ^ 2 * l ^ 2 ≤ l ^ 2 := by
         refine le_of_add_le_add_left (h.trans' ?_)
-        exact add_le_add_right (le_mul_of_one_le_right h0.1.le h0.2) _
+        exact add_le_add_left (le_mul_of_one_le_right h0.1.le h0.2) _
       rw [← sub_nonpos, ← sub_one_mul] at h
       exact Int.le_add_of_sub_right_le (nonpos_of_mul_nonpos_left h h0.2)
     replace h : l = 1 ∨ l = -1 := by
       refine sq_eq_one_iff.mp (h0.2.antisymm ?_).symm
       replace h : k ^ 2 * l ^ 2 ≤ k ^ 2 := by
         refine le_of_add_le_add_right (h.trans' ?_)
-        exact add_le_add_left (le_mul_of_one_le_left h0.2.le h0.1) _
+        exact add_le_add_right (le_mul_of_one_le_left h0.2.le h0.1) _
       rw [← sub_nonpos, ← mul_sub_one] at h
       exact Int.le_add_of_sub_right_le (nonpos_of_mul_nonpos_right h h0.1)
     revert h1; apply Or.imp

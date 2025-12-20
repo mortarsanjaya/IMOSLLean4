@@ -179,7 +179,7 @@ lemma four_le_p_val_imp₁ {A : Card4NatSet} (hA : 4 ≤ A.p_val) :
         add_left_comm (A.f 1), ← add_assoc, ← Nat.add_mul]
       exact Nat.lt_add_of_pos_left (Nat.mul_pos (Nat.succ_pos 5) (A.f_pos 0))
     -- Now resolve the inequalities
-    rw [Nat.lt_succ_iff_lt_or_eq, Nat.lt_succ] at h4
+    rw [Nat.lt_succ_iff_lt_or_eq, Nat.lt_succ_iff] at h4
     exact h4.imp_left λ h4 ↦ h4.antisymm h3
   ---- Simplify the case `2(a_1 + a_2) = 4(a_0 + a_1)`
   · replace h1 : A.f 2 = 2 * A.f 0 + A.f 1 := by

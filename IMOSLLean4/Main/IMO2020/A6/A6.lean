@@ -51,7 +51,7 @@ theorem good_zero : good (λ _ ↦ 0) := λ a b ↦ by
   cases h : (a.natAbs ^ 2 + b.natAbs ^ 2).beq 0 with | false => rfl | true => ?_
   have h0 (c : ℤ) : c.natAbs ^ 2 = 0 ↔ c = 0 := by
     rw [Nat.pow_eq_zero, and_iff_left (Nat.succ_ne_zero 1), Int.natAbs_eq_zero]
-  rw [Nat.beq_eq, Nat.add_eq_zero, h0, h0] at h
+  rw [Nat.beq_eq, Nat.add_eq_zero_iff, h0, h0] at h
   rw [h.1, h.2]; rfl
 
 

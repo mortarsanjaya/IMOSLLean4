@@ -1,0 +1,140 @@
+Let $R$ be a ring.
+Find all functions $f : R \to R$ such that for any $x, y \in R$,
+\[ f(x + f(x + y)) + f(xy) = x + f(x + y) + f(x) y. \tag{*}\label{2015a4-eq0} \]
+
+
+
+\subsection*{Main Progress}
+
+If $R$ is a domain, then the only functions satisfying~\eqref{2015a4-eq0} are $x \mapsto x$ and $x \mapsto 2 - x$.
+
+
+
+\subsection*{Solution}
+
+The \href{https://www.imo-official.org/problems/IMO2015SL.pdf}{official solution} works when $R$ is a domain of characteristic not equal to $2$.
+Without any characteristic assumption, it already proves that if $f(0) \neq 0$, then $f(x) = 2 - x$ for any $x \in R$.
+In the case $f(0) = 0$, it proves that $f = \id$, the identity function, as long as $2$ is not a zero divisor in $R$, even without the domain assumption.
+
+Here, we extend the solution to show that $f(0) = 0$ always implies $f = \id$ without any assumption on $R$.
+To do this, we show that for \textbf{any} function $f$ satisfying~\eqref{2015a4-eq0}, we have $f(1) = 1$, even without assuming $f(0) = 0$.
+Then following the official solution gives $f(-x) = -f(x)$ and $2 f(x) = 2x$ for all $x \in R$.
+We then add some extra steps to show that $f = \id$.
+
+
+
+\subsubsection*{General results}
+
+As in the official solution, plugging $y = 1$ into~\eqref{2015a4-eq0} gives
+\[ f(x + f(x + 1)) = x + f(x + 1). \tag{1}\label{2015a4-eq1} \]
+Plugging $x = 0$ into~\eqref{2015a4-eq0} gives
+\[ f(f(y)) + f(0) = f(y) + f(0) y. \tag{2}\label{2015a4-eq2} \]
+Plugging $y = 0$ into~\eqref{2015a4-eq0} gives
+\[ f(x + f(x)) + f(0) = x + f(x). \tag{3}\label{2015a4-eq3} \]
+Plugging $y = 0$ into~\eqref{2015a4-eq2} yields
+\[ f(f(0)) = 0. \tag{4}\label{2015a4-eq4} \]
+Plugging $x = f(0) - 1$ into~\eqref{2015a4-eq1} yields
+\[ f(f(0) - 1) = f(0) - 1. \tag{5}\label{2015a4-eq5} \]
+We now prove that $f(1) = 1$.
+
+\begin{claim}
+For any functions $f : R \to R$ satisfying~\eqref{2015a4-eq0}, we have $f(1) = 1$.
+\end{claim}
+\begin{proof}
+For convenience, let $b = f(1) - 1$.
+Our goal is to show that $b = 0$.
+We do a series of pluggings and deduce some equalities.
+
+First, plugging $x = 0$ into~\eqref{2015a4-eq1} yields $f(b + 1) = b + 1$.
+Pugging $y = f(1)$ into~\eqref{2015a4-eq2} yields $f(0) f(1) = f(0)$, which rewrites as $f(0) b = 0$.
+Plugging $x = 1$ and $y = f(0) - 1$ into~\eqref{2015a4-eq0} yields
+\[ f(1 + f(f(0))) + f(f(0) - 1) = 1 + f(f(0)) + f(1) (f(0) - 1). \]
+Recall by~\eqref{2015a4-eq4} and~\eqref{2015a4-eq5} that $f(f(0)) = 0$ and $f(f(0) - 1) = f(0) - 1$.
+Then the above equality reduces to
+\[ f(1) + f(0) - 1 = 1 + f(1) (f(0) - 1) \iff b(f(0) - 2) = 0. \]
+Thus, we get $(f(0) - 1) b = f(0) b - b = -b$ and $b(f(0) - 1) = b(f(0) - 2) + b = b$.
+Rewriting $b (f(0) - 1) b$ in two ways give
+\[ -b^2 = b ((f(0) - 1) b) = (b f(0) - 1) b = b^2. \]
+Thus, we get $2b^2 = 0$.
+
+Plugging $(x, y) = (-b, 2b + 1)$ into~\eqref{2015a4-eq0} yields
+\[ f(-b + f(b + 1)) + f(-b(2b + 1)) = -b + f(b + 1) + f(-b) (2b + 1). \]
+Recall that $f(b + 1) = b + 1$ and $2b^2 = 0$; then the above equality simplifies to
+\[ f(1) + f(-b) = 1 + f(-b) (2b + 1) \iff f(-b) (2b) = b. \]
+In particular, multiplying by $b$ on the right gives $b^2 = f(-b)(2b^2) = 0$.
+
+Plugging $(x, y) = (b + 1, -b)$ into~\eqref{2015a4-eq0} yields
+\[ f(b + 1 + f(1)) + f((b + 1)(-b)) = b + 1 + f(1) + f(b + 1)(-b). \]
+Recalling that $f(b + 1) = b + 1$ and $b^2 = 0$, the above equality reduces to
+\[ f(2(b + 1)) + f(-b) = 2(b + 1) + (-b). \]
+By~\eqref{2015a4-eq3}, since $f(b + 1) = b + 1$, we get $f(2(b + 1)) = 2(b + 1) - f(0)$.
+Thus the above equality reduces to $f(-b) = f(0) - b$.
+
+Finally, combine the equalities $f(-b) = f(0) - b$, $f(-b)(2b) = b$, $b^2 = 0$, and $f(0) b = 0$.
+From the first two equalities, we get $(f(0) - b)(2b) = b$.
+Applying the last two equalities then yield $b = 0$, as desired.
+\end{proof}
+
+
+
+\subsubsection*{The case $f(0) = 0$}
+
+We now proceed as in the official solution, knowing that $f(1) = 1$.
+Plugging $x = 1$ into~\eqref{2015a4-eq0} now yields
+\[ f(1 + f(y + 1)) + f(y) = 1 + f(y + 1) + y. \tag{6}\label{2015a4-eq6} \]
+Thus, if $y_0$ and $y_0 + 1$ are fixed points of $f$ for some $y_0 \in R$, then $y_0 + 2$ is also a fixed point of $f$.
+By induction, $y_0 + n$ would be a fixed point of $f$ for every $n \in \N$.
+Now note that $x + f(x) - 1$ and $x + f(x)$ are fixed points of $f$ by~\eqref{2015a4-eq1} and~\eqref{2015a4-eq3}, respectively.
+Thus $x + f(x) + n$ is a fixed point of $f$ for any $x \in \N$.
+Replacing $x$ with $x - n$, we get
+\[ f(x + f(x - n)) = x + f(x - n). \]
+Plugging $y = -n$ into~\eqref{2015a4-eq0} and using the above equality gives $f(-nx) = -n f(x)$ for every $n \in \N$ and $x \in R$.
+In particular, we get
+\[ f(-x) = -f(x), \tag{7}\label{2015a4-eq7} \]
+By applying~\eqref{2015a4-eq7} into the equality $f(nx) = -n f(x)$, we get that for any $n \in \N$ and $x \in R$,
+\[ f(nx) = n f(x). \tag{8}\label{2015a4-eq8} \]
+Plugging $(x, y) = (-1, -t)$ into~\eqref{2015a4-eq0} and simplifying using~\eqref{2015a4-eq7} yields
+\[ -f(1 + f(1 + t)) + f(t) = -(1 + f(1 + t)) + t. \]
+Combining with~\eqref{2015a4-eq6} yields that for any $t \in R$, we have
+\[ 2 f(t) = 2t. \tag{9}\label{2015a4-eq9} \]
+We can't immediately deduce $f = \id$ from this equality, so from now on we add some extra steps.
+
+Define the function $g : R \to R$ by $g(x) = f(x) - x$ for all $x \in R$.
+Then $g(0) = g(1) = 0$ and we have the following facts.
+\begin{itemize}
+    \item   From~\eqref{2015a4-eq0}, we get that for all $x, y \in R$,
+            \[ g(2x + y + g(x + y)) + g(xy) = g(x) y. \tag{10}\label{2015a4-eq10} \]
+    \item   From~\eqref{2015a4-eq9}, we get $2 g(x) = 0$ for all $x \in R$.
+    \item   From~\eqref{2015a4-eq7}, we get $g(-x) = -g(x) = g(x)$ for all $x \in R$.
+    \item   From~\eqref{2015a4-eq8}, we get $g(2x) = 2 g(x) = 0$ for all $x \in R$.
+    \item   From~\eqref{2015a4-eq2}, we get $g(y + g(y)) = 0$ for all $y \in R$.
+\end{itemize}
+
+We now work towards the goal of proving $g \equiv 0$.
+Plugging $(x, y) = (-t, 2t)$ into~\eqref{2015a4-eq10} yields $g(g(t)) = 0$ for all $t \in R$.
+Plugging $x = g(t)$ into~\eqref{2015a4-eq10} yields that for all $t, y \in R$,
+\[ g(y + g(g(t) + y)) + g(g(t) y) = 0 \iff g(y + g(g(t) + y)) = g(g(t) y). \tag{11}\label{2015a4-eq11} \]
+Since $g(y + g(y)) = 0$ for all $y \in R$, plugging $y = t$ into~\eqref{2015a4-eq11} yields
+\[ g(g(t) t) = g(t). \tag{12}\label{2015a4-eq12} \]
+Meanwhile, plugging $y = t + 2$ into~\eqref{2015a4-eq11} yields
+\[ g(t + 2 + g(g(t) + t + 2)) = g(g(t) (t + 2)) = g(g(t) t). \]
+Plugging $x = 2$ and $y = t - 2$ into~\eqref{2015a4-eq10} yields $g(g(t) + t + 2) = 0$.
+Thus the above equality simplifies to $g(t + 2) = g(g(t) t)$, and so~\eqref{2015a4-eq12} implies $g(t + 2) = g(t)$ for all $t \in R$.
+We are ready for the final step now.
+
+Plugging $y = 1 - x$ into~\eqref{2015a4-eq10} yields that for all $x \in R$,
+\[ g(x + 1) + g(x(1 - x)) = g(x) (1 - x) \iff g(x(1 - x)) = g(x) (1 - x) + g(x + 1). \]
+Since $g(x + 1) = g(x - 1) = g(1 - x)$, the above equality rewrites as
+\[ g(x(1 - x)) = g(x) (1 - x) + g(1 - x). \]
+By symmetry, we also get $g(x(1 - x)) = g(1 - x) x + g(x)$, so
+\[ g(x) (1 - x) + g(1 - x) = g(1 - x) x + g(x) \iff g(1 - x) (1 - x) = g(x) x. \]
+Then~\eqref{2015a4-eq12}, together with this equality, yields $g(x) = g(1 - x)$, so $g(x) x = g(x)(1 - x)$.
+Thus rearranges to $g(x) = g(x) x + g(x) x = 2 g(x) x = 0$ for all $x \in R$, as desired.
+
+
+
+\subsection*{Further direction}
+
+A general guess, obtained by only considering the linear case, is $f(x) = a(x - 1) + 1$ for some $a \in R$ such that $a^2 = 1$.
+By direct bashing, one can check that this function always satisfies~\eqref{2015a4-eq0}.
+From what happens above, it is fair to guess that these are the only functions that work.

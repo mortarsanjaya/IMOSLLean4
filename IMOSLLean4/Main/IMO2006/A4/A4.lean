@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+import Mathlib.Algebra.Field.Defs
+import Mathlib.Algebra.Order.Ring.Defs
 import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
@@ -119,7 +120,7 @@ theorem final_solution_unordered [Field F] [LinearOrder F] [IsStrictOrderedRing 
   · rw [offDiag_empty, sum_empty, card_empty, zero_nsmul, zero_div]
   ---- Next manipulate and reduce to `(a_i - a_j)^2 ≤ (a_i - a_j)^2 S/(a_i + a_j)`
   have h : (0 : F) < 2 := two_pos
-  rw [le_div_iff₀' (mul_pos two_pos (sum_pos hS hS0)), ← mul_le_mul_left h,
+  rw [le_div_iff₀' (mul_pos two_pos (sum_pos hS hS0)), ← mul_le_mul_iff_right₀ h,
     mul_right_comm, ← mul_assoc, ← mul_assoc, ← sq, field_id3, sub_one_mul,
     mul_sub, sub_sub, sub_mul, mul_assoc, mul_assoc, ← sq, ← nsmul_eq_mul,
     field_id5, nsmul_sub, mul_sub, sub_le_sub_iff_left, add_mul,

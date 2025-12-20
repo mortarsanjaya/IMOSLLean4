@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.GeomSum
+import Mathlib.Algebra.Field.GeomSum
+import Mathlib.Algebra.Order.BigOperators.Group.Finset
+import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # IMO 2007 A3
@@ -70,3 +72,5 @@ theorem final_solution {x y : F} (hx : 0 < x) (hy : 0 < y) (h : x ^ n + y ^ n = 
   _ = ((1 - x) * (1 - y))⁻¹ := by
     rw [← eq_sub_of_add_eq h, ← eq_sub_of_add_eq' h, div_mul_div_comm, mul_mul_mul_comm,
       mul_comm, ← mul_pow, div_mul_cancel_left₀ (pow_ne_zero _ (mul_pos hx hy).ne.symm)]
+
+#min_imports

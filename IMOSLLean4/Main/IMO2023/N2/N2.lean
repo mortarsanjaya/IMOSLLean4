@@ -91,7 +91,7 @@ lemma good_alt_imp (hxy : 0 < x + y) (h : good_alt x y p) :
   match y with | 0 => exact absurd rfl hp.ne | y + 1 => ?_
   replace hp : 1 < p := (Nat.one_lt_pow_iff y.succ_ne_zero).mp hp
   replace hxy : x ≤ y := by
-    rw [← Nat.lt_succ, ← Nat.pow_lt_pow_iff_right hp, ← h, Nat.lt_add_right_iff_pos]
+    rw [← Nat.lt_succ_iff, ← Nat.pow_lt_pow_iff_right hp, ← h, Nat.lt_add_right_iff_pos]
     exact Nat.zero_lt_of_lt hxy
   have h0 : (p - 1) * p ^ y ≤ 2 * (2 * y + 1) ^ 2 := by
     rw [Nat.sub_mul, Nat.one_mul, ← Nat.pow_succ', ← h, Nat.add_comm]
@@ -100,7 +100,7 @@ lemma good_alt_imp (hxy : 0 < x + y) (h : good_alt x y p) :
       exact Nat.mul_le_mul_left 2 (Nat.pow_le_pow_left (Nat.add_le_add_right hxy _) 2)
     · exact Nat.pow_le_pow_right (Nat.zero_lt_of_lt hp) hxy
   replace hp : 2 = p ∨ 3 = p ∨ 4 = p ∨ 5 ≤ p := by
-    simpa only [Nat.succ_le, ← le_iff_eq_or_lt]
+    simpa only [Nat.succ_le_iff, ← le_iff_eq_or_lt]
   rcases hp with rfl | rfl | rfl | hp
   ---- Case 1: `p = 2`
   · replace h0 : y < 10 := Nat.lt_of_not_le λ h1 ↦

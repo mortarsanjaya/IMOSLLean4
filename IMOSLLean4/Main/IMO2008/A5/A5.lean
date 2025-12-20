@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Defs
-import Mathlib.Algebra.Order.Ring.Basic
+import Mathlib.Algebra.Field.Defs
+import Mathlib.Algebra.Order.Ring.Defs
+import Mathlib.Data.Nat.Cast.Basic
 
 /-!
 # IMO 2008 A5
@@ -20,29 +21,22 @@ $$ \sum_{i = 1}^4 a_i < \sum_{i = 1}^4 \frac{a_{i + 1}}{a_i}. $$
 namespace IMOSL
 namespace IMO2008A5
 
-lemma ring_ineq [CommSemiring R] [LinearOrder R] [IsStrictOrderedRing R]
-    [ExistsAddOfLE R] (a b : R) :
-    2 ^ 2 * (a * b) ≤ (a + b) ^ 2 := by
-  rw [sq, mul_assoc, two_mul, ← mul_assoc, add_sq', add_le_add_iff_right]
-  exact two_mul_le_add_sq a b
-
-
 variable [Semifield F] [LinearOrder F] [IsStrictOrderedRing F] [ExistsAddOfLE F]
   {a b c d : F} (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) (hd : 0 < d)
 include ha hb hc hd
 
 lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) ^ 4 := by
-  have X : 4 = (2 : F) ^ 2 := by rw [← Nat.cast_ofNat, ← Nat.cast_two, ← Nat.cast_pow]; rfl
-  ---- Split calculation, part 1 (for responsiveness)
+  ---- Split calculation, part 1
   calc (4 * a) ^ 4 / (a * b * c * d)
-    _ = (4 * (2 * (a / b))) ^ 2 * (2 ^ 2 * ((b / c) * (a / d))) := ?_
+    _ = (4 * (2 * (a / b))) ^ 2 * (4 * (b / c) * (a / d)) := ?_
     _ ≤ (4 * (2 * (a / b))) ^ 2 * (b / c + a / d) ^ 2 :=
-      mul_le_mul_of_nonneg_left (ring_ineq _ _) (sq_nonneg _)
-    _ = (2 ^ 2 * (2 * (a / b) * (b / c + a / d))) ^ 2 := by rw [← mul_pow, X, mul_assoc]
+      mul_le_mul_of_nonneg_left (four_mul_le_sq_add _ _) (sq_nonneg _)
+    _ = (4 * (2 * (a / b)) * (b / c + a / d)) ^ 2 := by rw [← mul_pow, mul_assoc]
     _ ≤ ((2 * (a / b) + (b / c + a / d)) ^ 2) ^ 2 := by
-      refine pow_le_pow_left₀ (mul_nonneg (sq_nonneg 2) ?_) (ring_ineq _ _) 2
-      have X {u v : F} (hu : 0 < u) (hv : 0 < v) : 0 < u / v := div_pos hu hv
-      exact mul_nonneg (mul_nonneg zero_le_two (X ha hb).le) (add_pos (X hb hc) (X ha hd)).le
+      have X {u v : F} (hu : 0 < u) (hv : 0 < v) : 0 ≤ u / v := (div_pos hu hv).le
+      refine pow_le_pow_left₀ (mul_nonneg ?_ ?_) (four_mul_le_sq_add _ _) 2
+      · exact mul_nonneg zero_le_four (mul_nonneg zero_le_two (X ha hb))
+      · exact add_nonneg (X hb hc) (X ha hd)
     _ = _ := by rw [← pow_mul]
   ---- Split calculation, part 2
   calc
@@ -54,9 +48,10 @@ lemma ineq1 : (4 * a) ^ 4 / (a * b * c * d) ≤ (2 * (a / b) + (b / c + a / d)) 
     _ = 4 ^ 4 * ((a / b) ^ 2 * ((b / c) * (a / d))) := by
       rw [sq, mul_mul_mul_comm, div_mul_div_cancel₀ hb.ne.symm,
         mul_left_comm (a / c), mul_assoc]
-    _ = 4 ^ 2 * ((2 * (a / b)) ^ 2 * (2 ^ 2 * ((b / c) * (a / d)))) := by
-      rw [mul_pow, ← X, mul_mul_mul_comm, ← sq, ← mul_assoc (4 ^ 2), ← pow_add]
-    _ = (4 * (2 * (a / b))) ^ 2 * (2 ^ 2 * ((b / c) * (a / d))) := by
+    _ = 4 ^ 2 * ((2 * (a / b)) ^ 2 * (4 * (b / c) * (a / d))) := by
+      have X : (2 : F) ^ 2 = 4 := by rw [sq, two_mul, two_add_two_eq_four]
+      rw [mul_pow, mul_assoc 4, mul_mul_mul_comm, X, ← sq, ← mul_assoc (4 ^ 2), ← pow_add]
+    _ = (4 * (2 * (a / b))) ^ 2 * (4 * (b / c) * (a / d)) := by
       rw [← mul_assoc, ← mul_pow]
 
 variable (h : a * b * c * d = 1)

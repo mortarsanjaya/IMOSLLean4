@@ -33,7 +33,7 @@ lemma clog_base_mul (hb : 1 < b) (hn : 0 < n) : b.clog (b * n) = b.clog n + 1 :=
 lemma two_pow_clog_mem_Ico (hn : 0 < n) : 2 ^ Nat.clog 2 n ∈ Ico n (2 * n) := by
   have X : 1 < 2 := Nat.one_lt_two
   refine mem_Ico.mpr ⟨Nat.le_pow_clog X n, ?_⟩
-  rw [Nat.pow_lt_iff_lt_clog X, clog_base_mul X hn, Nat.lt_succ_iff]
+  rw [← Nat.lt_clog_iff_pow_lt X, clog_base_mul X hn, Nat.lt_succ_iff]
 
 lemma prod_mod_ne_one [DecidableEq ι] {I : Finset ι}
     {f : ι → ℕ} (h : ∃ i₀ ∈ I, ∀ i ∈ I, n ∣ f i ↔ i ≠ i₀) :

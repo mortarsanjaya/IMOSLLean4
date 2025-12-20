@@ -86,8 +86,8 @@ theorem log2_monotone {m n : Nat} (h : m ≤ n) : m.log2 ≤ n.log2 :=
       (Nat.le_trans (Nat.log2_self_le m.succ_ne_zero) h)
 
 theorem log2_two_pow : ∀ n : Nat, (2 ^ n).log2 = n
-  | 0 => by simp [Nat.pow_zero, Nat.log2]
-  | n + 1 => by rw [Nat.pow_succ, Nat.log2, Nat.mul_div_left _ Nat.two_pos,
+  | 0 => by simp [Nat.pow_zero, Nat.log2_def]
+  | n + 1 => by rw [Nat.pow_succ, Nat.log2_def, Nat.mul_div_left _ Nat.two_pos,
       log2_two_pow, if_pos (Nat.le_mul_of_pos_left 2 n.two_pow_pos)]
 
 
@@ -115,7 +115,7 @@ theorem log2_iter_lt_iff {seed} (hk : 0 < k) : ∀ {n}, log2_iter seed n < k ↔
       log2_lt_iff₂ (P_pos_of_seed hk n)]
 
 theorem log2_iter_eq_zero_iff : log2_iter seed n = 0 ↔ seed < P 1 n := by
-  rw [← log2_iter_lt_iff Nat.one_pos, Nat.lt_succ, Nat.le_zero]
+  rw [← log2_iter_lt_iff Nat.one_pos, Nat.lt_succ_iff, Nat.le_zero]
 
 theorem log2_iter_monotone_seed (h : seed₁ ≤ seed₂) :
     ∀ n, log2_iter seed₁ n ≤ log2_iter seed₂ n
@@ -276,7 +276,7 @@ theorem three_stack_1mod4 (hN : 2 ≤ N) (hA : A % 4 = 1) (hA0 : A ≠ 1) (h : A
   obtain ⟨N', rfl⟩ : ∃ N', N = N' + 2 := Nat.exists_eq_add_of_le' hN
   obtain ⟨A', h0, rfl⟩ : ∃ A', A' ≤ N' ∧ A = 4 * A' + 5 := by
     refine ⟨A / 4 - 1, ?_, ?_⟩
-    · rw [Nat.mul_comm, ← Nat.div_lt_iff_lt_mul (Nat.succ_pos 3), Nat.lt_succ] at h
+    · rw [Nat.mul_comm, ← Nat.div_lt_iff_lt_mul (Nat.succ_pos 3), Nat.lt_succ_iff] at h
       exact Nat.sub_le_of_le_add h
     · rw [← A.div_add_mod 4, hA, Ne, Nat.add_right_cancel_iff] at hA0
       replace hA0 := (Nat.mul_ne_zero_iff.mp hA0).2
@@ -294,7 +294,7 @@ theorem three_stack_2mod4 (hN : 6 ≤ N) (hA : A % 4 = 2) (h : A < 4 * N) :
   rcases h with h | h
   ---- Case 1: `A/4 < N`
   · refine (type2_repeat_drain 0 ?_).trans (Nadd2_zero_zero_to_4Nadd2 (A / 4))
-    rwa [Nat.succ_le_succ_iff, Nat.succ_le]
+    rwa [Nat.succ_le_succ_iff, Nat.succ_le_iff]
   ---- Case 2: `A/4 = N`
   · rw [h]; clear A hA h
     rcases Nat.exists_eq_add_of_le' (Nat.succ_le_succ_iff.mp hN) with ⟨K, rfl⟩
@@ -314,7 +314,7 @@ theorem three_stack_of_bdd (hN : 6 ≤ N) (hL₀ : isReachable L [0, 0, 0, N, 0,
   iterate 3 rw [Nat.lt_succ_iff_lt_or_eq] at h1
   ---- Cases on `A % 4`: `0, 1, 2, 3` resp.
   rcases h1 with ((h1 | h1) | h1) | h1
-  · rw [Nat.lt_succ, Nat.le_zero] at h1
+  · rw [Nat.lt_one_iff] at h1
     exact hL₀.trans (append_left (three_stack_0mod4 N h1 h0) [0, 0, 0])
   · replace hN : 2 ≤ N := Nat.le_trans (Nat.le_add_left 2 4) hN
     exact hL₀.trans (append_left (three_stack_1mod4 hN h1 h h0) [0, 0, 0])
@@ -371,12 +371,6 @@ theorem final_solution :
       rw [Nat.pow_add, Nat.pow_mul]
       exact Nat.mul_le_mul (Nat.le_add_right 11 5) (Nat.pow_le_pow_left hM M)
     _ = log2_iter (4 + 11 * M) 14 := by rw [log2_iter_succ, log2_two_pow]
-    _ ≤ log2_iter (2 ^ 15) 14 := by
-      refine log2_iter_monotone_seed ?_ 14; calc
-        _ ≤ 4 + 11 * 2 ^ 11 := Nat.add_le_add_left (Nat.mul_le_mul_left 11 hM) 4
-        _ ≤ 2 ^ 15 := Nat.le_add_right 22532 10236
-    _ = log2_iter 15 13 := by rw [log2_iter_succ, log2_two_pow]
-    _ ≤ log2_iter 15 3 := log2_antitone_iter 15 (Nat.le_add_right 3 10)
-    _ = log2_iter 3 2 := congrArg (log2_iter · 2) (by iterate 4 rw [Nat.log2]; simp)
-    _ = log2_iter 1 1 := congrArg (log2_iter · 1) (by iterate 2 rw [Nat.log2]; simp)
-    _ = 0 := by rw [log2_iter, log2_iter, Nat.log2]; rfl
+    _ ≤ log2_iter (2 ^ 15) 14 :=
+      log2_iter_monotone_seed (Nat.add_le_add_left (Nat.mul_le_mul_left 11 hM) 4) 14
+    _ = 0 := rfl

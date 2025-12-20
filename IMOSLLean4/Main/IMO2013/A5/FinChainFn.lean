@@ -120,7 +120,7 @@ theorem iterRangeCompl_zero : h.iterRangeCompl 0 = ∅ := rfl
 
 theorem iterRangeCompl_succ (n : ℕ) :
     h.iterRangeCompl n.succ = h.exactIterRange n ∪ h.iterRangeCompl n :=
-  (congr_arg₂ _ range_succ rfl).trans biUnion_insert
+  (congr_arg₂ _ range_add_one rfl).trans biUnion_insert
 
 theorem iterRangeCompl_spec :
     ∀ n, (h.iterRangeCompl n : Set α) = (Set.range f^[n])ᶜ
@@ -160,6 +160,6 @@ theorem iter_range_of_rangeCompl_singleton (h0 : h.rangeCompl = {a}) :
     ∀ n, h.iterRangeCompl n = (range n).image (λ k ↦ f^[k] a)
   | 0 => rfl
   | n + 1 => by rw [h.iterRangeCompl_succ, exactIterRange, h0, image_singleton,
-      iter_range_of_rangeCompl_singleton h0 n, range_succ, image_insert]; rfl
+      iter_range_of_rangeCompl_singleton h0 n, range_add_one, image_insert]; rfl
 
 end Decidable

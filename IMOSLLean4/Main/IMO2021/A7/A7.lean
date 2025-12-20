@@ -51,9 +51,11 @@ lemma lemma2 (r : R) {y : ℕ → R} (hy : ∀ n, 0 ≤ y n) (hy0 : ∀ n, n •
   obtain hr | hr : r ≤ 0 ∨ 0 ≤ r := le_total r 0
   · exact (nsmul_nonpos hr _).trans (sq_nonneg _)
   ---- Induction on `N`; base case `N = 0` immediate
-  induction' N with N N_ih
-  · rw [Nat.zero_pow (Nat.succ_pos 2), mul_zero, zero_nsmul]
-    exact sq_nonneg _
+  induction N with
+  | zero =>
+      rw [Nat.zero_pow (Nat.succ_pos 2), mul_zero, zero_nsmul]
+      exact sq_nonneg _
+  | succ N N_ih => ?_
   ---- Now focus on the induction step with `r ≥ 0`
   replace hy0 : (9 * (N + 1)) • r ≤ (3 * y (N + 1)) ^ 2 := by
     have h : 9 = 3 ^ 2 := rfl

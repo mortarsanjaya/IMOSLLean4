@@ -4,11 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.BigInequalities.Finset
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Data.Nat.Cast.Order.Basic
-import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # IMO 2007 A6
@@ -21,7 +19,7 @@ $$ \left(3 \sum_{i = 1} a_i^2 a_{i + 1}\right)^2 ≤ 2 \left(\sum_{i = 1}^n a_i^
 namespace IMOSL
 namespace IMO2007A6
 
-open Finset Extra.Finset
+open Finset
 
 /-! ### Extra lemmas on sums over `Fin` -/
 
@@ -45,11 +43,12 @@ abbrev niceTuple (a : Fin (n + 1) → R) :=
   2 ^ 2 * ∑ i, a i * a (i + 1) ≤ (∑ i, a i) ^ 2
 
 theorem niceTuple.of_four [ExistsAddOfLE R] (a : Fin 4 → R) : niceTuple a := by
-  rw [niceTuple, Fin.sum_univ_four, Fin.sum_univ_four]
-  change 2 ^ 2 * (a 0 * a 1 + a 1 * a 2 + a 2 * a 3 + a 3 * a 0) ≤ _
-  rw [mul_comm (a 0), ← mul_add, add_assoc, mul_comm (a 2), ← mul_add,
-    add_comm (a 2), ← add_mul, add_assoc, add_add_add_comm, add_comm (a 0 + a 2)]
-  exact Extra.two_sq_AM_GM _ _
+  have h : (2 : R) ^ 2 = 4 := by norm_num
+  rw [niceTuple, Fin.sum_univ_four, Fin.sum_univ_four, h]
+  change 4 * (a 0 * a 1 + a 1 * a 2 + a 2 * a 3 + a 3 * a 0) ≤ _
+  rw [mul_comm (a 0), ← mul_add, add_assoc, mul_comm (a 2), ← mul_add, add_comm (a 2),
+    ← add_mul, ← mul_assoc, add_assoc, add_add_add_comm, add_comm (a 0 + a 2)]
+  exact four_mul_le_sq_add _ _
 
 theorem cyclic_add_right_formula (a : Fin (n + 1) → R) (c : R) :
     ∑ i, (a i + c) * (a (i + 1) + c)
@@ -128,7 +127,7 @@ theorem niceTuple.of_three_le [ExistsAddOfLE R] :
   wlog h : ∀ i, a 0 ≤ a i
   · obtain ⟨j, hj⟩ : ∃ j, ∀ i, a j ≤ a i := Fin_exists_minimal a
     exact of_add₁_iff.mp <| this _ hn n_ih (a := λ i ↦ a (i + j))
-      (λ i ↦ ha _) (λ i ↦ (hj _).trans_eq' (congrArg a j.zero_add))
+      (λ i ↦ ha _) (λ i ↦ (hj _).trans_eq' (congrArg a j.zero_add.symm))
   specialize ha 0
   obtain ⟨b, hb, h0⟩ : ∃ b : Fin (n + 1) → R,
       (∀ i, 0 ≤ b i) ∧ ∀ i, a i = (Fin.cons 0 b : _ → R) i + a 0 := by
@@ -171,7 +170,7 @@ theorem id2 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
     (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2
       ≤ (∑ i, a i ^ 2) * ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2 := by
   rw [id1, ← Fin_sum_shift (λ i ↦ a i ^ 2) 1]
-  exact CauchySchwarz_squares _ _ _
+  exact sum_mul_sq_le_sq_mul_sq _ _ _
 
 open Fin.NatCast in
 theorem id3 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
@@ -212,14 +211,16 @@ theorem id5 (hn : 5 ≤ n + 1) {b : Fin (n + 1) → R} (hb : ∀ i, 0 ≤ b i) :
     ∑ i, b i ^ 2 + 2 * ∑ i, b i * (b (i + 1) + b (i + 2)) ≤ (∑ i, b i) ^ 2 := by
   rw [id4, sq, sum_mul, ← Fin_sum_shift (λ i ↦ b i * _) 2]
   refine sum_le_sum λ i _ ↦ mul_le_mul_of_nonneg_left ?_ (hb _)
-  rw [← Fin_sum_shift _ i]
-  apply (sum_le_univ_sum_of_nonneg (s := image (Fin.castLE hn) univ) (λ _ ↦ hb _)).trans_eq'
-  refine Finset.sum_of_injOn (Fin.castLE hn) ?_ ?_ (λ j ↦ ?_) (λ j _ ↦ ?_)
+  calc ∑ j : Fin 5, b (_ + i)
+    _ = ∑ j ∈ image (Fin.castLE hn) univ, b (j + i) :=
+      Finset.sum_of_injOn (Fin.castLE hn) ?_ ?_ (λ j ↦ ?_) (λ j _ ↦ ?_)
+    _ ≤ ∑ j : Fin (n + 1), b (j + i) := sum_le_univ_sum_of_nonneg λ _ ↦ hb _
+    _ = ∑ j : Fin (n + 1), b j := Fin_sum_shift b i
   · exact Set.injOn_of_injective (Fin.castLE_injective _)
   · rw [coe_image]; exact Set.mapsTo_image (Fin.castLE hn) _
   · rw [coe_univ, Set.image_univ, mem_image_univ_iff_mem_range]; exact absurd
   · refine congrArg b (congrArg₂ _ ?_ rfl)
-    rw [← Fin.val_inj, Fin.coe_castLE, Fin.val_natCast, Nat.mod_succ_eq_iff_lt]
+    rw [← Fin.val_inj, Fin.val_castLE, Fin.val_natCast, Nat.mod_succ_eq_iff_lt]
     exact j.2.trans_le hn
 
 /-- Final solution -/

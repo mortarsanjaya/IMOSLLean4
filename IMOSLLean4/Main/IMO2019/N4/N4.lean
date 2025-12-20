@@ -46,7 +46,7 @@ theorem eq_zero_of_prime_add_dvd_sq (h : p.Prime) (h0 : a < p) (h1 : p + a ∣ p
   rcases h1 with (rfl | rfl) | rfl
   · exact absurd h2 (h.one_lt.trans_le le_self_add).ne.symm
   · rwa [pow_one, add_eq_left] at h2
-  · refine absurd ((add_lt_add_left h0 p).trans_le ?_) h2.not_lt
+  · refine absurd ((add_lt_add_right h0 p).trans_le ?_) h2.not_lt
     rw [sq, ← two_mul]; exact Nat.mul_le_mul_right p h.two_le
 
 
@@ -90,7 +90,7 @@ theorem good_is_linear {f : ℕ → ℕ} (h : good C f) : ∃ k, f = (k * ·) :=
     rcases (f x).eq_zero_or_pos with h5 | h5
     · rcases k.eq_zero_or_pos with rfl | h6
       · rw [h5, zero_mul]
-      · suffices x ^ 2 = 0 by rw [h5, pow_eq_zero this, mul_zero]
+      · suffices x ^ 2 = 0 by rw [h5, eq_zero_of_pow_eq_zero this, mul_zero]
         specialize h x p (Nat.lt_add_left x hp1)
         rw [h5, mul_zero, add_zero, h4] at h
         exact Nat.eq_zero_of_dvd_of_lt h <|

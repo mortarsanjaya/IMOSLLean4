@@ -124,7 +124,8 @@ lemma PNat_good_padic_eq_of_shift {a : ℕ → ℕ+} (ha : good λ n ↦ a n) (p
   · -- Suppose that `v < ν_p(a_{m + kp^{v + 1}})`.
     refine Nat.le_of_not_lt λ h0 ↦ v.lt_irrefl ?_
     -- Then `p^{v + 1} ∣ a_{m + kp^{v + 1}}`, but `p^{v + 1} ∣ a_m`; contradiction.
-    rw [← Nat.succ_le, ← PNat.count_factorMultiset, PNat.dvd_iff, PNat.pow_coe, hp] at h0 ⊢
+    rw [← Nat.succ_le_iff, ← PNat.count_factorMultiset,
+      PNat.dvd_iff, PNat.pow_coe, hp] at h0 ⊢
     exact (h.dvd_iff (Nat.dvd_refl _)).mp h0
   ---- Now show that `ν_p(a_{m + kp^{v + 1}}) ≤ v`.
   · -- Indeed this holds iff `p^v ∣ a_{m + kp^{v + 1}}` iff `p^v ∣ a_m`, which is true.

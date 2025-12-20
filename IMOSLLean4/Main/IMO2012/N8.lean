@@ -204,7 +204,7 @@ theorem card_mul_eq_unit [CommRing R] [Fintype R] [DecidableEq R] (r : Rˣ) :
   · rintro ⟨a, b⟩ h
     rw [mem_coe, mem_filter_univ] at h
     -- First lift `a` to a unit.
-    lift a to Rˣ using isUnit_of_mul_eq_one a (b * r⁻¹) (by rw [← mul_assoc, h, r.mul_inv])
+    lift a to Rˣ using IsUnit.of_mul_eq_one (b * r⁻¹) (by rw [← mul_assoc, h, r.mul_inv])
     refine ⟨a, mem_univ _, Prod.ext rfl ?_⟩
     -- Now it remains to show that `b = a⁻¹ r`.
     dsimp only; rw [Units.val_mul, ← h, Units.inv_mul_cancel_left]
@@ -349,7 +349,7 @@ theorem card_sq_add_Polynomial_fiber_lower_bound_simple
 theorem card_sq_add_Polynomial_not_fiber_upper_bound
     (hF : ringChar F ≠ 2) {P : F[X]} (hP : 1 < P.natDegree) :
     #{r | ¬∃ a b, a ^ 2 + P.eval b = r} < P.natDegree - 1 := by
-  rw [← Nat.add_lt_add_iff_left, filter_card_add_filter_neg_card_eq_card]
+  rw [← Nat.add_lt_add_iff_left, card_filter_add_card_filter_not]
   exact card_sq_add_Polynomial_fiber_lower_bound_simple hF hP
 
 /-- Simple bound on the number elements of `F` not of the form `a^2 + b^n`, `n > 1`. -/

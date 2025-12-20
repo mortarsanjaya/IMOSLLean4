@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.BigOperators.Group.Multiset
+import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 
 /-!
 # IMO 2019 C2
@@ -51,12 +52,13 @@ theorem exists_max_add_rest {S : Multiset α} (h : S ≠ 0) :
 theorem LinearOrder_induction {P : Multiset α → Prop}
     (h : P 0) (h0 : ∀ a S, P S → (∀ x ∈ S, x ≤ a) → P (a ::ₘ S)) (S) : P S := by
   generalize hS : card S = n
-  induction' n with n h1 generalizing S
-  · exact card_eq_zero.mp hS ▸ h
-  · obtain ⟨a, S₀, rfl, h2⟩ : ∃ a S₀, S = a ::ₘ S₀ ∧ ∀ x : α, x ∈ S₀ → x ≤ a :=
-      exists_max_add_rest (card_pos.mp (n.succ_pos.trans_eq hS.symm))
-    rw [card_cons, Nat.succ_inj] at hS
-    exact h0 a S₀ (h1 S₀ hS) h2
+  induction n generalizing S with
+  | zero => exact card_eq_zero.mp hS ▸ h
+  | succ n h1 =>
+      obtain ⟨a, S₀, rfl, h2⟩ : ∃ a S₀, S = a ::ₘ S₀ ∧ ∀ x : α, x ∈ S₀ → x ≤ a :=
+        exists_max_add_rest (card_pos.mp (n.succ_pos.trans_eq hS.symm))
+      rw [card_cons, Nat.succ_inj] at hS
+      exact h0 a S₀ (h1 S₀ hS) h2
 
 
 

@@ -31,9 +31,10 @@ lemma Fin_digits_map_injOn (m n : ℕ) :
   obtain rfl | hm : m = 0 ∨ m ≠ 0 := eq_or_ne m 0
   · rintro c hc _ - -; funext i
     exact absurd (hc i) (c i).not_lt_zero
-  ---- Induction on `n`, discharging the base case immediately
-  induction' n with n n_ih
-  · rintro c - d - -; exact funext λ i ↦ absurd i.2 i.1.not_lt_zero
+  ---- Induction on `n`, discharging the base case immediately.
+  induction n with
+  | zero => rintro c - d - -; exact funext λ i ↦ absurd i.2 i.1.not_lt_zero
+  | succ n n_ih => ?_
   /- Focus on the main case `m > 0`. The first step is to prove `c_0 = d_0`.
     Then we get `c_1 + c_2 m + … + c_n m^{n - 1} = d_1 + d_2 m + … + d_n m^{n - 1}`.
     By induction hypothesis, this gives `c_i = d_i` for all `0 < i ≤ n`. -/

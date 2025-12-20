@@ -155,7 +155,7 @@ theorem good_imp_succ_or_answer2 : f = Nat.succ ∨ f = answer2 := by
     rcases h4 with h4 | h4
     -- The impossible subcase `f(a) = 0`
     · rw [h4, or_iff_right (h3 0)] at h1
-      exact absurd h1 (Nat.lt_succ.mpr (f 0).le_succ).ne
+      exact absurd h1 (Nat.lt_succ_iff.mpr (f 0).le_succ).ne
     -- The main subcase `f(a) = a + 1`
     rw [h4, or_iff_left (h3 _)] at h1
     have h5 : f (f (f (f 0 + 1))) = f (f 0 + 2) + 1 := h (f 0).succ

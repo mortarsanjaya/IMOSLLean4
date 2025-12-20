@@ -65,8 +65,9 @@ theorem final_solution (h : 1 < m) :
     -- `n = 0`
     · exact Nat.dvd_refl 0
     -- `c, n > 0`
-    · refine (Nat.Coprime.dvd_mul_right ?_).mp ⟨_, (n.succ_mul_choose_eq c).symm⟩
+    · refine (Nat.Coprime.dvd_mul_right ?_).mp ⟨_, (n.add_one_mul_choose_eq c).symm⟩
       rw [Nat.two_mul, Nat.add_assoc] at h0
       rw [← Nat.coprime_self_add_right, ← Nat.coprime_self_add_right,
         Nat.coprime_comm, h0.coprime_iff_not_dvd]
-      exact Nat.not_dvd_of_pos_of_lt n.succ_pos (Nat.lt_add_of_pos_right (n.succ + c).succ_pos)
+      exact Nat.not_dvd_of_pos_of_lt n.succ_pos
+        (Nat.lt_add_of_pos_right (n.succ + c).succ_pos)

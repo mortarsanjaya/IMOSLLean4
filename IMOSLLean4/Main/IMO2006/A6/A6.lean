@@ -43,7 +43,7 @@ theorem good_alt {M : R} :
       ≤ M * ((b - a) ^ 2 + (c - b) ^ 2 + (a - c) ^ 2 + (a + b + c) ^ 2) ^ 2 := by
   refine forall₃_congr λ a b c ↦ ?_
   rw [ring_id1, ring_id2, mul_pow, mul_left_comm]
-  exact (mul_le_mul_left (pow_pos zero_lt_three 2)).symm
+  exact (mul_le_mul_iff_right₀ (pow_pos zero_lt_three 2)).symm
 
 theorem ring_ineq1 (r t : R) : 2 ^ 8 * (r ^ 3 * t) ≤ 3 ^ 3 * (r + t) ^ 4 := by
   apply le_of_sub_nonneg; calc

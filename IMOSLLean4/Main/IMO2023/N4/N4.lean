@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Data.Nat.Factorial.BigOperators
 
 /-!
 # IMO 2023 N4
@@ -91,18 +91,19 @@ lemma mul_sub_eq_mul_sub (h : i + 1 < n) :
   exact Nat.eq_of_mul_eq_mul_left (Nat.mul_pos (X.prod_b_pos _) (X.prod_a_pos _)) h0
 
 lemma mul_b_sub_a_lt_a (h : i < n) : i * (X.b i - X.a i) < X.a i := by
-  induction' i with i i_ih
-  · exact (Nat.zero_mul _).trans_lt (X.a_pos 0)
-  · have h0 := Nat.lt_of_succ_lt h
-    specialize i_ih h0
-    apply Nat.lt_of_mul_lt_mul_left (a := X.b i - X.a i)
-    calc
-      _ = (i * (X.b i - X.a i) + (X.b i - X.a i)) * (X.b (i + 1) - X.a (i + 1)) := by
-        rw [Nat.mul_left_comm, ← Nat.mul_assoc, Nat.succ_mul]
-      _ < (X.a i + (X.b i - X.a i)) * (X.b (i + 1) - X.a (i + 1)) :=
-        Nat.mul_lt_mul_of_pos_right (Nat.add_lt_add_right i_ih _) (X.b_sub_a_pos h)
-      _ = X.b i * (X.b (i + 1) - X.a (i + 1)) := by rw [Nat.add_sub_cancel' (X.a_lt_b h0).le]
-      _ = _ := by rw [← X.mul_sub_eq_mul_sub h, Nat.mul_comm]
+  induction i with
+  | zero => exact (Nat.zero_mul _).trans_lt (X.a_pos 0)
+  | succ i i_ih => ?_
+  have h0 := Nat.lt_of_succ_lt h
+  specialize i_ih h0
+  apply Nat.lt_of_mul_lt_mul_left (a := X.b i - X.a i)
+  calc
+    _ = (i * (X.b i - X.a i) + (X.b i - X.a i)) * (X.b (i + 1) - X.a (i + 1)) := by
+      rw [Nat.mul_left_comm, ← Nat.mul_assoc, Nat.succ_mul]
+    _ < (X.a i + (X.b i - X.a i)) * (X.b (i + 1) - X.a (i + 1)) :=
+      Nat.mul_lt_mul_of_pos_right (Nat.add_lt_add_right i_ih _) (X.b_sub_a_pos h)
+    _ = X.b i * (X.b (i + 1) - X.a (i + 1)) := by rw [Nat.add_sub_cancel' (X.a_lt_b h0).le]
+    _ = _ := by rw [← X.mul_sub_eq_mul_sub h, Nat.mul_comm]
 
 lemma self_lt_a (h : i < n) : i < X.a i :=
   (Nat.le_mul_of_pos_right i (X.b_sub_a_pos h)).trans_lt (X.mul_b_sub_a_lt_a h)

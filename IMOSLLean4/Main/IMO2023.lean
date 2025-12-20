@@ -1,5 +1,5 @@
 -- Root for the `IMO2023` problems.
-import IMOSLLean4.Main.IMO2023.A2.A2
+import IMOSLLean4.Main.IMO2023.A2
 import IMOSLLean4.Main.IMO2023.A3.A3
 import IMOSLLean4.Main.IMO2023.A5.A5
 import IMOSLLean4.Main.IMO2023.N2.N2

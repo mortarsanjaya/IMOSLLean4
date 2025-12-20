@@ -56,7 +56,7 @@ theorem a_and_sum_nonneg : ∀ n, 0 ≤ a b n ∧ 0 ≤ (range n).sum λ i ↦ a
 theorem a_plus_sum_ge : ∀ n : ℕ, (n : ℤ) ≤ a b n + (range n).sum λ i ↦ a b i * |b i - 2|
   | 0 => le_refl 0
   | n + 1 => by
-    apply (add_le_add_right (a_plus_sum_ge n) 1).trans
+    apply (add_le_add_left (a_plus_sum_ge n) 1).trans
     rw [sum_range_succ_comm, ← add_assoc, add_right_comm,
       add_le_add_iff_right, main_equality b_pos n, add_right_comm,
       add_le_add_iff_right, add_right_comm, ← Int.mul_add]
@@ -77,7 +77,7 @@ theorem final_solution : ∀ n : ℕ, (n : ℤ) ≤ a b n ∨ (n : ℤ) ≤ a b 
       refine (Int.add_one_le_of_lt (b_pos n)).lt_or_eq.imp (λ h ↦ ?_) (λ h ↦ ?_)
       ---- Case 1: `b_n > 1`
       · rw [main_equality b_pos, Int.natCast_succ, add_le_add_iff_right]
-        refine (a_plus_sum_ge b_pos n).trans (add_le_add_right ?_ _)
+        refine (a_plus_sum_ge b_pos n).trans (add_le_add_left ?_ _)
         rw [Int.mul_sub, Int.mul_one, le_sub_iff_add_le, ← Int.two_mul, Int.mul_comm]
         exact Int.mul_le_mul_of_nonneg_left h (h0 n)
       ---- Case 2: `b_n = 1`

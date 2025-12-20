@@ -42,7 +42,7 @@ theorem final_solution_explicit {b n : ℕ} (h : ∃ a, (b : ℤ) ^ 2 ∣ b - a 
     rw [gcd_eq_of_dvd_sub_right h0, gcd_one_right]
     exact isUnit_one
   ---- Then `|c|^n = b`, since `b > 0`.
-  rw [Int.associated_iff_natAbs, Int.natAbs_pow, Int.natAbs_cast] at hc
+  rw [Int.associated_iff_natAbs, Int.natAbs_pow, Int.natAbs_natCast] at hc
   exact ⟨c.natAbs, hc.symm⟩
 
 /-- Final solution -/

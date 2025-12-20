@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Defs
+import Mathlib.Algebra.Field.Defs
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Nat.Cast.Order.Ring
 

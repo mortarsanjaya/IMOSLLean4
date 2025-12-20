@@ -51,7 +51,7 @@ lemma good_iff {S : Finset ℕ} :
         _ ≤ S.card / 2 + m := Nat.add_le_add_left hm1 _
       obtain ⟨T, hT, hT0, hT1⟩ := hS (S.card - m) hm0 hm1
       refine ⟨S \ T, sdiff_subset, ?_, ?_⟩
-      · rw [card_sdiff hT, hT0, Nat.sub_sub_self hm]
+      · rw [card_sdiff_of_subset hT, hT0, Nat.sub_sub_self hm]
       · rwa [sdiff_sdiff_right_self, inf_eq_inter, inter_eq_right.mpr hT, eq_comm, X hT]
 
 theorem good_of_card_lt_four {S : Finset ℕ} (hS : S.card < 4) : good S :=
@@ -98,7 +98,7 @@ lemma GoodSetBase_sum (N : ℕ) : (GoodSetBase N).sum id + 3 = 3 ^ (N + 1) := by
       ((range N).image (n.succ * 3 ^ ·)).sum id = ∑ k ∈ range N, n.succ * 3 ^ k :=
     sum_image λ _ _ _ _ h ↦ mul_three_pow_inj n h
   rw [GoodSetBase, sum_union (image_mul_three_pow_disj N), X, X]
-  clear X; induction' N with N hN; rfl
+  clear X; induction N with | zero => rfl | succ N hN => ?_
   rw [sum_range_succ, sum_range_succ, add_add_add_comm, add_right_comm, hN, ← Nat.add_mul,
     Nat.mul_assoc 2 3, ← Nat.pow_succ', add_comm, ← Nat.succ_mul, ← Nat.pow_succ']
 
@@ -143,7 +143,7 @@ lemma GoodSubsetBase_card (K m) : (GoodSubsetBase K m).card = m + 1 := by
 lemma GoodSubsetBase_sum (K m) : (GoodSubsetBase K m).sum id = 2 * 3 ^ (K + m) := by
   rw [GoodSubsetBase, sum_insert (GoodSubsetBase_disjoint' K m),
     sum_image λ _ _ _ _ h ↦ mul_three_pow_add_inj 3 _ h]
-  induction' m with m m_ih; rfl
+  induction m with | zero => rfl | succ m m_ih => ?_
   rw [sum_range_succ, ← Nat.add_assoc, m_ih, ← Nat.add_assoc, Nat.pow_succ,
     ← Nat.mul_assoc, Nat.mul_succ, Nat.mul_right_comm, Nat.add_comm]; rfl
 

@@ -42,7 +42,7 @@ include h
 theorem main_lemma (n : ℕ) : d z (n + 1) ≤ d z n - n := by
   have X : (n : ℤ) * (z n + 1) = n * z n + n := by rw [Int.mul_add, Int.mul_one]
   rw [d_succ, d, sub_sub, ← X]; apply Int.sub_le_sub_left
-  exact Int.mul_le_mul_of_nonneg_left (h n.lt_succ_self) (Int.ofNat_zero_le n)
+  exact Int.mul_le_mul_of_nonneg_left (h n.lt_succ_self) (Int.natCast_nonneg n)
 
 theorem binom_bound : ∀ n, d z n ≤ z 0 - n.choose 2
   | 0 => ((d_zero z).trans (sub_zero _).symm).le
@@ -56,7 +56,7 @@ theorem d_nonpos_of_big (h0 : (z 0).natAbs ≤ n.choose 2) : d z n ≤ 0 :=
 
 theorem d_nonpos_mono (h0 : d z n ≤ 0) : (h1 : n ≤ k) → d z k ≤ 0 :=
   Nat.le_induction h0 (λ x _ h2 ↦ (main_lemma h x).trans <|
-    Int.sub_nonpos_of_le (h2.trans <| Int.ofNat_zero_le x)) k
+    Int.sub_nonpos_of_le (h2.trans (Int.natCast_nonneg x))) k
 
 omit h in
 theorem d_one_pos (h0 : 0 < z 0) : 0 < d z 1 :=

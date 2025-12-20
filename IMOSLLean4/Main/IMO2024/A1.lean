@@ -91,7 +91,7 @@ lemma zero_of_floor_eq_zero (hα0 : ⌊α⌋ = 0) : α = 0 := by
     obtain ⟨k, hk⟩ : ∃ k, 1 < k • α := exists_lt_nsmul hα1 _
     exact hk.asymm (Int.floor_eq_zero_iff.mp (this k)).2
   ---- Set up strong induction on `n`; assume `⌊mα⌋ = 0` for all `m < n`.
-  intro n; induction' n using Nat.strong_induction_on with n n_ih
+  intro n; induction n using Nat.strong_induction_on with | h n n_ih => ?_
   ---- The case `n = 0, 1` are obvious, so now write `n = k + 2`.
   cases n with | zero => rw [zero_nsmul, Int.floor_zero] | succ m => ?_
   cases m with | zero => rwa [one_nsmul] | succ k => ?_
@@ -123,7 +123,7 @@ lemma floor_ne_neg_one : ⌊α⌋ ≠ -1 := by
     rw [Int.floor_lt, succ_nsmul, Int.cast_neg, Int.cast_one, ← add_zero (-1)]
     exact add_lt_add hk hα1
   ---- Set up strong induction on `n`; assume `⌊(m + 1)α⌋ = -1` for all `m < n`.
-  intro n; induction' n using Nat.strong_induction_on with n n_ih
+  intro n; induction n using Nat.strong_induction_on with | h n n_ih => ?_
   ---- The case `n = 0` is obvious, so now write `n = k + 1`.
   cases n with | zero => rwa [one_nsmul] | succ k => ?_
   ---- Since `α` is good, we have `k + 2 ∣ ∑_{m ≤ k + 2} ⌊mα⌋ + (k + 2) = ⌊(k + 2)α⌋ + 1`.

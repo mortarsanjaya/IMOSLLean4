@@ -153,8 +153,8 @@ lemma good_two_mul_imp₂ (h : 7 ^ a + 3 ^ b ∣ 8 * a ^ 4 + 2 * b ^ 2) :
   right; have h0 : 7 ^ a + 3 ^ b ≤ 8 * a ^ 4 + 2 * b ^ 2 :=
     Nat.le_of_dvd (Nat.add_pos_left (Nat.mul_pos (Nat.succ_pos 7) (Nat.pow_pos ha)) _) h
   ---- Split into 4 cases: `a = 1`, `a = 2`, `a = 3`, and `a ≥ 4`
-  rw [Nat.le_iff_lt_or_eq, ← Nat.succ_le, Nat.le_iff_lt_or_eq,
-    ← Nat.succ_le, Nat.le_iff_lt_or_eq] at ha
+  rw [Nat.le_iff_lt_or_eq, ← Nat.succ_le_iff, Nat.le_iff_lt_or_eq,
+    ← Nat.succ_le_iff, Nat.le_iff_lt_or_eq] at ha
   rcases ha with (((ha : 4 ≤ a) | (rfl : 3 = a)) | (rfl : 2 = a)) | (rfl : 1 = a)
   ---- Case 1: `a ≥ 4`
   · exfalso; refine h0.not_gt (Nat.add_lt_add ?_ (b_bound₁ b))

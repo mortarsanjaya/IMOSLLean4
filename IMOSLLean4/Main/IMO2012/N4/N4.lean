@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.GCD
-import Mathlib.Data.Int.Interval
 import Mathlib.Algebra.Order.Ring.Basic
+import Mathlib.Algebra.Order.Ring.Int
+import Mathlib.Data.Int.Interval
 import Mathlib.Data.Nat.Cast.Order.Ring
 import Mathlib.Tactic.Ring
 

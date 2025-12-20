@@ -5,31 +5,29 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import IMOSLLean4.Main.IMO2012.N8
+import Mathlib.Data.Nat.Factorization.PrimePow
 
 /-!
 # IMO 2012 N8 (Generalization)
 
-Let $F$ be a finite field of cardinality $q ≠ 11$.
-Prove that for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
+Find all finite fields $F$ with the following property:
+  for any $r ∈ F$, there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
 
-Throughout this file, we say that $F$ is `good` if for any $r ∈ F$,
-  there exists $a, b ∈ F$ such that $a^2 + b^5 = r$.
-By adapting the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf),
-  we proved that a finite field of cardinality $q > 40$ with $q$ odd is good.
-Here we extend this result to any finite field of cardinality $q ≠ 11$.
-In addition, we prove that the given statement does not work when $q = 11$.
+### Answer
 
-As we have solved the problem for $q$ odd with $q > 40$,
-  we only need to check the case where $q$ is even or $q ≤ 40$.
-By looking at the unit group $Fˣ$, a finite field of cardinality $q ≢ 1 \pmod{10}$ is good.
-Thus the remaining cases are $q = 11$ and $q = 31$, for which we use direct search.
-* $𝔽_{11}$ is not good; $7 ∈ 𝔽_{11}$ cannot be represented as $a^2 + b^5$.
-* $F_{31}$ is good; every element of $F_{31}$, other than $22 = 4^2 - 5^5$ and
-    $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 + 5 = a^2 - 6^5$.
+Any field of cardinality $q ≠ 11$.
+
+### Implementation details
+
+The condition being asked on $F$ is implemented via the predicate `good`.
+For the case $q = 11$ and $q = 31$, we show that `good` is preserved under field isomorphisms
+  via `good.of_RingEquiv`, so we just have to check the fields `ZMod 11` and `ZMod 31`.
+For `ZMod 11`, we show by computer search that $a^2 + b^5 ≠ 7$ for any $a, b ∈ F$.
+For `ZMod 31`, we show that every element of $𝔽_{31}$, other than $22 = 4^2 - 5^5$ and
+  $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 - 6^5$ for some $a ∈ 𝔽_{31}$.
 -/
 
 namespace IMOSL
-namespace Generalization
 namespace IMO2012N8
 
 open Finset
@@ -141,8 +139,8 @@ omit [DecidableEq F] in
 theorem good_of_card_eq_31 (hF : q = 31) : good F :=
   ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F (by decide) hF)
 
-/-- Final solution -/
-theorem final_solution : good F ↔ ¬q = 11 := by
+/-- Final solution to the generalized version -/
+theorem final_solution_general : good F ↔ ¬q = 11 := by
   ---- As fields of cardinality `11` are not good, we now assume `q ≠ 11`.
   refine ⟨λ hF hF0 ↦ not_good_of_card_eq_11 hF0 hF, λ hF ↦ ?_⟩
   ---- If `10 ∤ q - 1`, then we proved that `F` is good.
@@ -156,7 +154,7 @@ theorem final_solution : good F ↔ ¬q = 11 := by
     calc 40 ≤ 10 * k := Nat.mul_le_mul_left 10 h0
          _  < 10 * k + 1 := Nat.lt_succ_self _
          _  = q := h.symm
-  ---- If `k < 4`, then divide into four cases
+  ---- If `k < 4`, then divide into four cases.
   lift k to Fin 4 using h0
   fin_cases k
   ---- If `k = 0`, then `q = 1`. Contradiction, as a field cannot have cardinality `1`.
@@ -164,7 +162,11 @@ theorem final_solution : good F ↔ ¬q = 11 := by
   ---- If `k = 1`, then `q = 11`. Contradiction, as we assumed `q ≠ 11`.
   · exact absurd h hF
   ---- If `k = 2`, then `q = 21`. Contradiction, as `21` is not a prime power.
-  · replace h : IsPrimePow 21 := by simpa [h] using FiniteField.isPrimePow_card F
-    exact absurd h (by decide : ¬IsPrimePow 21)
+  · refine absurd (FiniteField.isPrimePow_card F) (h ▸ ?_)
+    -- Somehow direct decision procedute doesn't work anymore...
+    clear h; intro h
+    replace hF : Nat.Coprime 3 7 := rfl
+    replace h : 21 ∣ 3 ∨ 21 ∣ 7 := (hF.isPrimePow_dvd_mul h).mp (Nat.dvd_refl 21)
+    revert h; decide
   ---- If `k = 3`, then `q = 31`, which works.
   · exact good_of_card_eq_31 h

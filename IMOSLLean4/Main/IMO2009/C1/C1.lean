@@ -133,7 +133,7 @@ theorem Ends_iff {X : GameState n} : X.Ends ↔ X.board ⊆ range n :=
 /-! ### Game termination -/
 
 theorem ValidMove_Colex {X Y : GameState n} (h : X.ValidMove Y) :
-    Colex.toColex Y.board < Colex.toColex X.board := by
+    toColex Y.board < toColex X.board := by
   rcases h with ⟨i, h⟩
   refine Colex.toColex_lt_toColex.mpr ⟨?_, λ j h0 h1 ↦ ?_⟩
   · rw [Ne, symmDiff_eq_left]

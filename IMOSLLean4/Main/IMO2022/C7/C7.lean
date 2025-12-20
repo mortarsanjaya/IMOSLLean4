@@ -4,12 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Finsupp.Single
-import Mathlib.Data.Finset.Order
-import Mathlib.Data.Finset.Range
-import Mathlib.Data.Finset.Lattice.Fold
+import Mathlib.Algebra.Group.Finsupp
 import Mathlib.Algebra.Order.Ring.Int
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Finset.Order
 
 /-!
 # IMO 2022 C7
@@ -54,15 +52,15 @@ variable [Add α] [SemilatticeSup α] {S : Set α} (hS : AddMaxClosed S)
 include hS
 
 theorem Finset_range_sup_mem {f : ℕ → α} (hf : ∀ k, f k ∈ S) :
-    ∀ n : ℕ, (Finset.range n.succ).sup' Finset.nonempty_range_succ f ∈ S := by
+    ∀ n : ℕ, (Finset.range n.succ).sup' Finset.nonempty_range_add_one f ∈ S := by
   refine Nat.rec ?_ λ n hn ↦ ?_
   · simpa only [Finset.range_one, Finset.sup'_singleton] using hf 0
-  · simp only [Finset.range_succ (n := n.succ)]
-    rw [Finset.sup'_insert Finset.nonempty_range_succ]
+  · simp only [Finset.range_add_one (n := n.succ)]
+    rw [Finset.sup'_insert Finset.nonempty_range_add_one]
     exact hS.sup_mem _ (hf n.succ) _ hn
 
 theorem mem_of_Finset_range_sup_eq {f : ℕ → α} (hf : ∀ k, f k ∈ S) {x : α}
-    (hx : x = (Finset.range (n + 1)).sup' Finset.nonempty_range_succ f) : x ∈ S :=
+    (hx : x = (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one f) : x ∈ S :=
   hx ▸ Finset_range_sup_mem hS hf n
 
 open Fin.NatCast in
@@ -71,7 +69,7 @@ theorem Fin_univ_sup_mem {f : Fin (n + 1) → α} (hf : ∀ k, f k ∈ S) :
   have h : (Finset.range n.succ).image (λ k : ℕ ↦ (k : Fin (n + 1))) = Finset.univ :=
     Finset.eq_univ_of_forall λ k ↦ Finset.mem_image.mpr
       ⟨k.1, Finset.mem_range.mpr k.isLt, k.cast_val_eq_self⟩
-  simp only [← h, ← Finset.sup'_comp_eq_image Finset.nonempty_range_succ]
+  simp only [← h, ← Finset.sup'_comp_eq_image Finset.nonempty_range_add_one]
   exact Finset_range_sup_mem hS (λ k ↦ hf k) n
 
 theorem mem_of_Fin_univ_sup_eq {f : Fin (n + 1) → α} (hf : ∀ k, f k ∈ S)
@@ -139,19 +137,21 @@ theorem ofPreimage {S : Set (α → ℤ)} (hS : AddMaxClosed S) (i : α → β) 
 /-! ##### Closed sets satisfying certain conditions -/
 
 theorem Nat_Finsupp_mem_of_zero_single_mem [DecidableEq ι] {S : Set (ι → ℤ)}
-    (hS : AddMaxClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, ⇑(Finsupp.single i 1) ∈ S) :
-    ∀ v : ι →₀ ℕ, Nat.cast ∘ v ∈ S := by
-  intro v; induction' v using Finsupp.induction_linear with f g hf hg i k
-  · exact hS0
-  · exact hS.add_mem _ hf _ hg
-  · obtain rfl | h : k = 0 ∨ 0 < k := k.eq_zero_or_pos
-    · rw [Finsupp.single_zero]; exact hS0
-    · have h0 : (Nat.cast : ℕ → ℤ) ∘ ⇑(Finsupp.single i k) = k • ⇑(Finsupp.single i 1) := by
-        funext j; rw [Function.comp_apply, Pi.smul_apply, nsmul_eq_mul]
-        obtain rfl | h0 : i = j ∨ i ≠ j := eq_or_ne i j
-        · rw [Finsupp.single_eq_same, Finsupp.single_eq_same, mul_one]
-        · rw [Finsupp.single_eq_of_ne h0, Finsupp.single_eq_of_ne h0, mul_zero]; rfl
-      exact h0 ▸ hS.smul_mem_of_pos (hS1 i) k h
+    (hS : AddMaxClosed S) (hS0 : 0 ∈ S) (hS1 : ∀ i, ⇑(Finsupp.single i 1) ∈ S) (v : ι →₀ ℕ) :
+    Nat.cast ∘ v ∈ S := by
+  ---- Induction on `v`; only the case where `v` has one non-zero coordinate is nontrivial.
+  induction v using Finsupp.induction_linear with
+  | zero => exact hS0
+  | add _ _ hf hg => exact hS.add_mem _ hf _ hg
+  | single i k => ?_
+  obtain rfl | h : k = 0 ∨ 0 < k := k.eq_zero_or_pos
+  · rw [Finsupp.single_zero]; exact hS0
+  · have h0 : (Nat.cast : ℕ → ℤ) ∘ ⇑(Finsupp.single i k) = k • ⇑(Finsupp.single i 1) := by
+      funext j; rw [Function.comp_apply, Pi.smul_apply, nsmul_eq_mul]
+      obtain rfl | h0 : i = j ∨ i ≠ j := eq_or_ne i j
+      · rw [Finsupp.single_eq_same, Finsupp.single_eq_same, mul_one]
+      · rw [Finsupp.single_eq_of_ne' h0, Finsupp.single_eq_of_ne' h0, Int.mul_zero]; rfl
+    exact h0 ▸ hS.smul_mem_of_pos (hS1 i) k h
 
 
 section
