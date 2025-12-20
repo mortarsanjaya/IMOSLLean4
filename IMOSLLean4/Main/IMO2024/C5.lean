@@ -4,15 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Int.ModEq
-import Mathlib.Algebra.Ring.Parity
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Order.Interval.Finset.Defs
-import Mathlib.Data.Int.Interval
-import Mathlib.Algebra.Order.Interval.Finset.SuccPred
-import Mathlib.Data.Int.SuccPred
 import Mathlib.Algebra.Order.Interval.Finset.Basic
+import Mathlib.Algebra.Order.Interval.Finset.SuccPred
+import Mathlib.Data.Int.Interval
+import Mathlib.Data.Int.ModEq
+import Mathlib.Data.Int.SuccPred
 
 /-!
 # IMO 2024 C5
@@ -196,10 +192,6 @@ theorem binary_merge_of_left_not_isWinning (hS : ¬isWinning S) (hT : T.Nonempty
 theorem binary_merge_of_right_not_isWinning (hS : S.Nonempty) (hT : ¬isWinning T) :
     isWinning (S.image (2 * · + a) ∪ T.image (2 * · + b)) := by
   rw [union_comm]; exact binary_merge_of_left_not_isWinning hab.symm hT hS
-
-
-set_option trace.profiler true
-set_option trace.profiler.threshold 100
 
 /-- If `a ≢ b (mod 2)` and `S ≠ ∅` is winning, then `(2S + a) ∪ (2S + b)` is losing. -/
 theorem binary_merge_self_not_isWinning (hS : isWinning S) (hS0 : S.Nonempty) :
