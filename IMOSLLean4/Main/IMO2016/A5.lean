@@ -49,14 +49,11 @@ theorem final_solution_part1 (n) :
       exact Nat.le_of_lt hs
     refine ⟨r ^ 2 + (2 * k + 1) + (r - k), r + 1, Nat.succ_pos r, Nat.le_refl _, ?_⟩
     replace hr : (r ^ 2 + (2 * k + 1) + (r - k)) ^ 2
-        = (r + 1) ^ 2 * (r ^ 2 + (2 * k + 1)) + (r - k) ^ 2 := calc
-      _ = (r ^ 2 + (2 * k + 1)) ^ 2 + 2 * (r ^ 2 + (2 * k + 1)) * (r - k) + (r - k) ^ 2 :=
-        add_sq _ _
-      _ = (r + 1) ^ 2 * (r ^ 2 + (2 * k + 1)) + (r - k) ^ 2 := by
-        rw [Nat.add_left_inj, Nat.pow_two, Nat.mul_right_comm, ← Nat.add_mul]
-        refine congrArg (· * _) ?_
-        rw [Nat.add_assoc, Nat.add_right_comm, ← Nat.mul_add, Nat.add_sub_cancel' hs,
-          add_sq, Nat.mul_one, Nat.one_pow, Nat.add_assoc]
+        = (r + 1) ^ 2 * (r ^ 2 + (2 * k + 1)) + (r - k) ^ 2 := by
+      rw [add_sq, Nat.add_left_inj, Nat.pow_two, Nat.mul_right_comm, ← Nat.add_mul]
+      refine congrArg (· * _) ?_
+      rw [Nat.add_assoc, Nat.add_right_comm, ← Nat.mul_add, Nat.add_sub_cancel' hs,
+        add_sq, Nat.mul_one, Nat.one_pow, Nat.add_assoc]
     replace hs : r - k ≤ r + 1 := Nat.le_of_lt (Nat.sub_lt_succ r k)
     exact hr ▸ ⟨Nat.le_add_right _ _, Nat.add_le_add_left (Nat.pow_le_pow_left hs 2) _⟩
 
