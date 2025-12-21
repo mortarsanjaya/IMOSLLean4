@@ -37,7 +37,8 @@ Then $f$ is eventually strictly increasing, again contradicting the
 namespace IMOSL
 namespace IMO2013N3
 
-/-- The more general result. -/
+/-- If `f : ℕ → α` satisfies the functional equation `f((n + 1)^2) = max{f(n), f(n + 1)}`,
+  then there exists infinitely many `n` such that `f(n^2) = f((n + 1)^2)`. -/
 theorem general_result [LinearOrder α]
     (f : ℕ → α) (hf : ∀ n, f ((n + 1) ^ 2) = max (f n) (f (n + 1))) (N) :
     ∃ n ≥ N, f (n ^ 2) = f ((n + 1) ^ 2) := by
