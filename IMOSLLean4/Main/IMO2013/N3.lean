@@ -37,8 +37,8 @@ Then $f$ is eventually strictly increasing, again contradicting the
 namespace IMOSL
 namespace IMO2013N3
 
-/-- The generalized result. -/
-theorem final_solution_general [LinearOrder α]
+/-- The more general result. -/
+theorem general_result [LinearOrder α]
     (f : ℕ → α) (hf : ∀ n, f ((n + 1) ^ 2) = max (f n) (f (n + 1))) (N) :
     ∃ n ≥ N, f (n ^ 2) = f ((n + 1) ^ 2) := by
   ---- Suppose that the statement is false.
@@ -110,7 +110,7 @@ theorem final_solution :
     ∀ N, ∃ n ≥ N, (n ^ 4 + n ^ 2 + 1).primeFactorsList.foldr max 0
       = ((n + 1) ^ 4 + (n + 1) ^ 2 + 1).primeFactorsList.foldr max 0 := by
   simp only [Nat.pow_mul _ 2 2]
-  refine final_solution_general (λ n ↦ (n ^ 2 + n + 1).primeFactorsList.foldr max 0) ?_
+  refine general_result (λ n ↦ (n ^ 2 + n + 1).primeFactorsList.foldr max 0) ?_
   have h0 (n) : n ^ 2 + n + 1 ≠ 0 := Nat.succ_ne_zero _
   intro n; simp only; rw [special_formula, ← foldr_max_zero_append]
   exact (Nat.perm_primeFactorsList_mul (h0 n) (h0 (n + 1))).foldr_eq _

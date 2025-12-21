@@ -9,8 +9,6 @@ import Mathlib.Algebra.Order.Floor.Ring
 /-!
 # IMO 2010 A1 (P1)
 
-A totally ordered
-
 Let $R$ and $S$ be totally ordered rings with floor. (See `FloorRing`.)
 Suppose that $R$ is densely ordered.
 That is, for any $x < y$ in $R$, there exists $z ∈ R$ such that $x < z < y$.

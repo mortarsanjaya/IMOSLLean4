@@ -216,7 +216,6 @@ theorem eq_id_of_map_zero_eq_zero : f = id := by
     _ = g x * (1 - x) + g (x - 1 + (1 + 1)) := by rw [sub_add_add_cancel]
     _ = g x * (1 - x) + g (x - 1) := by rw [one_add_one_eq_two, h0]
     _ = g x * (1 - x) + g (1 - x) := by rw [← neg_sub 1 x, hg7]
-
   ---- Now fix `x`. Applying symmetry, we get `g(1 - x) (1 - x) = g(x) x`.
   intro x
   replace h1 : g x * (1 - x) + g (1 - x) = g (1 - x) * x + g x := by
@@ -235,8 +234,8 @@ end good
 
 
 /-- Final solution to the generalized version -/
-theorem final_solution_general [Ring R] [DecidableEq R] [NoZeroDivisors R] {f : R → R} :
-    good f ↔ f = (λ x ↦ 2 - x) ∨ f = id := by
+theorem Generalization.final_solution [Ring R] [DecidableEq R] [NoZeroDivisors R]
+    {f : R → R} : good f ↔ f = (λ x ↦ 2 - x) ∨ f = id := by
   refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   ---- The `→` direction.
   · apply (Decidable.em (f 0 = 0)).symm.imp

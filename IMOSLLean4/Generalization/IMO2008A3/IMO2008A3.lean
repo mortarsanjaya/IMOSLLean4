@@ -26,8 +26,8 @@ In terms of ordinals, this holds if and only if the ordinal number $o_S$ of $S$ 
 We define an ordered set $S$ to be `good` if there exists a Spanish couple on $S$.
 The theorem `good.conjOrderIso_iff` shows that `good` is preserved under order isomorphisms.
 We define `isGoodOrdinal` to be the quotient predicate of `good` on ordinals.
-We state the main result in terms of both ordinals and well-ordered sets;
-  see `final_solution_ordinal` and `final_solution_general` (only on `Type 0`).
+We state the main result in terms of well-ordered sets.
+For the ordinal version, see `IMOSL.IMO2008A3.isGoodOrdinal.iff_omega0_sq_dvd`.
 
 The construction of Spanish couple on lexicographical product is implemented via
   `SpanishCouple.prodLexLeft`, while the construction of Spanish couple on an upper subset
@@ -46,8 +46,7 @@ theorem StrictMono_conjOrderIso [Preorder α] [Preorder β]
     StrictMono (e.toEquiv.conj f) :=
   λ _ _ h ↦ e.strictMono (hf (e.symm.strictMono h))
 
-/-- Somehow this isn't on `mathlib`.
-  TODO: Remove this instance once `mathlib` variant appears. -/
+/-- TODO: Remove this instance once `mathlib` variant appears. -/
 instance [LT α] [WellFoundedLT α] [LT β] [WellFoundedLT β] : WellFoundedLT (α ⊕ₗ β) :=
   ⟨Sum.lex_wf wellFounded_lt wellFounded_lt⟩
 
@@ -297,11 +296,8 @@ end isGoodOrdinal
 
 /-! ### Summary -/
 
-/-- Final solution, ordinal form -/
-alias final_solution_ordinal := isGoodOrdinal.iff_omega0_sq_dvd
-
 /-- Final solution to the generalized version -/
-theorem final_solution_general {α : Type} [LinearOrder α] [WellFoundedLT α] :
+theorem Generalization.final_solution {α : Type} [LinearOrder α] [WellFoundedLT α] :
     good α ↔ ∃ (β : Type) (_ : LinearOrder β) (_ : WellFoundedLT β),
       Nonempty (α ≃o β ×ₗ ℕ ×ₗ ℕ) := by
   ---- The backwards direction is more straightforward.
