@@ -26,8 +26,8 @@ Since $b > 0$ and $\gcd(b, 1 - bd) = 1$, so $b$ must be an $n$th power.
 namespace IMOSL
 namespace IMO2007N2
 
-/-- Final solution with explicit `k`. -/
-theorem final_solution_explicit {b n : ℕ} (h : ∃ a, (b : ℤ) ^ 2 ∣ b - a ^ n) :
+/-- If `b ∈ ℕ` and `b^2 ∣ b - a^n` for some `a ∈ ℤ`, then `b = A^n` for some `A ∈ ℕ`. -/
+theorem eq_pow_of_sq_dvd_self_sub_pow {b n : ℕ} (h : ∃ a, (b : ℤ) ^ 2 ∣ b - a ^ n) :
     ∃ A, b = A ^ n := by
   ---- Write `b - a^n = b^2 d` for some `d ∈ ℤ`.
   rcases h with ⟨a, d, h⟩
@@ -48,4 +48,4 @@ theorem final_solution_explicit {b n : ℕ} (h : ∃ a, (b : ℤ) ^ 2 ∣ b - a 
 /-- Final solution -/
 theorem final_solution {b n : ℕ} (hb : 0 < b) (h : ∀ k > 0, ∃ c : ℤ, k ∣ b - c ^ n) :
     ∃ A, b = A ^ n :=
-  final_solution_explicit (h (b ^ 2) (sq_pos_of_pos (Int.natCast_pos.mpr hb)))
+  eq_pow_of_sq_dvd_self_sub_pow (h (b ^ 2) (sq_pos_of_pos (Int.natCast_pos.mpr hb)))

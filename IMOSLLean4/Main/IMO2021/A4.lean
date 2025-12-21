@@ -21,6 +21,8 @@ We follow Solution 1 of the
 More generally, we prove that for any increasing and concave function $g : ℝ_{≥ 0} → ℝ$,
 $$ \sum_{i = 1}^n \sum_{j = 1}^n g(|x_i - x_j|)
   ≤ \sum_{i = 1}^n \sum_{j = 1}^n g(|x_i + x_j|). $$
+See `IMOSL.IMO2021A4.targetSum_nonneg_of_monotone_concave`.
+
 Instead of taking $T$ large enough, we split into three cases:
 1. $x_i ≥ 0$ for all $i$;
 2. $x_i ≤ 0$ for all $i$;
@@ -283,8 +285,8 @@ theorem exists_targetSum_shift_le_targetSum
   rcases h with h | h
   exacts [⟨pₙ, hpₙ, h⟩, ⟨pₚ, hpₚ, h⟩]
 
-/-- Final solution, more general version. -/
-theorem final_solution_monotone_concave [DecidableEq ι] (S : Finset ι) (x : ι → 𝕜) :
+/-- If `g` is monotone and concave on `[0, ∞)`, then the target sum is nonnegative. -/
+theorem targetSum_nonneg_of_monotone_concave [DecidableEq ι] (S : Finset ι) (x : ι → 𝕜) :
     targetSum g S x ≥ 0 := by
   ---- Proceed by strong induction on `S`.
   induction S using Finset.strongInduction generalizing x with | H S S_ih => ?_
@@ -326,5 +328,5 @@ end
 /-- Final solution -/
 theorem final_solution [DecidableEq ι] (S : Finset ι) (x : ι → ℝ) :
     targetSum Real.sqrt S x ≥ 0 :=
-  final_solution_monotone_concave _ (λ _ _ _ ↦ Real.sqrt_le_sqrt)
+  targetSum_nonneg_of_monotone_concave _ (λ _ _ _ ↦ Real.sqrt_le_sqrt)
     Real.strictConcaveOn_sqrt.concaveOn S x

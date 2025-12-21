@@ -14,15 +14,6 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 Define the sequence $(x_n)_{n ≥ 0}$ recursively by $x_0 = 1$,
   $x_{2k} = (-1)^k x_k$, and $x_{2k + 1} = -x_k$ for all $k ∈ ℕ$.
 Prove that for any $n ∈ ℕ$, $$ \sum_{i < n} x_i ≥ 0. $$
-
-**Extra**: Prove that equality holds if and only if the
-  base $4$ representation of $n$ only contains $0$ and $2$ as a digit.
-
-### Further directions
-
-I think the proof codes can still be cleaned up.
-Another idea is to define the auxiliary functions `List Bool → Bool`
-  representing the sequence $(x_n)$ and $(S_n)$.
 -/
 
 namespace IMOSL
@@ -114,7 +105,7 @@ theorem S_four_mul_add_eq_zero_iff (q : ℕ) {r : ℕ} (h : r < 4) :
 
 
 
-/-! ## Final solution -/
+/-! ### Summary -/
 
 /-- Final solution -/
 theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
@@ -140,25 +131,3 @@ theorem final_solution : ∀ k : ℕ, 0 ≤ S k := by
   replace k_ih := k_ih q (lt_mul_left h0 <| Nat.succ_lt_succ <| Nat.succ_pos 2) h
   replace h : q.bodd = false := by simpa [S_parity] using congrArg Int.bodd h
   rw [add_zero, x_mul4, h, k_ih]; rfl
-
-/-- Final solution for the extra part -/
-theorem final_solution_extra (k : ℕ) :
-    S k = 0 ↔ ∀ c ∈ Nat.digits 4 k, c = 0 ∨ c = 2 := by
-  induction k using Nat.strong_induction_on with | h k k_ih => ?_
-  obtain ⟨q, r, h, rfl⟩ : ∃ q r : ℕ, r < 4 ∧ 4 * q + r = k :=
-    ⟨k / 4, k % 4, Nat.mod_lt k four_pos, Nat.div_add_mod k 4⟩
-  rw [S_four_mul_add_eq_zero_iff q h]
-  rcases q.eq_zero_or_pos with (rfl | h0)
-  ---- Case 1: `q = 0`
-  · rw [S_zero, eq_self_iff_true, true_and, MulZeroClass.mul_zero, zero_add]
-    rcases r.eq_zero_or_pos with (rfl | h0)
-    rw [eq_self_iff_true, true_or, true_iff, Nat.digits_zero]
-    intro c h0; exact absurd h0 List.not_mem_nil
-    rw [Nat.digits_def' (Nat.succ_lt_succ <| Nat.succ_pos 2) h0,
-      Nat.mod_eq_of_lt h, Nat.div_eq_of_lt h, Nat.digits_zero]
-    simp only [List.mem_singleton]; rw [forall_eq]
-  ---- Case 2: `0 < q`
-  · have h1 : 1 < 4 := Nat.succ_lt_succ (Nat.succ_pos 2)
-    specialize k_ih q (Nat.lt_add_right _ (lt_mul_left h0 h1))
-    rw [k_ih, add_comm, Nat.digits_add 4 h1 r q h (Or.inr h0.ne.symm)]
-    simp only [List.mem_cons]; rw [forall_eq_or_imp, and_comm]

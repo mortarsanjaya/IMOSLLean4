@@ -26,6 +26,8 @@ Given a positive integer $n$, a positive integer $N$ is called $n$-`Norwegian` i
   there exist positive divisors $a > b > c$ of $N$ such that $a + b + c = n$.
 Using the official solution, we show that if $p > 19$ is a prime with $p ≡ 1 (mod 6)$,
   then the smallest $6p$-Norwegian integer is $4(p - 1)$.
+This more general version is implemented as
+  `IMOSL.IMO2022N1.IsLeast_Norwegian_prime_one_mod_six`.
 
 We denote the divisors by $d_1, d_2, d_3$ rather than $a, b, c$.
 We implement the Norwegian data using `ℕ` as opposed to `ℕ⁺`.
@@ -164,6 +166,8 @@ theorem two_le_divisor_quot1 : 2 ≤ X.divisor_quot 1 := calc
   _ < X.divisor_quot 1 := X.divisor_quot0lt1 hN
 
 end
+
+
 
 
 
@@ -356,10 +360,13 @@ end Norwegian
 
 
 
+
+
 /-! ### Summary -/
 
-/-- Final solution, general version -/
-theorem final_solution_general (hk : Nat.Prime (6 * k + 1)) (hk0 : 4 ≤ k) :
+/-- If `p = 6k + 1` is prime, where `k ≥ 4`,
+  then the smallest `6(6k + 1)`-Norwegian number is `24k`. -/
+theorem IsLeast_Norwegian_prime_one_mod_six (hk : Nat.Prime (6 * k + 1)) (hk0 : 4 ≤ k) :
     IsLeast {N > 0 | Nonempty (Norwegian (6 * (6 * k + 1)) N)} (24 * k) := by
   ---- First show that `24k` is positive and `6(6k + 1)`-Norwegian.
   refine ⟨?_, ?_⟩
@@ -381,4 +388,4 @@ theorem final_solution_general (hk : Nat.Prime (6 * k + 1)) (hk0 : 4 ≤ k) :
 
 /-- Final solution -/
 theorem final_solution : IsLeast {N > 0 | Nonempty (Norwegian 2022 N)} 1344 :=
-  final_solution_general (k := 56) (by norm_num) (by decide)
+  IsLeast_Norwegian_prime_one_mod_six (k := 56) (by norm_num) (by decide)

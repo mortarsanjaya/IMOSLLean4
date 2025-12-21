@@ -108,10 +108,10 @@ end
 
 
 
-/-! ### Final solution -/
+/-! ### Summary -/
 
-/-- Final solution, unordered version -/
-theorem final_solution_unordered [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+/-- A version of the inequality to be proved, where the index is unordered. -/
+theorem unordered_index_version [Field F] [LinearOrder F] [IsStrictOrderedRing F]
     [DecidableEq ι] (a : ι → F) {S : Finset ι} (hS : ∀ i ∈ S, 0 < a i) :
     S.offDiag.sum (λ p ↦ a p.1 * a p.2 / (a p.1 + a p.2))
       ≤ S.card • S.offDiag.sum (λ p ↦ a p.1 * a p.2) / (2 * S.sum a) := by
@@ -144,4 +144,4 @@ theorem final_solution [Field F] [LinearOrder F] [IsStrictOrderedRing F]
   rw [orderedPair_sum_eq_offDiag_of_symm _ (λ _ ↦ h _ _), nsmul_eq_mul,
     nsmul_eq_mul, ← mul_div_assoc, mul_left_comm, ← nsmul_eq_mul,
     ← nsmul_eq_mul, orderedPair_sum_eq_offDiag_of_symm _ (λ _ ↦ h0 _ _)]
-  exact final_solution_unordered a hS
+  exact unordered_index_version a hS

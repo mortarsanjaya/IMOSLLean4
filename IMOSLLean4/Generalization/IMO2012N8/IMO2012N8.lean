@@ -66,8 +66,8 @@ theorem good_of_card_big_enough (hF : 40 < q) : good F := by
     rw [zero_pow (Nat.succ_ne_zero 4), add_zero]
 
 /-- If `n` is coprime with `q - 1`, then every element of `F` is an `n`th power. -/
-theorem exists_eq_pow_n_of_gcd_eq_one (hn : n ≠ 0) (h : n.Coprime (q - 1)) (x : F) :
-    ∃ y, y ^ n = x := by
+theorem exists_eq_pow_n_of_gcd_eq_one (hn : n ≠ 0) (h : Nat.Coprime n (q - 1)) (x : F) :
+    ∃ y : F, y ^ n = x := by
   ---- If `x = 0` then the statement is trivial.
   obtain rfl | hx : x = 0 ∨ IsUnit x := (eq_or_ne x 0).imp_right Ne.isUnit
   · exact ⟨0, zero_pow hn⟩
@@ -109,7 +109,6 @@ theorem good_of_card_mod_5_ne_one (hF : ¬5 ∣ q - 1) : good F := by
 
 /-- A finite field of cardinality `q ≢ 1 (mod 10)` is `good`. -/
 theorem good_of_card_mod_10_ne_one (hF : ¬10 ∣ q - 1) : good F := by
-  ---- `10 ∤ q - 1` implies `2 ∤ q - 1` or `5 ∤ q - 1`, for which we are done.
   obtain h | h : ¬2 ∣ q - 1 ∨ ¬5 ∣ q - 1 := by rwa [← not_and_or, ← Nat.lcm_dvd_iff]
   exacts [good_of_card_mod_2_ne_one h, good_of_card_mod_5_ne_one h]
 
@@ -130,17 +129,28 @@ theorem ZMod31_is_good : good (ZMod 31) := by
     `a^2`, `a^2 + 1`, or `a^2 + 5`, except `22` and `27`. -/
   obtain ⟨a, rfl | rfl | rfl⟩ | rfl | rfl :
     (∃ a, a ^ 2 = r ∨ a ^ 2 + 1 = r ∨ a ^ 2 + 5 = r) ∨ (r = 22 ∨ r = 27) := by
-      revert r; decide
+      decide +revert
   ---- Now just brute force all the cases.
   exacts [⟨a, 0, add_zero _⟩, ⟨a, 1, rfl⟩, ⟨a, -6, rfl⟩, ⟨4, -5, rfl⟩, ⟨1, 6, rfl⟩]
+
+/-- The integer `31` is prime. -/
+theorem prime_31 : Nat.Prime 31 := by decide
 
 omit [DecidableEq F] in
 /-- A field of cardinality `31` is `good`. -/
 theorem good_of_card_eq_31 (hF : q = 31) : good F :=
-  ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F (by decide) hF)
+  ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F prime_31 hF)
+
+/-- The integer `21` is not a prime power. -/
+theorem not_IsPrimePow_21 : ¬IsPrimePow 21 := by
+  ---- Somehow direct decision procedute doesn't work anymore...
+  intro h
+  replace h0 : Nat.Coprime 3 7 := rfl
+  replace h : 21 ∣ 3 ∨ 21 ∣ 7 := (h0.isPrimePow_dvd_mul h).mp (Nat.dvd_refl 21)
+  revert h; decide
 
 /-- Final solution to the generalized version -/
-theorem final_solution_general : good F ↔ ¬q = 11 := by
+theorem Generalization.final_solution : good F ↔ ¬q = 11 := by
   ---- As fields of cardinality `11` are not good, we now assume `q ≠ 11`.
   refine ⟨λ hF hF0 ↦ not_good_of_card_eq_11 hF0 hF, λ hF ↦ ?_⟩
   ---- If `10 ∤ q - 1`, then we proved that `F` is good.
@@ -154,19 +164,11 @@ theorem final_solution_general : good F ↔ ¬q = 11 := by
     calc 40 ≤ 10 * k := Nat.mul_le_mul_left 10 h0
          _  < 10 * k + 1 := Nat.lt_succ_self _
          _  = q := h.symm
-  ---- If `k < 4`, then divide into four cases.
+  ---- If `k < 4`, then divide into four cases: `q = 1, 11, 21, 31`, respectively.
   lift k to Fin 4 using h0
   fin_cases k
-  ---- If `k = 0`, then `q = 1`. Contradiction, as a field cannot have cardinality `1`.
-  · exact absurd h Fintype.one_lt_card.ne.symm
-  ---- If `k = 1`, then `q = 11`. Contradiction, as we assumed `q ≠ 11`.
-  · exact absurd h hF
-  ---- If `k = 2`, then `q = 21`. Contradiction, as `21` is not a prime power.
-  · refine absurd (FiniteField.isPrimePow_card F) (h ▸ ?_)
-    -- Somehow direct decision procedute doesn't work anymore...
-    clear h; intro h
-    replace hF : Nat.Coprime 3 7 := rfl
-    replace h : 21 ∣ 3 ∨ 21 ∣ 7 := (hF.isPrimePow_dvd_mul h).mp (Nat.dvd_refl 21)
-    revert h; decide
-  ---- If `k = 3`, then `q = 31`, which works.
-  · exact good_of_card_eq_31 h
+  exacts [
+    absurd h Fintype.one_lt_card.ne.symm,
+    absurd h hF,
+    absurd (FiniteField.isPrimePow_card F) (h ▸ not_IsPrimePow_21),
+    good_of_card_eq_31 h]
