@@ -12,30 +12,22 @@ import Mathlib.FieldTheory.Finite.Basic
 # IMO 2020 N5
 
 Find all functions $f : ℕ⁺ → ℕ$ such that:
-1. $f(n) = 0$ for some $n ∈ ℕ⁺$;
+1. $f(n) ≠ 0$ for some $n ∈ ℕ⁺$;
 2. $f(xy) = f(x) + f(y)$ for all $x, y ∈ ℕ⁺$;
 3. there are infinitely many $n ∈ ℕ⁺$ such that
   $f(a) = f(b)$ for any $a, b ∈ ℕ⁺$ with $a + b = n$.
 
 ### Answer
 
-$n ↦ cν_p(n)$, where $c$ is a fixed positive integer and $p$ is a prime number.
+$n ↦ ν_p(n) c$, where $c$ is a fixed positive integer and $p$ is a prime number.
 
 ### Solution
 
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2020SL.pdf).
-
-### Generalization
-
-It is possible to generalize $ℕ$ to any (additive) abelian monoid $M$.
-The answer functions are (again) of the form $n ↦ ν_p(n) c$ if $M$ is torsion-free.
-However, this is not the case if $M$ is not torsion-free.
-See `IMOSLLean4/Generalization/IMO2020N5/IMO2020N5.lean` for more details.
-
-### TODO
-
-Implement the generalization.
+Our implementation manually requires $f(1) = 0$; this does not do anything to the
+  original functional equation since it can be deduced from $f(xy) = f(x) + f(y)$.
+However, adding the condition allows us to generalize the functional equation.
 -/
 
 namespace IMOSL
@@ -46,10 +38,13 @@ namespace IMO2020N5
 def nice (f : ℕ+ → α) (n : ℕ+) := ∀ a b, a + b = n → f a = f b
 
 /-- The functional equation to be solved. -/
-structure good (f : ℕ+ → ℕ) : Prop where
-  nontrivial : ∃ n, 0 < f n
+structure good [AddZero M] (f : ℕ+ → M) : Prop where
+  nontrivial : ∃ n, f n ≠ 0
+  map_one : f 1 = 0
   map_mul (x y) : f (x * y) = f x + f y
   infinite_nice (N) : ∃ n ≥ N, nice f n
+
+
 
 
 
@@ -58,12 +53,12 @@ structure good (f : ℕ+ → ℕ) : Prop where
 /-- `p`-adic valuation of `n : ℕ+` is equal to `0` if and only if `p ∤ n`.
   TODO: This might be `mathlib`-worthy, so remove this lemma if it goes to `mathlib`. -/
 lemma factorMultiset_count_eq_zero_iff {p : Nat.Primes} {n : ℕ+} :
-    Multiset.count p n.factorMultiset = 0 ↔ ¬(p : ℕ+) ∣ n := by
+    (PNat.factorMultiset n).count p  = 0 ↔ ¬(p : ℕ+) ∣ n := by
   rw [← pow_one (p : ℕ+), PNat.count_factorMultiset, Nat.not_le, Nat.lt_one_iff]
 
 /-- If `a, b : ℕ⁺` and `a + b` is a power of `p`, then `ν_p(a) = ν_p(b)`. -/
 theorem padic_eq_of_add_eq_ppow {p : Nat.Primes} {N} {a b : ℕ+} (h : a + b = p ^ N) :
-    a.factorMultiset.count p = b.factorMultiset.count p := by
+    (PNat.factorMultiset a).count p = (PNat.factorMultiset b).count p := by
   ---- Induction on `N`, but the base case `N = 0` is impossible, as `a + b > 1`.
   induction N generalizing a b with
   | zero => exact absurd (a.one_le.trans_lt (a.lt_add_right b)) h.not_gt
@@ -86,13 +81,21 @@ theorem padic_eq_of_add_eq_ppow {p : Nat.Primes} {N} {a b : ℕ+} (h : a + b = p
     refine λ hb ↦ ha ?_
     rwa [PNat.dvd_iff, Nat.dvd_add_iff_left hb]
 
-/-- Functions of the form `n ↦ c ν_p(n)` are good. -/
-theorem padic_mul_is_good (c : ℕ+) (p : Nat.Primes) :
-    good (λ n ↦ c * n.factorMultiset.count p) :=
-  { nontrivial := ⟨p, Nat.mul_pos c.pos <| (PNat.count_factorMultiset _ _ _).mp (by simp)⟩
-    map_mul x y := by rw [PNat.factorMultiset_mul, Multiset.count_add, Nat.mul_add]
-    infinite_nice N := ⟨p ^ N.1, (Nat.lt_pow_self p.2.one_lt).le,
-      λ a b h ↦ congrArg (c.1 * ·) (padic_eq_of_add_eq_ppow h)⟩ }
+/-- Functions of the form `n ↦ ν_p(n) c` are good. -/
+theorem padic_nsmul_is_good [AddMonoid M] (c : M) (hc : c ≠ 0) (p : Nat.Primes) :
+    good (λ n ↦ (PNat.factorMultiset n).count p • c) where
+  map_one := by
+    rw [PNat.factorMultiset_one, Multiset.count_zero, zero_nsmul]
+  nontrivial :=
+    ⟨p, by rwa [PNat.factorMultiset_ofPrime, PrimeMultiset.ofPrime,
+      Multiset.count_singleton_self, one_nsmul]⟩
+  map_mul x y := by
+    rw [PNat.factorMultiset_mul, Multiset.count_add, add_nsmul]
+  infinite_nice N :=
+    ⟨p ^ N.1, (Nat.lt_pow_self p.2.one_lt).le,
+      λ a b h ↦ congrArg (· • c) (padic_eq_of_add_eq_ppow h)⟩
+
+
 
 
 
@@ -100,46 +103,43 @@ theorem padic_mul_is_good (c : ℕ+) (p : Nat.Primes) :
 
 namespace good
 
-variable {f : ℕ+ → ℕ} (hf : good f)
-include hf
-
-/-- `f(1) = 0`. -/
-theorem map_one : f 1 = 0 :=
-  Nat.left_eq_add.mp (hf.map_mul 1 1)
-
-/-- `f(n^k) = f(n) k`. -/
-theorem map_pow (n k) : f (n ^ k) = f n * k := by
-  induction k with | zero => exact hf.map_one | succ k hk => ?_
-  rw [pow_succ, Nat.mul_succ, hf.map_mul, hk]
+/-- `f(n ^ k) = k f(n)`. -/
+theorem map_pow [AddMonoid M] {f : ℕ+ → M} (hf : good f) (n k) : f (n ^ k) = k • f n := by
+  induction k with | zero => rw [pow_zero, hf.map_one, zero_nsmul] | succ k hk => ?_
+  rw [pow_succ, succ_nsmul, hf.map_mul, hk]
 
 /-- If `n` is `f`-nice and `d ∣ n`, then `d` if `f`-nice. -/
-theorem nice_of_dvd_nice (hn : nice f n) (hd : d ∣ n) : nice f d := by
+theorem nice_of_dvd_nice [AddMonoid M] [IsRightCancelAdd M]
+    {f : ℕ+ → M} (hf : good f) (hn : nice f n) (hd : d ∣ n) : nice f d := by
   rcases hd with ⟨k, rfl⟩
   rintro a b rfl
   specialize hn (a * k) (b * k) (add_mul a b k).symm
-  rwa [hf.map_mul, hf.map_mul, Nat.add_right_cancel_iff] at hn
+  rwa [hf.map_mul, hf.map_mul, add_left_inj] at hn
 
 
-/-- The smallest `p : ℕ+` such that `f(p) > 0`, named as such because it is prime. -/
+variable {f : ℕ+ → ℕ} (hf : good f)
+include hf
+
+/-- The smallest `p : ℕ+` such that `f(p) ≠ 0`, named as such because it is prime. -/
 def base_prime_PNat : ℕ+ := PNat.find hf.nontrivial
 
 /-- Specification of `base_prime_PNat`. -/
-theorem base_prime_PNat_spec : 0 < f hf.base_prime_PNat :=
+theorem base_prime_PNat_spec : f hf.base_prime_PNat ≠ 0 :=
   PNat.find_spec hf.nontrivial
 
 /-- Minimality of `base_prime_PNat`. -/
 theorem base_prime_PNat_min (h : a < hf.base_prime_PNat) : f a = 0 :=
-  Nat.eq_zero_of_not_pos (PNat.find_min hf.nontrivial h)
+  not_not.mp (PNat.find_min hf.nontrivial h)
 
 /-- Minimality of `base_prime_PNat`. -/
-theorem base_prime_PNat_min' (h : 0 < f a) : hf.base_prime_PNat ≤ a :=
+theorem base_prime_PNat_min' (h : f a ≠ 0) : hf.base_prime_PNat ≤ a :=
   PNat.find_min' hf.nontrivial h
 
 /-- `base_prime_PNat` is prime. -/
 theorem base_prime_PNat_is_prime : hf.base_prime_PNat.Prime := by
   ---- Let `q` be a prime factor of `p = base_prime_PNat`.
   obtain ⟨q, hq, h⟩ : ∃ q : ℕ+, q.Prime ∧ q ∣ hf.base_prime_PNat :=
-    PNat.exists_prime_and_dvd λ h ↦ hf.base_prime_PNat_spec.ne (by rw [h, hf.map_one])
+    PNat.exists_prime_and_dvd λ h ↦ hf.base_prime_PNat_spec (by rw [h, hf.map_one])
   ---- It suffices to show that `q ≥ p`, since we know `q ≤ p`.
   suffices hf.base_prime_PNat ≤ q by rwa [this.antisymm (PNat.le_of_dvd h)]
   ---- Factorize `p = qr` and infer that `f(r) = 0` since `r < p`.
@@ -147,14 +147,13 @@ theorem base_prime_PNat_is_prime : hf.base_prime_PNat.Prime := by
   have h0 : f r = 0 :=
     hf.base_prime_PNat_min ((lt_mul_of_one_lt_left' r hq.one_lt).trans_eq h.symm)
   ---- Thus `f(q) = f(q) + f(r) = f(qr) = f(p) > 0`, so minimality yields `q ≥ p`.
-  replace hq : 0 < f hf.base_prime_PNat := hf.base_prime_PNat_spec
+  replace hq : f hf.base_prime_PNat ≠ 0 := hf.base_prime_PNat_spec
   rw [h, hf.map_mul, h0] at hq
   exact hf.base_prime_PNat_min' hq
 
 /-- The smallest `p : ℕ+` such that `f(p) > 0`, as a `Nat.Primes`.
   Use `base_prime_PNat` for actual computations instead. -/
 def base_prime : Nat.Primes := ⟨hf.base_prime_PNat, hf.base_prime_PNat_is_prime⟩
-
 
 /-- If `d` is `f`-nice and `p ≤ d`, then `p ∣ d`. -/
 theorem base_prime_dvd_of_le_of_nice (hd : hf.base_prime_PNat ≤ d) (hd0 : nice f d) :
@@ -169,8 +168,9 @@ theorem base_prime_dvd_of_le_of_nice (hd : hf.base_prime_PNat ≤ d) (hd0 : nice
   have h : p * q + r = d := by
     rw [← PNat.coe_inj, PNat.add_coe, hr, PNat.mul_coe, hq, Nat.div_add_mod]
   ---- Since `d` is `f`-nice, we get `f(r) = f(pq) ≥ f(p) > 0`.
-  clear hq; replace h : 0 < f r := by
-    simpa only [← hd0 _ _ h, hf.map_mul] using Nat.add_pos_left (base_prime_PNat_spec hf) _
+  clear hq; replace h : 0 < f r := calc
+    0 < f p + f q := Nat.add_pos_left (Nat.zero_lt_of_ne_zero (base_prime_PNat_spec hf)) _
+    _ = f r := by rw [← hf.map_mul, hd0 _ _ h]
   ---- But `f(p) > 0`; contradiction.
   refine absurd (hf.base_prime_PNat_min ?_) h.ne.symm
   simpa only [← PNat.coe_lt_coe, hr] using Nat.mod_lt _ p.pos
@@ -198,7 +198,7 @@ theorem base_prime_pow_is_nice (k) : nice f (hf.base_prime_PNat ^ k) := by
   obtain ⟨n, hn, hn0⟩ : ∃ n ≥ hf.base_prime_PNat ^ k, nice f n := hf.infinite_nice _
   exact hf.nice_of_dvd_nice hn0 (hf.base_prime_pow_dvd_of_le_of_nice hn hn0)
 
-/-- If `gcd(n, p) = 1`, then `f(n) = 0`. -/
+/-- If `p ∤ n`, then `f(n) = 0`. -/
 theorem map_eq_zero_of_coprime_base_prime (hn : ¬hf.base_prime_PNat ∣ n) : f n = 0 := by
   ---- Assume `n > 1`; we are done otherwise.
   obtain rfl | hn0 : n = 1 ∨ 1 < n := n.one_le.eq_or_lt'
@@ -221,7 +221,7 @@ theorem map_eq_zero_of_coprime_base_prime (hn : ¬hf.base_prime_PNat ∣ n) : f 
 
 /-- The main result: `f(n) = f(p) ν_p(n)` for all `n : ℕ+`, where `p = base_prime`. -/
 theorem eq_map_base_prime_mul_padic_base_prime (n : ℕ+) :
-    f n = f hf.base_prime_PNat * n.factorMultiset.count hf.base_prime := by
+    f n = n.factorMultiset.count hf.base_prime * f hf.base_prime_PNat := by
   let p : Nat.Primes := hf.base_prime
   let ν : ℕ := n.factorMultiset.count p
   ---- Factorize `n` as `p^{ν_p(n)} k` for some `k : ℕ+`.
@@ -233,10 +233,12 @@ theorem eq_map_base_prime_mul_padic_base_prime (n : ℕ+) :
     rw [← hk, PNat.count_factorMultiset, ← Nat.not_lt, Nat.lt_add_right_iff_pos] at h
     exact h Nat.one_pos
   ---- Then `f(n) = f(p) ν_p(n) + f(k) = f(p) ν_p(n)`.
-  simpa only [hf.map_mul, hf.map_pow, Nat.add_zero,
-    hf.map_eq_zero_of_coprime_base_prime h] using congrArg f hk
+  rw [hk, hf.map_mul, hf.map_pow, ← hk,
+    hf.map_eq_zero_of_coprime_base_prime h, Nat.add_zero]; rfl
 
 end good
+
+
 
 
 
@@ -244,7 +246,8 @@ end good
 
 /-- Final solution -/
 theorem final_solution {f : ℕ+ → ℕ} :
-    good f ↔ ∃ (c : ℕ+) (p : Nat.Primes), f = λ n : ℕ+ ↦ c * n.factorMultiset.count p :=
-  ⟨λ hf ↦ ⟨⟨f hf.base_prime, hf.base_prime_PNat_spec⟩,
-    hf.base_prime, funext hf.eq_map_base_prime_mul_padic_base_prime⟩,
-  λ ⟨c, p, hf⟩ ↦ hf ▸ padic_mul_is_good c p⟩
+    good f ↔ ∃ c ≠ 0, ∃ p : Nat.Primes,
+      f = λ n : ℕ+ ↦ n.factorMultiset.count p * c :=
+  ⟨λ hf ↦ ⟨f hf.base_prime, hf.base_prime_PNat_spec, hf.base_prime,
+    funext hf.eq_map_base_prime_mul_padic_base_prime⟩,
+  λ ⟨c, hc, p, hf⟩ ↦ hf ▸ padic_nsmul_is_good c hc p⟩
