@@ -6,9 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Algebra.MvPolynomial.CommRing
 import Mathlib.Algebra.Order.Group.PosPart
-import Mathlib.Algebra.Ring.Pi
-import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Algebra.Ring.Subring.Basic
 
 /-!
 # IMO 2012 A7
