@@ -72,5 +72,3 @@ theorem final_solution {x y : F} (hx : 0 < x) (hy : 0 < y) (h : x ^ n + y ^ n = 
   _ = ((1 - x) * (1 - y))⁻¹ := by
     rw [← eq_sub_of_add_eq h, ← eq_sub_of_add_eq' h, div_mul_div_comm, mul_mul_mul_comm,
       mul_comm, ← mul_pow, div_mul_cancel_left₀ (pow_ne_zero _ (mul_pos hx hy).ne.symm)]
-
-#min_imports
