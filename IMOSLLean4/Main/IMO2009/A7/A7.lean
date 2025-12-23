@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.CharTwo.Ring
+import Mathlib.Algebra.CharP.Two
 import Mathlib.Algebra.Ring.Commute
 
 /-!
@@ -132,35 +132,39 @@ end
 
 section
 
-open Extra.CharTwo
-
-theorem char_eq2_solution [Extra.CharTwo R] {f : R → R} (hf : good f) : f = (·) := by
+theorem char_eq2_solution [CharP R 2] {f : R → R} (hf : good f) : f = (·) := by
   ---- First note that `f(1) = 1`
-  have hf1 : f 1 = 1 := sq_eq_one_iff.mp hf.map_one_sq_eq
+  have hf1 : f 1 = 1 := by
+    rw [← CharTwo.add_eq_zero, ← pow_eq_zero_iff (n := 2) (Nat.succ_ne_zero 1),
+      sq, add_one_mul, mul_add_one, add_assoc, CharTwo.add_cancel_left,
+      CharTwo.add_eq_zero, ← sq]
+    exact map_one_sq_eq hf
   ---- Now show that if `f(c) = d + 1` and `f(d) = c + 1`, then either `d ∈ {c, c + 1}`.
   have h {c d : R} (h : f c = d + 1) : f ((d + 1) * (c + 1)) = c ^ 2 + d + 1 := by
     have h1 := hf c (c + 1)
-    rw [add_add_cancel_left, hf1, mul_one, h, ← add_eq_iff_eq_add, ← add_rotate] at h1
+    rw [CharTwo.add_cancel_left, hf1, mul_one, h,
+      ← CharTwo.add_eq_iff_eq_add, ← add_rotate] at h1
     exact h1.symm
   replace h {c d : R} (h0 : f c = d + 1) (h1 : f d = c + 1) : c = d ∨ c = d + 1 := by
     have h2 : c * d = d * c := by
-      rw [← add_eq_iff_eq_add.mpr h0, mul_add_one, add_one_mul, _root_.add_left_inj,
-        ← hf.inj, hf.self_mul_map, ← add_eq_iff_eq_add'.mpr (hf c c),
-        add_self_eq_zero, hf.map_zero, mul_zero, hf.map_zero, zero_add]
+      rw [← CharTwo.add_eq_iff_eq_add.mpr h0, mul_add_one, add_one_mul, add_left_inj,
+        ← hf.inj, hf.self_mul_map, ← CharTwo.add_eq_iff_eq_add.mpr (hf c c),
+        right_eq_add, CharTwo.add_self_eq_zero, hf.map_zero, mul_zero, hf.map_zero]
     have h3 : c ^ 2 + d = d ^ 2 + c := by
       rw [← add_left_inj (a := 1), ← h h0, ← h h1, mul_add_one,
         add_one_mul, ← h2, ← mul_add_one, ← add_one_mul]
-    rw [← add_eq_zero_iff_eq, add_add_add_comm, _root_.add_comm d,
-      ← add_sq_of_Commute h2, sq, ← mul_add_one, mul_eq_zero, add_assoc] at h3
-    exact h3.imp add_eq_zero_iff_eq.mp add_eq_zero_iff_eq.mp
+    replace h3 : (c + d) * (c + d + 1) = 0 := by
+      rw [mul_add_one, add_mul, mul_add, mul_add, h2, add_assoc (c * c), ← sq, ← sq,
+        CharTwo.add_cancel_left, add_comm c, add_add_add_comm, h3, CharTwo.add_eq_zero]
+    rwa [add_assoc, mul_eq_zero, CharTwo.add_eq_zero, CharTwo.add_eq_zero] at h3
   ---- Now use the fact that the above is satisfied for `(c, d) = (f(y), f(y + 1))`
   have h0 := hf.map_map_add_one hf1
   funext y; have h1 := h0 (y + 1)
-  rw [add_add_cancel_right] at h1
+  rw [CharTwo.add_cancel_right] at h1
   obtain h2 | h2 := h (h0 y) h1
   · rw [hf.inj, add_eq_left] at h2
     rw [← sub_eq_zero, ← mul_one (f y - y), h2, mul_zero]
-  · rwa [h2, add_add_cancel_right, hf.inj] at h1
+  · rwa [h2, CharTwo.add_cancel_right, hf.inj] at h1
 
 end
 
@@ -173,12 +177,13 @@ end good
 /-! ### Final solution -/
 
 /-- Final solution -/
-theorem final_solution [NoZeroDivisors R] {f : R → R} : good f ↔ f = (·) ∨ f = (- ·) := by
+theorem final_solution [IsDomain R] {f : R → R} : good f ↔ f = (·) ∨ f = (- ·) := by
   refine ⟨λ hf ↦ ?_, λ h ↦ ?_⟩
   ---- `→` direction
   · obtain h | h : (2 : R) ≠ 0 ∨ (2 : R) = 0 := ne_or_eq 2 0
     · exact hf.char_ne2_solution h
-    · have : Extra.CharTwo R := Extra.CharTwo.Semiring_of_two_eq_zero h
+    · have : CharP R 2 := by
+        refine CharTwo.of_one_ne_zero_of_two_eq_zero one_ne_zero h
       left; exact hf.char_eq2_solution
   ---- `←` direction
   · rcases h with rfl | rfl
