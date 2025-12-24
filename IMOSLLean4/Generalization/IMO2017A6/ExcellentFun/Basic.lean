@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.ExcellentFun.Defs
+import IMOSLLean4.Generalization.IMO2017A6.ExcellentFun.Defs
 import Mathlib.Algebra.Group.Basic
 
 /-! # Additional lemmas about excellent functions -/
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 variable [NonAssocRing R] [AddCancelCommMonoid G]
   [FunLike F R G] [ExcellentFunClass F R G] (f : F)

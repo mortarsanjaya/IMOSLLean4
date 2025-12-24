@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.A6RingCon.Defs
+import IMOSLLean4.Generalization.IMO2017A6.A6RingCon.Defs
 import Mathlib.RingTheory.Congruence.Basic
 
 /-!
@@ -16,6 +16,7 @@ We show that the period ideal $I_f$ is $R$ iff $f = 0$ and is $0$ iff $f$ is non
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-! ### When is the induced ring congruence equal to ⊤? -/
 

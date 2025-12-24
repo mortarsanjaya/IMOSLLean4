@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.A6SpecificCases.SimpleRing
-import IMOSLLean4.Main.IMO2017.A6.A6SpecificCases.CharTwoUnit
-import IMOSLLean4.Main.IMO2017.A6.A6NonperiodicSol
-import IMOSLLean4.Main.IMO2017.A6.ExcellentFun.TorsionFree
-import IMOSLLean4.Main.IMO2017.A6.CentralInvolutive.SimpleRing
+import IMOSLLean4.Generalization.IMO2017A6.A6SpecificCases.SimpleRing
+import IMOSLLean4.Generalization.IMO2017A6.A6SpecificCases.CharTwoUnit
+import IMOSLLean4.Generalization.IMO2017A6.A6NonperiodicSol
+import IMOSLLean4.Generalization.IMO2017A6.ExcellentFun.TorsionFree
+import IMOSLLean4.Generalization.IMO2017A6.CentralInvolutive.SimpleRing
 import Mathlib.Algebra.Field.Basic
 
 /-!
@@ -21,6 +21,7 @@ $$ f(ι(f(x)) ι(f(y))) + f(x + y) = f(xy). $$
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 open NonperiodicGoodFun
 

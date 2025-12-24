@@ -18,6 +18,7 @@ TODO: Remove this if something similar gets to mathlib.
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-- Central involutive elements -/
 @[ext] structure CentralInvolutive (M) [MulOneClass M] where

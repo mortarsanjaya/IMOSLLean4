@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.A6Defs
+import IMOSLLean4.Generalization.IMO2017A6.A6Defs
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Algebra.Group.Basic
@@ -18,6 +18,7 @@ This file is separate from `IMOSLLean4/IMO2012/A6/A6Defs.lean` for using extra i
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-! ### Additional lemmas on good functions -/
 

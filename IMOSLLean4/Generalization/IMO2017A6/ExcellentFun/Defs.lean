@@ -18,6 +18,7 @@ In this file, we define excellent functions and prove their most basic propertie
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-- Exellent functions. -/
 structure ExcellentFun (R G) [NonAssocRing R] [Add G] where

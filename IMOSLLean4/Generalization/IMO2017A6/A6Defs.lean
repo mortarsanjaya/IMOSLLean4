@@ -25,6 +25,7 @@ The file `IMOSLLean4/IMO2017/A6/A6.lean` collects all the main results.
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-! ### Good functions -/
 

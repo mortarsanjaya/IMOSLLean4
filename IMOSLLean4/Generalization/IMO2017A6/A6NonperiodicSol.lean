@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.A6Basic
-import IMOSLLean4.Main.IMO2017.A6.ExcellentFun.AddMonoidHom
-import IMOSLLean4.Main.IMO2017.A6.CentralInvolutive.Defs
+import IMOSLLean4.Generalization.IMO2017A6.A6Basic
+import IMOSLLean4.Generalization.IMO2017A6.ExcellentFun.AddMonoidHom
+import IMOSLLean4.Generalization.IMO2017A6.CentralInvolutive.Defs
 import Mathlib.Algebra.Ring.Basic
 
 /-!
@@ -24,6 +24,7 @@ It only takes $a ∈ Z(R)$ with $a^2 = 1$ as a parameter.
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-! ### `x ↦ 1 - x` and variants as a non-periodic good function -/
 

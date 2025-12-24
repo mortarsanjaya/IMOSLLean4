@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.A6RingCon.Basic
+import IMOSLLean4.Generalization.IMO2017A6.A6RingCon.Basic
 import Mathlib.RingTheory.SimpleRing.Defs
 
 /-!
@@ -16,6 +16,7 @@ We show that if $R$ is a simple ring, then $f$ is $ι$-good iff
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 theorem RingCon_eq_bot_or_top [NonUnitalNonAssocRing R] [IsSimpleRing R] (rc : RingCon R) :
     rc = ⊥ ∨ rc = ⊤ :=

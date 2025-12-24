@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.ExcellentFun.Defs
+import IMOSLLean4.Generalization.IMO2017A6.ExcellentFun.Defs
 import Mathlib.Algebra.Group.Hom.Defs
 
 /-!
@@ -23,6 +23,7 @@ When this holds, `toAddMonoidHom` gives an explicit inverse of `ofAddMonoidHom`.
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 namespace ExcellentFun
 
 variable [NonAssocRing R] [AddZeroClass G]

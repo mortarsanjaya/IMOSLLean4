@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.CentralInvolutive.Defs
+import IMOSLLean4.Generalization.IMO2017A6.CentralInvolutive.Defs
 import Mathlib.RingTheory.SimpleRing.Field
 
 /-!
@@ -16,6 +16,7 @@ Then the only central involutive elements of $R$ are $±1$.
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 namespace CentralInvolutive
 
 variable [Ring R] [IsSimpleRing R]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.A6Defs
+import IMOSLLean4.Generalization.IMO2017A6.A6Defs
 import Mathlib.RingTheory.Congruence.Defs
 
 /-!
@@ -26,6 +26,7 @@ Instead of using ideals explicitly, we use the `RingCon` API.
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 
 /-! ### General period congruence -/
 

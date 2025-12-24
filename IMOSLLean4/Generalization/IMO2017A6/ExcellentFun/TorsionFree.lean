@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2017.A6.ExcellentFun.AddMonoidHom
-import IMOSLLean4.Main.IMO2017.A6.ExcellentFun.Basic
+import IMOSLLean4.Generalization.IMO2017A6.ExcellentFun.AddMonoidHom
+import IMOSLLean4.Generalization.IMO2017A6.ExcellentFun.Basic
 
 /-! # `IsOfAddMonoidHomSurjective R G` instance if `G` is {2, 3}-torsion-free -/
 
 namespace IMOSL
 namespace IMO2017A6
+namespace Generalization
 namespace ExcellentFun
 
 theorem IsOfAddMonoidHomSurjective_of_TwoThreeTorsionFree
