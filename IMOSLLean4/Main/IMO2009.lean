@@ -9,5 +9,5 @@ import IMOSLLean4.Main.IMO2009.C2
 import IMOSLLean4.Main.IMO2009.C3.C3
 import IMOSLLean4.Main.IMO2009.N1
 import IMOSLLean4.Main.IMO2009.N2
-import IMOSLLean4.Main.IMO2009.N3.N3
+import IMOSLLean4.Main.IMO2009.N3
 import IMOSLLean4.Main.IMO2009.N5
