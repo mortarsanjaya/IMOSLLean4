@@ -80,5 +80,3 @@ theorem final_solution (hn : 1 < n) (N) : ∃ k > N, Odd (n ^ k / k) := by
     rw [Nat.even_add_one, Nat.not_even_iff_odd] at h0
     refine ⟨n ^ N.succ, ?_, case_odd_succ h h0 _⟩
     exact N.lt_succ_self.trans (Nat.lt_pow_self h)
-
-#min_imports

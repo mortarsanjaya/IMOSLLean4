@@ -12,7 +12,7 @@ import Mathlib.Algebra.Ring.Int.Defs
 # IMO 2018 N2
 
 Let $n$ and $k$ be positive integers.
-Consider an $k × k$ table, where each cell contains an integer $1 \pmod{n}$.
+Consider a $k × k$ table, where each cell contains an integer $1 \pmod{n}$.
 Suppose that the sum of all numbers in an arbitrary row or column is $k \pmod{n^2}$.
 For each $i ≤ n$, let $R_i$ and $C_i$ be the product of
   numbers in the $i$th row and $i$th column, respectively.

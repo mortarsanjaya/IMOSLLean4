@@ -15,16 +15,13 @@ import Mathlib.NumberTheory.Divisors
 Let $S$ be a set and $T : S → S$ be a function.
 Prove that there does not exist a non-constant polynomial $P ∈ ℤ[X]$ such that
   for every positive integer $n$,
-$$ #\\{x ∈ ℤ : T^n(x) = x\\} = P(n). $$
+$$ \#\{x ∈ ℤ : T^n(x) = x\} = P(n). $$
 
 ### Solution
 
 We follow a variant of Solution 2 of the
   [official solution](https://www.imo-official.org/problems/IMO2009SL.pdf).
 Namely, $p$ does not have to be prime; we have $P(0) ≡ P(n) \pmod{q}$ for any $n > 0$.
-
-We say that a function $T : S → S$ is *nice* if $T^n$ has
-  finitely many fixed points for every positive integer $n$.
 -/
 
 namespace IMOSL

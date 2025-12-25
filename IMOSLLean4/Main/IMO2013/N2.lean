@@ -16,11 +16,11 @@ $$ 1 + \frac{2^k - 1}{n} = \prod_{i = 1}^k \left(1 + \frac{1}{m_i}\right). $$
 
 ### Solution
 
-We follow Solution 1 of the official solution with a slight modification.
-See [here](https://www.imo-official.org/problems/IMO2013SL.pdf).
+We follow Solution 1 of the
+  [official solution](https://www.imo-official.org/problems/IMO2013SL.pdf)
+  with a slight modification.
 The induction step is proved with $2^k - 1$ generalized to any positive integer.
-For generality (and more importantly, reducing import),
-  we work over fields of characteristic zero.
+For generality, we work over fields of characteristic zero.
 -/
 
 namespace IMOSL

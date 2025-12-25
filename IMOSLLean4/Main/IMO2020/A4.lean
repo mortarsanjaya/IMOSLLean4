@@ -14,7 +14,7 @@ Prove that $$ (a + 2b + 3c + 4d) a^a b^b c^c d^d < 1. $$
 
 ### Solution
 
-We follow both Solution 1 and Solution of the
+We follow both Solution 1 and Solution 2 of the
   [official solution](https://www.imo-official.org/problems/IMO2020SL.pdf).
 We start with $a + 2b + 3c + 4d ≤ a + 3(b + c + d) = 3 - 2a$.
 Then we use the bound $a^a b^b c^c d^d ≤ a$ when $a < 1/2$ and the weighted AM-GM

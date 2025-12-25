@@ -14,7 +14,7 @@ $$ f(x - f(y)) = f(f(x)) - f(y) - 1. $$
 
 ### Answer
 
-$x ↦ -1$ and $x ↦ x + 1$.
+$f(x) = -1$ and $f(x) = x + 1$.
 
 ### Solution
 

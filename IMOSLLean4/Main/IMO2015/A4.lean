@@ -16,7 +16,7 @@ $$ f(x + f(x + y)) + f(xy) = x + f(x + y) + f(x) y. $$
 
 ### Answer
 
-$x ↦ x$ and $x ↦ 2 - x$.
+$f(x) = x$ and $f(x) = 2 - x$.
 
 ### Solution
 
@@ -25,7 +25,6 @@ We change $y f(x)$ to $f(x) y$ in our formulation as this makes the identity fun
   a solution to the functional equation.
 It is worth mentioning that the case $f(0) = 0$ works as long as $2$ is not a
   zero divisor in $R$, even without assuming that $R$ is a domain.
-We define a function to be `good` if it satisfies the given functional equation.
 
 ### Generalization
 

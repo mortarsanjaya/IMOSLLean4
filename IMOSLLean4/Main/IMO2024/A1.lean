@@ -12,12 +12,12 @@ import Mathlib.Algebra.Order.Archimedean.Basic
 # IMO 2024 A1 (P1)
 
 A ring with floor is a totally ordered ring $R$ with a floor function $⌊⬝⌋ : R → ℤ$
-  such that for any $x ∈ R$ and $n ∈ ℤ$, we have $⌊x⌋ ≤ n ↔ x ≤ n_R$.
+  such that for any $x ∈ R$ and $n ∈ ℤ$, we have $⌊x⌋ ≤ n$ if and only if $x ≤ n_R$.
 (See `FloorRing` for the formal definition.)
 
 Let $R$ be an archimedean ring with floor.
-Determine all $α ∈ R$ such that for any non-negative integer $n$, $n$ divides
-$$ \sum_{k = 0}^n \lfloor kα \rfloor. $$
+Determine all $α ∈ R$ such that for any non-negative integer $n$,
+$$ n ∣ \sum_{k = 0}^n \lfloor kα \rfloor. $$
 
 ### Answer
 
@@ -31,8 +31,6 @@ We follow Solution 1 of the
 Before proceeding into cases as in Solution 1, we assume WLOG that $-1 ≤ α < 1$.
 In particular, when $⌊α⌋ = -1$, we show that $⌊nα⌋ = -1$ for all $n > 0$.
 Note that the original condition assumes $n > 0$, but the case $n = 0$ is obvious.
-
-Throughout this file, we say that $α ∈ R$ satisfying the requirement is `good`.
 -/
 
 namespace IMOSL

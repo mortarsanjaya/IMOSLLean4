@@ -12,8 +12,8 @@ import Mathlib.Tactic.NormNum.Prime
 /-!
 # IMO 2022 N1
 
-Find the smallest positive integer $N$ with the following property:
-  there exist positive divisors $a > b > c$ of $N$ such that $a + b + c = 2022$.
+Find the smallest positive integer $N$ with the following property: there exist
+  positive divisors $d_1 > d_2 > d_3$ of $N$ satisfying $d_1 + d_2 + d_3 = 2022$.
 
 ### Answer
 
@@ -23,14 +23,11 @@ $1344$.
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2022SL.pdf).
 Given a positive integer $n$, a positive integer $N$ is called $n$-`Norwegian` if
-  there exist positive divisors $a > b > c$ of $N$ such that $a + b + c = n$.
-Using the official solution, we show that if $p > 19$ is a prime with $p ≡ 1 (mod 6)$,
+  there exist positive divisors $d_1 > d_2 > d_3$ of $N$ satisfying $d_1 + d_2 + d_3 = n$.
+Using the official solution, we show that if $p > 19$ is a prime with $p ≡ 1 \pmod{6}$,
   then the smallest $6p$-Norwegian integer is $4(p - 1)$.
 This more general version is implemented as
   `IMOSL.IMO2022N1.IsLeast_Norwegian_prime_one_mod_six`.
-
-We denote the divisors by $d_1, d_2, d_3$ rather than $a, b, c$.
-We implement the Norwegian data using `ℕ` as opposed to `ℕ⁺`.
 -/
 
 namespace IMOSL

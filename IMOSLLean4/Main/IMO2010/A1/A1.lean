@@ -9,7 +9,11 @@ import Mathlib.Algebra.Order.Floor.Ring
 /-!
 # IMO 2010 A1 (P1)
 
-Let $R$ and $S$ be totally ordered rings with floor. (See `FloorRing`.)
+A ring with floor is a totally ordered ring $R$ with a floor function $⌊⬝⌋ : R → ℤ$
+  such that for any $x ∈ R$ and $n ∈ ℤ$, we have $⌊x⌋ ≤ n$ if and only if $x ≤ n_R$.
+(See `FloorRing` for the formal definition.)
+
+Let $R$ and $S$ be totally ordered rings with floor.
 Suppose that $R$ is densely ordered.
 That is, for any $x < y$ in $R$, there exists $z ∈ R$ such that $x < z < y$.
 Find all functions $f : R → S$ such that, for any $x, y ∈ R$,

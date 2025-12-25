@@ -17,14 +17,14 @@ Let $S$ be a finite set of integers.
 Initially, each element of $S$ is written on the board, once.
 Two players take a turn, where the current player choose a pair of integers $(k, n)$,
   where $k ≥ 0$ and $n$ is one of the integers remaining on the board, and then
-  erases every integer $s$ on the board such that $s ≡ n (mod 2^k)$.
+  erases every integer $s$ on the board such that $s ≡ n \pmod{2^k}$.
 The player who cannot make a move **wins**.
 
 Determine all positive integers $N$ such that the first player wins if $S = \{1, 2, …, N\}$.
 
 ### Answer
 
-The first player wins if and only if $N = t 4^k$ where either
+The first player wins if and only if $N = t \cdot 4^k$ where either
   $t = 2$ or $t$ is an odd number greater than $1$.
 
 ### Solution

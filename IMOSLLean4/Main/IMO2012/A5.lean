@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Real.CompleteField
+import Mathlib.Data.Real.Sqrt
 
 /-!
 # IMO 2012 A5
@@ -23,7 +23,6 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2012S
 We skip (4) and immediately prove that the function $g(x) = f(x) + 1$ is odd.
 The method essentially follows from the official solution as well.
 
-The same method works even with the generalized codomain.
 Note that the only ring homomorphism from $ℝ$ to itself is the identity map.
 However, we have to add a step of showing that $S$ cannot have characteristic $2$.
 This is done when obtaining $g(1 + xy) = 1 + g(x) g(y)$, where again $g(x) = f(x) + 1$.
@@ -207,15 +206,10 @@ theorem good'_Real_iff [Ring S] [IsDomain S] {g : ℝ → S} :
     replace hφ : φ 2 * φ 2⁻¹ = 0 := mul_eq_zero_of_left hφ _
     rwa [← φ.map_mul, mul_inv_cancel₀ two_ne_zero, φ.map_one] at hφ
 
-/-- A function `f : ℝ → S` is good with `f(-1) ≠ 0` if and only if
-  `f(x) = φ(x) - 1` for some ring homomorphism `φ : ℝ → S`. -/
-theorem good_Real_iff [Ring S] [IsDomain S] {f : ℝ → S} :
+/-- Final solution -/
+theorem final_solution [Ring S] [IsDomain S] {f : ℝ → S} :
     (good f ∧ f (-1) ≠ 0) ↔ ∃ φ : ℝ →+* S, f = (φ · - 1) :=
   calc good f ∧ f (-1) ≠ 0
   _ ↔ good' (f · + 1) ∧ f (-1) + 1 ≠ 1 := by rw [good_iff_good', add_ne_right]
   _ ↔ ∃ φ : ℝ →+* S, f + 1 = φ := good'_Real_iff
   _ ↔ ∃ φ : ℝ →+* S, f = φ - 1 := by simp only [eq_sub_iff_add_eq]
-
-/-- Final solution -/
-theorem final_solution {f : ℝ → ℝ} : (good f ∧ f (-1) ≠ 0) ↔ f = id - 1 :=
-  good_Real_iff.trans Unique.exists_iff

@@ -22,7 +22,10 @@ Find, in terms of $n$, the minimum possible number of piles that
 
 ### Answer
 
-$0$ if $n = 0$, $1$ if $n$ is a power of $2$, and $2$ otherwise.
+The answer is:
+* $0$, if $n = 0$;
+* $1$, if $n$ is a power of $2$;
+* $2$, otherwise.
 
 ### Solution
 
@@ -41,7 +44,7 @@ open Multiset
 /-- `canReach X Y` means we can transform `X` to `Y` after several moves.
   We also allow adding and removing empty piles, for convenience. -/
 inductive canReach : Multiset ℕ → Multiset ℕ → Prop
-  /-- We can add and delete empty piles as we want. (This implies reflexivity to)-/
+  /-- We can add and delete empty piles as we want. (This implies reflexivity too.) -/
   | manip_zeroes (X m n) : canReach (X + replicate m 0) (X + replicate n 0)
   /-- Transitivity. -/
   | trans' (X Y Z) : canReach X Y → canReach Y Z → canReach X Z

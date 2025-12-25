@@ -12,7 +12,7 @@ import Mathlib.Algebra.BigOperators.Fin
 
 For each $n ∈ ℕ$, find the largest integer $k$ such that the following holds:
   there exists injective functions $a_1, a_2, a_3 : [k] → ℕ$ such that
-  $a_1(i) + a_2(i) + a_3(i) = n$ for all $i ∈ [k]$, where $[k] = \\{1, 2, …, k\\}$.
+  $a_1(i) + a_2(i) + a_3(i) = n$ for all $i ∈ [k]$, where $[k] = \{1, 2, …, k\}$.
 
 ### Answer
 

@@ -8,7 +8,7 @@ import Mathlib.Algebra.Order.Ring.Abs
 import Mathlib.Data.Int.GCD
 import Mathlib.Tactic.Ring
 
-/-
+/-!
 # IMO 2014 N2
 
 Determine all pairs $(x, y)$ of integers such that

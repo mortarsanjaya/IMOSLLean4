@@ -14,7 +14,7 @@ Find all positive integers $n$ such that for any $d ∈ ℕ⁺$ with $d ∣ n$,
 
 ### Answer
 
-$1, 2, 4, 12$.
+$1$, $2$, $4$, and $12$.
 
 ### Solution
 

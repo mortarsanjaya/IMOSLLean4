@@ -10,7 +10,7 @@ import Mathlib.Data.Fintype.Pigeonhole
 /-!
 # IMO 2009 N2
 
-For each $n ∈ ℕ+$, let $Ω(n)$ denote the number of prime factors of $n$ with multiplicity.
+For each $n ∈ ℕ^+$, let $Ω(n)$ denote the number of prime factors of $n$ with multiplicity.
 For convenience, we denote $Ω(0) = 0$.
 1. Prove that for any $N ∈ ℕ$, there exists $a, b ∈ ℕ$ distinct such that
     $Ω((a + k)(b + k))$ is even for all $k < N$.

@@ -7,20 +7,18 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 
-/-
+/-!
 # IMO 2024 A3
 
 Let $(a_n)_{n ≥ 0}$ be a sequence of positive real numbers.
-Does there exist $n > 0$ such that
-$$ \frac{3^{a_1} + 3^{a_2} + … + 3^{a_n}}{(2^{a_1} + 2^{a_2} + … + 2^{a_n})^2}
-  < \frac{1}{2024}? $$
+For any positive real number $ε$, determine whether there exists $n > 0$ such that
+$$ \frac{3^{a_1} + 3^{a_2} + … + 3^{a_n}}{(2^{a_1} + 2^{a_2} + … + 2^{a_n})^2} < ε. $$
 
 ### Answer
 
-Yes, with $\dfrac{1}{2024}$ replaced by any positive real number.
-In fact, any $n$ large enough works, independent of the sequence,
-  and the sequence may take the value $0$.
-This generalized statement is the one we implement.
+Such $n$ exists for any $ε > 0$.
+In fact, the sequence $(a_n)_{n ≥ 0}$ may take zero as a value
+  and the answer is still the same.
 
 ### Solution
 

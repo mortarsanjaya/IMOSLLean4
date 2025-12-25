@@ -17,7 +17,7 @@ Initially, all the lamps are off.
 
 Consider sequences of $k = 2d + n$ steps, where at each step,
   one of the lamps is switched (off to on and vice versa).
-Let $S_N$ be the set of $k$-step sequences ending in a stat
+Let $S_N$ be the set of $k$-step sequences ending in a state
    where the lamps labelled $(b, m)$ are on iff $b = 0$.
 Let $S_M ⊆ S_N$ consist of the sequences that do not
   touch the lamps labelled $(0, m)$ at all.

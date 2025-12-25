@@ -18,7 +18,7 @@ Prove that the graph $G_{𝔽_p}$ is disconnected for infinitely many primes $p$
 
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2020SL.pdf).
-With the same proof, we show more: $G_{𝔽_p}$ is disconnected if $p ≡ 1 (mod 3)$.
+With the same proof, we show more: $G_{𝔽_p}$ is disconnected if $p ≡ 1 \pmod{3}$.
 -/
 
 namespace IMOSL

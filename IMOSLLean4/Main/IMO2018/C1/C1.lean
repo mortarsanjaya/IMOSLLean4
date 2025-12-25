@@ -10,8 +10,8 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 # IMO 2018 C1
 
 Let $n ≥ 4$ be an integer and $S ⊆ ℕ^+$.
-We say that $S$ is *good* if for each $m ∈ ℕ$ with $2 ≤ m ≤ n - 2$, there exists
-  $T ⊆ S$ of size $m$ such that the sum of all elements in $T$ and $S \ T$ are equal.
+We say that $S$ is *good* if for each $m ∈ ℕ$ with $2 ≤ m ≤ n - 2$, there exists $T ⊆ S$
+  of size $m$ such that the sum of all elements in $T$ and $S \setminus T$ are equal.
 Prove that for any $n ≥ 4$, there exists a good set of size $n$.
 -/
 

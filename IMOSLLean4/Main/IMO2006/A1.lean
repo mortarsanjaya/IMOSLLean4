@@ -36,11 +36,6 @@ After that, there is no need to divide into cases based on the sign of $r$.
 Since there is no division, in the case $⌊f^k(r)⌋ → c ≤ -2$, we need to consider
   the sequence $b_k = (c - 1) f^k(r) - c^2$ as opposed to $b_k = f^k(r) - c^2/(c - 1)$.
 We will use $b_k = (-c + 1) f^k(r) + c^2$ instead.
-
-### TODO
-
-Remove `sub_lt_one_of_floor_eq_floor` and `abs_sub_lt_one_of_floor_eq_floor`
-  once a similar version gets into `mathlib`.
 -/
 
 namespace IMOSL

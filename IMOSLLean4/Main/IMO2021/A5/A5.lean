@@ -7,7 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.Order.Field.Basic
 
 /-!
-### IMO 2021 A5
+# IMO 2021 A5
 
 Let $F$ be a totally ordered field.
 Let $a_1, a_2, …, a_n ∈ F$ be non-negative elements.
