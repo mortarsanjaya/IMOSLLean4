@@ -17,14 +17,14 @@ $$ P(n^4 + n^2 + 1) = P((n + 1)^4 + (n + 1)^2 + 1). $$
 
 We generalize the problem even further.
 Let $f : ℕ → S$ be a function to a totally ordered set $S$ such that for any $n$,
-$$ f((n + 1)^2) = max\\{f(n), f(n + 1)\\}. $$
+$$ f((n + 1)^2) = max\{f(n), f(n + 1)\}. $$
 Then we prove that there exists infinitely many positive integers $n$ such that
 $$ f(n^2) = f((n + 1)^2). $$
 The original problem follows by taking $f(n) = P(n^2 + n + 1)$ due to the formula
 $$ (n + 1)^4 + (n + 1)^2 + 1 = (n^2 + n + 1)((n + 1)^2 + (n + 1) + 1). $$
 
 Replace $n$ in the equality to be proved with $n + 1$, and rewrite the equality as
-$$ \max{f(n), f(n + 1)} = \max{f(n + 1), f(n + 2)}. $$
+$$ \max\{f(n), f(n + 1)\} = \max\{f(n + 1), f(n + 2)\}. $$
 Suppose for the sake of contradiction that this equality only holds for finitely many $n$.
 Then for every $n$ large enough, $f(n) ≤ f(n + 1)$ implies $f(n + 1) < f(n + 2)$.
 If such $n$ exists, then then $f$ is eventually strictly increasing, contradicting the
