@@ -21,7 +21,7 @@ We follow Solution 1 of the
 More generally, we prove that for any increasing and concave function $g : ℝ_{≥ 0} → ℝ$,
 $$ \sum_{i = 1}^n \sum_{j = 1}^n g(|x_i - x_j|)
   ≤ \sum_{i = 1}^n \sum_{j = 1}^n g(|x_i + x_j|). $$
-See `IMOSL.IMO2021A4.targetSum_nonneg_of_monotone_concave`.
+See `IMOSL.IMO2021A4.targetSum_nonneg_of_monotone_concave'`.
 
 Instead of taking $T$ large enough, we split into three cases:
 1. $x_i ≥ 0$ for all $i$;
@@ -322,11 +322,18 @@ theorem targetSum_nonneg_of_monotone_concave [DecidableEq ι] (S : Finset ι) (x
       rw [union_sdiff_self_eq_union, union_eq_right.mpr hi]
     _ ≤ targetSum g S x := h
 
+/-- If `g` is monotone and concave on `[0, ∞)`,
+  then `∑_{i, j ∈ S} g(|x_i - x_j|) ≤ ∑_{i, j ∈ S} g(|x_i + x_j|)`. -/
+theorem targetSum_nonneg_of_monotone_concave' [DecidableEq ι] (S : Finset ι) (x : ι → 𝕜) :
+    ∑ p ∈ S ×ˢ S, g |x p.1 - x p.2| ≤ ∑ p ∈ S ×ˢ S, g |x p.1 + x p.2| := by
+  rw [← sub_nonneg, ← sum_sub_distrib]
+  exact targetSum_nonneg_of_monotone_concave g hg hg0 S x
+
 end
 
 
 /-- Final solution -/
 theorem final_solution [DecidableEq ι] (S : Finset ι) (x : ι → ℝ) :
-    targetSum Real.sqrt S x ≥ 0 :=
-  targetSum_nonneg_of_monotone_concave _ (λ _ _ _ ↦ Real.sqrt_le_sqrt)
+    ∑ p ∈ S ×ˢ S, √|x p.1 - x p.2| ≤ ∑ p ∈ S ×ˢ S, √|x p.1 + x p.2| :=
+  targetSum_nonneg_of_monotone_concave' _ (λ _ _ _ ↦ Real.sqrt_le_sqrt)
     Real.strictConcaveOn_sqrt.concaveOn S x
