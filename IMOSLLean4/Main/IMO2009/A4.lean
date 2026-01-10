@@ -48,8 +48,8 @@ theorem ineq1 {a b : ℝ≥0} (ha : a ≠ 0) (hb : b ≠ 0) :
     rw [inv_add_inv ha hb, ← div_mul, ← mul_div_right_comm, ← add_div,
       ← mul_assoc, ← add_sq', sq, mul_div_cancel_right₀ _ (add_ne_zero.mpr (Or.inl ha))]
 
-/-- Hölder's inequality: if `z_i^3 ≤ x_i y_i` for all `i`,
-  then of form `√(∑_i z_i)^3 ≤ (∑_i √x_i)^2 (∑_i y_i)`. -/
+/-- Hölder's inequality: if `z_i^3 = x_i y_i` for all `i`,
+  then `√(∑_i z_i)^3 ≤ (∑_i √x_i)^2 (∑_i y_i)`. -/
 theorem Hölder_one_and_half
     (I : Finset ι) {x y z : ι → ℝ≥0} (h : ∀ i ∈ I, z i ^ 3 = x i * y i) :
     sqrt ((∑ i ∈ I, z i) ^ 3) ≤ (∑ i ∈ I, sqrt (x i)) * sqrt (∑ i ∈ I, y i) := by
