@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Analysis.MeanInequalities
+import Mathlib.Data.Real.Sqrt
 
 /-!
 # IMO 2009 A4
@@ -48,28 +48,30 @@ theorem ineq1 {a b : ℝ≥0} (ha : a ≠ 0) (hb : b ≠ 0) :
     rw [inv_add_inv ha hb, ← div_mul, ← mul_div_right_comm, ← add_div,
       ← mul_assoc, ← add_sq', sq, mul_div_cancel_right₀ _ (add_ne_zero.mpr (Or.inl ha))]
 
-/-- Hölder's inequality of form `√(∑_i (f(i) g(i))^{1/3})^3 ≤ (∑_i √f(i))^2 (∑_i g(i))`. -/
-theorem Hölder_one_and_half (I : Finset ι) (f g : ι → ℝ≥0) :
-    sqrt ((∑ i ∈ I, (f i * g i) ^ (3 : ℝ)⁻¹) ^ 3)
-      ≤ (∑ i ∈ I, sqrt (f i)) * sqrt (∑ i ∈ I, g i) := by
-  ---- First raise both sides to a power of `2/3`.
-  have h : (0 : ℝ) < ((3 : ℕ) : ℝ) := three_pos
-  suffices ∑ i ∈ I, (f i * g i) ^ (3 : ℝ)⁻¹
-      ≤ ((∑ i ∈ I, sqrt (f i)) ^ 2 * (∑ i ∈ I, g i)) ^ (3 : ℝ)⁻¹ by
-    rwa [sqrt_le_iff_le_sq, mul_pow, sq_sqrt, ← rpow_natCast, ← le_rpow_inv_iff h]
-  ---- Then apply Hölder's inequality of the form `NNReal.inner_le_Lp_mul_Lq`.
-  replace h : Real.HolderConjugate (3 / 2) 3 := ⟨by norm_num, div_pos h two_pos, h⟩
-  calc ∑ i ∈ I, (f i * g i) ^ (3 : ℝ)⁻¹
-    _ = ∑ i ∈ I, sqrt (f i) ^ (3 / 2 : ℝ)⁻¹ * g i ^ (3 : ℝ)⁻¹ := by
-      refine sum_congr rfl λ i _ ↦ ?_
-      rw [mul_rpow, inv_div, div_eq_mul_inv, rpow_mul, rpow_ofNat, sq_sqrt]
-    _ ≤ (∑ i ∈ I, (sqrt (f i) ^ (3 / 2 : ℝ)⁻¹) ^ (3 / 2 : ℝ)) ^ (1 / (3 / 2) : ℝ)
-        * (∑ i ∈ I, (g i ^ (3 : ℝ)⁻¹) ^ (3 : ℝ)) ^ (1 / 3 : ℝ) :=
-      inner_le_Lp_mul_Lq I _ _ h
-    _ = ((∑ i ∈ I, sqrt (f i)) ^ 2 * (∑ i ∈ I, g i)) ^ (3 : ℝ)⁻¹ := by
-      simp_rw [← rpow_mul, inv_mul_cancel₀ h.ne_zero,
-        inv_mul_cancel₀ h.symm.ne_zero, rpow_one]
-      rw [one_div_div, one_div, div_eq_mul_inv 2 3, rpow_mul, ← mul_rpow, rpow_ofNat]
+/-- Hölder's inequality: if `z_i^3 ≤ x_i y_i` for all `i`,
+  then of form `√(∑_i z_i)^3 ≤ (∑_i √x_i)^2 (∑_i y_i)`. -/
+theorem Hölder_one_and_half
+    (I : Finset ι) {x y z : ι → ℝ≥0} (h : ∀ i ∈ I, z i ^ 3 = x i * y i) :
+    sqrt ((∑ i ∈ I, z i) ^ 3) ≤ (∑ i ∈ I, sqrt (x i)) * sqrt (∑ i ∈ I, y i) := by
+  ---- If `∑_i z_i = 0` we are done.
+  obtain hz | hz : ∑ i ∈ I, z i = 0 ∨ ∑ i ∈ I, z i > 0 := eq_zero_or_pos _
+  · rw [hz, pow_succ, mul_zero, sqrt_zero]
+    exact zero_le _
+  ---- If `∑_i z_i > 0`, then multiply both sides by `√(∑_i z_i)`.
+  refine le_of_mul_le_mul_of_pos_right ?_ (sqrt_pos.mpr hz)
+  ---- Then apply double Cauchy-Schwarz afterwards.
+  calc sqrt ((∑ i ∈ I, z i) ^ 3) * sqrt (∑ i ∈ I, z i)
+    _ = (∑ i ∈ I, z i) ^ 2 := by
+      rw [← sqrt_mul, ← pow_succ, pow_mul _ 2 2, sqrt_sq]
+    _ ≤ (∑ i ∈ I, sqrt (x i)) * ∑ i ∈ I, sqrt (y i) * sqrt (z i) := by
+      refine sum_sq_le_sum_mul_sum_of_sq_eq_mul _
+        (λ _ _ ↦ zero_le _) (λ _ _ ↦ zero_le _) (λ i hi ↦ ?_)
+      rw [← sqrt_mul, ← sqrt_mul, eq_comm, sqrt_eq_iff_eq_sq,
+        ← pow_mul, pow_succ, h i hi, mul_assoc]
+    _ ≤ (∑ i ∈ I, sqrt (x i)) * (sqrt (∑ i ∈ I, y i) * sqrt (∑ i ∈ I, z i)) :=
+      mul_le_mul_right (sum_sqrt_mul_sqrt_le I y z) _
+    _ = (∑ i ∈ I, sqrt (x i)) * sqrt (∑ i ∈ I, y i) * sqrt (∑ i ∈ I, z i) :=
+      (mul_assoc _ _ _).symm
 
 /-- The inequality `#I √(#I/∑_{i ∈ I} x_i) ≤ ∑_{i ∈ I} 1/√x_i`. -/
 theorem ineq2 (I : Finset ι) {x : ι → ℝ≥0} (hx : ∀ i ∈ I, x i ≠ 0) :
@@ -81,12 +83,8 @@ theorem ineq2 (I : Finset ι) {x : ι → ℝ≥0} (hx : ∀ i ∈ I, x i ≠ 0)
   calc (#I : ℝ≥0) * sqrt (#I)
     _ = sqrt ((∑ i ∈ I, 1) ^ 3) := by
       rw [sum_const, nsmul_one, pow_succ, sqrt_mul, sqrt_sq]
-    _ = sqrt ((∑ i ∈ I, ((x i)⁻¹ * x i) ^ (3 : ℝ)⁻¹) ^ 3) := by
-      have h (i) (hi : i ∈ I) : ((x i)⁻¹ * x i) ^ (3 : ℝ)⁻¹ = 1 := by
-        rw [inv_mul_cancel₀ (hx i hi), one_rpow]
-      exact congrArg (λ t ↦ sqrt (t ^ 3)) (sum_congr rfl h).symm
     _ ≤ (∑ i ∈ I, sqrt (x i)⁻¹) * sqrt (∑ i ∈ I, x i) :=
-      Hölder_one_and_half _ _ _
+      Hölder_one_and_half I λ i hi ↦ by rw [one_pow, inv_mul_cancel₀ (hx i hi)]
 
 /-- The general form of the inequality to be proved. -/
 theorem ineq3 (I : Finset ι) {x y : ι → ℝ≥0}
