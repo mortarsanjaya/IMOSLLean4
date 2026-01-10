@@ -16,7 +16,7 @@ Fix an arbitrary non-decreasing sequence $(x_i)_{i = 0}^n$ in $G$, and let
 $$ L = \max_{j ≤ n} |x_j - a_j|. $$
 1. Prove that $2L ≥ a_k - a_m$ for any $k ≤ m ≤ n$.
 2. Fix an arbitrary $g ∈ G$ such that $2g ≥ a_k - a_m$ for any $k ≤ m ≤ n$.
-  Prove that there exists a choice of $(x_i)_{i = 1}^n$ such that $L = g$.
+  Prove that there exists a choice of $(x_i)_{i = 0}^n$ such that $L = g$.
 
 ### Solution
 
