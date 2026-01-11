@@ -10,9 +10,10 @@ import Mathlib.Algebra.BigOperators.Fin
 /-!
 # IMO 2009 C2
 
-For each $n ∈ ℕ$, find the largest integer $k$ such that the following holds:
-  there exists injective functions $a_1, a_2, a_3 : [k] → ℕ$ such that
-  $a_1(i) + a_2(i) + a_3(i) = n$ for all $i ∈ [k]$, where $[k] = \{1, 2, …, k\}$.
+For each $n ∈ ℕ$, find the largest integer $k$ such that there exist $k$ triples
+  $(a_1, b_1, c_1), …, (a_k, b_k, c_k)$ with the following properties:
+* $a_i + b_i + c_i$ for all $i ≤ k$;
+* for any $i ≠ j$, we have $a_i ≠ a_j$, $b_i ≠ b_j$, and $c_i ≠ c_j$.
 
 ### Answer
 
@@ -41,10 +42,11 @@ theorem card_choose_le_nat_sum (S : Finset ℕ) : Nat.choose #S 2 ≤ ∑ s ∈ 
   replace hmS : m ∉ S := λ h ↦ Nat.lt_irrefl m (hmS _ h)
   ---- Now just do the calculations.
   calc Nat.choose #(insert m S) 2
-    _ = #S + Nat.choose #S 2 := by rw [card_insert_of_notMem hmS,
-      Nat.choose_succ_left _ _ Nat.two_pos, Nat.choose_one_right]
+    _ = Nat.choose (#S + 1) 2 := by rw [card_insert_of_notMem hmS]
+    _ = #S + Nat.choose #S 2 := by
+      rw [Nat.choose_succ_left _ _ Nat.two_pos, Nat.choose_one_right]
     _ ≤ m + ∑ s ∈ S, s := Nat.add_le_add hmS0 hS
-    _ = ∑ s ∈ insert m S, s := by rw [sum_insert hmS]
+    _ = ∑ s ∈ insert m S, s := (sum_insert hmS (f := id)).symm
 
 /-- If `f : ι → ℕ` is injective, thenf or any finite set `I ⊆ ι`,
   the sum of `f(i)` across all `i ∈ I` is at least `C(#I, 2)`. -/
@@ -55,12 +57,13 @@ theorem card_choose_le_sum_of_inj {f : ι → ℕ} (hf : f.Injective) (I : Finse
   _ = ∑ i ∈ I, f i := sum_image λ _ _ _ _ h ↦ hf h
 
 /-- The map `f : Fin k → ℕ` defined by `f(i) = 2(k - i - 1)` is injective. -/
-theorem fin_cast_sub_two_mul_injective (k) :
-    (λ i : Fin k ↦ 2 * (k - 1 - i.1)).Injective := by
+theorem fin_cast_sub_two_mul_injective (k : ℕ) :
+    (λ i : Fin k ↦ 2 * (k - 1 - i.val)).Injective := by
   match k with | 0 => exact λ x _ ↦ x.elim0 | k + 1 => ?_
-  intro a b h; rw [Nat.add_sub_cancel, Nat.mul_right_inj (Nat.succ_ne_zero 1)] at h
-  rw [Fin.ext_iff, ← Nat.add_right_inj (n := k - a.1),
-    Nat.sub_add_cancel a.is_le, h, Nat.sub_add_cancel b.is_le]
+  have h : 2 ≠ 0 := Nat.succ_ne_zero 1
+  intro a b h0; rw [Nat.add_sub_cancel, Nat.mul_right_inj h] at h0
+  rw [Fin.ext_iff, ← Nat.add_right_inj (n := k - a.val),
+    Nat.sub_add_cancel a.is_le, h0, Nat.sub_add_cancel b.is_le]
 
 
 
@@ -91,8 +94,10 @@ theorem nonempty_of_card_le [Fintype ι] [Fintype κ]
     Nonempty (GoodTripleFn n κ) :=
   (Function.Embedding.nonempty_of_card_le h).elim λ f ↦ hι.elim λ X ↦ ⟨ofEmbedding f X⟩
 
-/-- If there is an `ι`-indexed `n`-good collection, then `k := |ι| ≤ 2n/3 + 1`. -/
-theorem card_bound [Fintype ι] (X : GoodTripleFn n ι) : Fintype.card ι ≤ 2 * n / 3 + 1 := by
+/-- If there is an `ι`-indexed `n`-good collection, then `|ι| ≤ 2n/3 + 1`. -/
+theorem card_bound [Fintype ι] (X : GoodTripleFn n ι) :
+    Fintype.card ι ≤ 2 * n / 3 + 1 := by
+  ---- Denote `k := |ι|`.
   let k : ℕ := Fintype.card ι
   ---- Prove `3 k(k - 1)/2 ≤ kn` by counting.
   have h : 3 * Nat.choose k 2 ≤ k * n := calc
@@ -110,7 +115,7 @@ theorem card_bound [Fintype ι] (X : GoodTripleFn n ι) : Fintype.card ι ≤ 2 
         Nat.div_mul_cancel (even_iff_two_dvd.mp (Nat.even_mul_pred_self k))
       rw [Nat.choose_two_right, Nat.mul_assoc, h0]
     _ ≤ k * n * 2 := Nat.mul_le_mul_right 2 h
-    _ = k * (2 * n) := by rw [Nat.mul_assoc, n.mul_comm]
+    _ = k * (2 * n) := by rw [Nat.mul_assoc, Nat.mul_comm n 2]
   ---- Solve the case `k = 0`, then solve the case `k > 0`.
   obtain h0 | h0 : k = 0 ∨ 0 < k := Nat.eq_zero_or_pos _
   · exact h0.trans_le (Nat.zero_le _)
@@ -133,11 +138,11 @@ def default_of_0mod3 (k) : GoodTripleFn (3 * k) (Fin (k + 1) ⊕ Fin k) where
     | 0 => Function.Injective.sumElim
         Fin.val_injective
         (λ _ _ h ↦ Fin.val_injective (Nat.add_left_cancel h))
-        (λ a b ↦ (Nat.lt_add_right _ a.2).ne)
+        (λ a b ↦ (Nat.lt_add_right _ a.is_lt).ne)
     | 1 => Function.Injective.sumElim
         (λ _ _ h ↦ Fin.val_injective (Nat.add_left_cancel h))
         Fin.val_injective
-        (λ a b ↦ (Nat.lt_add_right _ b.2).ne.symm)
+        (λ a b ↦ (Nat.lt_add_right _ b.is_lt).ne.symm)
     | 2 => Function.Injective.sumElim
         (fin_cast_sub_two_mul_injective (k + 1))
         (λ _ _ h0 ↦ fin_cast_sub_two_mul_injective k (Nat.add_right_cancel h0))
@@ -153,7 +158,7 @@ def default_of_0mod3 (k) : GoodTripleFn (3 * k) (Fin (k + 1) ⊕ Fin k) where
         _ = k + 2 * ((k - 1 - i) + (i + 1)) := by
           rw [Nat.add_right_comm k, Nat.add_assoc k, Nat.add_assoc, Nat.add_left_comm i,
             Nat.add_add_add_comm, ← Nat.two_mul, Nat.add_assoc, ← Nat.mul_add]
-        _ = k + 2 * k := by rw [Nat.sub_sub, Nat.add_comm 1, Nat.sub_add_cancel i.2]
+        _ = k + 2 * k := by rw [Nat.sub_sub, Nat.add_comm 1, Nat.sub_add_cancel i.is_lt]
         _ = 3 * k := by rw [Nat.add_comm, ← Nat.succ_mul]
 
 /-- Construction of a `3k + 1`-good collection of `2k + 1` triples. -/
@@ -170,11 +175,11 @@ def default_of_2mod3 (k) : GoodTripleFn (3 * k + 2) (Fin (k + 1) ⊕ Fin (k + 1)
     | 0 => Function.Injective.sumElim
         Fin.val_injective
         (λ _ _ h ↦ Fin.val_injective (Nat.add_left_cancel h))
-        (λ a b ↦ (Nat.lt_add_right _ a.2).ne)
+        (λ a b ↦ (Nat.lt_add_right _ a.is_lt).ne)
     | 1 => Function.Injective.sumElim
         (λ _ _ h ↦ Fin.val_injective (Nat.add_left_cancel h))
         Fin.val_injective
-        (λ a b ↦ (Nat.lt_add_right a.1 (Nat.lt_succ_of_lt b.2)).ne.symm)
+        (λ a b ↦ (Nat.lt_add_right a.val (Nat.lt_succ_of_lt b.is_lt)).ne.symm)
     | 2 =>
         let h := fin_cast_sub_two_mul_injective (k + 1)
         Function.Injective.sumElim h
@@ -184,11 +189,13 @@ def default_of_2mod3 (k) : GoodTripleFn (3 * k + 2) (Fin (k + 1) ⊕ Fin (k + 1)
     | Sum.inl i => calc
         _ = i + (k + 2 + i) + 2 * (k - i) := Fin.sum_univ_three _
         _ = k + 2 + 2 * i + 2 * (k - i) := by rw [Nat.add_left_comm, ← Nat.two_mul]
-        _ = k + 2 + 2 * k := by rw [Nat.add_assoc, ← Nat.mul_add, Nat.add_sub_cancel' i.is_le]
+        _ = k + 2 + 2 * k := by
+          rw [Nat.add_assoc, ← Nat.mul_add, Nat.add_sub_cancel' i.is_le]
         _ = 3 * k + 2 := by rw [Nat.add_right_comm, Nat.add_comm k, ← Nat.succ_mul]
     | Sum.inr i => calc
         _ = k + 1 + i + i + (2 * (k - i) + 1) := Fin.sum_univ_three _
-        _ = k + 1 + 2 * i + (2 * (k - i) + 1) := by rw [Nat.add_assoc (k + 1), ← Nat.two_mul]
+        _ = k + 1 + 2 * i + (2 * (k - i) + 1) := by
+          rw [Nat.add_assoc (k + 1), ← Nat.two_mul]
         _ = k + 1 + (2 * k + 1) := by
           rw [Nat.add_assoc, ← Nat.add_assoc (2 * i),
             ← Nat.mul_add, Nat.add_sub_cancel' i.is_le]
@@ -201,19 +208,19 @@ theorem nonempty_of_le_bound [Fintype ι] (h : Fintype.card ι ≤ 2 * n / 3 + 1
   ---- First write `n = 3k + r` where `r < 3`.
   obtain ⟨k, r, hr, rfl⟩ : ∃ k, ∃ r < 3, n = 3 * k + r :=
     ⟨n / 3, n % 3, Nat.mod_lt n three_pos, (n.div_add_mod 3).symm⟩
-  replace hr : (r = 0 ∨ r = 1) ∨ r = 2 := by
-    rwa [Nat.lt_succ_iff, Nat.le_succ_iff, Nat.le_one_iff_eq_zero_or_eq_one] at hr
-  ---- Now split into cases.
+  ---- Now split into three cases.
   have fin_sum_fin_card (a b) : Fintype.card (Fin a ⊕ Fin b) = a + b := by
     rw [Fintype.card_sum, Fintype.card_fin, Fintype.card_fin]
+  replace hr : (r = 0 ∨ r = 1) ∨ r = 2 := by
+    rwa [Nat.lt_succ_iff, Nat.le_succ_iff, Nat.le_one_iff_eq_zero_or_eq_one] at hr
   rcases hr with (rfl | rfl) | rfl
   ---- Case 1: `r = 0`.
   · refine nonempty_of_card_le ⟨default_of_0mod3 k⟩ (h.trans_eq ?_)
-    rw [fin_sum_fin_card, k.add_right_comm, ← k.two_mul, (3 * k).add_zero,
+    rw [fin_sum_fin_card, Nat.add_right_comm, ← Nat.two_mul, Nat.add_zero (3 * k),
       Nat.mul_left_comm, Nat.mul_div_cancel_left _ three_pos]
   ---- Case 2: `r = 1`.
   · refine nonempty_of_card_le ⟨default_of_1mod3 k⟩ (h.trans_eq ?_)
-    rw [fin_sum_fin_card, k.add_right_comm, ← k.two_mul,
+    rw [fin_sum_fin_card, Nat.add_right_comm, ← Nat.two_mul,
       Nat.mul_succ, Nat.mul_left_comm, Nat.mul_add_div three_pos]
   ---- Case 3: `r = 2`.
   · refine nonempty_of_card_le ⟨default_of_2mod3 k⟩ (h.trans_eq ?_)
