@@ -13,3 +13,4 @@ import IMOSLLean4.Main.IMO2009.N2
 import IMOSLLean4.Main.IMO2009.N3
 import IMOSLLean4.Main.IMO2009.N4
 import IMOSLLean4.Main.IMO2009.N5
+import IMOSLLean4.Main.IMO2009.N6
