@@ -32,7 +32,8 @@ Let $S(X)$ be the companion of $R(X - 1)$, constructed inductively.
 Then set $Q(X) = (X + 1) S(X + 1) + (R(-1) + S(-1))$.
 It is easy to check that $Q$ is the companion of $P$.
 
-For convenience, we say that $P(0) + Q(-1)$ is the *companion constant* of $P$.
+For convenience, we say that $P(0) + Q(-1)$ is the *companion constant* of $P$,
+  where $Q$ is the companion of $P$.
 -/
 
 namespace IMOSL
@@ -129,37 +130,38 @@ theorem map_X_add_one [Semiring R] [Semiring S] (φ : R →+* S) :
 
 section
 
+variable [Ring R]
+
 /-- The explicit companion of a polynomial. -/
-noncomputable def companion [Ring R] (P : R[X]) : R[X] :=
+noncomputable def companion (P : R[X]) : R[X] :=
   if hP : P.natDegree = 0 then 0
-  else
-    let T : R[X] := P.divX.comp (X - 1)
-    let U : R[X] := companion T
-    U.comp (X + 1) * (X + 1) + C (T.coeff 0 + U.eval (-1))
+  else  let T : R[X] := P.divX.comp (X - 1)
+        (companion T).comp (X + 1) * (X + 1) + C (T.coeff 0 + (companion T).eval (-1))
 termination_by P.natDegree
-decreasing_by
-  rw [natDegree_comp_X_sub_one, natDegree_divX_eq_natDegree_tsub_one]
-  exact Nat.sub_one_lt hP
+decreasing_by calc (P.divX.comp (X - 1)).natDegree
+  _ = P.divX.natDegree := natDegree_comp_X_sub_one _
+  _ = P.natDegree - 1 := natDegree_divX_eq_natDegree_tsub_one
+  _ < P.natDegree := Nat.sub_one_lt hP
 
 /-- The companion constant of `P` is `P(0) + Q(-1)`, where `Q` is the companion of `P`. -/
-noncomputable def companionConstant [Ring R] (P : R[X]) : R :=
+noncomputable def companionConstant (P : R[X]) : R :=
   P.coeff 0 + (companion P).eval (-1)
 
 /-- The companion of a degree zero polynomial. -/
-theorem companion_of_natDegree_eq_zero [Ring R] {P : R[X]} (hP : P.natDegree = 0) :
+theorem companion_of_natDegree_eq_zero {P : R[X]} (hP : P.natDegree = 0) :
     companion P = 0 := by
   rw [companion, dif_pos hP]
 
 /-- The companion of a constant polynomial. -/
-theorem companion_const [Ring R] (c : R) : companion (C c) = 0 :=
+theorem companion_const (c : R) : companion (C c) = 0 :=
   companion_of_natDegree_eq_zero (natDegree_C c)
 
 /-- The companion of zero. -/
-theorem companion_zero [Ring R] : companion (0 : R[X]) = 0 :=
+theorem companion_zero : companion (0 : R[X]) = 0 :=
   companion_of_natDegree_eq_zero rfl
 
 /-- Companion in terms of division by `X`. -/
-theorem companion_general_formula [Ring R] (P : R[X]) :
+theorem companion_general_formula (P : R[X]) :
     companion P = (companion (P.divX.comp (X - 1))).comp (X + 1) * (X + 1)
       + C ((P.divX.comp (X - 1)).coeff 0 + (companion (P.divX.comp (X - 1))).eval (-1)) := by
   ---- The formula is exactly the one given here if `P` is non-constant.
@@ -170,15 +172,22 @@ theorem companion_general_formula [Ring R] (P : R[X]) :
   rw [companion_const, divX_C, zero_comp, companion_zero, zero_comp,
     zero_mul, zero_add, coeff_zero, eval_zero, add_zero, C_0]
 
+end
+
+
+section
+
+variable [CommRing R]
+
 /-- Formula for the companion of `R(X + 1) X + c`. -/
-theorem companion_X_mul_comp_add_one_add_const [CommRing R] (Q : R[X]) (c : R) :
+theorem companion_X_mul_comp_add_one_add_const (Q : R[X]) (c : R) :
     companion (Q.comp (X + 1) * X + C c)
       = (companion Q).comp (X + 1) * (X + 1) + C (companionConstant Q) := by
   rw [companionConstant, companion_general_formula,
     divX_mul_X_add_C, comp_X_add_one_comp_X_sub_one]
 
 /-- The formula characterizing the companion polynomial. -/
-theorem companion_main_formula [CommRing R] (P : R[X]) :
+theorem companion_main_formula (P : R[X]) :
     companion P * X = P + (companion P).comp (X - 1) - C (companionConstant P) := by
   unfold companionConstant
   induction hP : P.natDegree generalizing P with
@@ -200,13 +209,19 @@ theorem companion_main_formula [CommRing R] (P : R[X]) :
         eval_comp, eval_neg_one_X_add_one, n_ih, ← coeff_zero_eq_eval_zero]; rfl
 
 /-- Another formula related to the companion polynomial. -/
-theorem companion_second_formula [CommRing R] (P : R[X]) :
+theorem companion_second_formula (P : R[X]) :
     companion P * X - (companion P).comp (X - 1) + C (companionConstant P) = P := by
   rw [companion_main_formula, sub_right_comm, sub_add_cancel, add_sub_cancel_right]
 
+end
+
+
+section
+
+variable [CommRing R] [CommRing S] (φ : R →+* S) (P : R[X])
+
 /-- Mapping companion polynomial under ring homomorphism. -/
-theorem map_companion [CommRing R] [CommRing S] (φ : R →+* S) (P : R[X]) :
-    companion (P.map φ) = (companion P).map φ := by
+theorem map_companion : companion (P.map φ) = (companion P).map φ := by
   induction hP : P.natDegree generalizing P with
   | zero =>
       have hP0 : (P.map φ).natDegree = 0 :=
@@ -232,8 +247,7 @@ theorem map_companion [CommRing R] [CommRing S] (φ : R →+* S) (P : R[X]) :
           rw [companion_X_mul_comp_add_one_add_const]
 
 /-- Mapping companion constant under ring homomorphism. -/
-theorem map_companionConstant [CommRing R] [CommRing S] (φ : R →+* S) (P : R[X]) :
-    companionConstant (P.map φ) = φ (companionConstant P) := by
+theorem map_companionConstant : companionConstant (P.map φ) = φ (companionConstant P) := by
   unfold companionConstant
   rw [map_companion, coeff_map, φ.map_add, ← eval_map_apply, φ.map_neg, φ.map_one]
 
@@ -258,9 +272,11 @@ open Finset
 /-- For any `n : ℕ`, we have `0! + 1! + … + (n - 1)! ≤ n!`. -/
 theorem sum_factorial_range_le_factorial (n) :
     ∑ i ∈ range n, i.factorial ≤ n.factorial := by
-  ---- Separate the case `n = 0`, then induction on the rest.
+  ---- Separate the case `n = 0`.
   cases n with | zero => exact Nat.zero_le 1 | succ n => ?_
+  ---- Induction on the rest; the base case is trivial.
   induction n with | zero => exact Nat.le_refl 1 | succ n n_ih => ?_
+  ---- The induction step.
   calc ∑ i ∈ range (n + 2), i.factorial
     _ = ∑ i ∈ range (n + 1), i.factorial + (n + 1).factorial := sum_range_succ _ _
     _ ≤ (n + 1).factorial + (n + 1).factorial := Nat.add_le_add_right n_ih _
@@ -283,6 +299,7 @@ theorem right_eq_zero_of_factorial_dvd_add_sum_factorial_mul
   ---- Indeed, we have `x + (0! + 1! + … + n!) y = 0` if `n ≥ N := |x| + 2|y|`.
   let N : ℕ := x.natAbs + 2 * y.natAbs
   replace h {n : ℕ} (hn : N ≤ n) : x + (∑ i ∈ range (n + 1), i.factorial : ℕ) * y = 0 := by
+    -- ... which follows from `|x + (0! + 1! + … + n!) y| < (n + 1)!`.
     refine Int.eq_zero_of_dvd_of_natAbs_lt_natAbs (h (n + 1)) ?_
     have hn0 : 0 < n.factorial := n.factorial_pos
     calc (x + (∑ i ∈ range (n + 1), i.factorial : ℕ) * y).natAbs
@@ -303,8 +320,8 @@ theorem right_eq_zero_of_factorial_dvd_add_sum_factorial_mul
 
 /-- A polynomial `P` is good iff its companion constant `c` is zero. -/
 theorem good_iff_companionConstant_eq_zero : good P ↔ companionConstant P = 0 := by
-  /- First show that `Q` satisfies the recursion of `(a_n)_{n ≥ 0}`... minus a constant:
-    `(n + 1) Q(n + 1) = Q(n) + P(n + 1) - c`. -/
+  /- First show that `Q` satisfies the recursion of `(a_n)_{n ≥ 0}`...
+    minus a constant: `(n + 1) Q(n + 1) = Q(n) + P(n + 1) - c`. -/
   let Q : ℤ[X] := companion P
   set c : ℤ := companionConstant P
   have hP (n : ℕ) :
