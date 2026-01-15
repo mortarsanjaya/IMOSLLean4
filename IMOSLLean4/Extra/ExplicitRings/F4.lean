@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Hom.Defs
-import IMOSLLean4.Extra.CharTwo.Ring
+import Mathlib.Algebra.Ring.Defs
 
 /-!
 # Explicit construction of `𝔽₄`
@@ -13,14 +12,12 @@ import IMOSLLean4.Extra.CharTwo.Ring
 In this file, we explicitly construct `𝔽₄`, the field of 4 elements.
 We prove that it is a ring, and we construct ring homomorphisms from `𝔽₄`.
 
-### TODO
-
-Unify with `IMOSLLean4.Extra.ExplicitRings.F4`.
+Note that `𝔽₄` can also be obtained as `QuadraticAlgebra (ZMod 2) 1 1`.
+However, this very direct implementation has an advantage of faster computations.
 -/
 
 namespace IMOSL
-namespace IMO2012A5
-namespace Generalization
+namespace Extra
 
 open Extra
 
@@ -35,15 +32,13 @@ namespace 𝔽₄
 
 protected def add : 𝔽₄ → 𝔽₄ → 𝔽₄
   | O, x => x
-  | I, O => I
+  | x, O => x
   | I, I => O
   | I, X => Y
   | I, Y => X
-  | X, O => X
   | X, I => Y
   | X, X => O
   | X, Y => I
-  | Y, O => Y
   | Y, I => X
   | Y, X => I
   | Y, Y => O
@@ -51,20 +46,56 @@ protected def add : 𝔽₄ → 𝔽₄ → 𝔽₄
 protected def mul : 𝔽₄ → 𝔽₄ → 𝔽₄
   | O, _ => O
   | I, x => x
-  | X, O => O
-  | X, I => X
+  | _, O => O
+  | x, I => x
   | X, X => Y
   | X, Y => I
-  | Y, O => O
-  | Y, I => Y
   | Y, X => I
   | Y, Y => X
+
+protected def inv : 𝔽₄ → 𝔽₄
+  | O => O
+  | I => I
+  | X => Y
+  | Y => X
+
+protected def div : 𝔽₄ → 𝔽₄ → 𝔽₄
+  | _, O => O
+  | x, I => x
+  | O, _ => O
+  | I, X => Y
+  | I, Y => X
+  | X, X => I
+  | X, Y => Y
+  | Y, X => X
+  | Y, Y => I
 
 instance : Zero 𝔽₄ := ⟨O⟩
 instance : One 𝔽₄ := ⟨I⟩
 instance : Add 𝔽₄ := ⟨𝔽₄.add⟩
 instance : Neg 𝔽₄ := ⟨id⟩
+instance : Sub 𝔽₄ := ⟨𝔽₄.add⟩
 instance : Mul 𝔽₄ := ⟨𝔽₄.mul⟩
+instance : Inv 𝔽₄ := ⟨𝔽₄.inv⟩
+instance : Div 𝔽₄ := ⟨𝔽₄.div⟩
+
+instance : DecidableEq 𝔽₄
+  | O, O => isTrue rfl
+  | O, I => isFalse 𝔽₄.noConfusion
+  | O, X => isFalse 𝔽₄.noConfusion
+  | O, Y => isFalse 𝔽₄.noConfusion
+  | I, O => isFalse 𝔽₄.noConfusion
+  | I, I => isTrue rfl
+  | I, X => isFalse 𝔽₄.noConfusion
+  | I, Y => isFalse 𝔽₄.noConfusion
+  | X, O => isFalse 𝔽₄.noConfusion
+  | X, I => isFalse 𝔽₄.noConfusion
+  | X, X => isTrue rfl
+  | X, Y => isFalse 𝔽₄.noConfusion
+  | Y, O => isFalse 𝔽₄.noConfusion
+  | Y, I => isFalse 𝔽₄.noConfusion
+  | Y, X => isFalse 𝔽₄.noConfusion
+  | Y, Y => isTrue rfl
 
 
 
@@ -125,11 +156,18 @@ protected theorem add_assoc : ∀ x y z : 𝔽₄, x + y + z = x + (y + z)
   | Y, Y, X => rfl
   | Y, Y, Y => rfl
 
-protected theorem neg_add_cancel : ∀ x : 𝔽₄, -x + x = 0
+protected theorem add_self : ∀ x : 𝔽₄, x + x = 0
   | O => rfl
   | I => rfl
   | X => rfl
   | Y => rfl
+
+protected theorem neg_def (x : 𝔽₄) : -x = x := rfl
+
+protected theorem sub_def (x y : 𝔽₄) : x - y = x + y := rfl
+
+protected theorem neg_add_cancel (x : 𝔽₄) : -x + x = 0 := by
+  rw [𝔽₄.neg_def, 𝔽₄.add_self]
 
 instance : AddCommGroup 𝔽₄ :=
   { add_assoc := 𝔽₄.add_assoc
@@ -139,8 +177,6 @@ instance : AddCommGroup 𝔽₄ :=
     neg_add_cancel := 𝔽₄.neg_add_cancel
     nsmul := nsmulRec
     zsmul := zsmulRec }
-
-instance : CharTwo 𝔽₄ := ⟨neg_add_cancel⟩
 
 
 
@@ -249,55 +285,39 @@ instance : CommRing 𝔽₄ :=
 
 
 
-/-! ### Ring homomorphism from `𝔽₄` -/
+/-! ### Some basic arithmetic properties of `𝔽₄` -/
 
-open CharTwo
+/-- Over `𝔽₄`, we have `0 ≠ 1`. -/
+theorem zero_ne_one : (0 : 𝔽₄) ≠ 1 := by decide
 
-def cast [AddMonoidWithOne R] (r : R) : 𝔽₄ → R
-  | O => 0
-  | I => 1
-  | X => r
-  | Y => r + 1
+/-- We have `X^3 = 1`. -/
+theorem X_pow_three_eq_one : X ^ 3 = 1 := rfl
 
-variable [NonAssocSemiring R] [CharTwo R]
+/-- We have `Y^3 = 1`. -/
+theorem Y_pow_three_eq_one : Y ^ 3 = 1 := rfl
 
-theorem cast_add (r : R) : ∀ x y : 𝔽₄, cast r (x + y) = cast r x + cast r y
-  | O, _ => (zero_add _).symm
-  | x, O => x.add_zero.symm ▸ (add_zero _).symm
-  | I, I => (add_self_eq_zero _).symm
-  | I, X => CharTwo.add_comm r 1
-  | I, Y => (add_add_cancel_middle₁ 1 r).symm
-  | X, I => rfl
-  | X, X => (add_self_eq_zero _).symm
-  | X, Y => (add_add_cancel_left _ _).symm
-  | Y, I => (add_add_cancel_right _ _).symm
-  | Y, X => (add_add_cancel_middle₂ _ _).symm
-  | Y, Y => (add_self_eq_zero _).symm
+/-- For any `k : ℕ`, we have `X^k = X^{k % 3}`. -/
+theorem X_pow_eq_X_pow_mod_three (k : ℕ) : X ^ k = X ^ (k % 3) :=
+  calc X ^ k
+  _ = X ^ (3 * (k / 3) + k % 3) := by rw [Nat.div_add_mod]
+  _ = X ^ (k % 3) := by rw [pow_add, pow_mul, X_pow_three_eq_one, one_pow, 𝔽₄.one_mul]
 
-variable {r : R} (h : r * r + r = 1)
-include h
+/-- For any `k : ℕ`, we have `Y^k = Y^{k % 3}`. -/
+theorem Y_pow_eq_Y_pow_mod_three (k : ℕ) : Y ^ k = Y ^ (k % 3) := by
+  calc Y ^ k
+  _ = Y ^ (3 * (k / 3) + k % 3) := by rw [Nat.div_add_mod]
+  _ = Y ^ (k % 3) := by rw [pow_add, pow_mul, Y_pow_three_eq_one, one_pow, 𝔽₄.one_mul]
 
-theorem cast_mul : ∀ x y : 𝔽₄, cast r (x * y) = cast r x * cast r y
-  | O, _ => (zero_mul _).symm
-  | I, _ => (one_mul _).symm
-  | x, O => x.mul_zero.symm ▸ (mul_zero _).symm
-  | x, I => x.mul_one.symm ▸ (mul_one _).symm
-  | X, X => add_eq_iff_eq_add'''.mpr h.symm
-  | X, Y => h.symm.trans (mul_add_one r r).symm
-  | Y, X => h.symm.trans (add_one_mul r r).symm
-  | Y, Y => (add_eq_iff_eq_add''.mp h).trans (add_one_mul_self r).symm
+open Fin.NatCast in
+/-- For any `k : ℕ`, we have `X^k + Y^k = 0` if and only if `3 ∣ k`. -/
+theorem X_pow_add_Y_pow (k : ℕ) : X ^ k + Y ^ k = if 3 ∣ k then 0 else 1 :=
+  calc X ^ k + Y ^ k
+  _ = X ^ ((k : Fin 3).val) + Y ^ ((k : Fin 3).val) :=
+    congrArg₂ (· + ·) (X_pow_eq_X_pow_mod_three k) (Y_pow_eq_Y_pow_mod_three k)
+  _ = if (k : Fin 3).val = 0 then 0 else 1 :=
+    match (k : Fin 3) with | 0 => rfl | 1 => rfl | 2 => rfl
+  _ = if 3 ∣ k then 0 else 1 := if_congr Nat.dvd_iff_mod_eq_zero.symm rfl rfl
 
-def castRingHom : 𝔽₄ →+* R :=
-  { toFun := cast r
-    map_one' := rfl
-    map_mul' := cast_mul h
-    map_zero' := rfl
-    map_add' := cast_add r }
-
-theorem castRingHom_injective (h0 : (1 : R) ≠ 0) :
-    Function.Injective (castRingHom h) :=
-  (injective_iff_map_eq_zero _).mpr λ x h1 ↦ match x with
-    | O => rfl
-    | I => Not.elim h0 h1
-    | X => Not.elim h0 ((cast_mul h X Y).trans (mul_eq_zero_of_left h1 _))
-    | Y => Not.elim h0 ((cast_mul h Y X).trans (mul_eq_zero_of_left h1 _))
+/-- For any `k : ℕ`, `X^k + Y^k` equals `0` if `3 ∣ k` and `1` otherwise. -/
+theorem X_pow_add_Y_pow_eq_zero_iff {k : ℕ} : X ^ k + Y ^ k = 0 ↔ 3 ∣ k := by
+  rw [X_pow_add_Y_pow, zero_ne_one.ite_eq_left_iff]

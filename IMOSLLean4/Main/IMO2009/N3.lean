@@ -6,7 +6,6 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Nat.Prime.Infinite
-import Mathlib.Algebra.Order.Group.Unbundled.Int
 
 /-!
 # IMO 2009 N3
@@ -55,13 +54,14 @@ lemma const_of_infinite_map_eq_map_zero (hf0 : ∀ K, ∃ c ≥ K, f c = f 0) :
   refine ⟨f 0, λ a ↦ ?_⟩
   ---- Choose some `c > |f(a) - f(0)| + a` such that `f(b) = f(0)`.
   obtain ⟨c, hc, hc0⟩ : ∃ c > (f 0 - f a).natAbs + a, f c = f 0 := hf0 _
-  ---- Then `|f(0) - f(a)| < c - a`.
-  replace hc : |f 0 - f a| < c - a := by
-    rwa [lt_sub_iff_add_lt, ← Int.natCast_natAbs, ← Int.natCast_add, Int.ofNat_lt]
-  ---- But also `c - a ∣ f(0) - f(a)`.
-  replace hc0 : (c : ℤ) - a ∣ f 0 - f a := hc0 ▸ hf _ _
+  ---- Note that `c - a ∣ f(0) - f(a)`.
+  replace hc0 : ((c - a : ℕ) : ℤ) ∣ f 0 - f a := by
+    rw [← hc0, Int.natCast_sub (Nat.le_of_lt (Nat.lt_of_add_left_lt hc))]
+    exact hf c a
+  ---- But we also have `|f(0) - f(a)| < c - a`.
+  replace hc : (f 0 - f a).natAbs < c - a := Nat.lt_sub_of_add_lt hc
   ---- Thus `f(a) = f(0)`.
-  exact (Int.eq_of_sub_eq_zero (Int.eq_zero_of_abs_lt_dvd hc0 hc)).symm
+  exact (Int.eq_of_sub_eq_zero (Int.eq_zero_of_dvd_of_natAbs_lt_natAbs hc0 hc)).symm
 
 /-- If only finitely many primes divide `f(c)` for some `c`, then `f` is constant. -/
 lemma const_of_finite_prime_divisor (hf0 : ∀ p ≥ K, Nat.Prime p → (∀ c, ¬(p : ℤ) ∣ f c)) :
@@ -73,7 +73,8 @@ lemma const_of_finite_prime_divisor (hf0 : ∀ p ≥ K, Nat.Prime p → (∀ c, 
   ---- Let `N = 4K! f(0)` where `K` is greater than all primes dividing `f(c)` for some `c`.
   let N : ℕ := 4 * K.factorial * (f 0).natAbs
   have hN : N > 0 :=
-    Nat.mul_pos (Nat.mul_pos (by decide) (Nat.factorial_pos K)) (Int.natAbs_pos.mpr hf1)
+    have h : 0 < 4 := Nat.succ_pos 3
+    Nat.mul_pos (Nat.mul_pos h K.factorial_pos) (Int.natAbs_pos.mpr hf1)
   /- By using `const_of_infinite_map_eq_map_zero`,
     it suffices to prove that `f(kN) = f(0)` for all `k ∈ ℕ`. -/
   suffices ∀ k, f (k * N) = f 0
@@ -123,7 +124,7 @@ lemma const_of_finite_prime_divisor (hf0 : ∀ p ≥ K, Nat.Prime p → (∀ c, 
   · replace h : (4 : ℤ) ∣ -2 := calc
       _ ∣ ((4 * K.factorial : ℕ) : ℤ) := ⟨K.factorial, Int.natCast_mul _ _⟩
       _ ∣ -1 - 1 := h
-    exact absurd h (by decide)
+    exact absurd h (by decide : ¬(4 : ℤ) ∣ -2)
 
 /-- Final solution -/
 theorem final_solution (hf0 : ∀ C, ∃ x, f x ≠ C) (K : ℕ) :

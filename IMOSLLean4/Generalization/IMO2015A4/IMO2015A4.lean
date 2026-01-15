@@ -100,23 +100,18 @@ theorem fixed_pt_add_two_of_fixed_pt (hy : f y = y) (hy0 : f (y + 1) = y + 1) :
     f (y + 2) = y + 2 :=
   fixed_pt_add_two_of_map_one hf hf.map_one_eq_one hy hy0
 
-/-- If `(y) = y` and `f(y + 1) = y + 1`, then `f(y + 2) = y + n` for every `n ∈ ℕ`. -/
+/-- If `(y) = y` and `f(y + 1) = y + 1`, then `f(y + n) = y + n` for every `n ∈ ℕ`. -/
 theorem fixed_pt_add_nat_of_fixed_pt (hy : f y = y) (hy0 : f (y + 1) = y + 1) (n : ℕ) :
     f (y + n) = y + n := by
-  ---- Strong nduction on `n`.
-  induction n using Nat.strongRecOn with | ind n n_ih => ?_
-  ---- The base cases `n = 0`, `n = 1` are easy.
-  match n with
-    | 0 => rwa [Nat.cast_zero, add_zero]
-    | 1 => rwa [Nat.cast_one]
-    | k + 2 => ?_
-  ---- Now suppose `n = k + 2`. Then `f(y + k) = y + k` and `f(y + k + 1) = y + k + 1`.
-  replace hy : f (y + k) = y + k := n_ih k (Nat.lt_add_of_pos_right Nat.two_pos)
-  replace hy0 : f (y + k + 1) = y + k + 1 := by
-    rw [add_assoc, ← Nat.cast_succ, n_ih _ (Nat.lt_add_one k.succ)]
+  ---- We use two-step induction on `n`; the two base cases are given as hypothesis.
+  induction n using Nat.twoStepInduction with
+  | zero => rw [Nat.cast_zero, add_zero, hy]
+  | one => rw [Nat.cast_one, hy0]
+  | more k hk hk0 => ?_
   ---- Now apply the previous argument and we are done.
+  rw [Nat.cast_succ, ← add_assoc] at hk0
   rw [Nat.cast_add, Nat.cast_two, ← add_assoc]
-  exact hf.fixed_pt_add_two_of_fixed_pt hy hy0
+  exact hf.fixed_pt_add_two_of_fixed_pt hk hk0
 
 
 variable (hf0 : f 0 = 0)
