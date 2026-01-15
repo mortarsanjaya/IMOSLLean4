@@ -45,13 +45,14 @@ namespace IMO2006N4
 
 open Polynomial
 
-/-- A pair `(f, S)`, where `f ∈ R[X]` and `S ⊆ R`, is a **good pair** if for all `x, y ∈ S`
-  with `x ≠ y`, there exists a unit `α ∈ Rˣ` such that `f(x) - f(y) = α(x - y)`. -/
+/-- A pair `(f, S)`, where `f ∈ R[X]` and `S ⊆ R` is a finite set,
+  is a **good pair** if for all `x, y ∈ S` with `x ≠ y`,
+  there exists a unit `α ∈ Rˣ` such that `f(x) - f(y) = α(x - y)`. -/
 structure GoodPair (R) [Ring R] where
   /-- This is the corresponding polynomial of the good pair. -/
   f : R[X]
   /-- This is the corresponding set of the good pair. -/
-  S : Set R
+  S : Finset R
   /-- This is the corresponding collection of units of the good pair. -/
   α (x : S) (y : S) (_ : x.1 ≠ y) : Rˣ
   spec (x y : S) (h : x.1 ≠ y) : f.eval x.1 - f.eval y.1 = α x y h * (x - y)
@@ -142,7 +143,7 @@ theorem exists_α_c_mem_S_imp_IsRoot_f_sub_αX_add_c :
     · rw [sub_eq_sub_iff_sub_eq_sub, U.spec x y hxy, hγ, mul_sub]
   ---- If `S` is empty then `c` can be anything; pick `c = 0`.
   obtain hS | ⟨x, hxS⟩ : U.S = ∅ ∨ U.S.Nonempty := U.S.eq_empty_or_nonempty
-  · exact ⟨0, λ ⟨x, hx⟩ ↦ absurd hx (hS ▸ Set.notMem_empty x)⟩
+  · exact ⟨0, λ ⟨x, hx⟩ ↦ absurd hx (hS ▸ Finset.notMem_empty x)⟩
   ---- Otherwise if `x ∈ S` then pick `c = f(x) - αx`.
   lift x to U.S using hxS
   refine ⟨U.f.eval x.1 - γ * x, λ y ↦ ?_⟩
