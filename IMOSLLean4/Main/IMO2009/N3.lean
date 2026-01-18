@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 import Mathlib.Data.Nat.Prime.Basic
 import Mathlib.Data.Nat.Prime.Infinite
+import Mathlib.Data.Int.Basic
 
 /-!
 # IMO 2009 N3
