@@ -22,7 +22,7 @@ More generally, we prove that for any positive real numbers $x_1, …, x_n, y_1,
 $$ \sum_{i = 1}^n \sqrt{\frac{x_i^2 + y_i^2}{x_i + y_i}}
     + n \sqrt{\frac{2n}{\sum_{i = 1}^n (x_i^{-1} + y_i^{-1})}}
   ≤ \sqrt{2} \sum_{i = 1}^n \sqrt{x_i + y_i}. $$
-This general inequality is proved in `ineq3`.
+This general inequality is proved in `IMOSL.IMO2009A4.general_ineq`.
 -/
 
 namespace IMOSL
@@ -87,7 +87,7 @@ theorem ineq2 (I : Finset ι) {x : ι → ℝ≥0} (hx : ∀ i ∈ I, x i ≠ 0)
       Hölder_one_and_half I λ i hi ↦ by rw [one_pow, inv_mul_cancel₀ (hx i hi)]
 
 /-- The general form of the inequality to be proved. -/
-theorem ineq3 (I : Finset ι) {x y : ι → ℝ≥0}
+theorem general_ineq (I : Finset ι) {x y : ι → ℝ≥0}
     (hx : ∀ i ∈ I, x i ≠ 0) (hy : ∀ i ∈ I, y i ≠ 0) :
     ∑ i ∈ I, sqrt ((x i ^ 2 + y i ^ 2) / (x i + y i))
         + #I * sqrt (2 * #I / ∑ i ∈ I, ((x i)⁻¹ + (y i)⁻¹))
@@ -101,7 +101,8 @@ theorem ineq3 (I : Finset ι) {x y : ι → ℝ≥0}
       + sqrt 2 * ∑ i ∈ I, sqrt ((x i)⁻¹ + (y i)⁻¹)⁻¹ :=
     add_le_add_right (a := _) <| mul_le_mul_right (a := _) <|
       ineq2 _ λ i hi ↦ add_ne_zero.mpr (Or.inl (inv_ne_zero (hx i hi)))
-  _ = ∑ i ∈ I, (sqrt ((x i ^ 2 + y i ^ 2) / (x i + y i)) + sqrt 2 * sqrt ((x i)⁻¹ + (y i)⁻¹)⁻¹) := by
+  _ = ∑ i ∈ I, (sqrt ((x i ^ 2 + y i ^ 2) / (x i + y i))
+      + sqrt 2 * sqrt ((x i)⁻¹ + (y i)⁻¹)⁻¹) := by
     rw [mul_sum, sum_add_distrib]
   _ ≤ ∑ i ∈ I, sqrt (2 * (x i + y i)) :=
     sum_le_sum λ i hi ↦ ineq1 (hx i hi) (hy i hi)
@@ -110,12 +111,13 @@ theorem ineq3 (I : Finset ι) {x y : ι → ℝ≥0}
   _ = sqrt 2 * ∑ i ∈ I, sqrt (x i + y i) :=
     (mul_sum _ _ _).symm
 
-/-- Specialiation of `ineq3` over `Fin n` as index with `y_i = x_{i + j}` for some `j`. -/
-theorem ineq4 {x : Fin n → ℝ≥0} (hx : ∀ i, x i ≠ 0) (j : Fin n) :
+/-- Specialiation of `general_ineq` over `Fin n` with `y_i = x_{i + j}` for some `j`. -/
+theorem ineq3 {x : Fin n → ℝ≥0} (hx : ∀ i, x i ≠ 0) (j : Fin n) :
     ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j))) + n * sqrt (n / ∑ i, (x i)⁻¹)
       ≤ sqrt 2 * ∑ i, sqrt (x i + x (i + j)) :=
   let I : Finset (Fin n) := univ
-  calc ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j))) + n * sqrt (n / ∑ i, (x i)⁻¹)
+  calc ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j)))
+      + n * sqrt (n / ∑ i, (x i)⁻¹)
   _ = ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j)))
       + #I * sqrt ((2 * #I) / ∑ i, ((x i)⁻¹ + (x (i + j))⁻¹)) := by
     cases n with
@@ -127,16 +129,25 @@ theorem ineq4 {x : Fin n → ℝ≥0} (hx : ∀ i, x i ≠ 0) (j : Fin n) :
     rw [add_right_inj, card_univ, Fintype.card_fin, sum_add_distrib,
       h, ← two_mul, mul_div_mul_left _ _ two_ne_zero]
   _ ≤ sqrt 2 * ∑ i, sqrt (x i + x (i + j)) :=
-    ineq3 (x := x) (y := λ i ↦ x (i + j)) univ (λ i _ ↦ hx i) (λ i _ ↦ hx (i + j))
+    general_ineq (x := x) (y := λ i ↦ x (i + j)) univ (λ i _ ↦ hx i) (λ i _ ↦ hx (i + j))
+
+/-- Specialiation of `general_ineq` over `Fin n` with
+  `y_i = x_{i + j}` for some `j` and `∑_i x_i^{-1} ≤ n`. -/
+theorem main_ineq [NeZero n] {x : Fin n → ℝ≥0}
+    (hx : ∀ i, x i > 0) (hx0 : ∑ i, (x i)⁻¹ ≤ n) (j) :
+    ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j))) + n
+      ≤ sqrt 2 * ∑ i, sqrt (x i + x (i + j)) :=
+  calc ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j))) + n
+  _ ≤ ∑ i, sqrt ((x i ^ 2 + x (i + j) ^ 2) / (x i + x (i + j)))
+      + n * sqrt (n / ∑ i, (x i)⁻¹) := by
+    have h : 0 < ∑ i, (x i)⁻¹ :=
+      Fintype.sum_pos (lt_of_strongLT λ i ↦ inv_pos.mpr (hx i))
+    refine add_le_add_right (a := _) (le_mul_of_one_le_right (Nat.cast_nonneg n) ?_)
+    rwa [one_le_sqrt, one_le_div h]
+  _ ≤ sqrt 2 * ∑ i, sqrt (x i + x (i + j)) := ineq3 (λ i ↦ (hx i).ne.symm) j
 
 /-- Final solution -/
 theorem final_solution {x : Fin 3 → ℝ≥0} (hx : ∀ i, x i > 0) (hx0 : ∑ i, (x i)⁻¹ ≤ 3) :
     ∑ i, sqrt ((x i ^ 2 + x (i + 1) ^ 2) / (x i + x (i + 1))) + 3
       ≤ sqrt 2 * ∑ i, sqrt (x i + x (i + 1)) :=
-  calc ∑ i, sqrt ((x i ^ 2 + x (i + 1) ^ 2) / (x i + x (i + 1))) + 3
-  _ ≤ ∑ i, sqrt ((x i ^ 2 + x (i + 1) ^ 2) / (x i + x (i + 1))) + 3 * sqrt (3 / ∑ i, (x i)⁻¹) :=
-    have h : 0 < ∑ i, (x i)⁻¹ :=
-      Fintype.sum_pos (lt_of_strongLT λ i ↦ inv_pos.mpr (hx i))
-    add_le_add_right (a := _) <| le_mul_of_one_le_right zero_le_three <|
-      one_le_sqrt.mpr ((one_le_div h).mpr hx0)
-  _ ≤ sqrt 2 * ∑ i, sqrt (x i + x (i + 1)) := ineq4 (λ i ↦ (hx i).ne.symm) 1
+  main_ineq (n := 3) hx hx0 1
