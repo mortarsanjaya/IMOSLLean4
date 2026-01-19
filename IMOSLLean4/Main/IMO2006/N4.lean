@@ -17,8 +17,9 @@ Prove that the polynomial $g = f ∘ f ∘ … ∘ f$ has no more than $n$ integ
 ### Solution
 
 We prove something more general as follows.
-Given a subset $A ⊆ R$, we say that a function $α : A × A → Rˣ$ is $A$-**admissible** if
-  for all $x, y, z ∈ A$, we have $α(x, y)(x - y) + α(y, z)(y - z) + α(z, x)(z - x) = 0$.
+Given a subset $A ⊆ R$, we say that a function $α : A × A → Rˣ$ is $A$-**admissible**
+  if for all $x, y, z ∈ A$, we have
+$$ α(x, y)(x - y) + α(y, z)(y - z) + α(z, x)(z - x) = 0. $$
 We say that $A$ is an $Rˣ$-**good** subset if for any $A$-**admissible** function $α$,
   there exists $β ∈ Rˣ$ such that $α(x, y) = β$ for any $x, y ∈ A$ with $x ≠ y$.
 Assuming $|Rˣ| ≤ 2$, we claim that every subset of $R$ is $Rˣ$-good.
@@ -41,8 +42,8 @@ Since $\deg(P) = \deg(f) = 2$, we then get $|A| ≤ \deg(f)$.
 
 We generalize the definition of $A$-admissible functions and $Rˣ$-good sets.
 Let $G$ be a monoid and $M$ be a $G$-module.
-A function $α : A × A → G$ is called $A$-**admissible** if for all $x, y, z ∈ A$,
-  we have $α(x, y)(x - y) + α(y, z)(y - z) + α(z, x)(z - x) = 0$.
+A function $α : A × A → G$ is called $A$-**admissible** if for all $x, y, z ∈ A$, we have
+$$ α(x, y)(x - y) + α(y, z)(y - z) + α(z, x)(z - x) = 0. $$
 The definition of $G$-**good** sets is generalized accordingly.
 
 The solution also proves that $f₀ ∘ f$ has no more than

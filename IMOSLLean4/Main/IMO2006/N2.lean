@@ -13,7 +13,7 @@ import Mathlib.Data.Fintype.Pigeonhole
 
 Let $b > 1$ be a positive integer.
 For any real number $r$, its **$n$th digit after decimal point in base $b$**
-  is defined to be the remainder of $⌊b^(n + 1) r⌋$ upon division by $b$.
+  is defined to be the remainder of $⌊b^{n + 1} r⌋$ upon division by $b$.
 In particular, the $0$th digit is right after (not before) the decimal point.
 (This definition is different from the naive definition for negative real numbers.)
 

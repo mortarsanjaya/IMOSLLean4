@@ -21,15 +21,15 @@ We follow Solution 1 and Solution 2 of the
 We follow Solution 1 for part A and B, and we follow Solution 2 for part C.
 However, we do a different construction for part A using induction on the degree of $P$.
 
-A polynomial $Q$ is called the **companion** of $P$ if the polynomial equality
-  $X Q(X) = P(X) + Q(X - 1) - (P(0) + Q(-1))$ holds.
+A polynomial $Q$ is called the **companion** of $P$ if
+$$ X Q(X) = P(X) + Q(X - 1) - (P(0) + Q(-1)). $$
 It is easy to show every integer polynomial has at most one companion.
 Our goal for part A is to construct the companion of any integer polynomial.
 Here is the inductive construction.
 1. First, if $P$ is constant, then set $Q(X) = 0$.
 2. Next, write $P(X) = XR(X) + c$ for some $R ∈ ℤ[X]$ and integer constant $c$.
 Let $S(X)$ be the companion of $R(X - 1)$, constructed inductively.
-Then set $Q(X) = (X + 1) S(X + 1) + (R(-1) + S(-1))$.
+Then set $$Q(X) = (X + 1) S(X + 1) + (R(-1) + S(-1)). $$
 It is easy to check that $Q$ is the companion of $P$.
 
 For convenience, we say that $P(0) + Q(-1)$ is the *companion constant* of $P$,
