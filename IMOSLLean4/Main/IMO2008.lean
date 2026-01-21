@@ -5,3 +5,4 @@ import IMOSLLean4.Main.IMO2008.A3
 import IMOSLLean4.Main.IMO2008.A5.A5
 import IMOSLLean4.Main.IMO2008.A7.A7
 import IMOSLLean4.Main.IMO2008.C4.C4
+import IMOSLLean4.Main.IMO2008.N6
