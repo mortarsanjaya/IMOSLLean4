@@ -111,22 +111,22 @@ theorem exists_two_mul_add_sqrt_10_mul_lt_and_dvd_sq_add_one
     exact Nat.dvd_mul_left_of_dvd hn0 4
   replace hn0 : p ∣ (p - 2 * n) ^ 2 + 4 :=
     dvd_sub_sq_add_of_le hn hn0
-  ---- Write `(p - 2n)^2 + 4 = pl`; then `l = 5 (mod 8)` and so `l ≥ 5`.
-  rcases hn0 with ⟨l, hl⟩
-  have hl0 : l ≡ 5 [MOD 8] := calc
-    l = 1 * l := (Nat.one_mul l).symm
-    _ ≡ p * l [MOD 8] := hp0.symm.mul_right l
-    _ = (p - 2 * n) ^ 2 + 4 := hl.symm
+  ---- Write `(p - 2n)^2 + 4 = pr`; then `r ≡ 5 (mod 8)` and so `r ≥ 5`.
+  rcases hn0 with ⟨r, hr⟩
+  have hr0 : r ≡ 5 [MOD 8] := calc
+    r = 1 * r := (Nat.one_mul r).symm
+    _ ≡ p * r [MOD 8] := hp0.symm.mul_right r
+    _ = (p - 2 * n) ^ 2 + 4 := hr.symm
     _ ≡ 1 + 4 [MOD 8] := by
       have h : Odd (p - 2 * n) := (Nat.odd_sub hn).mpr (iff_of_true hp1 (even_two_mul n))
       exact (sq_modeq_one_eight_of_odd h).add_right 4
-  replace hl0 : l ≥ 5 := hl0.symm.trans_le (Nat.mod_le _ _)
+  replace hr0 : r ≥ 5 := hr0.symm.trans_le (Nat.mod_le _ _)
   ---- In particular, `(p - 2n)^2 > 5(p - 1) ≥ 10n` and we are done.
   have hn0 : 2 * n < p :=
     Nat.lt_of_le_of_ne hn λ h ↦ Nat.not_even_iff_odd.mpr hp1 (h ▸ even_two_mul n)
   replace hl : (2 * n + 1) * 5 < (p - 2 * n) ^ 2 + 5 := calc
-    _ ≤ p * l := Nat.mul_le_mul hn0 hl0
-    _ = (p - 2 * n) ^ 2 + 4 := hl.symm
+    _ ≤ p * r := Nat.mul_le_mul hn0 hr0
+    _ = (p - 2 * n) ^ 2 + 4 := hr.symm
     _ < (p - 2 * n) ^ 2 + 5 := Nat.lt_succ_self _
   rw [Nat.succ_mul, Nat.add_lt_add_iff_right, Nat.mul_right_comm, ← Nat.sqrt_lt'] at hl
   exact Nat.add_lt_of_lt_sub' hl
