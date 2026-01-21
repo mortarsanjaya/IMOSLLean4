@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.Padics.PAdicVal.Basic
+import Mathlib.NumberTheory.Padics.PadicVal.Basic
 import Mathlib.Data.Finite.Prod
 
 /-!
