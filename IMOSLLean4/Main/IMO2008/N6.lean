@@ -24,13 +24,13 @@ Our main statement will use $2n + \sqrt{10n}$ instead of $2n + \sqrt{2n}$ as wel
 
 The version formalized in `Archive.Imo.Imo2008Q3` in
   [Mathlib4](https://leanprover-community.github.io/mathlib4_docs/Archive/Imo/Imo2008Q3.html),
-  at least up to version `4.27.0-rc1`, keeps the bound $2n + \sqrt{2n}$ and
-  instead proves that every prime $p > 20$ with $p ≡ 1 \pmod{4}$ works.
-The bound $p > 20$ is almost as strict as it can be, except that $p = 17$ also works.
-This is the most notable difference in their proof vs. the official solution.
+  at least up to version `4.27.0-rc1`, keeps the bound $2n + \sqrt{2n}$
+  but proves that every prime $p > 20$ with $p ≡ 1 \pmod{4}$ works.
+The bound $p > 20$ is almost as strict as it can be.
+This is the most notable difference in their solution vs. the official solution.
 
-Our implementation adds much more lemmas and avoids the usage of the `Real` type.
-We use `Nat.sqrt`, which computes the **floor** of the square root of a natural number.
+In the implementation, we use `Nat.sqrt` instead of `Real.sqrt`.
+Note that `Nat.sqrt` computes the **floor** of the square root of a natural number.
 This does not change the statement to be proved.
 -/
 
