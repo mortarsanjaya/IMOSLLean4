@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Rat
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Int.Interval
 import Mathlib.Data.ZMod.Basic
@@ -40,14 +39,22 @@ open Finset
 
 /-- The area of a triangle. -/
 def triangleArea (Δ : Fin 3 → ℤ × ℤ) : Rat :=
-  ((Δ 0).1 * (Δ 1).2 + (Δ 1).1 * (Δ 2).2 + (Δ 2).1 * (Δ 0).2
-    - ((Δ 0).2 * (Δ 1).1 + (Δ 1).2 * (Δ 2).1 + (Δ 2).2 * (Δ 0).1)).natAbs / 2
+  mkRat ((Δ 0).1 * (Δ 1).2 + (Δ 1).1 * (Δ 2).2 + (Δ 2).1 * (Δ 0).2
+    - ((Δ 0).2 * (Δ 1).1 + (Δ 1).2 * (Δ 2).1 + (Δ 2).2 * (Δ 0).1)).natAbs 2
+
+/-- Two points `p, q : ℤ × ℤ` are `k`-*friends* if there is a point `r`
+  such that the triangle with vertices `p, q, r` has area `k`. -/
+def friends (k : ℕ) (p q : ℤ × ℤ) := ∃ r, triangleArea ![p, q, r] = k
+
+/-- A set `S` is a `k`-*clique* if every two distinct points in `S` are `k`-friends. -/
+def clique (k : ℕ) (S : Set (ℤ × ℤ)) := ∀ p ∈ S, ∀ q ∈ S, p ≠ q → friends k p q
+
 
 /-- An alternative (assymetric) formula for the area of a triangle. -/
 lemma triangleArea_alt (p q r) :
     triangleArea ![p, q, r] =
-      ((p.1 - q.1) * (q.2 - r.2) + (p.2 - q.2) * (r.1 - q.1)).natAbs / 2 := by
-  refine congrArg (λ n ↦ (Int.natAbs n : Rat) / 2) ?_
+      mkRat ((p.1 - q.1) * (q.2 - r.2) + (p.2 - q.2) * (r.1 - q.1)).natAbs 2 := by
+  refine congrArg (λ n ↦ mkRat (Int.natAbs n) 2) ?_
   calc p.1 * q.2 + q.1 * r.2 + r.1 * p.2 - (p.2 * q.1 + q.2 * r.1 + r.2 * p.1)
     _ = p.1 * q.2 + r.1 * p.2 - (p.2 * q.1 + q.2 * r.1) + (q.1 - p.1) * r.2 := by
       rw [Int.add_right_comm, add_sub_add_comm, Int.sub_mul, Int.mul_comm p.1 r.2]
@@ -61,18 +68,15 @@ lemma triangleArea_alt (p q r) :
       rw [Int.add_right_comm, ← Int.neg_sub p.1,
         Int.neg_mul, Int.add_neg_eq_sub, ← Int.mul_sub]
 
-/-- Two points `p, q : ℤ × ℤ` are `k`-*friends* if there is a point `r`
-  such that the triangle with vertices `p, q, r` has area `k`. -/
-def friends (k : ℕ) (p q : ℤ × ℤ) := ∃ r, triangleArea ![p, q, r] = k
-
 /-- The main criterion for two points to be `k`-friends. -/
 theorem friends_iff {k : ℕ} {p q : ℤ × ℤ} :
     friends k p q ↔ Int.gcd (p.1 - q.1) (p.2 - q.2) ∣ 2 * k := calc
   _ ↔ ∃ r s, triangleArea ![p, q, (r, s)] = k := Prod.exists'
   _ ↔ ∃ r s, ((p.1 - q.1) * (q.2 - s) + (p.2 - q.2) * (r - q.1)).natAbs = 2 * k := by
     refine exists₂_congr λ r s ↦ ?_
-    have h : (2 : Rat) ≠ 0 := by decide
-    rw [triangleArea_alt, div_eq_iff h, mul_two, ← Nat.cast_add, Nat.cast_inj, Nat.two_mul]
+    rw [triangleArea_alt, ← Rat.intCast_natCast, ← Rat.mkRat_one,
+      Rat.mkRat_eq_iff (Nat.succ_ne_zero 1) Nat.one_ne_zero, Int.natCast_one,
+      Int.mul_one, ← Int.natCast_mul, Int.natCast_inj, Nat.mul_comm k 2]
   _ ↔ ∃ r s, ((p.1 - q.1) * s + (p.2 - q.2) * r).natAbs = 2 * k := by
     refine ⟨λ ⟨r, s, h⟩ ↦ ⟨r - q.1, q.2 - s, h⟩, λ ⟨r, s, h⟩ ↦ ⟨r + q.1, q.2 - s, ?_⟩⟩
     rw [sub_sub_cancel, Int.add_sub_cancel, h]
@@ -80,21 +84,16 @@ theorem friends_iff {k : ℕ} {p q : ℤ × ℤ} :
     refine ⟨λ ⟨r, s, h⟩ ↦ ?_, λ ⟨r, s, h⟩ ↦ ⟨s, r, congrArg Int.natAbs h.symm⟩⟩
     obtain h0 | h0 :
         (p.1 - q.1) * s + (p.2 - q.2) * r = (2 * k : ℕ)
-          ∨ (p.1 - q.1) * s + (p.2 - q.2) * r = -(2 * k : ℕ) :=
-      Int.natAbs_eq_iff.mp h
+          ∨ (p.1 - q.1) * s + (p.2 - q.2) * r = -(2 * k : ℕ) := Int.natAbs_eq_iff.mp h
     · exact ⟨s, r, h0.symm⟩
     · refine ⟨-s, -r, ?_⟩
       rw [Int.mul_neg, Int.mul_neg, ← Int.neg_add, h0, Int.neg_neg]
-  _ ↔ Int.gcd (p.1 - q.1) (p.2 - q.2) ∣ 2 * k :=
-    Int.gcd_dvd_iff.symm
+  _ ↔ Int.gcd (p.1 - q.1) (p.2 - q.2) ∣ 2 * k := Int.gcd_dvd_iff.symm
 
 /-- The point `(p_1, p_2)` is a `k`-friend of `(q_1, q_2)`
   if and only if `(p_2, p_1)` is a `k`-friend of `(q_2, q_1)`. -/
 theorem friends_coord_comm : friends k (p₁, p₂) (q₁, q₂) ↔ friends k (p₂, p₁) (q₂, q₁) := by
   rw [friends_iff, friends_iff, Int.gcd_comm]
-
-/-- A set `S` is a `k`-*clique* if every two distinct points in `S` are `k`-friends. -/
-def clique (k : ℕ) (S : Set (ℤ × ℤ)) := ∀ p ∈ S, ∀ q ∈ S, p ≠ q → friends k p q
 
 /-- If a subset `S ⊆ ℤ × ℤ` is good then there exist two distinct
   points `p, q ∈ S` such that `m ∣ gcd(p_1 - q_1, p_2 - q_2)`. -/
@@ -104,11 +103,11 @@ theorem exist_dvd_gcd_of_sq_lt_card (hm : m > 0) {S : Finset (ℤ × ℤ)} (hS :
   ---- First find `p ≠ q ∈ S` such that `p ≡ q (mod m)`.
   obtain ⟨p, hp, q, hq, hpq, h⟩ : ∃ p ∈ S, ∃ q ∈ S, p ≠ q ∧
       ((p.1, p.2) : ZMod m × ZMod m) = ((q.1, q.2) : ZMod m × ZMod m) := by
-    have h : #(S.image λ x : ℤ × ℤ ↦ ((x.1, x.2) : ZMod m × ZMod m)) < #S := calc
+    refine exists_ne_map_eq_of_card_image_lt ?_
+    calc #(S.image λ x : ℤ × ℤ ↦ ((x.1, x.2) : ZMod m × ZMod m))
       _ ≤ Fintype.card (ZMod m × ZMod m) := card_le_univ _
       _ = m ^ 2 := by rw [Fintype.card_prod, ZMod.card, Nat.pow_two]
       _ < #S := hS
-    exact exists_ne_map_eq_of_card_image_lt h
   ---- Now we just check that this `p` and `q` works.
   refine ⟨p, hp, q, hq, hpq, ?_⟩
   rw [Int.dvd_gcd_iff, ← ZMod.intCast_eq_intCast_iff_dvd_sub, eq_comm,
@@ -131,19 +130,18 @@ theorem range_sq_is_clique {N k : ℕ} (hN : ∀ m > 0, m ≤ N → m ∣ 2 * k)
   ---- Fix some `p_1, q_1, p_2, q_2 ∈ {0, 1, …, N}^2` with `(p_1, p_2) ≠ (q_1, q_2)`.
   rintro ⟨p₁, p₂⟩ hp ⟨q₁, q₂⟩ hq hpq
   rw [mem_coe, mem_product] at hp hq
-  rcases hp with ⟨hp₁ : p₁ ∈ _, hp₂ : p₂ ∈ _⟩
-  rcases hq with ⟨hq₁ : q₁ ∈ _, hq₂ : q₂ ∈ _⟩
   replace hpq : p₁ ≠ q₁ ∨ p₂ ≠ q₂ := by rwa [Ne, Prod.ext_iff, not_and_or] at hpq
   ---- WLOG let `p_1 ≠ q_1`.
   wlog hpq₁ : p₁ ≠ q₁ generalizing p₁ p₂ q₁ q₂
   · exact friends_coord_comm.mp <|
-      this p₂ p₁ q₂ q₁ hp₂ hp₁ hq₂ hq₁ hpq.symm (hpq.resolve_left hpq₁)
+      this p₂ p₁ hp.symm q₂ q₁ hq.symm hpq.symm (hpq.resolve_left hpq₁)
   ---- Then `0 < |p_1 - q_1| ≤ N` implies `gcd(p_1 - q_1, p_2 - q_2) ≤ N` and we are done.
   replace hpq₁ : p₁ - q₁ ≠ 0 := λ h ↦ hpq₁ (Int.eq_of_sub_eq_zero h)
+  replace hp : 0 ≤ p₁ ∧ p₁ ≤ N := mem_Icc.mp hp.1
+  replace hq : 0 ≤ q₁ ∧ q₁ ≤ N := mem_Icc.mp hq.1
   replace hpq : (p₁ - q₁).natAbs ≤ N := by
-    rw [mem_Icc] at hp₁ hq₁
     rw [← Int.ofNat_le, Int.natCast_natAbs]
-    exact abs_sub_le_of_nonneg_of_le hp₁.1 hp₁.2 hq₁.1 hq₁.2
+    exact abs_sub_le_of_nonneg_of_le hp.1 hp.2 hq.1 hq.2
   exact friends_iff.mpr <| hN _ (Int.gcd_pos_of_ne_zero_left _ hpq₁)
     ((Int.gcd_le_natAbs_left _ hpq₁).trans hpq)
 
@@ -152,11 +150,11 @@ theorem range_sq_is_clique {N k : ℕ} (hN : ∀ m > 0, m ≤ N → m ∣ 2 * k)
 theorem exists_clique_card_lt_iff :
     (∃ S : Finset (ℤ × ℤ), clique k S ∧ #S > N) ↔ ∀ m > 0, m ≤ N.sqrt → m ∣ 2 * k := by
   refine ⟨λ h ↦ ?_, λ h ↦ ?_⟩
-  ---- The `→` direction.
+  ---- The `→` direction uses `clique_card_le_sq_of_not_dvd_two_mul`.
   · rcases h with ⟨S, hS, hSN⟩
     intro m hm hm0; contrapose! hSN
     exact (clique_card_le_sq_of_not_dvd_two_mul hm hSN hS).trans (Nat.le_sqrt'.mp hm0)
-  ---- The `←` direction.
+  ---- The `←` direction uses `range_sq_is_clique`.
   · refine ⟨Icc 0 (N.sqrt : ℤ) ×ˢ Icc 0 (N.sqrt : ℤ), range_sq_is_clique h, ?_⟩
     rw [card_product, Int.card_Icc, Int.sub_zero, Int.toNat_natCast_add_one]
     exact Nat.lt_succ_sqrt N
