@@ -4,11 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Pigeonhole
-import Mathlib.Data.Int.GCD
-import Mathlib.Order.Bounds.Defs
 import Mathlib.Algebra.Ring.Rat
+import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Int.Interval
 import Mathlib.Data.ZMod.Basic
 
@@ -19,12 +16,12 @@ For any $k ∈ ℕ$ and integer points $p, q ∈ ℤ^2$, we say that $p$ and $q$
   $k$-*friends* if there exists a point $r ∈ ℤ^2$ such that the area of the
   triangle with endpoints $p, q, r$ is equal to $k$.
 A set $S ⊆ ℤ^2$ is a $k$-*clique* if every two distinct points in $S$ are $k$-friends.
-For any positive integer $N$, find the smallest positive integer $k$
+For any positive integer $N ≥ 4$, find the smallest positive integer $k$
   such that there exists a $k$-clique with more than $N$ elements.
 
 ### Answer
 
-$\text{lcm}(1, 2, …, ⌊√N⌋ + 1)/2$.
+$\text{lcm}(1, 2, …, ⌊√N⌋)/2$.
 
 ### Solution
 
@@ -47,7 +44,7 @@ def triangleArea (Δ : Fin 3 → ℤ × ℤ) : Rat :=
     - ((Δ 0).2 * (Δ 1).1 + (Δ 1).2 * (Δ 2).1 + (Δ 2).2 * (Δ 0).1)).natAbs / 2
 
 /-- An alternative (assymetric) formula for the area of a triangle. -/
-lemma triangleArea_alt (p q r : ℤ × ℤ) :
+lemma triangleArea_alt (p q r) :
     triangleArea ![p, q, r] =
       ((p.1 - q.1) * (q.2 - r.2) + (p.2 - q.2) * (r.1 - q.1)).natAbs / 2 := by
   refine congrArg (λ n ↦ (Int.natAbs n : Rat) / 2) ?_
@@ -91,6 +88,11 @@ theorem friends_iff {k : ℕ} {p q : ℤ × ℤ} :
   _ ↔ Int.gcd (p.1 - q.1) (p.2 - q.2) ∣ 2 * k :=
     Int.gcd_dvd_iff.symm
 
+/-- The point `(p_1, p_2)` is a `k`-friend of `(q_1, q_2)`
+  if and only if `(p_2, p_1)` is a `k`-friend of `(q_2, q_1)`. -/
+theorem friends_coord_comm : friends k (p₁, p₂) (q₁, q₂) ↔ friends k (p₂, p₁) (q₂, q₁) := by
+  rw [friends_iff, friends_iff, Int.gcd_comm]
+
 /-- A set `S` is a `k`-*clique* if every two distinct points in `S` are `k`-friends. -/
 def clique (k : ℕ) (S : Set (ℤ × ℤ)) := ∀ p ∈ S, ∀ q ∈ S, p ≠ q → friends k p q
 
@@ -125,12 +127,69 @@ theorem clique_card_le_sq_of_not_dvd_two_mul
 /-- If `N : ℕ` satisfies `m ∣ 2k` for every `0 < m ≤ N`,
   then `{0, 1, …, N}^2` is a `k`-clique. -/
 theorem range_sq_is_clique {N k : ℕ} (hN : ∀ m > 0, m ≤ N → m ∣ 2 * k) :
-    clique k (Icc 0 (N : ℤ) ×ˢ Icc 0 (N : ℤ)) := by
-  intro p hp q hq hpq
-  sorry
+    clique k (Icc 0 (N : ℤ) ×ˢ Icc 0 (N : ℤ) : Finset _) := by
+  ---- Fix some `p_1, q_1, p_2, q_2 ∈ {0, 1, …, N}^2` with `(p_1, p_2) ≠ (q_1, q_2)`.
+  rintro ⟨p₁, p₂⟩ hp ⟨q₁, q₂⟩ hq hpq
+  rw [mem_coe, mem_product] at hp hq
+  rcases hp with ⟨hp₁ : p₁ ∈ _, hp₂ : p₂ ∈ _⟩
+  rcases hq with ⟨hq₁ : q₁ ∈ _, hq₂ : q₂ ∈ _⟩
+  replace hpq : p₁ ≠ q₁ ∨ p₂ ≠ q₂ := by rwa [Ne, Prod.ext_iff, not_and_or] at hpq
+  ---- WLOG let `p_1 ≠ q_1`.
+  wlog hpq₁ : p₁ ≠ q₁ generalizing p₁ p₂ q₁ q₂
+  · exact friends_coord_comm.mp <|
+      this p₂ p₁ q₂ q₁ hp₂ hp₁ hq₂ hq₁ hpq.symm (hpq.resolve_left hpq₁)
+  ---- Then `0 < |p_1 - q_1| ≤ N` implies `gcd(p_1 - q_1, p_2 - q_2) ≤ N` and we are done.
+  replace hpq₁ : p₁ - q₁ ≠ 0 := λ h ↦ hpq₁ (Int.eq_of_sub_eq_zero h)
+  replace hpq : (p₁ - q₁).natAbs ≤ N := by
+    rw [mem_Icc] at hp₁ hq₁
+    rw [← Int.ofNat_le, Int.natCast_natAbs]
+    exact abs_sub_le_of_nonneg_of_le hp₁.1 hp₁.2 hq₁.1 hq₁.2
+  exact friends_iff.mpr <| hN _ (Int.gcd_pos_of_ne_zero_left _ hpq₁)
+    ((Int.gcd_le_natAbs_left _ hpq₁).trans hpq)
+
+/-- There exists a clique of size greater than `N`
+  if and only if `m ∣ 2k` for every positive integer `m ≤ ⌊√N⌋`. -/
+theorem exists_clique_card_lt_iff :
+    (∃ S : Finset (ℤ × ℤ), clique k S ∧ #S > N) ↔ ∀ m > 0, m ≤ N.sqrt → m ∣ 2 * k := by
+  refine ⟨λ h ↦ ?_, λ h ↦ ?_⟩
+  ---- The `→` direction.
+  · rcases h with ⟨S, hS, hSN⟩
+    intro m hm hm0; contrapose! hSN
+    exact (clique_card_le_sq_of_not_dvd_two_mul hm hSN hS).trans (Nat.le_sqrt'.mp hm0)
+  ---- The `←` direction.
+  · refine ⟨Icc 0 (N.sqrt : ℤ) ×ˢ Icc 0 (N.sqrt : ℤ), range_sq_is_clique h, ?_⟩
+    rw [card_product, Int.card_Icc, Int.sub_zero, Int.toNat_natCast_add_one]
+    exact Nat.lt_succ_sqrt N
+
+/-- There exists a clique of size greater than `N`
+  if and only if `lcm(1, 2, …, ⌊√N⌋)` divides `2k`. -/
+theorem exists_clique_card_lt_iff2 :
+    (∃ S : Finset (ℤ × ℤ), clique k S ∧ #S > N) ↔ (range N.sqrt).lcm Nat.succ ∣ 2 * k :=
+  calc ∃ S : Finset (ℤ × ℤ), clique k S ∧ #S > N
+  _ ↔ ∀ m > 0, m ≤ N.sqrt → m ∣ 2 * k := exists_clique_card_lt_iff
+  _ ↔ ∀ m < N.sqrt, Nat.succ m ∣ 2 * k := by
+    refine ⟨λ h m hm ↦ h _ m.succ_pos hm, λ h m hm hm0 ↦ ?_⟩
+    cases m with | zero => exact absurd rfl hm.ne | succ l => exact h l hm0
+  _ ↔ (range N.sqrt).lcm Nat.succ ∣ 2 * k := by simp_rw [Finset.lcm_dvd_iff, mem_range]
+
+/-- If `k ≥ 2`, then `2 ∣ lcm(1, 2, …, k)`. -/
+theorem two_dvd_lcm_range_succ (hk : k ≥ 2) : 2 ∣ (range k).lcm Nat.succ :=
+  dvd_lcm (mem_range.mpr hk)
+
+/-- For any `k`, we have `lcm(1, 2, …, k) > 0`. -/
+theorem lcm_range_succ_pos (k) : 0 < (range k).lcm Nat.succ := by
+  rw [Nat.pos_iff_ne_zero, lcm_ne_zero_iff]
+  rintro x -; exact Nat.succ_ne_zero x
 
 /-- Final solution -/
-theorem final_solution (hN : N > 0) :
-    IsLeast {k : ℕ | ∃ S : Finset (ℤ × ℤ), clique k S ∧ #S > N}
-      (Finset.fold Nat.lcm 1 Nat.succ (range (Nat.sqrt N + 1)) / 2) :=
-  sorry
+theorem final_solution (hN : N ≥ 4) :
+    IsLeast {k : ℕ | k > 0 ∧ ∃ S : Finset (ℤ × ℤ), clique k S ∧ #S > N}
+      ((range N.sqrt).lcm Nat.succ / 2) := by
+  obtain ⟨K, hK⟩ : 2 ∣ (range N.sqrt).lcm Nat.succ :=
+    two_dvd_lcm_range_succ (Nat.le_sqrt'.mpr hN)
+  have hK0 : 0 < 2 * K := (lcm_range_succ_pos _).trans_eq hK
+  replace hK0 : 0 < K := Nat.pos_of_mul_pos_left hK0
+  replace hN : 2 > 0 := Nat.two_pos
+  simp_rw [exists_clique_card_lt_iff2, hK,
+    Nat.mul_dvd_mul_iff_left hN, Nat.mul_div_cancel_left K hN]
+  exact ⟨⟨hK0, Nat.dvd_refl K⟩, λ k ⟨hk, hk0⟩ ↦ Nat.le_of_dvd hk hk0⟩
