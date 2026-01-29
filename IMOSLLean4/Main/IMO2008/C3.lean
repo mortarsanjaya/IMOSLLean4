@@ -95,8 +95,8 @@ theorem friends_iff {k : ℕ} {p q : ℤ × ℤ} :
 theorem friends_coord_comm : friends k (p₁, p₂) (q₁, q₂) ↔ friends k (p₂, p₁) (q₂, q₁) := by
   rw [friends_iff, friends_iff, Int.gcd_comm]
 
-/-- If a subset `S ⊆ ℤ × ℤ` is good then there exist two distinct
-  points `p, q ∈ S` such that `m ∣ gcd(p_1 - q_1, p_2 - q_2)`. -/
+/-- If a subset `S ⊆ ℤ × ℤ` has cardinality greater than `m^2`, `m > 0`, then there exist
+  two distinct points `p, q ∈ S` such that `m ∣ gcd(p_1 - q_1, p_2 - q_2)`. -/
 theorem exist_dvd_gcd_of_sq_lt_card (hm : m > 0) {S : Finset (ℤ × ℤ)} (hS : m ^ 2 < #S) :
     ∃ p ∈ S, ∃ q ∈ S, p ≠ q ∧ m ∣ Int.gcd (p.1 - q.1) (p.2 - q.2) := by
   haveI : NeZero m := NeZero.of_pos hm
