@@ -1,4 +1,5 @@
 -- Root for the `IMO2009` problems.
+import IMOSLLean4.Main.IMO2009.A1
 import IMOSLLean4.Main.IMO2009.A2.A2
 import IMOSLLean4.Main.IMO2009.A3.A3
 import IMOSLLean4.Main.IMO2009.A4
