@@ -7,7 +7,6 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Algebra.Group.Units.Equiv
 import Mathlib.Algebra.Order.Group.Unbundled.Basic
-import Mathlib.Algebra.Order.Monoid.Defs
 import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Finset.Card
@@ -60,32 +59,30 @@ instance instDecidableIsTriangleSideLengths [Add G] [LT G] [DecidableLT G] :
   λ _ ↦ Nat.decidableForallFin _
 
 /-- For any `g : G`, the triple `(g, g, 2g)` is not a triangle side length. -/
-theorem not_isTriangleSideLengths_self_self_two_nsmul [AddMonoid G] [Preorder G] (g : G) :
-    ¬isTriangleSideLengths ![g, g, 2 • g] :=
-  λ hg ↦ (hg 2).ne (two_nsmul g)
+theorem not_isTriangleSideLengths_add_self [Add G] [Preorder G] (g : G) :
+    ¬isTriangleSideLengths ![g, g, g + g] :=
+  λ hg ↦ (hg 2).ne rfl
 
-/-- If `a < b ≤ 2a`, then `(a, b, 2a)` is a triangle side length. -/
-theorem isTriangleSideLengths_of_lt_of_le_two_nsmul
-    [AddMonoid G] [Preorder G] [AddLeftStrictMono G] [AddLeftMono G] [AddLeftReflectLT G]
-    {a b : G} (hab : a < b) (hab0 : b ≤ 2 • a) :
-    isTriangleSideLengths ![a, b, 2 • a] := by
-  have ha : 0 < a := by
-    rw [← lt_add_iff_pos_right (a := a), ← two_nsmul]
-    exact hab.trans_le hab0
+/-- If `a < b ≤ c ≤ a + a`, then `(a, b, c)` is a triangle side length. -/
+theorem isTriangleSideLengths_of_lt_le_le_add
+    [Add G] [Preorder G] [AddLeftStrictMono G] [AddRightStrictMono G]
+    {x : Fin 3 → G} (hx : x 0 < x 1) (hx0 : x 1 ≤ x 2) (hx1 : x 2 ≤ x 0 + x 0) :
+    isTriangleSideLengths x := by
+  have hx2 : x 0 < x 2 := hx.trans_le hx0
   intro j; match j with
-  | 0 => exact lt_add_of_lt_of_nonneg hab (nsmul_nonneg ha.le 2)
-  | 1 => exact lt_add_of_le_of_pos hab0 ha
-  | 2 => exact (add_lt_add_right hab a).trans_eq' (two_nsmul a).symm
+    | 0 => exact hx2.trans (hx1.trans_lt (add_lt_add hx hx2))
+    | 1 => exact (hx0.trans hx1).trans_lt (add_lt_add_left hx2 _)
+    | 2 => exact hx1.trans_lt (add_lt_add_right hx _)
 
 /-- If `0 < b ≤ a`, then `(a, b, a)` is a triangle side length. -/
 theorem isTriangleSideLengths_of_pos_of_le
     [AddZeroClass G] [Preorder G] [AddLeftStrictMono G] [AddRightStrictMono G]
-    {a b : G} (hb : 0 < b) (hab : b ≤ a) :
-    isTriangleSideLengths ![a, b, a] := by
+    {x : Fin 3 → G} (hx : 0 < x 1) (hx0 : x 1 ≤ x 0) (hx1 : x 2 = x 0) :
+    isTriangleSideLengths x := by
   intro j; match j with
-  | 0 => exact lt_add_of_pos_left a hb
-  | 1 => exact lt_add_of_le_of_pos hab (hb.trans_le hab)
-  | 2 => exact lt_add_of_pos_right a hb
+  | 0 => exact lt_add_of_pos_of_le hx hx1.ge
+  | 1 => exact lt_add_of_le_of_pos (hx0.trans_eq hx1.symm) (hx.trans_le hx0)
+  | 2 => exact lt_add_of_le_of_pos hx1.le hx
 
 
 
@@ -99,7 +96,7 @@ theorem isTriangleSideLengths_of_pos_of_le
   `f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)` forms the side length of a triangle. -/
 @[ext] structure GoodFun (G) [Add G] [Preorder G] (n : ℕ) where
   toFun : Fin n → Fin 3 → G
-  monotone' j : Monotone (λ i ↦ toFun i j)
+  monotone_left' j : Monotone (λ i ↦ toFun i j)
   exists_triangle_perm' :
     ∃ σ : Fin 3 → Equiv.Perm (Fin n), ∀ i, isTriangleSideLengths (λ j ↦ toFun (σ j i) j)
 
@@ -113,8 +110,8 @@ instance : FunLike (GoodFun G n) (Fin n) (Fin 3 → G) where
   coe_injective' _ _ := GoodFun.ext
 
 /-- If `f` is a good function, then the function `i ↦ f(i, j)` is monotone for each `j`. -/
-theorem monotone (f : GoodFun G n) (j) : Monotone (λ i ↦ f i j) :=
-  f.monotone' j
+theorem monotone_left (f : GoodFun G n) (j) : Monotone (λ i ↦ f i j) :=
+  f.monotone_left' j
 
 /-- If `f` is a good function, then there exist permutations `σ_0, σ_1, σ_2` such that
   `f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)` forms the side length of a triangle. -/
@@ -144,7 +141,7 @@ theorem last_is_triangular [AddLeftMono G] [AddRightMono G] (f : GoodFun G (n + 
     _ = f (σ j i) j := congrArg (λ i ↦ f i j) ((σ j).apply_symm_apply _).symm
     _ < f (σ (j + 1) i) (j + 1) + f (σ (j + 2) i) (j + 2) := hσ i j
     _ ≤ f (Fin.last n) (j + 1) + f (Fin.last n) (j + 2) :=
-      add_le_add (f.monotone (j + 1) (Fin.le_last _)) (f.monotone (j + 2) (Fin.le_last _))
+      add_le_add (f.monotone_left _ (Fin.le_last _)) (f.monotone_left _ (Fin.le_last _))
 
 end GoodFun
 
@@ -156,18 +153,18 @@ end GoodFun
 
 /-- A sequence `(a_i)_{i = 0}^n` of elements of `G` is called *nice* if
   `0 < a_0 < … < a_n` and `a_{i + 1} ≤ 2a_i` for each `i < n`. -/
-@[ext] structure NiceSeq (G) [AddMonoid G] [Preorder G] (n) where
+@[ext] structure NiceSeq (G) [AddZero G] [Preorder G] (n) where
   toFun : Fin (n + 1) → G
   map_zero_pos' : toFun 0 > 0
   strictMono' : StrictMono toFun
-  le_two_mul' (i) (hi : i ≠ Fin.last n) : toFun (i + 1) ≤ 2 • toFun i
+  map_add_one_le' (i) (hi : i ≠ Fin.last n) : toFun (i + 1) ≤ toFun i + toFun i
 
 
 namespace NiceSeq
 
 section
 
-variable [AddMonoid G] [Preorder G] (a : NiceSeq G n)
+variable [AddZero G] [Preorder G] (a : NiceSeq G n)
 
 instance : FunLike (NiceSeq G n) (Fin (n + 1)) G where
   coe := toFun
@@ -190,13 +187,13 @@ theorem map_nonneg (i) : a i ≥ 0 :=
   (a.map_pos i).le
 
 /-- If `a : Fin (n + 1) → G` is a nice sequence, then `a_{i + 1} ≤ 2a_i` for all `i ≠ n`. -/
-theorem le_two_mul {i} (hi : i ≠ Fin.last n) : a (i + 1) ≤ 2 • a i :=
-  a.le_two_mul' i hi
+theorem map_add_one_le {i} (hi : i ≠ Fin.last n) : a (i + 1) ≤ a i + a i :=
+  a.map_add_one_le' i hi
 
 /-- The function `f : Fin (n + 1) × Fin 3 → G` defined by `f(i, 0) = f(i, 1) = a_i`
   and `f(i, 2) = 2a_i` for `i ≤ n`, except `f(i, n) = 2a_n`. -/
 def mkFun (i : Fin (n + 1)) : Fin 3 → G :=
-  ![if i = Fin.last n then 2 • a (Fin.last n) else a i, a i, 2 • a i]
+  ![if i = Fin.last n then a (Fin.last n) + a (Fin.last n) else a i, a i, a i + a i]
 
 /-- The value of `a.mkFun i 0` for `i ≠ n`. -/
 theorem mkFun_apply_zero_of_ne_last (hi : i ≠ Fin.last n) : a.mkFun i 0 = a i :=
@@ -207,11 +204,79 @@ theorem mkFun_apply_zero_of_lt_last (hi : i < Fin.last n) : a.mkFun i 0 = a i :=
   a.mkFun_apply_zero_of_ne_last hi.ne
 
 /-- The value of `a.mkFun n 0`. -/
-theorem mkFun_last_zero : a.mkFun (Fin.last n) 0 = 2 • a (Fin.last n) :=
+theorem mkFun_last_zero : a.mkFun (Fin.last n) 0 = a (Fin.last n) + a (Fin.last n) :=
   if_pos rfl
 
 end
 
+
+section
+
+variable [AddZeroClass G] [Preorder G]
+  [AddLeftStrictMono G] [AddRightStrictMono G] (a : NiceSeq G n)
+
+/-- For each `j : Fin 3`, the function `i ↦ a.mkFun i j` is strictly monotone. -/
+theorem mkFun_strictMono_left (j) : StrictMono (λ i ↦ a.mkFun i j) := by
+  ---- We only need to solve the case `j = 0`.
+  intro i₁ i₂ hi
+  have hi0 : a i₁ < a i₂ := a.strictMono hi
+  match j with | 0 => ?_ | 1 => exact hi0 | 2 => exact add_lt_add hi0 hi0
+  ---- Now split into two cases: `i₂ < n` and `i₂ = n`.
+  dsimp only
+  obtain hi₂ | rfl : i₂ < Fin.last n ∨ i₂ = Fin.last n := i₂.le_last.lt_or_eq
+  ---- If `i₂ < n` then the goal is `a_{i₁} < a_{i₂}` which follows by property of `a`.
+  · rwa [a.mkFun_apply_zero_of_lt_last (hi.trans hi₂), a.mkFun_apply_zero_of_lt_last hi₂]
+  ---- If `i₂ = n` then the goal is `a_{i₁} < 2a_n` which also follows by property of `a`.
+  · rw [a.mkFun_apply_zero_of_lt_last hi, a.mkFun_last_zero]
+    exact lt_add_of_lt_of_pos hi0 (a.map_pos _)
+
+/-- For each `j : Fin 3`, the function `i ↦ a.mkFun i j` is monotone. -/
+theorem mkFun_monotone_left (j) : Monotone (λ i ↦ a.mkFun i j) :=
+  (a.mkFun_strictMono_left j).monotone
+
+/-- For each `i : Fin (n + 1)`, if we let `f = a.mkFun`,
+  then `f(i, 0), f(i + 1, 1), f(i, 2)` form the side lengths of a triangle. -/
+theorem mkFun_isTriangleSideLengths (i) :
+    isTriangleSideLengths
+      (λ j ↦ a.mkFun (![Equiv.refl _, Equiv.addRight 1, Equiv.refl _] j i) j) := by
+  set Δ : Fin 3 → G := λ j ↦ a.mkFun (![Equiv.refl _, Equiv.addRight 1, Equiv.refl _] j i) j
+  obtain hi | rfl : i ≠ Fin.last n ∨ i = Fin.last n := ne_or_eq _ _
+  ---- If `i < n`, the sides to be considered are `a_i, a_{i + 1}, 2a_i`.
+  · have h : Δ 0 = a i := a.mkFun_apply_zero_of_ne_last hi
+    have h0 : i < i + 1 := by rwa [Fin.lt_add_one_iff, Fin.lt_last_iff_ne_last]
+    replace h0 : Δ 0 < a (i + 1) := h.trans_lt (a.strictMono h0)
+    exact isTriangleSideLengths_of_lt_le_le_add h0
+      (a.map_add_one_le hi) (ge_of_eq (congrArg₂ (· + ·) h h))
+  ---- If `i = n`, the sides to be considered are `2a_i, a_{i + 1}, 2a_i`.
+  · have h : Δ 0 = a (Fin.last n) + a (Fin.last n) := a.mkFun_last_zero
+    have h0 : a (Fin.last n + 1) ≤ Δ 0 :=
+      ((lt_add_of_le_of_pos (a.monotone (Fin.le_last _)) (a.map_pos _)).trans_eq h.symm).le
+    exact isTriangleSideLengths_of_pos_of_le (a.map_pos _) h0 h.symm
+
+/-- The function `a.mkFun` as a good function. -/
+def mkGoodFun : GoodFun G (n + 1) where
+  toFun := a.mkFun
+  monotone_left' := a.mkFun_monotone_left
+  exists_triangle_perm' :=
+    ⟨![Equiv.refl _, Equiv.addRight 1, Equiv.refl _], a.mkFun_isTriangleSideLengths⟩
+
+/-- The value of `a.mkGoodFun i` for `i ≠ n`. -/
+theorem mkGoodFun_apply_zero_of_ne_last (hi : i ≠ Fin.last n) :
+    a.mkGoodFun i = ![a i, a i, a i + a i] :=
+  congrArg (![·, a i, a i + a i]) (if_neg hi)
+
+end
+
+
+/-- The only `a.mkFun`-triangular index is `n`. -/
+theorem mkGoodFun_triangular_iff [AddZeroClass G] [Preorder G] [AddLeftMono G]
+    [AddRightMono G] [AddLeftStrictMono G] [AddRightStrictMono G] {a : NiceSeq G n} :
+  a.mkGoodFun.triangular i ↔ i = Fin.last n := by
+  ---- The `→` direction has been done before.
+  refine ⟨λ hi ↦ ?_, λ hi ↦ hi ▸ a.mkGoodFun.last_is_triangular⟩
+  ---- For `←`, If `i ≠ n`, then the sides to be considered is `(g, g, 2g)` with `g = a_i`.
+  refine (eq_or_ne _ _).resolve_right λ hi0 ↦ not_isTriangleSideLengths_add_self (a i) ?_
+  rwa [GoodFun.triangular, a.mkGoodFun_apply_zero_of_ne_last hi0] at hi
 
 /-- A nice sequence made out of a positive element of a group. -/
 def of_pos [AddMonoid G] [Preorder G] [AddLeftMono G] [AddLeftStrictMono G]
@@ -219,80 +284,13 @@ def of_pos [AddMonoid G] [Preorder G] [AddLeftMono G] [AddLeftStrictMono G]
   toFun i := (i.val + 1) • g
   map_zero_pos' := hg.trans_eq (one_nsmul g).symm
   strictMono' i₁ i₂ hi := nsmul_lt_nsmul_left hg (Nat.succ_lt_succ (Fin.lt_def.mp hi))
-  le_two_mul' i hi :=
+  map_add_one_le' i hi :=
     calc ((i + 1).val + 1) • g
     _ = (i.val + 2) • g := by rw [Fin.val_add_one_of_lt (Fin.lt_last_iff_ne_last.mpr hi)]
     _ ≤ (2 * (i.val + 1)) • g :=
       nsmul_le_nsmul_left hg.le <| Nat.add_le_add_right (k := 2) <|
         Nat.le_mul_of_pos_left i.val Nat.two_pos
-    _ = 2 • (i.val + 1) • g := by rw [Nat.mul_comm, mul_nsmul]
-
-
-section
-
-variable [AddCommGroup G] [PartialOrder G] [IsOrderedAddMonoid G] (a : NiceSeq G n)
-
-/-- For each `j : Fin 3`, the function `i ↦ a.mkFun i j` is monotone. -/
-theorem mkFun_monotone_left (j) : Monotone (λ i ↦ a.mkFun i j) := by
-  ---- We only need to solve the case `j = 0`.
-  intro i₁ i₂ hi
-  have hi0 : a i₁ ≤ a i₂ := a.monotone hi
-  match j with | 0 => ?_ | 1 => exact hi0 | 2 => exact nsmul_le_nsmul_right hi0 2
-  ---- If `i₂ < n` then `i₁ < n` as well and we are done.
-  dsimp only
-  obtain hi₂ | rfl : i₂ < Fin.last n ∨ i₂ = Fin.last n := i₂.le_last.lt_or_eq
-  · rwa [a.mkFun_apply_zero_of_lt_last (hi.trans_lt hi₂), a.mkFun_apply_zero_of_lt_last hi₂]
-  ---- If `i₁ = i₂ = n` then we are done.
-  obtain rfl | hi₁ : i₁ = Fin.last n ∨ i₁ < Fin.last n := hi.eq_or_lt
-  · rfl
-  ---- If `i₁ < i₂ = n`, then `a_{i₁} ≤ a_n ≤ 2a_n`.
-  rw [a.mkFun_apply_zero_of_lt_last hi₁, a.mkFun_last_zero, two_nsmul]
-  exact hi0.trans (le_add_of_nonneg_left (a.map_nonneg _))
-
-/-- For each `i : Fin (n + 1)`, if we let `f = a.mkFun`,
-  then `f(i, 0), f(i + 1, 1), f(i, 2)` form the side lengths of a triangle. -/
-theorem mkFun_isTriangleSideLengths (i) :
-    isTriangleSideLengths
-      (λ j ↦ a.mkFun (![Equiv.refl _, Equiv.addRight 1, Equiv.refl _] j i) j) := by
-  obtain hi | rfl : i ≠ Fin.last n ∨ i = Fin.last n := ne_or_eq _ _
-  ---- If `i < n`, the sides to be considered are `a_i, a_{i + 1}, 2a_i`.
-  · have hi0 : i < i + 1 := by rwa [Fin.lt_add_one_iff, Fin.lt_last_iff_ne_last]
-    convert isTriangleSideLengths_of_lt_of_le_two_nsmul
-      (a.strictMono hi0) (a.le_two_mul hi) using 1
-    funext j; match j with | 0 => exact if_neg hi | 1 => rfl | 2 => rfl
-  ---- If `i = n`, the sides to be considered are `2a_i, a_{i + 1}, 2a_i`.
-  · have ha : a 0 ≤ 2 • a (Fin.last n) := calc
-      _ ≤ a (Fin.last n) + a (Fin.last n) :=
-        le_add_of_le_of_nonneg (a.monotone (Fin.le_last _)) (a.map_nonneg _)
-      _ = 2 • a (Fin.last n) := (two_nsmul _).symm
-    convert isTriangleSideLengths_of_pos_of_le (a.map_pos 0) ha using 1
-    funext j; match j with
-      | 0 => exact if_pos rfl
-      | 1 => exact congrArg a (Fin.last_add_one n)
-      | 2 => rfl
-
-/-- The function `a.mkFun` as a good function. -/
-def mkGoodFun : GoodFun G (n + 1) where
-  toFun := a.mkFun
-  monotone' := a.mkFun_monotone_left
-  exists_triangle_perm' :=
-    ⟨![Equiv.refl _, Equiv.addRight 1, Equiv.refl _], a.mkFun_isTriangleSideLengths⟩
-
-/-- The value of `a.mkGoodFun i` for `i ≠ n`. -/
-theorem mkGoodFun_apply_zero_of_ne_last (hi : i ≠ Fin.last n) :
-    a.mkGoodFun i = ![a i, a i, 2 • a i] :=
-  congrArg (![·, a i, 2 • a i]) (if_neg hi)
-
-/-- The only `a.mkFun`-triangular index is `n`. -/
-theorem mkGoodFun_triangular_iff : a.mkGoodFun.triangular i ↔ i = Fin.last n := by
-  ---- The `→` direction has been done before.
-  refine ⟨λ hi ↦ ?_, λ hi ↦ hi ▸ a.mkGoodFun.last_is_triangular⟩
-  ---- For `←`, If `i ≠ n`, then the sides to be considered is `(g, g, 2g)` with `g = a_i`.
-  refine (eq_or_ne _ _).resolve_right λ hi0 ↦
-    not_isTriangleSideLengths_self_self_two_nsmul (a i) ?_
-  rwa [GoodFun.triangular, a.mkGoodFun_apply_zero_of_ne_last hi0] at hi
-
-end
+    _ = (↑i + 1) • g + (↑i + 1) • g := by rw [Nat.two_mul, add_nsmul]
 
 end NiceSeq
 
@@ -313,7 +311,8 @@ theorem exists_pos_of_nontrivial
 open Finset in
 /-- Final solution -/
 theorem final_solution
-    [Nontrivial G] [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G] {n} :
+    (G) [Nontrivial G] [AddGroup G] [LinearOrder G] [AddLeftMono G]
+    [AddRightMono G] [AddLeftStrictMono G] [AddRightStrictMono G] (n) :
     IsLeast (Set.range λ f : GoodFun G (n + 1) ↦ #{i | f.triangular i}) 1 := by
   refine ⟨?_, ?_⟩
   ---- First find a good function `f : Fin (n + 1) × Fin 3 → G` with one triangular index.
