@@ -8,6 +8,7 @@ import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Algebra.Group.Units.Equiv
 import Mathlib.Algebra.Order.Group.Unbundled.Basic
 import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
+import Mathlib.Algebra.Order.Monoid.Defs
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Fintype.Basic
@@ -19,8 +20,8 @@ import Mathlib.Order.Bounds.Defs
 Let $n$ be a positive integer and $G$ be a nontrivial totally ordered abelian group.
 We say that a function $f : \{1, 2, …, n\} × \{0, 1, 2\} → G$ is *good* if;
 * for each $1 ≤ i₁ ≤ i₂ ≤ n$ and $j = 0, 1, 2$, we have $f(i₁, j) ≤ f(i₂, j)$; and
-* there exist permutations $σ_0, σ_1, σ_2$ of $\{1, 2, …, n\}$ such that the real numbers
-    $f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)$ form the side lengths of a triangle.
+* there exist permutations $σ_0, σ_1, σ_2$ of $\{1, 2, …, n\}$ such that for each $i$, the
+  elements $f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)$ form the side lengths of a triangle.
 
 Find the smallest possible number of indices $i ≤ n$ such that
   $f(i, 0), f(i, 1), f(i, 2)$ form the side lengths of a triangle.
@@ -39,6 +40,8 @@ For convenience, we define the following notions:
   if $f(i, 0), f(i, 1), f(i, 2)$ form the side lengths of a triangle.
 * `IMOSL.IMO2009A1.NiceSeq`: a sequence $(a_i)_{i = 0}^n$ of elements of $G$ is
   called *nice* if $0 < a_0 < … < a_n$ and $a_{i + 1} ≤ 2a_i$ for each $i < n$.
+
+We use nice sequences to construct good functions with only one triangular index.
 -/
 
 namespace IMOSL
@@ -48,8 +51,8 @@ open Finset
 
 /-! ### Triangle side lengths -/
 
-/-- The triple `(a, b, c)` is a triangle side length if and only if
-  `a < b + c`, `b < c + a`, and `c < a + b`. -/
+/-- The triple `(a, b, c)` is called a triangle side length
+  if `a < b + c`, `b < c + a`, and `c < a + b`. -/
 def isTriangleSideLengths [Add G] [LT G] (x : Fin 3 → G) :=
   ∀ j, x j < x (j + 1) + x (j + 2)
 
@@ -92,8 +95,8 @@ theorem isTriangleSideLengths_of_pos_of_le
 
 /-- A *good* function is a function `f : Fin n × Fin 3 → G` such that
 * for each `i₁ ≤ i₂` and `j`, we have `f(i₁, j) ≤ f(i₂, j)`; and
-* there exist permutations `σ_0, σ_1, σ_2` such that for each `i`,
-  `f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)` forms the side length of a triangle. -/
+* there exist permutations `σ_0, σ_1, σ_2` such that for each `i`, the elements
+  `f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)` form the side lengths of a triangle. -/
 @[ext] structure GoodFun (G) [Add G] [Preorder G] (n : ℕ) where
   toFun : Fin n → Fin 3 → G
   monotone_left' j : Monotone (λ i ↦ toFun i j)
@@ -113,13 +116,13 @@ instance : FunLike (GoodFun G n) (Fin n) (Fin 3 → G) where
 theorem monotone_left (f : GoodFun G n) (j) : Monotone (λ i ↦ f i j) :=
   f.monotone_left' j
 
-/-- If `f` is a good function, then there exist permutations `σ_0, σ_1, σ_2` such that
-  `f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)` forms the side length of a triangle. -/
+/-- If `f` is a good function, then there exist permutations `σ_0, σ_1, σ_2` such that for
+  all `i`, `f(σ_0(i), 0), f(σ_1(i), 1), f(σ_2(i), 2)` form the side lengths of a triangle. -/
 theorem exists_triangle_perm (f : GoodFun G n) :
     ∃ σ : Fin 3 → Fin n ≃ Fin n, ∀ i, isTriangleSideLengths (λ j ↦ f (σ j i) j) :=
   f.exists_triangle_perm'
 
-/-- An index `i` is called `f`-*triangular* if
+/-- An index `i` is called `f`-*triangular* if the elements
   `f(i, 0), f(i, 1), f(i, 2)` form the side lengths of a triangle. -/
 def triangular (f : GoodFun G n) (i : Fin n) := isTriangleSideLengths (f i)
 
@@ -195,15 +198,15 @@ theorem map_add_one_le {i} (hi : i ≠ Fin.last n) : a (i + 1) ≤ a i + a i :=
 def mkFun (i : Fin (n + 1)) : Fin 3 → G :=
   ![if i = Fin.last n then a (Fin.last n) + a (Fin.last n) else a i, a i, a i + a i]
 
-/-- The value of `a.mkFun i 0` for `i ≠ n`. -/
+/-- The value of `a.mkFun i 0` is `a_i` for `i ≠ n`. -/
 theorem mkFun_apply_zero_of_ne_last (hi : i ≠ Fin.last n) : a.mkFun i 0 = a i :=
   if_neg hi
 
-/-- The value of `a.mkFun i 0` for `i < n`. -/
+/-- The value of `a.mkFun i 0` is `a_i` for `i < n`. -/
 theorem mkFun_apply_zero_of_lt_last (hi : i < Fin.last n) : a.mkFun i 0 = a i :=
   a.mkFun_apply_zero_of_ne_last hi.ne
 
-/-- The value of `a.mkFun n 0`. -/
+/-- The value of `a.mkFun n 0` is `2a_n`. -/
 theorem mkFun_last_zero : a.mkFun (Fin.last n) 0 = a (Fin.last n) + a (Fin.last n) :=
   if_pos rfl
 
@@ -234,8 +237,8 @@ theorem mkFun_strictMono_left (j) : StrictMono (λ i ↦ a.mkFun i j) := by
 theorem mkFun_monotone_left (j) : Monotone (λ i ↦ a.mkFun i j) :=
   (a.mkFun_strictMono_left j).monotone
 
-/-- For each `i : Fin (n + 1)`, if we let `f = a.mkFun`,
-  then `f(i, 0), f(i + 1, 1), f(i, 2)` form the side lengths of a triangle. -/
+/-- Letting `f = a.mkFun`, for each index `i`, the elements
+  `f(i, 0), f(i + 1, 1), f(i, 2)` form the side lengths of a triangle. -/
 theorem mkFun_isTriangleSideLengths (i) :
     isTriangleSideLengths
       (λ j ↦ a.mkFun (![Equiv.refl _, Equiv.addRight 1, Equiv.refl _] j i) j) := by
@@ -272,10 +275,9 @@ end
 theorem mkGoodFun_triangular_iff [AddZeroClass G] [Preorder G] [AddLeftMono G]
     [AddRightMono G] [AddLeftStrictMono G] [AddRightStrictMono G] {a : NiceSeq G n} :
   a.mkGoodFun.triangular i ↔ i = Fin.last n := by
-  ---- The `→` direction has been done before.
-  refine ⟨λ hi ↦ ?_, λ hi ↦ hi ▸ a.mkGoodFun.last_is_triangular⟩
-  ---- For `←`, If `i ≠ n`, then the sides to be considered is `(g, g, 2g)` with `g = a_i`.
-  refine (eq_or_ne _ _).resolve_right λ hi0 ↦ not_isTriangleSideLengths_add_self (a i) ?_
+  refine ⟨λ hi ↦ (eq_or_ne _ _).resolve_right
+      λ hi0 ↦ not_isTriangleSideLengths_add_self (a i) ?_,
+    λ hi ↦ hi ▸ a.mkGoodFun.last_is_triangular⟩
   rwa [GoodFun.triangular, a.mkGoodFun_apply_zero_of_ne_last hi0] at hi
 
 /-- A nice sequence made out of a positive element of a group. -/
@@ -311,14 +313,13 @@ theorem exists_pos_of_nontrivial
 open Finset in
 /-- Final solution -/
 theorem final_solution
-    (G) [Nontrivial G] [AddGroup G] [LinearOrder G] [AddLeftMono G]
-    [AddRightMono G] [AddLeftStrictMono G] [AddRightStrictMono G] (n) :
+    (G) [Nontrivial G] [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G] (n) :
     IsLeast (Set.range λ f : GoodFun G (n + 1) ↦ #{i | f.triangular i}) 1 := by
   refine ⟨?_, ?_⟩
   ---- First find a good function `f : Fin (n + 1) × Fin 3 → G` with one triangular index.
   · obtain ⟨g, hg⟩ : ∃ g : G, g > 0 := exists_pos_of_nontrivial G
     refine ⟨(NiceSeq.of_pos g hg n).mkGoodFun, ?_⟩
-    simp_rw [NiceSeq.mkGoodFun_triangular_iff]
+    simp only [NiceSeq.mkGoodFun_triangular_iff]
     rw [filter_eq', if_pos (mem_univ _), card_singleton]
   ---- Now show that the index `i` must always exist.
   · rintro _ ⟨f, rfl⟩
