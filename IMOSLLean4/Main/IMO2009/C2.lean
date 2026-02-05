@@ -12,7 +12,7 @@ import Mathlib.Algebra.BigOperators.Fin
 
 For each $n ∈ ℕ$, find the largest integer $k$ such that there exist $k$ triples
   $(a_1, b_1, c_1), …, (a_k, b_k, c_k)$ with the following properties:
-* $a_i + b_i + c_i$ for all $i ≤ k$;
+* $a_i + b_i + c_i = n$ for all $i ≤ k$;
 * for any $i ≠ j$, we have $a_i ≠ a_j$, $b_i ≠ b_j$, and $c_i ≠ c_j$.
 
 ### Answer
