@@ -11,9 +11,42 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 /-!
 # IMO 2007 A6
 
-Let $R$ be a totally ordered commutative ring and $n ≥ 4$.
-Prove that, for any $a_1, a_2, …, a_n ∈ R$,
-$$ \left(3 \sum_{i = 1} a_i^2 a_{i + 1}\right)^2 ≤ 2 \left(\sum_{i = 1}^n a_i^2\right)^3. $$
+Let $R$ be a totally ordered commutative ring.
+Let $n ≥ 5$ be a positive integer, and let $a_1, a_2, …, a_n ∈ R$
+  be elements such that $a_1^2 + a_2^2 + … + a_n^2 = 1$.
+Prove that $25 \sum_{i = 1} a_i^2 a_{i + 1} < 12$.
+
+### Solution
+
+We follow the [official solution](https://www.imo-official.org/problems/IMO2007SL.pdf).
+However, one hole in an attempt to do the estimation in general is that the inequality
+$$ 4 \sum_{k = 1}^n x_k x_{k + 1} ≤ \left(\sum_{k = 1}^n x_k\right)^2 $$
+  for $x_1, …, x_n ≥ 0$ is nontrivial for odd $n$.
+(This estimate correspond to the second "trivial" estimate in the official solution,
+  although they are not directly the same for $n = 100$.)
+We prove the above inequality for all $n ≥ 4$ by induction on $n$.
+The base case $n = 4$ follows by AM-GM inequality;
+  the left hand side is $(x_1 + x_3)(x_2 + x_4)$.
+
+For the induction step, let $n ≥ 4$ and consider $x_1, …, x_{n + 1} ∈ R$ non-negative.
+Without loss of generality, assume that $x_{n + 1} ≤ x_i$ for all $i ≤ n$.
+For convenience, write $x_{n + 1} = c$ and $x_i = y_i + c$, $y_i ≥ 0$ for each $i ≤ n$.
+Then we have
+\begin{align*}
+    4 \sum_{k = 1}^{n + 1} x_k x_{k + 1}
+    &= 4 \sum_{k = 1}^{n - 1} (y_k + c)(y_{k + 1} + c) + 4 (y_n + y_1 + 2c) c \\
+    &= 4 \sum_{k = 1}^{n - 1} y_k y_{k + 1} + 8 \sum_{k = 1}^n y_k c + 4 (n + 1) c^2 \\
+    &≤ 4 \sum_{k = 1}^n y_k y_{k + 1} + 8 \sum_{k = 1}^n y_k c + 4 (n + 1) c^2,
+\end{align*}
+  where we set $y_{n + 1} = y_1$ (not $y_{n + 1} = 0$).
+On the other hand, we have
+\begin{align*}
+  \left(\sum_{k = 1}^{n + 1} x_k\right)^2
+  &= \left(\sum_{k = 1}^n y_k + (n + 1) c\right)^2
+  &= \left(\sum_{k = 1}^n y_k\right)^2 + 2 (n + 1) c \sum_{k = 1}^n y_k + (n + 1)^2 c^2.
+\end{align*}
+Matching terms one by one completes the induction step,
+  where we use induction hypothesis on $y_1, y_2, …, y_n$ on the first term.
 -/
 
 namespace IMOSL
@@ -28,7 +61,7 @@ theorem Fin_exists_minimal [LinearOrder α] (a : Fin (n + 1) → α) : ∃ j, �
 
 theorem Fin_sum_shift [AddCommMonoid M] (a : Fin (n + 1) → M) (k) :
     ∑ i, a (i + k) = ∑ i, a i :=
-  sum_equiv (Equiv.addRight k) (λ _ ↦ by simp only [mem_univ]) (λ _ _ ↦ rfl)
+  Fintype.sum_equiv (Equiv.addRight k) _ _ (λ _ ↦ rfl)
 
 
 
