@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.Prod
+import Mathlib.Algebra.Group.Fin.Basic
 
 /-!
 # IMO 2007 C3
@@ -17,56 +18,6 @@ Find all finite groups $G$ such that there exists a subset $S ⊆ G$ for which
 
 namespace IMOSL
 namespace IMO2007C3
-
-/-! ### `Fin 3` lemmas -/
-
-theorem Fin3_add_comm (i j : Fin 3) : i + j = j + i :=
-  match i, j with
-  | 0, 0 => rfl
-  | 0, 1 => rfl
-  | 0, 2 => rfl
-  | 1, 0 => rfl
-  | 1, 1 => rfl
-  | 1, 2 => rfl
-  | 2, 0 => rfl
-  | 2, 1 => rfl
-  | 2, 2 => rfl
-
-theorem Fin3_add_zero (i : Fin 3) : i + 0 = i :=
-  match i with | 0 => rfl | 1 => rfl | 2 => rfl
-
-theorem Fin3_sub_self (i : Fin 3) : i - i = 0 :=
-  match i with | 0 => rfl | 1 => rfl | 2 => rfl
-
-theorem Fin3_add_sub_cancel (i j : Fin 3) : (i + j) - i = j :=
-  match i, j with
-  | 0, 0 => rfl
-  | 0, 1 => rfl
-  | 0, 2 => rfl
-  | 1, 0 => rfl
-  | 1, 1 => rfl
-  | 1, 2 => rfl
-  | 2, 0 => rfl
-  | 2, 1 => rfl
-  | 2, 2 => rfl
-
-theorem Fin3_add_sub_cancel' (i j : Fin 3) : i + (j - i) = j :=
-  match i, j with
-  | 0, 0 => rfl
-  | 0, 1 => rfl
-  | 0, 2 => rfl
-  | 1, 0 => rfl
-  | 1, 1 => rfl
-  | 1, 2 => rfl
-  | 2, 0 => rfl
-  | 2, 1 => rfl
-  | 2, 2 => rfl
-
-
-
-
-
-/-! ### Start of the problem -/
 
 open Finset
 
@@ -113,14 +64,14 @@ def toSumCompl (p : Fin 3 × G × G) : Fin 3 → G :=
   λ k ↦ ![p.2.1, p.2.2, (p.2.1 * p.2.2)⁻¹] (k - p.1)
 
 lemma toSumCompl_self (p : G × G) (k) : toSumCompl (k, p) k = p.1 := by
-  rw [toSumCompl, Fin3_sub_self]; rfl
+  rw [toSumCompl, sub_self]; rfl
 
 lemma toSumCompl_self_add_one (p : G × G) (k) : toSumCompl (k, p) (k + 1) = p.2 := by
-  rw [toSumCompl, Fin3_add_sub_cancel]; rfl
+  rw [toSumCompl, add_sub_cancel_left]; rfl
 
 lemma toSumCompl_self_add_two (p : G × G) (k) :
     toSumCompl (k, p) (k + 2) = (p.1 * p.2)⁻¹ := by
-  rw [toSumCompl, Fin3_add_sub_cancel]; rfl
+  rw [toSumCompl, add_sub_cancel_left]; rfl
 
 lemma toSumCompl_prod (p : G × G) (k) :
     toSumCompl (k, p) 0 * toSumCompl (k, p) 1 * toSumCompl (k, p) 2 = 1 :=
@@ -145,9 +96,9 @@ lemma toSumCompl_injOn (S : Finset G) :
   rcases h with ⟨-, hx : x ∈ S, hy : y ∉ S⟩
   rcases h0 with ⟨-, hz : z ∈ S, hw : w ∉ S⟩
   obtain rfl : i = j := by
-    revert h1; rw [← Fin3_add_sub_cancel' i j]
+    revert h1; rw [← add_sub_cancel i j]
     match j - i with
-    | 0 => exact λ _ ↦ (Fin3_add_zero i).symm
+    | 0 => exact λ _ ↦ (add_zero i).symm
     | 1 =>
         intro h; obtain rfl : y = z := calc
           _ = toSumCompl (i, x, y) (i + 1) := (toSumCompl_self_add_one _ _).symm
@@ -162,7 +113,7 @@ lemma toSumCompl_injOn (S : Finset G) :
         exact absurd hx hw
   rw [Prod.mk.injEq, Prod.mk.injEq]
   replace h1 (j : Fin 3) : ![x, y, (x * y)⁻¹] j = ![z, w, (z * w)⁻¹] j :=
-    Fin3_add_sub_cancel i j ▸ congrFun h1 _
+    add_sub_cancel_left i j ▸ congrFun h1 _
   exact ⟨rfl, h1 0, h1 1⟩
 
 lemma mem_toSumCompl_image_iff {S : Finset G} :
@@ -175,8 +126,8 @@ lemma mem_toSumCompl_image_iff {S : Finset G} :
       (toSumCompl_self_add_one (x, y) i).symm ▸ hy]
   · rcases h with ⟨⟨i, hi, hi0⟩, h⟩
     refine ⟨⟨i, p i, p (i + 1)⟩, ⟨mem_univ _, hi, hi0⟩, funext λ j ↦ ?_⟩
-    rw [← Fin3_add_sub_cancel' i j]; match j - i with
-      | 0 => rw [Fin3_add_zero, toSumCompl_self]
+    rw [← add_sub_cancel i j]; match j - i with
+      | 0 => rw [add_zero, toSumCompl_self]
       | 1 => exact toSumCompl_self_add_one _ _
       | 2 => ?_
     replace h : p i * p (i + 1) * p (i + 2) = 1 := match i with
