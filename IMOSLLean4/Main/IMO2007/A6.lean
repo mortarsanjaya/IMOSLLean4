@@ -14,7 +14,8 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 Let $R$ be a totally ordered commutative ring.
 Let $n ≥ 5$ be a positive integer, and let $a_1, a_2, …, a_n ∈ R$
   be elements such that $a_1^2 + a_2^2 + … + a_n^2 = 1$.
-Prove that $25 \sum_{i = 1}^n a_i^2 a_{i + 1} < 12$.
+Prove that
+$$ 25 \sum_{i = 1}^n a_i^2 a_{i + 1} < 12. $$
 
 ### Solution
 
@@ -24,18 +25,18 @@ $$ \left(3 \sum_{i = 1}^n a_i^2 a_{i + 1}\right)^2 ≤ 2 \left(\sum_{i = 1}^n a_
 However, one hole in an attempt to do the estimation in general is that the inequality
 $$ 4 \sum_{i = 1}^n x_i x_{i + 1} ≤ \left(\sum_{i = 1}^n x_i\right)^2 $$
   for $x_1, …, x_n ≥ 0$ is nontrivial for odd $n$.
-(This estimate correspond to the second "trivial" estimate in the official solution,
-  although they are not directly the same for $n = 100$.)
+Note that this estimate correspond to the second "trivial" estimate in the
+  official solution, although they are not directly the same for $n = 100$.
+
 We prove the above inequality for all $n ≥ 4$ by induction on $n$.
 The base case $n = 4$ reads as
 $$ 4(x_1 + x_3)(x_2 + x_4) ≤ (x_1 + x_3 + x_2 + x_4)^2, $$
   which follows by the AM-GM inequality.
-
 For the induction step, let $n ≥ 4$ and consider $x_1, …, x_{n + 1} ∈ R$ non-negative.
 We first claim that there exists an index $i₀$ such that
-$$ 2 ∑_{i = 1}^n x_i ≥ 4(x_{i₀ - 1} + x_{i₀ + 1}) + x_{i₀}. $$
+$$ x_{i₀} + 2 \sum_{i ≠ i₀} x_i ≥ 4(x_{i₀ - 1} + x_{i₀ + 1}). $$
 Indeed, if the sign above is $<$ for all $i₀$, then summing over all $i₀$ yields
-$$ 2(n + 1) ∑_i x_i < 9 ∑_i x_i, $$
+$$ 2(n + 1) \sum_{i = 1}^{n + 1} x_i < 9 \sum_{i = 1}^{n + 1} x_i, $$
   which contradicts $n ≥ 4$.
 This proves the claim.
 
@@ -44,9 +45,9 @@ For convenience, write $y_i = x_{i + 1}$ for each $i = 1, 2, …, n$ and $y_{n +
 Then we have
 \begin{align*}
   4 \sum_{i = 1}^{n + 1} x_i x_{i + 1}
-  &≤ 4 \sum_{i = 1}^{n + 1} x_i x_{i + 1} + x_{n + 1} x_2
-  &= 4 \sum_{i = 1}^n y_i y_{i + 1} + 4x_1 (x_n + x_2)
-  &≤ \left(\sum_{i = 1}^n y_i\right)^2 + x_1 \left(2 \sum_{i ≠ 1} x_i + x_0\right)
+  &≤ 4 \sum_{i = 1}^{n + 1} x_i x_{i + 1} + x_{n + 1} x_2 \\\\
+  &= 4 \sum_{i = 1}^n y_i y_{i + 1} + 4x_1 (x_n + x_2) \\\\
+  &≤ \left(\sum_{i = 1}^n y_i\right)^2 + x_1 \left(2 \sum_{i ≠ 1} x_i + x_0\right) \\\\
   &= \left(\sum_{i = 1}^{n + 1} x_i\right)^2,
 \end{align*}
   as desired.
