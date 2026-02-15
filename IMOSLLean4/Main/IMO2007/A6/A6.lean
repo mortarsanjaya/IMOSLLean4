@@ -14,13 +14,15 @@ import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 Let $R$ be a totally ordered commutative ring.
 Let $n ≥ 5$ be a positive integer, and let $a_1, a_2, …, a_n ∈ R$
   be elements such that $a_1^2 + a_2^2 + … + a_n^2 = 1$.
-Prove that $25 \sum_{i = 1} a_i^2 a_{i + 1} < 12$.
+Prove that $25 \sum_{i = 1}^n a_i^2 a_{i + 1} < 12$.
 
 ### Solution
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2007SL.pdf).
+In particular, we prove an even more general inequality:
+$$ \left(3 \sum_{i = 1}^n a_i^2 a_{i + 1}\right)^2 ≤ 2 \left(\sum_{i = 1}^n a_i^2\right)^3. $$
 However, one hole in an attempt to do the estimation in general is that the inequality
-$$ 4 \sum_{k = 1}^n x_k x_{k + 1} ≤ \left(\sum_{k = 1}^n x_k\right)^2 $$
+$$ 4 \sum_{i = 1}^n x_i x_{i + 1} ≤ \left(\sum_{i = 1}^n x_i\right)^2 $$
   for $x_1, …, x_n ≥ 0$ is nontrivial for odd $n$.
 (This estimate correspond to the second "trivial" estimate in the official solution,
   although they are not directly the same for $n = 100$.)
@@ -33,20 +35,22 @@ Without loss of generality, assume that $x_{n + 1} ≤ x_i$ for all $i ≤ n$.
 For convenience, write $x_{n + 1} = c$ and $x_i = y_i + c$, $y_i ≥ 0$ for each $i ≤ n$.
 Then we have
 \begin{align*}
-    4 \sum_{k = 1}^{n + 1} x_k x_{k + 1}
-    &= 4 \sum_{k = 1}^{n - 1} (y_k + c)(y_{k + 1} + c) + 4 (y_n + y_1 + 2c) c \\
-    &= 4 \sum_{k = 1}^{n - 1} y_k y_{k + 1} + 8 \sum_{k = 1}^n y_k c + 4 (n + 1) c^2 \\
-    &≤ 4 \sum_{k = 1}^n y_k y_{k + 1} + 8 \sum_{k = 1}^n y_k c + 4 (n + 1) c^2,
+    4 \sum_{i = 1}^{n + 1} x_i x_{i + 1}
+    &= 4 \sum_{i = 1}^{n - 1} (y_i + c)(y_{i + 1} + c) + 4 (y_n + y_1 + 2c) c \\
+    &= 4 \sum_{i = 1}^{n - 1} y_i y_{i + 1} + 8c \sum_{i = 1}^n y_i + 4 (n + 1) c^2 \\
+    &≤ 4 \sum_{i = 1}^n y_i y_{i + 1} + 8c \sum_{i = 1}^n y_i + 4 (n + 1) c^2,
 \end{align*}
   where we set $y_{n + 1} = y_1$ (not $y_{n + 1} = 0$).
 On the other hand, we have
 \begin{align*}
-  \left(\sum_{k = 1}^{n + 1} x_k\right)^2
-  &= \left(\sum_{k = 1}^n y_k + (n + 1) c\right)^2
-  &= \left(\sum_{k = 1}^n y_k\right)^2 + 2 (n + 1) c \sum_{k = 1}^n y_k + (n + 1)^2 c^2.
+  \left(\sum_{i = 1}^{n + 1} x_i\right)^2
+  &= \left(\sum_{i = 1}^n y_i + (n + 1) c\right)^2
+  &= \left(\sum_{i = 1}^n y_i\right)^2 + 2 (n + 1) c \sum_{i = 1}^n y_i + (n + 1)^2 c^2.
 \end{align*}
 Matching terms one by one completes the induction step,
   where we use induction hypothesis on $y_1, y_2, …, y_n$ on the first term.
+
+In the implementation, we assume the smallest value among the $x_i$'s is $x_0$ instead.
 -/
 
 namespace IMOSL
@@ -59,9 +63,21 @@ open Finset
 theorem Fin_exists_minimal [LinearOrder α] (a : Fin (n + 1) → α) : ∃ j, ∀ i, a j ≤ a i :=
   (exists_min_image univ a univ_nonempty).imp λ _ ⟨_, h⟩ i ↦ h i (mem_univ i)
 
-theorem Fin_sum_shift [AddCommMonoid M] (a : Fin (n + 1) → M) (k) :
+/-- We have `∑_i a_{k + i} = ∑_i a_i`, where the summation runs over `Fin n`. -/
+theorem Fin_sum_add_left [NeZero n] [AddCommMonoid M] (a : Fin n → M) (k) :
+    ∑ i, a (k + i) = ∑ i, a i :=
+  Fintype.sum_equiv (Equiv.addLeft k) _ _ (λ _ ↦ rfl)
+
+/-- We have `∑_i a_{i + k} = ∑_i a_i`, where the summation runs over `Fin n`. -/
+theorem Fin_sum_add_right [NeZero n] [AddCommMonoid M] (a : Fin n → M) (k) :
     ∑ i, a (i + k) = ∑ i, a i :=
   Fintype.sum_equiv (Equiv.addRight k) _ _ (λ _ ↦ rfl)
+
+open Fin.NatCast in
+/-- Taking `Fin.castLE` is the same as casting the value into the higher `Fin`. -/
+theorem Fin_castLE_eq_natCast_val [NeZero m] (h : n ≤ m) (i : Fin n) :
+    i.castLE h = i.val := by
+  rw [Fin.ext_iff, Fin.val_castLE, Fin.val_natCast, Nat.mod_eq_of_lt (i.2.trans_le h)]
 
 
 
@@ -88,7 +104,7 @@ theorem cyclic_add_right_formula (a : Fin (n + 1) → R) (c : R) :
       = ∑ i, a i * a (i + 1) + (2 * ∑ i, a i) * c + (n + 1) • c ^ 2 := by
   simp only [mul_add, add_mul, sum_add_distrib]
   rw [← sq, Fin.sum_const, ← add_assoc, add_left_inj, add_assoc, add_right_inj,
-    ← mul_sum, ← sum_mul, mul_comm, ← add_mul, Fin_sum_shift, ← two_mul]
+    ← mul_sum, ← sum_mul, mul_comm, ← add_mul, Fin_sum_add_right, ← two_mul]
 
 theorem sum_sq_add_right_formula (a : Fin (n + 1) → R) (c : R) :
     (∑ i, (a i + c)) ^ 2
@@ -99,8 +115,8 @@ theorem sum_sq_add_right_formula (a : Fin (n + 1) → R) (c : R) :
 omit [IsStrictOrderedRing R] in
 theorem niceTuple.of_add₁ {n} {a : Fin (n + 1) → R} (ha : niceTuple a) (j) :
     niceTuple (λ i ↦ a (i + j)) := by
-  rw [niceTuple, Fin_sum_shift]; simp only [add_right_comm _ 1 j]
-  rw [Fin_sum_shift (λ i ↦ a i * a (i + 1))]; exact ha
+  rw [niceTuple, Fin_sum_add_right]; simp only [add_right_comm _ 1 j]
+  rw [Fin_sum_add_right (λ i ↦ a i * a (i + 1))]; exact ha
 
 omit [IsStrictOrderedRing R] in
 theorem niceTuple.of_add₁_iff {n} {a : Fin (n + 1) → R} {j} :
@@ -176,11 +192,20 @@ theorem niceTuple.of_three_le [ExistsAddOfLE R] :
   exact of_add₂ (Nat.le_succ_of_le (Nat.succ_le_succ hn))
     ha (of_zero_cons (n_ih hb) hb) (Fin_cons_nonneg hb)
 
-/-- The main claim -/
-theorem main_claim [ExistsAddOfLE R]
+/-- The main claim with `Fin (n + 1)` instead of `Fin n`. -/
+theorem main_ineq' [ExistsAddOfLE R]
     (hn : 4 ≤ n + 1) {a : Fin (n + 1) → R} (ha : ∀ i, 0 ≤ a i) :
-    2 ^ 2 * ∑ i, a i * a (i + 1) ≤ (∑ i, a i) ^ 2 :=
-  niceTuple.of_three_le n (Nat.succ_le_succ_iff.mp hn) ha
+    4 * ∑ i, a i * a (i + 1) ≤ (∑ i, a i) ^ 2 := by
+  rw [← two_add_two_eq_four, ← two_mul, ← sq]
+  exact niceTuple.of_three_le n (Nat.succ_le_succ_iff.mp hn) ha
+
+/-- The inequality `4 ∑_i x_i x_{i + 1} ≤ (∑_i x_i)^2`. -/
+theorem main_ineq
+    [ExistsAddOfLE R] [NeZero n] (hn : 4 ≤ n) {x : Fin n → R} (hx : ∀ i, 0 ≤ x i) :
+    4 * ∑ i, x i * x (i + 1) ≤ (∑ i, x i) ^ 2 := by
+  cases n with
+  | zero => exact absurd (Nat.succ_pos 3) hn.not_gt
+  | succ n => exact main_ineq' hn hx
 
 
 
@@ -190,76 +215,124 @@ theorem main_claim [ExistsAddOfLE R]
 
 open Fin.NatCast in
 omit [LinearOrder R] [IsStrictOrderedRing R] in
-theorem id1 (a : Fin (n + 1) → R) :
-    3 * ∑ i, a i ^ 2 * a (i + 1) = ∑ i, a (i + 1) * (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) := by
-  simp only [mul_add]
-  rw [sum_add_distrib, ← two_add_one_eq_three, add_comm, one_add_mul (2 : R), mul_sum]
-  refine congrArg₂ _ (sum_congr rfl λ i _ ↦ mul_comm _ _) ?_
-  rw [← Fin_sum_shift _ 1]; refine sum_congr rfl λ i _ ↦ ?_
-  rw [add_assoc, one_add_one_eq_two (R := Fin (n + 1)), mul_assoc, sq,
-    mul_left_comm _ 2, ← mul_assoc (a (i + 1))]
+/-- The identity
+  `∑_i (x_i^2 + 2 x_i (x_{i + 1} + x_{i + 2})) = ∑_i x_{i + 2} ∑_{j < 5} x_{i + j}`. -/
+theorem main_identity [NeZero n] (hn : 5 ≤ n) (x : Fin n → R) :
+    ∑ i, (x i ^ 2 + 2 * x i * (x (i + 1) + x (i + 1 + 1)))
+      = ∑ i, x (i + 2) * ∑ j : Fin 5, x (i + j.castLE hn) := by
+  ---- Rearrange appropriately.
+  calc ∑ i, (x i ^ 2 + 2 * x i * (x (i + 1) + x (i + 1 + 1)))
+    _ = ∑ i, (x i ^ 2 + 2 * x i * (x (i + 1) + x (i + 2))) := by
+      conv_lhs => right; ext i; rw [add_assoc, one_add_one_eq_two]
+    _ = ∑ i, (x (i + 2) * x i + x (i + 1) * x i + x i * x i
+        + x i * x (i + 1) + x i * x (i + 2)) :=
+      Fintype.sum_congr _ _ λ _ ↦ by ring
+    _ = ∑ i, x (i + 2) * x i + ∑ i, x (i + 1) * x i + ∑ i, x i * x i
+        + ∑ i, x i * x (i + 1) + ∑ i, x i * x (i + 2) := by
+      iterate 4 rw [sum_add_distrib]
+    _ = ∑ i, x (i + 2) * x (i + 0) + ∑ i, x (i + 2) * x (i + 1) + ∑ i, x (i + 2) * x (i + 2)
+        + ∑ i, x (i + 2) * x (i + 3) + ∑ i, x (i + 2) * x (i + 4) := ?_
+    _ = ∑ i, x (i + 2) * x (i + Fin.castLE hn 0)
+        + ∑ i, x (i + 2) * x (i + Fin.castLE hn 1)
+        + ∑ i, x (i + 2) * x (i + Fin.castLE hn 2)
+        + ∑ i, x (i + 2) * x (i + Fin.castLE hn 3)
+        + ∑ i, x (i + 2) * x (i + Fin.castLE hn 4) := by
+      simp only [Fin_castLE_eq_natCast_val]; rfl
+    _ = ∑ i, x (i + 2) * ∑ j : Fin 5, x (i + j.castLE hn) := by
+      simp_rw [Fin.sum_univ_five, mul_add, sum_add_distrib]
+  ---- Now equate term-by-term.
+  refine congrArg₂ _ (congrArg₂ _ (congrArg₂ _ (congrArg₂ _ ?_ ?_) ?_) ?_) ?_
+  ---- Term `0`: `∑_i x_{i + 2} x_i = ∑_i x_{i + 2} x_{i + 0}`.
+  · simp only [add_zero]
+  ---- Term `1`: `∑_i x_{i + 1} x_i = ∑_i x_{i + 2} x_{i + 1}`.
+  · calc ∑ i, x (i + 1) * x i
+      _ = ∑ i, x (i + 1 + 1) * x (i + 1) := (Fin_sum_add_right _ 1).symm
+      _ = ∑ i, x (i + 2) * x (i + 1) := by simp_rw [add_assoc, one_add_one_eq_two]
+  ---- Term `2`: `∑_i x_i x_i = ∑_i x_{i + 2} x_{i + 2}`.
+  · exact (Fin_sum_add_right _ 2).symm
+  ---- Term `3`: `∑_i x_i x_{i + 1} = ∑_i x_{i + 2} x_{i + 3}`.
+  · calc ∑ i, x i * x (i + 1)
+      _ = ∑ i, x (i + 2) * x (i + 2 + 1) := (Fin_sum_add_right _ 2).symm
+      _ = ∑ i, x (i + 2) * x (i + 3) := by simp_rw [add_assoc, two_add_one_eq_three]
+  ---- Term `4`: `∑_i x_i x_{i + 2} = ∑_i x_{i + 2} x_{i + 4}`.
+  · calc ∑ i, x i * x (i + 2)
+      _ = ∑ i, x (i + 2) * x (i + 2 + 2) := (Fin_sum_add_right _ 2).symm
+      _ = ∑ i, x (i + 2) * x (i + 4) := by simp_rw [add_assoc, two_add_two_eq_four]
 
-theorem id2 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
-    (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2
-      ≤ (∑ i, a i ^ 2) * ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2 := by
-  rw [id1, ← Fin_sum_shift (λ i ↦ a i ^ 2) 1]
-  exact sum_mul_sq_le_sq_mul_sq _ _ _
-
-open Fin.NatCast in
-theorem id3 [ExistsAddOfLE R] (a : Fin (n + 1) → R) :
-    ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 2)) ^ 2
-      ≤ ∑ i, (a i ^ 2) ^ 2 + 2 * ∑ i, a i ^ 2 * (a (i + 1) ^ 2 + a (i + 2) ^ 2)
-        + 2 ^ 2 * ∑ i, a i ^ 2 * a (i + 1) ^ 2 := by
-  simp only [add_sq, sum_add_distrib]
-  refine add_le_add_three (le_refl _) ?_ (le_of_eq ?_)
-  · rw [mul_sum]; refine sum_le_sum λ i _ ↦ ?_
-    rw [← mul_assoc 2]; refine mul_le_mul_of_nonneg_left (two_mul_le_add_sq _ _) ?_
-    exact mul_nonneg zero_le_two (sq_nonneg _)
-  · simp only [mul_pow, mul_assoc]; rw [← mul_sum, eq_comm, ← Fin_sum_shift _ 1]
-    refine congrArg₂ _ rfl (sum_congr rfl λ i _ ↦ ?_)
-    rw [add_assoc, one_add_one_eq_two]
-
-open Fin.NatCast in
-omit [LinearOrder R] [IsStrictOrderedRing R] in
-theorem id4 (b : Fin (n + 1) → R) :
-    ∑ i, b i ^ 2 + 2 * ∑ i, b i * (b (i + 1) + b (i + 2))
-      = ∑ i, b (i + 2) * ∑ j : Fin 5, b (j.val + i) := by
-  simp only [Fin.sum_univ_five, mul_add, sum_add_distrib]
-  rw [two_mul, two_mul, add_add_add_comm, add_left_comm, ← add_assoc, ← add_assoc]
-  refine congrArg₂ _ (congrArg₂ _ (congrArg₂ _ ?_ ?_) ?_) ?_
-  rw [add_comm]; apply congrArg₂
-  · refine sum_congr rfl λ i _ ↦ ?_
-    rw [Fin.val_zero, Nat.cast_zero, zero_add, mul_comm]
-  · rw [← Fin_sum_shift _ 1]; refine sum_congr rfl λ i _ ↦ ?_
-    rw [Fin.val_one, Nat.cast_one, add_assoc, add_comm, mul_comm, one_add_one_eq_two]
-  · rw [← Fin_sum_shift _ 2]; refine sum_congr rfl λ i _ ↦ ?_
-    rw [Fin.val_two, sq, Nat.cast_two, add_comm]
-  · rw [← Fin_sum_shift _ 2]; refine sum_congr rfl λ i _ ↦ ?_
-    rw [add_assoc, two_add_one_eq_three, add_comm i 3]; rfl
-  · rw [← Fin_sum_shift _ 2]; refine sum_congr rfl λ i _ ↦ ?_
-    change _ = _ * b ((2 + 2 : ℕ) + i)
-    rw [add_assoc, add_comm _ i, Nat.cast_add 2 2]; rfl
-
-theorem id5 (hn : 5 ≤ n + 1) {b : Fin (n + 1) → R} (hb : ∀ i, 0 ≤ b i) :
-    ∑ i, b i ^ 2 + 2 * ∑ i, b i * (b (i + 1) + b (i + 2)) ≤ (∑ i, b i) ^ 2 := by
-  rw [id4, sq, sum_mul, ← Fin_sum_shift (λ i ↦ b i * _) 2]
-  refine sum_le_sum λ i _ ↦ mul_le_mul_of_nonneg_left ?_ (hb _)
-  calc ∑ j : Fin 5, b (_ + i)
-    _ = ∑ j ∈ image (Fin.castLE hn) univ, b (j + i) :=
-      Finset.sum_of_injOn (Fin.castLE hn) ?_ ?_ (λ j ↦ ?_) (λ j _ ↦ ?_)
-    _ ≤ ∑ j : Fin (n + 1), b (j + i) := sum_le_univ_sum_of_nonneg λ _ ↦ hb _
-    _ = ∑ j : Fin (n + 1), b j := Fin_sum_shift b i
-  · exact Set.injOn_of_injective (Fin.castLE_injective _)
-  · rw [coe_image]; exact Set.mapsTo_image (Fin.castLE hn) _
-  · rw [coe_univ, Set.image_univ, mem_image_univ_iff_mem_range]; exact absurd
-  · refine congrArg b (congrArg₂ _ ?_ rfl)
-    rw [← Fin.val_inj, Fin.val_castLE, Fin.val_natCast, Nat.mod_succ_eq_iff_lt]
-    exact j.2.trans_le hn
+/-- The general result `(3 ∑_i a_i^2 a_{i + 1})^2 ≤ 2 (∑_i a_i^2)^3`. -/
+theorem general_result [ExistsAddOfLE R] [NeZero n] (hn : 5 ≤ n) (a : Fin n → R) :
+    (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2 ≤ 2 * (∑ i, a i ^ 2) ^ 3 := by
+  /- Prove `(3 ∑_i a_i^2 a_{i + 1})^2 ≤ (∑_i a_i^2)(∑_i (a_i^2 + 2 a_{i + 1} a_{i + 2})^2)`.
+    Thus we only need to prove `∑_i (a_i^2 + 2 a_{i + 1} a_{i + 2})^2 ≤ 2 (∑_i a_i^2)^2`. -/
+  calc (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2
+    _ = (∑ i, a i ^ 2 * a (i + 1) + 2 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2 := by
+      rw [add_comm, ← add_one_mul, two_add_one_eq_three]
+    _ = (∑ i, a i ^ 2 * a (i + 1) + 2 * ∑ i, a (i + 1) ^ 2 * a (i + 1 + 1)) ^ 2 :=
+      congrArg ((∑ i, a i ^ 2 * a (i + 1) + 2 * ·) ^ 2) (Fin_sum_add_right _ 1).symm
+    _ = (∑ i, (a i ^ 2 * a (i + 1) + 2 * (a (i + 1) ^ 2 * a (i + 1 + 1)))) ^ 2 := by
+      rw [sum_add_distrib, mul_sum]
+    _ = (∑ i, a (i + 1) * (a i ^ 2 + 2 * a (i + 1) * a (i + 1 + 1))) ^ 2 :=
+      congrArg (· ^ 2) (Fintype.sum_congr _ _ λ i ↦ by ring)
+    _ ≤ (∑ i, a (i + 1) ^ 2) * (∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 1 + 1)) ^ 2) :=
+      sum_mul_sq_le_sq_mul_sq _ _ _
+    _ ≤ (∑ i, a (i + 1) ^ 2) * (2 * (∑ i, a i ^ 2) ^ 2) :=
+      mul_le_mul_of_nonneg_left ?_ (Fintype.sum_nonneg λ _ ↦ sq_nonneg _)
+    _ = (∑ i, a i ^ 2) * (2 * (∑ i, a i ^ 2) ^ 2) :=
+      congrArg (· * _) (Fin_sum_add_right (λ i ↦ a i ^ 2) 1)
+    _ = 2 * (∑ i, a i ^ 2) ^ 3 := by rw [mul_left_comm, ← pow_succ']
+  /- Now break up LHS into `∑_i (a_i^4 + 4 a_i^2 a_{i + 1} a_{i + 2})` and
+    `4 ∑_{i + 1} a_i^2 a_{i + 1}^2 ≤ (∑_i a_i^2)^2`, so it remains to show that
+    `∑_i (a_i^4 + 4 a_i^2 a_{i + 1} a_{i + 2}) ≤ (∑_i a_i^2)^2`. -/
+  calc ∑ i, (a i ^ 2 + 2 * a (i + 1) * a (i + 1 + 1)) ^ 2
+    _ = ∑ i, ((a i ^ 2) ^ 2 + 2 * a i ^ 2 * (2 * a (i + 1) * a (i + 1 + 1))
+        + 4 * (a (i + 1) ^ 2 * a (i + 1 + 1) ^ 2)) :=
+      Fintype.sum_congr _ _ λ _ ↦ by ring
+    _ = ∑ i, ((a i ^ 2) ^ 2 + 2 * a i ^ 2 * (2 * a (i + 1) * a (i + 1 + 1)))
+        + 4 * ∑ i, a (i + 1) ^ 2 * a (i + 1 + 1) ^ 2 := by
+      rw [sum_add_distrib, mul_sum]
+    _ = ∑ i, ((a i ^ 2) ^ 2 + 2 * a i ^ 2 * (2 * a (i + 1) * a (i + 1 + 1)))
+        + 4 * ∑ i, a i ^ 2 * a (i + 1) ^ 2 :=
+      congrArg (_ + ·) <| congrArg (4 * ·) <|
+        Fin_sum_add_right (λ i ↦ a i ^ 2 * a (i + 1) ^ 2) 1
+    _ ≤ (∑ i, a i ^ 2) ^ 2 + (∑ i, a i ^ 2) ^ 2 :=
+      add_le_add ?_ (main_ineq (Nat.le_of_lt hn) (λ _ ↦ sq_nonneg _))
+    _ = 2 * (∑ i, a i ^ 2) ^ 2 := (two_mul _).symm
+  /- Finally, prove `∑_i (a_i^4 + 4 a_i^2 a_{i + 1} a_{i + 2}) ≤ (∑_i a_i^2)^2`. -/
+  calc ∑ i, ((a i ^ 2) ^ 2 + 2 * a i ^ 2 * (2 * a (i + 1) * a (i + 1 + 1)))
+    _ ≤ ∑ i, ((a i ^ 2) ^ 2 + 2 * a i ^ 2 * (a (i + 1) ^ 2 + a (i + 1 + 1) ^ 2)) :=
+      sum_le_sum λ i _ ↦ add_le_add_right (a := (a i ^ 2) ^ 2) <|
+        mul_le_mul_of_nonneg_left (two_mul_le_add_sq _ _)
+          (mul_nonneg zero_le_two (sq_nonneg _))
+    _ = ∑ i, a (i + 2) ^ 2 * ∑ j : Fin 5, a (i + j.castLE hn) ^ 2 :=
+      main_identity hn _
+    _ = ∑ i, a (i + 2) ^ 2 * ∑ j ∈ image (Fin.castLE hn) univ, a (i + j) ^ 2 :=
+      Fintype.sum_congr _ _ λ i ↦ congrArg (_ * ·)
+        (sum_image (f := λ j ↦ a (i + j) ^ 2)
+          (Set.injOn_of_injective (Fin.castLE_injective hn))).symm
+    _ ≤ ∑ i, a (i + 2) ^ 2 * ∑ j, a (i + j) ^ 2 :=
+      sum_le_sum λ _ _ ↦ mul_le_mul_of_nonneg_left
+        (sum_le_univ_sum_of_nonneg λ _ ↦ sq_nonneg _) (sq_nonneg _)
+    _ = ∑ i, a (i + 2) ^ 2 * ∑ j, a j ^ 2 :=
+      Fintype.sum_congr _ _ λ i ↦ congrArg (_ * ·) (Fin_sum_add_left (λ j ↦ a j ^ 2) i)
+    _ = ∑ i, a i ^ 2 * ∑ j, a j ^ 2 :=
+      Fin_sum_add_right (λ i ↦ a i ^ 2 * ∑ j, a j ^ 2) 2
+    _ = (∑ i, a i ^ 2) ^ 2 := by rw [sq, sum_mul]
 
 /-- Final solution -/
-theorem final_solution [ExistsAddOfLE R] (hn : 5 ≤ n + 1) (a : Fin (n + 1) → R) :
-    (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2 ≤ 2 * (∑ i, a i ^ 2) ^ 3 := by
-  rw [pow_succ' _ 2, mul_left_comm, two_mul]
-  have X (i) : 0 ≤ a i ^ 2 := sq_nonneg (a i)
-  refine (id2 _).trans (mul_le_mul_of_nonneg_left ?_ (sum_nonneg λ _ _ ↦ X _))
-  exact (id3 _).trans (add_le_add (id5 hn X) (main_claim (Nat.le_of_succ_le hn) X))
+theorem final_solution [ExistsAddOfLE R] [NeZero n] (hn : 5 ≤ n)
+    {a : Fin n → R} (ha : ∑ i, a i ^ 2 = 1) :
+    25 * ∑ i, a i ^ 2 * a (i + 1) < 12 := by
+  refine lt_of_pow_lt_pow_left₀ 2 (Nat.ofNat_nonneg 12) ?_
+  calc (25 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2
+    _ = 25 ^ 2 * (∑ i, a i ^ 2 * a (i + 1)) ^ 2 := mul_pow _ _ _
+    _ ≤ 70 * 3 ^ 2 * (∑ i, a i ^ 2 * a (i + 1)) ^ 2 := by
+      have h : (25 ^ 2 : R) ≤ 70 * 3 ^ 2 := calc
+        _ ≤ (25 ^ 2 : R) + 5 := le_add_of_nonneg_right (Nat.ofNat_nonneg 5)
+        _ = 70 * 3 ^ 2 := by norm_num
+      exact mul_le_mul_of_nonneg_right h (sq_nonneg _)
+    _ = 70 * (3 * ∑ i, a i ^ 2 * a (i + 1)) ^ 2 := by rw [mul_assoc, mul_pow]
+    _ ≤ 70 * (2 * (∑ i, a i ^ 2) ^ 3) :=
+      mul_le_mul_of_nonneg_left (general_result hn a) (Nat.ofNat_nonneg 70)
+    _ = 70 * 2 := by rw [ha, one_pow, mul_one]
+    _ < 70 * 2 + 4 := lt_add_of_pos_right _ four_pos
+    _ = 12 ^ 2 := by norm_num
