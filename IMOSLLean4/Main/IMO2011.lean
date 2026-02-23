@@ -4,4 +4,5 @@ import IMOSLLean4.Main.IMO2011.A3.A3
 import IMOSLLean4.Main.IMO2011.A4
 import IMOSLLean4.Main.IMO2011.A5
 import IMOSLLean4.Main.IMO2011.A6
+import IMOSLLean4.Main.IMO2011.N2
 import IMOSLLean4.Main.IMO2011.N5
