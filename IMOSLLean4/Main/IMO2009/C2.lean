@@ -12,7 +12,7 @@ import Mathlib.Algebra.BigOperators.Fin
 
 For each $n ∈ ℕ$, find the largest integer $k$ such that there exist $k$ triples
   $(a_1, b_1, c_1), …, (a_k, b_k, c_k)$ with the following properties:
-* $a_i + b_i + c_i$ for all $i ≤ k$;
+* $a_i + b_i + c_i = n$ for all $i ≤ k$;
 * for any $i ≠ j$, we have $a_i ≠ a_j$, $b_i ≠ b_j$, and $c_i ≠ c_j$.
 
 ### Answer
@@ -227,15 +227,16 @@ theorem nonempty_of_le_bound [Fintype ι] (h : Fintype.card ι ≤ 2 * n / 3 + 1
     rw [fin_sum_fin_card, ← Nat.two_mul, Nat.mul_add, Nat.mul_left_comm,
       Nat.mul_add_div three_pos, Nat.add_assoc, Nat.mul_succ 2 k]
 
+/-- There exists an `ι`-indexed `n`-good collection if and only if `ι ≤ ⌊2n/3⌋ + 1`. -/
+theorem nonempty_iff [Fintype ι] :
+    Nonempty (GoodTripleFn n ι) ↔ Fintype.card ι ≤ 2 * n / 3 + 1 :=
+  ⟨λ h ↦ h.elim λ X ↦ X.card_bound, GoodTripleFn.nonempty_of_le_bound⟩
+
 end GoodTripleFn
 
 
-
-
-
-/-! ### Summary -/
-
 /-- Final solution -/
-theorem final_solution [Fintype ι] :
-    Nonempty (GoodTripleFn n ι) ↔ Fintype.card ι ≤ 2 * n / 3 + 1 :=
-  ⟨λ h ↦ h.elim λ X ↦ X.card_bound, GoodTripleFn.nonempty_of_le_bound⟩
+theorem final_solution :
+    IsGreatest {k | Nonempty (GoodTripleFn n (Fin k))} (2 * n / 3 + 1) := by
+  conv => left; right; ext k; rw [GoodTripleFn.nonempty_iff, Fintype.card_fin]
+  exact ⟨Nat.le_refl _, λ _ ↦ id⟩

@@ -1,376 +1,177 @@
-Let $R$ be a ring, $S$ be an abelian (additive) group, and $\iota : S \to R$ be a group homomorphism.
-Find all functions $f : R \to S$ such that for any $x, y \in R$,
-\[ f(\iota(f(x)) \iota(f(y))) + f(x + y) = f(xy). \tag{*}\label{2017a6-eq0} \]
-
-We say that $f : R \to S$ is \emph{$\iota$-good} if $f$ satisfies the above functional equation.
-We say that $f$ is \emph{non-periodic $\iota$-good} if $f$ is $\iota$-good and $f$ has no non-zero period.
-The main goal is to find $\id_R$-good functions, but working in generality allows better proofs.
-To classify $\iota$-good functions, we reduce to non-periodic case.
+Let $R$ be a ring.
+Find all functions $f : R \to R$ such that for any $x, y \in R$,
+\[ f(f(x) f(y)) + f(x + y) = f(xy). \tag{*}\label{2017a6-eq0} \]
 
 
 
+\subsection*{Main Progress}
+
+Let $I$ be a double-sided ideal of $R$ and $[\cdot] : R \to R/I$ be the projection map.
+Let $\phi : R/I \to R$ be a group homomorphism such that $[\phi(x)] = x$ for all $x \in R/I$.
+Let $a$ be an element of the centre $Z(R/I)$ of $R/I$ such that $a^2 = 1$.
+Then the function $f(x) = \phi(a(1 - [x]))$ satisfies~\eqref{2017a6-eq0}.
+If $2$ and $3$ are non-zero-divisors of $R$, then there are no other functions satisfying~\eqref{2017a6-eq0}.
+
+\textbf{Note.}
+There is a case where $I \neq 0$.
+Let $S$ be an arbitrary ring.
+Set $R = S[X]$ and define $f : R[X] \to R[X]$ by $f(P) = (1 - P(1)) X$ for all $P \in R[X]$.
+One can check that $I = \langle X - 1 \rangle$, $\iota(P) = XP$, and $a = 1$ works.
 
 
-\subsection*{Answer}
 
+\subsection*{Solution}
+
+The solution in \href{https://artofproblemsolving.com/community/c6h1480146p8693244}{this AoPS thread}, post \#75, given by \textbf{anantmudgal09}, works when $R$ is a field of characteristic $2$.
+Under a very small change, it also works when commutativity assumption is removed from $R$.
+We extend this solution to work over more general rings.
+See the third claim.
+
+It is easy to check that the functions given in the previous subsection are all satisfies~\eqref{2017a6-eq0}.
+The main problem is proving the converse.
+In doing so, we need to generalize the functional equation as follows.
+
+\begin{problem}
+Let $R$ be a ring and let $\iota : G \to R$ be a group homomorphism, where $G$ is an (additive) abelian group.
+Find all functions $f : R \to G$ such that for any $x, y \in R$,
+\[ f(\iota(f(x)) \iota(f(y))) + f(x + y) = f(xy). \tag{**}\label{2017a6-eq00} \]
+\end{problem}
+\begin{proof}[Answer]
 Let $I$ be a double-sided ideal of $R$ and $[\cdot] : R \to R/I$ be the projection map.
 Let $\phi : R/I \to G$ be a group homomorphism such that $[\iota(\phi(x))] = x$ for all $x \in R/I$.
 Let $a \in Z(R/I)$ such that $a^2 = 1$.
-Then the function $f(x) = \phi(a(1 - [x]))$ is $\iota$-good.
-This construction gives us all the $\iota$-good functions in the following cases:
-\begin{enumerate}
-
-    \item 
-    $G$ is $2$-torsion free and $3$-torsion free.
-    
-    \item
-    $G = R$ is a simple ring of characteristic not equal to $2$ and $\iota = \id_R$.
-    Since $Z(R)$ is a field, this means that the good functions are $0$, $x \mapsto 1 - x$, and $x \mapsto x - 1$.
-    
-    \item
-    $G = R$ is a field of characteristic $2$ and $\iota = \id_R$.
-    That is, the good functions are $0$ and $x \mapsto x + 1$.
-
-\end{enumerate}
-
-
-
-
-
-\subsection*{References}
-
-\begin{itemize}
-    
-    \item
-    \url{https://artofproblemsolving.com/community/c6h1480146p8693244}.
-    
-    Solution in AoPS by \textbf{anantmudgal09} (post \#75).
-    We follow the main step of this solution when $G$ is $2$-torsion-free.
-
-    \item
-    \url{https://artofproblemsolving.com/community/c6h1480146p29214012}.
-
-    Solution in AoPS by \textbf{BlazingMuddy} (author of this project, post \#176).
-    We follow the main step of this solution when $R$ is a field.
-    More generally, the steps allows computing $f(x)$ when $x$ is a unit of $R$.
-
-\end{itemize}
-
-
-
-
-
-\subsection*{Excellent functions}
-
-Let $R$ be a ring and $G$ be an abelian group.
-An \emph{excellent function} from $R$ to $G$ is a function $f : R \to G$ such that for all $x, y \in R$,
-\[ f(x + y - xy) + f(1 - (x + y)) = f(1 - xy). \tag{**}\label{2017a6-eq-excellent0} \]
-
-Excellent functions appear in the classification of non-periodic good functions.
-Namely, an injective non-periodic good function induces an excellent function.
-Clearly, group homomorphisms are excellent functions.
-The main question of interest is determining if the converse holds.
-In this part, we try to answer this question and explore some properties of excellent function.
-
-By plugging $y = 0$ into~\eqref{2017a6-eq-excellent0}, we get $f(x) + f(1 - x) = f(1)$ for all $x \in R$.
-By plugging $y = 1$ instead, we get $f(1) + f(-x) = f(1 - x)$, which implies $f(x) + f(1) = f(x + 1)$ for all $x \in R$.
-Thus we also get $f(-x) = -f(x)$ for all $x \in R$ and $f(0) = 0$.
-By induction on $n \in \Z$, we get $f(n) = n f(1)$ and $f(x + n) = f(x) + n f(1)$ for all $x \in R$.
-By replacing $(x, y)$ with $(-x, -y)$ and using the equalities $f(-x) = -f(x)$ and $f(x + 1) = f(x) + 1$, one gets
-\[ f(xy + x + y) = f(xy) + f(x + y). \tag{3.1}\label{2017a6-eq-excellent1} \]
-
-Now we continue with more equations.
-The above one yields
-\[ f((x + 1)(y + 1)) = f(xy) + f(x + y) + f(1). \]
-By induction on $n \in \Z$, we get that for any $x, y \in R$,
-\[ f((x + n)(y + n)) = f(xy) + n f(x + y) + n^2 f(1). \tag{3.2}\label{2017a6-eq-excellent2} \]
-Plugging $y = 0$ and replacing $x$ with $x - n$, we get $f(nx) = n f(x)$ for any $n \in \Z$ and $x \in R$.
-We now prove:
-
-\begin{lemma}\label{2017a6-excellent-main}
-For any $a, b \in R$, we have $2 f(3a + b) = 2 (3 f(a) + f(b))$.
-In particular, $f$ must be a group homomorphism if $G$ is $2$-torsion free and $3$-torsion free.
-\end{lemma}
-\begin{proof}
-By replacing $x$ with $2x$ and using $n = 2$ in~\eqref{2017a6-eq-excellent2}, we get that for any $x, y \in R$,
-\[ 2 f((x + 1)(y + 2)) = 2 (f(xy) + f(2x + y) + 2 f(1)). \]
-By symmetry, for any $x, y \in R$,
-\[ 2 f((x + 2)(y + 1)) = 2 (f(xy) + f(x + 2y) + 2 f(1)). \]
-We can now write $2 f((x + 3)(y + 3))$ in two ways:
-\[ 2(f(xy) + 3 f(x + y) + 9 f(1)) = 2 f((x + 3)(y + 3)) = 2 (f(xy) + f(2x + y) + f(x + 2y) + 9 f(1)). \]
-After some cancellations, we simplify to
-\[ 6 f(x + y) = 2 (f(2x + y) + f(x + 2y)). \]
-The lemma follows by change of variables $(x, y) = (2a + b, -(a + b))$ and slight algebraic manipulation.
+Then the function $f(x) = \phi(a(1 - [x]))$ satisfies~\eqref{2017a6-eq00}.
+If $G$ is $2$- and $3$-torsion free, then there are no other functions satisfying~\eqref{2017a6-eq00}.
 \end{proof}
 
+This recovers the answer for~\eqref{2017a6-eq0} by setting $\iota$ to be the identity map.
+We now solve~\eqref{2017a6-eq00}.
 
+We say that a function $f : R \to G$ is $\iota$-\textbf{good} if it satisfies~\eqref{2017a6-eq00}.
+We say, furthermore, that $f$ is \textbf{non-periodic} if any elements $c, d \in R$ satisfying $f(x + c) = f(x + d)$ for all $x \in R$ also satisfies $c = d$.
+We start with a reduction from $\iota$-good functions to non-periodic $\iota$-good functions.
+Before that, we note the following property: for any $a, b, c, d \in R$ such that $f(a) = f(b)$ and $f(c) = f(d)$, we have $f(a + c) = f(b + d)$ if and only if $f(ac) = f(bd)$.
 
-\textbf{Some further directions.}
-The set of excellent functions, say $E(R, G)$, form a group under addition.
-Thus, we can consider the quotient $Q(R, G) = E(R, G)/\Hom(R, G)$.
-The main goal can be rephrased as $Q(R, G) = 0$ for all $R$ and $G$.
-
-To prove $Q(R, G) = 0$ by first principles, we would check that $f(x + y) = f(x) + f(y)$ for any $x, y \in E(R, G)$.
-Now we fix $x$ and $y$, and consider the evaluation homomorphism $\phi : \Z \langle X, Y \rangle \to R$ given by $X \mapsto x$ and $Y \mapsto y$, where $\Z \langle X, Y \rangle$ is the ring of non-commutative integer polynomials with two variables.
-Then one can check that $f \circ \phi \in E(\Z \langle X, Y \rangle, G)$, and if $f$ is a group homomorphism, then $f(x + y) = f(x) + f(y)$.
-Thus, the goal reduces to proving $Q(\Z \langle X, Y \rangle, G) = 0$ for all groups $G$.
-We can still make further reductions.
-
-The first lemma says that $Q(R, G)$ is $6$-torsion for any $R$ and $G$.
-Thus we can write $Q(R, G) = Q_2(R, G) \times Q_3(R, G)$, where $Q_p(R, G)$ is the set of $p$-torsion elements for $p = 2, 3$.
-When $R$ is free as an abelian group, e.g. $R = \Z \langle X, Y \rangle$, we can reduce even further.
-For $p = 2, 3$, by shifting with a group homomorphism, each element of $Q_p(R, G)$ has a representative that sends a fixed $\Z$-basis of $R$, say $\cB$, to zero.
-Then $f$ is $p$-torsion as an element of $E(R, G)$, so in fact $f \in E(R, G[p])$, where $G[p]$ is the set of $p$-torsion elements of $G$.
-If $f$ is non-zero, then we can choose an appropriate $\F_p$-linear functional $\alpha : G[p] \to \F_p$ such that $\alpha \circ f \in E(R, \F_p)$ is non-zero either.
-Since it still sends the basis $\cB$ to zero, $\alpha \circ f$ is not a group homomorphism, which means $Q(R, \F_3) \neq 0$.
-This means that the goal reduces entirely to two equalities: $Q_2(\Z \langle X, Y \rangle, \F_2) = 0$ and $Q_3(\Z \langle X, Y \rangle, \F_3) = 0$.
-
-If $p = 3$, then the second lemma says more.
-For any ring $R$ and $f \in E(R, \F_3)$ and $a, b \in R$, we have $f(3a + b) = 3 f(a) + f(b) = f(b)$.
-In particular, $f$ naturally induces an excellent function in $E(R/(3), \F_3)$.
-That is, we get $E(R, \F_3) \equiv E(R/(3), \F_3)$.
-Thus, the equality $Q_3(\Z \langle X, Y \rangle, \F_3) = 0$ reduces further to $Q_3(\F_3[X, Y], \F_3) = 0$.
-
-
-
-
-
-\subsection*{Basic results}
-
-Here, we collect basic results regarding $\iota$-good functions, mainly those obtained by plug-and-chug.
-An important observation is that if $f(a) = f(b)$ and $f(c) = f(d)$, then we have $f(a + c) = f (b + d) \iff f(ac) = f(bd)$.
-Taking $c = d$ gives $f(a + c) = f(b + c) \iff f(ac) = f(bc) \iff f(ca) = f(cb)$ whenever $f(a) = f(b)$.
-Taking $c = d = 1$, we get that $f(a) = f(b)$ implies $f(a + 1) = f(b + 1)$.
-By induction on $n \in \N$, we get that $f(a) = f(b)$ implies $f(a + n) = f(b + n)$.
-We also get that $f(a) = f(b)$ implies $f(na) = f(nb)$.
-
-By taking $c = d = -1$ and replacing $a$ and $b$ with $a + 1$ and $b + 1$, we get that $f(a) = f(b)$ implies $f(-(a + 1)) = f(-(b + 1))$.
-Then $f(a) = f(b)$ implies $f(-a) = f(-b)$, and in fact we get more:
-\[ f(a) = f(b) \iff f(a + 1) = f(b + 1) \iff f(-a) = f(-b). \]
-By induction, we get $f(a) = f(b) \iff f(a + n) = f(b + n)$ for any $n \in \Z$.
-
-By plugging $x = y = 0$ into~\eqref{2017a6-eq0}, we get $f(\iota(f(0))^2) = 0$.
-We now show:
-
-\begin{theorem}
-For any $c \in R$ such that $f(c) = 0$, we have $f(x + c) = f(x + 1)$ for any $x \in R$.
-In particular, $f(1) = 0$, and if $f$ is non-periodic, then $f(c) = 0 \iff c = 1$ and so $\iota(f(0))^2 = 1$.
-\end{theorem}
-\begin{proof}
-We first show that $f(c^2) = f(c^3) = 0$.
-First, for any $d \in R$ such that $f(d) = 0$, plugging $y = d$ into~\eqref{2017a6-eq0} yields
-\[ f(0) + f(x + d) = f(xd) \quad \forall x \in R. \]
-Now we have $f(c^2) = f(0) + f(2c)$ and $f(c^3) = f(0) + f(c^2 + c) = 2 f(0) + f(2c + 1)$.
-Thus our goal reduces to showing that $f(2c) = -f(0)$ and $f(2c + 1) = -2 f(0)$.
-Since $f(c + 1) = -f(0)$, the former yields $f(2c) = f(c + 1)$, and so
-\[ f(2c + 1) = f(c + 2) = f(2c) - f(0) = -f(0) - f(0) = -2 f(0). \]
-
-We now show that $f(2c) = -f(0)$.
-Since $f(c) = f(\iota(f(0))^2) = 0$, it suffices to show that $f(2 \iota(f(0))^2) = -f(0)$.
-Indeed, we have $f(0) + f(c + 1) = f(c) = 0$, so $f(c + 1) = -f(0)$.
-Plugging $x = 0$ and $y = c + 1$ into~\eqref{2017a6-eq0} yields $f(- \iota(f(0))^2) = 2 f(0)$.
-Plugging $x = 0$ and $y = -\iota(f(0))^2$ into~\eqref{2017a6-eq0} yields $f(2 \iota(f(0))^2) = -f(0)$.
-
-We now go back to the main goal.
-We write down $f(xc^4)$ in two ways:
-\[ f(xc^4) = f(0) + f(xc^2 + c^2) = f(0) + f((x + 1) c^2) = 2 f(0) + f(x + 1 + c^2), \]
-\[ f(xc^4) = f(0) + f(xc + c^3) = f(0) + f((x + c^2) c) = 2 f(0) + f(x + c + c^2). \]
-Replacing $x$ with $x - c^2$, we are done.
-\end{proof}
-
-Plugging $y = 1$ into~\eqref{2017a6-eq0} yields $f(0) + f(x + 1) = f(x)$ or $f(x + 1) = f(x) - f(0)$ for all $x \in R$.
-Next, for any $x \in R$, we have $f(\iota(f(0)) \iota(f(x))) = f(0) - f(x)$.
-Replacing $x$ with $\iota(f(0)) \iota(f(x))$, we get
-\[ f(\iota(f(0))^2 - \iota(f(0)) \iota(f(x))) = f(\iota(f(0)) \iota(f(x) - f(0))) = f(x). \]
-By the previous lemma,
-\[ f(\iota(f(0))^2 - \iota(f(0)) \iota(f(x))) = f(1 - \iota(f(0)) \iota(f(x))) = f(-\iota(f(0)) \iota(f(x))) - f(0), \]
-    and thus
-\[ f(-\iota(f(0)) \iota(f(x))) = f(x) + f(0) = f(x - 1) \quad \forall x \in R. \tag{1.1}\label{2017a6-eq-basic1} \]
-Since $f(a) = f(b)$ implies $f(-a) = f(-b)$, we get
-\[ f(0) - f(x) = f(\iota(f(0)) \iota(f(x))) = f(1 - x). \tag{1.2}\label{2017a6-eq-basic2} \]
-Then we get $f(x) + f(1 - x) = f(0)$, and thus
-\[ f(x) + f(-x) = 2 f(0) \quad \forall x \in R. \tag{1.3}\label{2017a6-eq-basic3} \]
-
-\begin{lemma}
-Suppose that $f$ is non-periodic $\iota$-good.
-Then for any $x \in R$, we have $\iota(f(0)) \iota(f(x)) = \iota(f(x)) = \iota(f(0))$.
-\end{lemma}
-\begin{proof}
-Plug $(\iota(f(1 - x)) \iota(f(0)), \iota(f(0)) \iota(f(x)))$ in place of $(x, y)$ in~\eqref{2017a6-eq0}.
-Using $\iota(f(0))^2 = 1$ and~\eqref{2017a6-eq-basic2}, we get
-\[ f(\iota(f(x)) \iota(f(1 - x))) + f(\iota(f(1 - x)) \iota(f(0)) + \iota(f(0)) \iota(f(x))) = f(\iota(f(1 - x)) \iota(f(x))). \]
-On the other hand,~\eqref{2017a6-eq0} with $x = 1 - y$ gives $f(\iota(f(1 - y)) \iota(f(y))) = f(y - y^2)$ for all $y \in R$.
-Simplifying gives
-\[ f(\iota(f(1 - x)) \iota(f(0)) + \iota(f(0)) \iota(f(x))) = 0 \iff \iota(f(1 - x)) \iota(f(0)) + \iota(f(0)) \iota(f(x)) = 1. \]
-Since $f(x) + f(1 - x) = f(0)$, adding $\iota(f(x)) \iota(f(0))$ to the left hand side gives
-\[ \iota(f(0))^2 + \iota(f(x)) \iota(f(0)) = \iota(f(0)) \iota(f(x)) + 1. \]
-The lemma is proved, since $\iota(f(0))^2 = 1$.
-\end{proof}
-
-Finally, we classify injective non-periodic $\iota$-good functions.
-This involves the theory of excellent functions.
-
-\begin{lemma}\label{2017a6-nonperiodic-injective}
-Suppose that all excellent functions $R \to G$ are group homomorphisms.\footnote{That is, $Q(R, G) = 0$, using the notation from the excellent function section.}
-Suppose that $f$ is non-periodic $\iota$-good and injective.
-Then there exists $a \in Z(R)$ with $a^2 = 1$ and a group homomorphism $\phi : R \to G$ with $\iota \circ \phi = \id_R$ such that $f(x) = \phi(a(1 - x))$ for all $x \in R$.
-\end{lemma}
-\begin{proof}
-Take $a = \iota(f(0))$; we proved $a^2 = 1$.
-By~\eqref{2017a6-eq-basic2} and injectivity, we get $a \iota(f(x)) = 1 - x$ and thus $\iota(f(x)) = a(1 - x)$ for all $x \in R$.
-The previous lemma then yields $ax = xa$ for all $x \in R$, and thus $a \in Z(R)$.
-Using the equation $\iota(f(x)) = a(1 - x)$,~\eqref{2017a6-eq0} simplifies to
-\[ f((1 - x)(1 - y)) + f(x + y) = f(xy). \]
-Then the function $x \mapsto f(1 - x)$ is excellent, and thus is a group homomorphism, say $\rho$.
-Finally, choosing $\phi(x) = \rho(ax) = f(1 - ax)$ works.
-\end{proof}
-
-
-
-
-
-\subsection*{Period congruence: from general to non-periodic}
-
-Here, we relate general good functions with non-periodic good functions.
-The main result is as follows.
-
-\begin{theorem}
-The $\iota$-good functions are in an explicit bijection with the disjoint union of non-periodic $\phi \iota$-good functions across all double-sided ideals $I \subseteq R$, where $\phi : R \to R/I$ is the projection map.
-\end{theorem}
-
-More explicitly, the bijection is given by the following two results.
-We will omit $\circ$ for this section at some equations for readability purposes.
-
-\begin{theorem}
-Let $I$ be a two-sided ideal of $R$ and $\phi : R \to R/I$ be the projection map.
-Let $\iota : S \to R$ be a function, and let $f : R/I \to S$ be $\phi \iota$-good function.
-Then $f \circ \phi : R \to S$ is an $\iota$-good function.
-\end{theorem}
-\begin{proof}
-By~\eqref{2017a6-eq0} on $f$, for any $x, y \in R/I$,
-\[ f(\phi \iota f(x) \; \phi \iota f(y)) + f(x + y) = f(xy). \]
-Now replace $x$ and $y$ with $\phi(x)$ and $\phi(y)$ with $x, y \in R$:
-\[ f(\phi \iota f \phi(x) \; \phi \iota f \phi(y)) + f(\phi(x) + \phi(y)) = f(\phi(x) \phi(y)). \]
-Rearranging, we get that for any $x, y \in R$,
-\[ f \phi(\iota f \phi(x) \; \iota f \phi(y)) + f \phi(x + y) = f \phi(xy). \]
-This proves that $f \circ \phi$ is an $\iota$-good function.
-\end{proof}
-
-\begin{theorem}
-Let $f : R \to S$ be an $\iota$-good function, and define
-\[ I_f := \{c \in R : \forall x \in R, f(x + c) = f(x)\}. \]
+\begin{claim}
+Let $f$ be an $\iota$-good function, and denote
+\[ I_f = \{c \in R : \forall x \in R, f(x + c) = f(x)\}. \]
 Then $I_f$ is a double-sided ideal of $R$.
-
-Furthermore, let $\phi : R \to R/I_f$ to be the usual projection map.
-Then the reduction $\tilde{f} : R/I_f \to S$ of $f$ is a non-periodic $\phi \circ \iota$-good function.
-\end{theorem}
+Furthermore, let $\tilde{f} : R/I \to G$ be the quotient map induced by $f$.
+Then $\tilde{f}$ is $[\cdot] \circ \iota$-good and non-periodic, where $[\cdot] : R \to R/I_f$ is the projection map.
+\end{claim}
 \begin{proof}
-Clearly, $I_f$ is a monoid under addition.
-Since $R$ is a ring, it is group under addition.
-So, it remains to show that $cy, yc \in I_f$ for any $c \in I_f$ and $y \in R$.
-
-Comparing~\eqref{2017a6-eq0} using $y = c$ and $y = 0$ gives $f(xc) = f(0)$ for all $x \in R$.
-Then replacing $y$ with $yc$ yields
-\[ f(x) + f(\iota f(x) \iota f(0)) = f(0) = f(xyc) = f(x + yc) + f(\iota f(x) \iota f(yc)) = f(x + yc) + f(\iota f(x) \iota f(0)), \]
-    so $f(x + yc) = f(x)$ for all $x, y \in R$.
-That is, $yc \in I_f$ for any $y \in R$.
-Similarly, we also get $cy \in I_f$ for any $y \in R$.
-This shows that $I_f$ is a double-sided ideal.
-
-Now write $f = \tilde{f} \circ \phi$.
-Plugging into~\eqref{2017a6-eq0}, we get that for any $x, y \in R$,
-\begin{align*}
-    \tilde{f} \phi(\iota \tilde{f} \phi(x) \iota \tilde{f} \phi(y)) + \tilde{f} \phi(x + y) &= \tilde{f} \phi(xy) \\
-    \tilde{f} (\phi \iota \tilde{f} \phi(x) \phi \iota \tilde{f} \phi(y)) + \tilde{f}(\phi(x) + \phi(y)) &= \tilde{f}(\phi(x) \phi(y)).
-\end{align*}
-Since $\phi$ is surjective, this implies that $\tilde{f}$ is $\phi \iota$-good.
-Finally, one can check from the definition of $I_f$ that $\tilde{f}$ is non-periodic.
+The only part of the claim that is not immediate is that $I_f$ is closed under multiplication from both sides.
+To prove this, take any $c \in I_f$ and $t \in R$.
+Comparing~\eqref{2017a6-eq00} with $(x, y) = (c, y)$ and $(x, y) = (0, y)$ gives $f(cy) = f(0)$ for all $y \in R$.
+Comparing~\eqref{2017a6-eq00} with $(x, y) = (ct, y)$ and $(x, y) = (0, y)$ then yields
+\[ f(\iota(f(0)) \iota(f(y))) + f(y) = f(0) = f(cty) = f(\iota(f(0)) \iota(f(y))) + f(ct + y). \]
+As this holds for any $y \in R$, we get $ct \in I_f$, as desired.
+By symmetry, we also get $tc \in I_f$.
 \end{proof}
 
+As a result, we may make the assumption that $f$ is non-periodic whenever necessary.
+We will not make this assumption for now.
+We continue with more observations.
 
+Consider $a, b \in R$ arbitrary with $f(a) = f(b)$.
+Then comparing~\eqref{2017a6-eq00} with $(x, y) = (a, 1)$ and $(x, y) = (b, 1)$ gives $f(a + 1) = f(b + 1)$.
+Applying the argument once more gives $f(a + 2) = f(b + 2)$, and plugging into~\eqref{2017a6-eq00} gives $f(2a) = f(2b)$.
+Meanwhile, comparing~\eqref{2017a6-eq00} with $(x, y) = (a + 1, -1)$ and $(x, y) = (b + 1, -1)$ gives $f(-a) = f(-b)$.
+In particular, we get $f(-a) = f(-b)$ if and only if $f(a) = f(b)$.
 
+We now show that $f(1) = 0$ and more: if $f(c) = 0$, then $f(x + c) = f(x + 1)$ for any $x \in R$.
+First, note that plugging $x = y = 0$ into~\eqref{2017a6-eq00} yields $f(\iota(f(0))^2) = 0$.
 
-
-\subsection*{Solution for subcases}
-
-Here we prove lemmas that allow us to solve the problem for the desired subcases.
-By Lemma~\ref{2017a6-nonperiodic-injective}, most of the work reduces to showing that $f$ is injective.
-
-\begin{lemma}\label{2017a6-nonperiodic-2tf}
-If $G$ is $2$-torsion free, then every non-periodic $\iota$-good function is injective.
-\end{lemma}
+\begin{claim}
+If $f(c) = 0$, then $f(x + c) = f(x + 1)$ for any $x \in R$.
+\end{claim}
 \begin{proof}
-Let $a, b \in R$ such that $f(a) = f(b)$.
-Since $f(a) = f(b)$, $f(b) = f(a)$, and $f(a + b) = f(b + a)$, we get $f(ab) = f(ba)$.
-Then we have $f(-ab) = f(-ba)$ and $f(-a) = f(-b)$.
-This implies $f(a - b) = f(b - a)$.
+For convenience, denote $C = \iota(f(0))$.
+For any $d \in R$ such that $f(d) = 0$, plugging $y = d$ into~\eqref{2017a6-eq00} yields
+\[ f(0) + f(x + d) = f(xd). \tag{1}\label{2017a6-eq1} \]
+In particular, we also get $f(d + 1) = -f(0)$.
+Since $f(C^2) = 0$, plugging $(x, y) = (0, C^2 + 1)$ into~\eqref{2017a6-eq00} yields $f(-C^2) = 2f(0)$.
+Now plugging $(x, y) = (0, -C^2)$ into~\eqref{2017a6-eq00} yields $f(2C^2) = -f(0)$.
+From the latter, we also get that $f(d) = 0$ implies $f(2d) = -f(0)$.
 
-Finally, substitute $x = a - b$ into~\eqref{2017a6-eq-basic3}.
-We get $2 f(a - b) = 2 f(0)$.
-Since $G$ is $2$-torsion free, we get
-\[ f(a - b) = f(0) \iff f(a - b + 1) = 0 \iff a - b + 1 = 1 \iff a = b. \]
-This proves that $f$ is injective.
+Now fix some $c \in R$ such that $f(c) = 0$.
+By the previous paragraph, we have $f(2c) = -f(0)$.
+Then~\eqref{2017a6-eq1} yields $f(c^2) = f(0) + f(2c) = 0$.
+Since $f(c) = 0$,~\eqref{2017a6-eq1} yields $f(c + 1) = -f(0) = f(2c)$, and so
+\[ f(2c + 1) = f(c + 2) = f(2c) - f(0) = -2 f(0). \]
+Thus we get $f(c^3) = f(0) + f(c^2 + c) = 2f(0) + f(2c + 1)$.
+In summary, we get $f(c^2) = f(c^3) = 0$.
+
+Finally, we write $f(xc^4)$ in two ways.
+By~\eqref{2017a6-eq1} and the fact that $f(c^2) = f(c^3) = 0$, we get
+\[ f(xc^4) = f(0) + f(xc + c^3) = f(0) + f((x + c^2) c) = 2 f(0) + f(x + c + c^2), \]
+\[ f(xc^4) = f(0) + f(xc^2 + c^2) = f(0) + f((x + 1) c^2) = 2 f(0) + f(x + 1 + c^2). \]
+Replacing $x$ with $x - c^2$, we get $f(x + c) = f(x + 1)$ for all $x \in R$, as desired.
 \end{proof}
 
-\begin{corollary}
-Suppose that $G$ is $2$-torsion free and $3$-torsion free.
-Then all non-periodic $\iota$-good functions are of form $x \mapsto \phi(a(1 - x))$ for some $a \in Z(R)$ with $a^2 = 1$ and group homomorphism $\phi : R \to G$ with $\iota \circ \phi = \id_R$.
-All $\iota$-good functions are of form $x \mapsto x \mapsto \phi(a(1 - [x]))$ for some $a \in Z(R/I)$ with $a^2 = 1$ and group homomorphism $\phi : R/I \to G$ with $[\iota(\phi(x))] = x$ for all $x \in R/I$.
-\end{corollary}
+In particular, we get $f(1) = 0$ as well.
+Plugging $y = 1$ into~\eqref{2017a6-eq00} now yields $f(x + 1) = f(x) - f(0)$.
+Replacing $x$ with $x - 1$, we get
+\[ f(x - 1) = f(x) + f(0). \tag{2}\label{2017a6-eq2} \]
+For any $t \in R$, by plugging $(x, y) = (0, \iota(f(0)) \iota(f(t)))$ into~\eqref{2017a6-eq00} and then applying~\eqref{2017a6-eq00} gives
+\[ f(1 - \iota(f(0)) \iota(f(t))) = f(t). \tag{3}\label{2017a6-eq3} \]
+Then applying~\eqref{2017a6-eq2} gives us
+\[ f(\iota(f(0)) \iota(f(t))) + f(0) = f(\iota(f(0)) \iota(f(t)) - 1) = f(-t). \]
+Applying~\eqref{2017a6-eq00} again then gives us
+\[ f(t) + f(-t) = 2 f(0). \tag{4}\label{2017a6-eq4} \]
 
-\begin{lemma}\label{2017a6-good-simple-ring-case}
-If $R$ is simple, then $f$ is $\iota$-good iff either $f = 0$ or $f$ is non-periodic $\iota$-good.
-\end{lemma}
+\begin{claim}
+Suppose that $G$ is $2$-torsion free.
+Then any non-periodic $\iota$-good function $f : R \to G$ is injective.
+\end{claim}
 \begin{proof}
-The fact that $R$ is simple means that the period ideal $I_f$ of $f$ is either $R$ or $(0)$.
-Thus $f$ is either constant, and so constant zero, or non-periodic, respectively.
+Fix $a, b \in R$ such that $f(a) = f(b)$.
+By~\eqref{2017a6-eq00}, we get $f(ab) = f(ba)$.
+Then we also get $f(-a) = f(-b)$ and $f((-a)b) = f((-b)a)$.
+By~\eqref{2017a6-eq00}, we then get $f(b - a) = f(a - b)$.
+By~\eqref{2017a6-eq4}, we get $2 f(a - b) = 2 f(0)$.
+Since $G$ is $2$-torsion free, we then get $f(a - b) = f(0) \iff f(a - b + 1) = 0 \iff a = b$, as desired.
 \end{proof}
 
-\begin{corollary}
-If $R$ is simple, then the $\id_R$-good functions are $0$, $1 - x$, and $x - 1$.
-\end{corollary}
+We now assume that $f$ is injective and show that it has the desired form.
+We take $a = \iota(f(0))$; we proved that $f(a^2) = f(1) = 0$ and so $a^2 = 1$.
+Applying injectivity to~\eqref{2017a6-eq3} yields
+\[ \iota(f(t)) = a(1 - t). \tag{5}\label{2017a6-eq5} \]
+Comparing~\eqref{2017a6-eq00} with $(x, y) = (t, 0)$ and $(x, y) = (0, t)$ shows that $a \iota(f(t)) = \iota(f(t)) a$, or $a \cdot a(1 - t) = a(1 - t) \cdot a$, for any $t \in R$.
+Replacing $t$ with $1 - at$ and applying~\eqref{2017a6-eq5} gives us $a \in Z(R)$.
+Also due to~\eqref{2017a6-eq5},~\eqref{2017a6-eq00} reduces to
+\[ f((1 - x)(1 - y)) + f(x + y) = f(xy). \tag{6}\label{2017a6-eq6} \]
 
-\begin{lemma}\label{2017a6-integral-domain-char2-unit}
-Suppose that $R$ is an integral domain of characteristic $2$.
-Let $f$ be a non-periodic $\iota$-good function.
-Then $\iota(f(x)) = 1 - x$ for any $x \in R^{\times}$.
-\end{lemma}
+\begin{claim}
+Suppose that $G$ is $2$- and $3$-torsion free.
+Then for any function $f : R \to G$ satisfying~\eqref{2017a6-eq6}, there exists a group homomorphism $\phi : R \to G$ such that $f(x) = \phi(1 - x)$ for all $x \in R$.
+\end{claim}
 \begin{proof}
-From~\eqref{2017a6-eq0}, we get that for any units $a \in R^{\times}$,
-\[ f(\iota(f(a + 1)) \iota(f(a^{-1} + 1))) = 0 \iff \iota(f(a + 1)) \iota(f(a^{-1} + 1)) = 1. \]
-Thus, if $a$ is a unit, then $\iota(f(a + 1))$ is also a unit.
-Since $R$ is an integral domain of characteristic $2$, we also have $\iota(f(0))^2 = 1 \iff \iota(f(0)) = 1$.
-From this, it is easy to see that
-\[ f(\iota(f(a + 1))) = f(\iota(f(0)) \iota(f(a + 1))) = f(0) - f(a + 1), \]
-\[ (\iota \circ f)^2(a + 1) = \iota(f(0)) - \iota(f(a + 1)) = \iota(f(0)) + \iota(f(a + 1)) = \iota(f(a)). \]
-One can check that $\iota(f(a)) = \iota(f(b))$ always implies $a = b$, namely, from comparing~\eqref{2017a6-eq0} using $y = 0$.
-Thus we get $f(\iota(f(a + 1))) = f(a)$ for any unit $a$.
-It remains to show the following: if $a, b \in R^{\times}$ satisfy $f(a) = f(b)$, then $a = b$.
+Writing $g(x) = f(1 - x)$, we get
+\[ g(x + y - xy) + g(1 - (x + y)) = g(1 - xy). \tag{7}\label{2017a6-eq7} \]
+By plugging $y = 0$ into~\eqref{2017a6-eq7}, we get $g(x) + g(1 - x) = g(1)$ for all $x \in R$.
+By plugging $y = 1$ instead, we get $g(1) + g(-x) = g(1 - x)$, which implies $g(x) + g(1) = g(x + 1)$ and $g(-x) = -g(x)$ for all $x \in R$.
+In particular, $g(0) = 0$.
 
-Fix some $a, b \in R^{\times}$ with $f(a) = f(b)$.
-Consider~\eqref{2017a6-eq0} with $(x, y) = (a + 1, b^{-1} + 1)$.
-Since $f(1) = 0$, we get
-\begin{align*}
-    f((a + 1)(b^{-1} + 1)) &= f((a + 1) + (b^{-1} + 1)) \\
-    f(ab^{-1} + a + b^{-1} + 1) &= f(a + b^{-1}) \\
-    f(ab^{-1} + a + b^{-1}) &= f(1 + a + b^{-1}).
-\end{align*}
-By symmetry, we also have
-\[ f(ba^{-1} + b + a^{-1}) = f(1 + b + a^{-1}). \]
-Now notice the identity
-\[ (1 + a + b^{-1})(1 + b + a^{-1}) = (ab^{-1} + a + b^{-1})(ba^{-1} + b + a^{-1}). \]
-As a result, by plugging the appropriate values into~\eqref{2017a6-eq0}, we get
-\[ f((1 + a + b^{-1}) + (1 + b + a^{-1})) = f((ab^{-1} + a + b^{-1}) + (ba^{-1} + b + a^{-1})). \]
-Letting $C = a + b + 1$ and $D = a^{-1} + b^{-1} + 1$, the above equation is equivalent to saying that
-\[ f(C + D) = f(CD + 1) = f(CD) + 1. \]
-But then plugging $(x, y) = (C, D)$ into~\eqref{2017a6-eq0} yields
-\[ f(f(C) f(D)) = 1 \iff f(C) f(D) = 0 \iff f(C) = 0 \vee f(D) = 0 \iff C = 1 \vee D = 1. \]
-By definition of $C$ and $D$, and by $\rchar(R) = 2$, this is equivalent to
-\[ a + b + 1 = 1 \vee a^{-1} + b^{-1} + 1 = 1 \iff a = b \vee a^{-1} = b^{-1}. \]
-But $a^{-1} = b^{-1}$ yields $a = b$.
-So, regardless, we have obtained $a = b$, as desired.
+By induction on $n \in \Z$, we get $g(n) = n g(1)$ and $g(x + n) = g(x) + n g(1)$ for all $x \in R$.
+By replacing $(x, y)$ with $(-x, -y)$ and using the equalities $g(-x) = -g(x)$ and $g(x + 1) = g(x) + 1$, one gets
+\[ g(xy + x + y) = g(xy) + g(x + y). \]
+By induction on $n \in \Z$, we then get that for any $x, y \in R$,
+\[ g((x + n)(y + n)) = g(xy) + n g(x + y) + n^2 f(1). \tag{8}\label{2017a6-eq8} \]
+Plugging $y = 0$ and replacing $x$ with $x - n$, we get $g(nx) = n g(x)$ for any $n \in \Z$ and $x \in R$.
+
+Now replace $x$ with $2x$ in~\eqref{2017a6-eq8} and use $n = 2$.
+Since $G$ is $2$-torsion-free, we get that for any $x, y \in R$,
+\[ g((x + 1)(y + 2)) = g(xy) + g(2x + y) + 2 g(1). \]
+By symmetry, we also get
+\[ g((x + 2)(y + 1)) = g(xy) + g(x + 2y) + 2 g(1). \]
+Combining the two equalities, we get
+\[ g((x + 3)(y + 3)) = g(xy) + g(2x + y) + g(x + 2y) + 9 g(1). \]
+Applying~\eqref{2017a6-eq8} yields $3 g(x + y) = g(2x + y) + g(x + 2y)$ for all $x, y \in R$.
+By substituting $(x, y) = (2a - b, 2b - a)$, we get $3 g(a + b) = 3 (g(a) + g(b))$.
+Since $G$ is $3$-torsion-free, we are done.
 \end{proof}
 
-\begin{corollary}
-If $R$ is a field, then the $\id_R$-good functions are $0$ and $1 - x$.
-\end{corollary}
+Since left multiplication by $a$ is an invertible group homomorphism, we can instead write $f(x) = \phi(a(1 - x))$ for some group homomorphism $\phi : R \to G$.
+Together with~\eqref{2017a6-eq5}, this implies that $\iota \circ \phi$ is the identity on $R$.
+We are done.

@@ -57,13 +57,13 @@ theorem good_iff_of_spec (hn : ¬good n) (hn0 : good n.succ) : good k ↔ n.succ
 /-! ### `2` is not good -/
 
 theorem rat_inv_den {q : ℚ} (h : 0 < q) : (q⁻¹.den : ℤ) = q.num := by
-  rw [q.inv_def', Rat.divInt_eq_div]
+  rw [q.inv_def, Rat.divInt_eq_div]
   exact Rat.den_div_eq_of_coprime (Rat.num_pos.mpr h) q.reduced.symm
 
 theorem den_eq_of_add_eq_int : ∀ {q r : ℚ} {k : ℤ}, q + r = k → q.den = r.den := by
   have h {q r : ℚ} {k : ℤ} (h : q + r = k) : q.den ∣ r.den := by
     have h0 := Rat.add_den_dvd k (-r)
-    rwa [Rat.intCast_den, Nat.one_mul, Rat.neg_den, ← h, add_neg_cancel_right] at h0
+    rwa [Rat.den_intCast, Nat.one_mul, Rat.neg_den, ← h, add_neg_cancel_right] at h0
   intro q r k h0; exact Nat.dvd_antisymm (h h0) (h ((r.add_comm q).trans h0))
 
 theorem nat_dvd_two_imp (hn : n ∣ 2) : n = 1 ∨ n = 2 := by
@@ -104,7 +104,7 @@ theorem setOf_nice_card_two_subseteq :
   replace hS0 := hS hS0; rcases hS0 with h0 | h0 <;> rcases hS1 with h1 | h1
   · right; left; exact Rat.ext h1 h0
   · right; right; exact Rat.ext h1 h0
-  · left; rw [Rat.inv_def']; exact Rat.ext h1 h0
+  · left; rw [Rat.inv_def]; exact Rat.ext h1 h0
   · refine absurd x.reduced ?_
     rw [h0, h1]; exact Nat.ne_of_beq_eq_false rfl
 

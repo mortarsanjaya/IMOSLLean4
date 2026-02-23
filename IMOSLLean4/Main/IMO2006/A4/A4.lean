@@ -44,9 +44,9 @@ theorem orderedPair_sum_eq_offDiag (a : ι × ι → M) :
   have h : Disjoint ((S ×ˢ S).filter λ p ↦ p.1 < p.2) ((S ×ˢ S).filter λ p ↦ p.2 < p.1) :=
     disjoint_left.mpr λ p h h0 ↦ (mem_filter.mp h).2.asymm (mem_filter.mp h0).2
   rw [← sum_disjUnion h]; refine sum_congr ?_ λ _ _ ↦ rfl
-  ---- Now show that the union of the two sets is indeed the off-diagonal set
-  rw [disjUnion_eq_union, ← filter_or]
-  simp only [lt_or_lt_iff_ne]; rfl
+  ---- Now show that the union of the two sets is indeed the off-diagonal set.
+  ext x; rw [mem_offDiag, disjUnion_eq_union, ← filter_or,
+    mem_filter, lt_or_lt_iff_ne, mem_product, and_assoc]
 
 theorem orderedPair_symm_sum {a : ι × ι → M} (ha : ∀ p, a p.swap = a p) :
     ((S ×ˢ S).filter λ p ↦ p.1 < p.2).sum a = ((S ×ˢ S).filter λ p ↦ p.2 < p.1).sum a := by

@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.CharP.Two
-import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Field
 
 /-!
 # IMO 2017 A6 (P2)
@@ -243,7 +243,7 @@ theorem case2_injective [Field F] [CharP F 2]
   ---- Consider the identity `(ab⁻¹ + a + b⁻¹)(ba⁻¹ + b + a⁻¹) = (a + b⁻¹ + 1)(b + a⁻¹ + 1)`.
   replace hab :
       (a * b⁻¹ + a + b⁻¹) * (b * a⁻¹ + b + a⁻¹) = (a + b⁻¹ + 1) * (b + a⁻¹ + 1) := by
-    field_simp [ha, hb]; ring
+    field
   /- Combining with the previous two equalities and the original FE, we get
     `f(ab⁻¹ + a + b⁻¹ + ba⁻¹ + b + a⁻¹) = f(a + b⁻¹ + 1 + b + a⁻¹ + 1)`. -/
   replace h : f ((a * b⁻¹ + a + b⁻¹) + (b * a⁻¹ + b + a⁻¹))
@@ -252,7 +252,7 @@ theorem case2_injective [Field F] [CharP F 2]
   ---- But `ab⁻¹ + a + b⁻¹ + ba⁻¹ + b + a⁻¹ = (a + b + 1)(b⁻¹ + a⁻¹ + 1) + 1`.
   replace h0 : (a * b⁻¹ + a + b⁻¹) + (b * a⁻¹ + b + a⁻¹)
       = (a + b + 1) * (b⁻¹ + a⁻¹ + 1) + 1 := calc
-    _ = (a + b + 1) * (b⁻¹ + a⁻¹ + 1) + 1 - (2 + 2) := by field_simp [ha, hb]; ring
+    _ = (a + b + 1) * (b⁻¹ + a⁻¹ + 1) + 1 - (2 + 2) := by field
     _ = (a + b + 1) * (b⁻¹ + a⁻¹ + 1) + 1 := by rw [CharTwo.add_self_eq_zero, sub_zero]
   ---- Thus `f((a + b + 1)(b⁻¹ + a⁻¹ + 1)) + 1 = f((b + a + 1) + (b⁻¹ + a⁻¹ + 1))`.
   replace hab : f ((a + b + 1) * (b⁻¹ + a⁻¹ + 1)) + 1

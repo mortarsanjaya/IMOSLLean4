@@ -11,6 +11,7 @@ import Mathlib.Tactic.Ring
 # IMO 2009 A2
 
 Let $F$ be a totally ordered field, and $a, b, c ∈ F$ be positive elements.
+Suppose that $a^{-1} + b^{-1} + c^{-1} = a + b + c$.
 Prove that
 $$ \frac{1}{(2a + b + c)^2} + \frac{1}{(2b + c + a)^2} + \frac{1}{(2c + a + b)^2}
   ≤ \frac{3}{16}. $$

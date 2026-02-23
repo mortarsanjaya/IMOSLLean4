@@ -11,19 +11,8 @@ import Mathlib.Data.Finite.Prod
 # IMO 2017 A3
 
 Let $S$ be a finite set, and fix some $f : S → S$.
-Suppose that, for any $g : S → S$, $$f ∘ g ∘ f = g ∘ f ∘ g \implies g = f. $$
+Suppose that for any $g : S → S$, $f ∘ g ∘ f = g ∘ f ∘ g$ implies $g = f$.
 Prove that $f^2(S) = f(S)$.
-
-### Further directions
-
-An interesting question is to classify all such functions $f$.
-Since $S$ is finite, the original question is equivalent to
-  saying that $f$ is a permutation on its own image.
-This is not enough; for example $f = \text{id}_S$ doesn't work if $|S| ≥ 2$.
-
-One possible point of view is to consider the graph $G = (V, E)$ where
-  $V = S^S$ and $(f, g) ∈ E$ iff $f ≠ g$ and $f ∘ g ∘ f = g ∘ f ∘ g$.
-The question becomes classifying isolated points of $G$.
 -/
 
 namespace IMOSL

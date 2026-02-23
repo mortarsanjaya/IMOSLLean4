@@ -89,6 +89,10 @@ theorem good.mod_le_div {f : Fin (m + 1) → Fin n} (hf : good f) :
 
 /-! ### Properties of a special function -/
 
+lemma Icc_succ_right (h : i ≤ j) : Icc i (j + 1) = insert (j + 1) (Icc i j) := by
+  ext x; rw [mem_Icc, mem_insert, mem_Icc, Nat.le_succ_iff, and_or_left, or_comm,
+    and_iff_right_of_imp λ hx ↦ Nat.le_trans (Nat.le_succ_of_le h) (Nat.le_of_eq hx.symm)]
+
 lemma image_mul_div (h : a ≤ b) (i : ℕ) :
     ∀ j ≥ i, (Icc i j).image (λ x ↦ a * x / b) = Icc (a * i / b) (a * j / b) := by
   ---- Induction on `n`; the base case `n = m` is immediate
@@ -97,7 +101,7 @@ lemma image_mul_div (h : a ≤ b) (i : ℕ) :
   ---- Induction step
   obtain ⟨c, hc⟩ : ∃ c, a * (j + 1) / b = a * j / b + c :=
     Nat.exists_eq_add_of_le (Nat.div_le_div_right (Nat.le_add_right _ _))
-  rw [← Nat.Icc_insert_succ_right (Nat.le_add_right_of_le hij), image_insert, hj, hc]
+  rw [Icc_succ_right hij, image_insert, hj, hc]
   replace hn : a * i / b ≤ a * j / b := Nat.div_le_div_right (Nat.mul_le_mul_left a hij)
   obtain rfl | rfl : c = 0 ∨ c = 1 := by
     rw [← Nat.le_one_iff_eq_zero_or_eq_one, ← Nat.add_le_add_iff_left, ← hc]
@@ -108,7 +112,7 @@ lemma image_mul_div (h : a ≤ b) (i : ℕ) :
   · rw [Nat.add_zero, insert_eq_self, mem_Icc]
     exact ⟨hn, Nat.le_refl _⟩
   ---- Case 2: `c = 1`
-  · exact Nat.Icc_insert_succ_right (Nat.le_succ_of_le hn)
+  · exact (Icc_succ_right hn).symm
 
 lemma exists_le_mul_div_add_eq (h : a ≤ b) (x : ℕ) (h0 : c ≤ a * m / b) :
     ∃ k ≤ m, a * (x + k) / b = a * x / b + c := by
@@ -156,7 +160,7 @@ lemma mul_div_good_of_bound {n m : ℕ} (h : m.succ % n.succ ≤ m.succ / n.succ
 
 
 
-/-! ### Final solution -/
+/-! ### Summary -/
 
 /-- Final solution -/
 theorem final_solution {n m : ℕ} :

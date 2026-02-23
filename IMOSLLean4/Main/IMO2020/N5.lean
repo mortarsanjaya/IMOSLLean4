@@ -206,7 +206,7 @@ theorem map_eq_zero_of_coprime_base_prime (hn : ¬hf.base_prime_PNat ∣ n) : f 
   ---- Write `p^{φ(n)} = x + 1` for some `x ∈ ℕ+`.
   obtain ⟨x, hx⟩ : ∃ x : ℕ+, hf.base_prime_PNat ^ n.1.totient = x + 1 := by
     apply PNat.exists_eq_succ_of_ne_one
-    rw [Ne, pow_eq_one_iff (n.1.totient_pos.mpr n.pos).ne.symm]
+    rw [Ne, pow_eq_one_iff, or_iff_left (n.1.totient_pos.mpr n.pos).ne.symm]
     exact hf.base_prime_PNat_is_prime.ne_one
   ---- Deduce `n ∣ x` and write `x = nq`, `p^{φ(n)} = nq + 1` for some `q ∈ ℕ+`.
   obtain ⟨q, rfl⟩ : n ∣ x := by
