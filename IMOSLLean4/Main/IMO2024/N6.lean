@@ -21,6 +21,7 @@ $n > 2$.
 
 We follow and generalize Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2024SL.pdf).
+
 Given a ring $R$, we say that a function $f : R → R$ is *good* if
   there exists $a, b, c ∈ R$ such that for any $r ∈ R$,
 $$ (ar^2 + br + c)(f(r) - (ar^2 + br + c)) ≠ 0. $$
@@ -28,27 +29,27 @@ We say that $R$ is *nice* if every *polynomial* over $R$ is good.
 The original problem is equivalent to finding all $n > 0$ for which $ℤ/nℤ$ is nice.
 
 The official solution shows that $ℤ/nℤ$ is if and only if $n > 2$.
-In the case $n$ is prime, the method from the official solution shows more:
-  every function from a finite field of characteristic not equal to $2$ to itself is good.
-In the case $n = 1, 2, 4$, we prove more; see below.
-
-Let us call a ring $R$ *boolean* if $r^2 = r$ for all $r ∈ R$.
-Then the function $x ↦ 1$ is not good over a boolean ring, so boolean rings are not nice.
-Since $ℤ/2ℤ$ and the trivial ring $ℤ/1ℤ$ are boolean, they are not nice.
-
-For the case $n = 4$, we claim that any function $f : ℤ/4ℤ → ℤ/4ℤ$ is good.
+The method also shows that every finite field of characteristic not equal to $2$ is nice.
+In the case $n = 4$, we show more: we claim that any function $f : ℤ/4ℤ → ℤ/4ℤ$ is good.
 We show that there exists $a, c ∈ ℤ/4ℤ$ such that $Q(r)(f(r) - Q(r)) ≠ 0$
   for all $r ∈ ℤ/4ℤ$, where $Q(r) = a(1 - r^2) + cr^2$.
 * If $\{f(0), f(2)\} ≠ \{1, 3\}$, pick any $a \in \{1, 3\} \setminus \{f(0), f(2)\}$.
 * If $\{f(0), f(2)\} = \{1, 3\}$, pick $a = 2$.
 
 We do similar procedure to pick $c$ but with $\{f(1), f(3)\}$ replacing $\{f(0), f(2)\}$.
+Since $Q(0) = Q(2) = a$ and $Q(1) = Q(3) = c$, it can be checked that the choices work.
 
 ### Notes
 
 It seems that the only part of the condition $0 ∉ f(F)$ that is needed is that $f(0) ≠ 0$,
 The condition that $f$ attains all non-zero values is only
   used to pick $y ≠ 0$ such that $f(y) = (1 - r') f(0)$.
+
+### Generalization
+
+It turns out that a finite field is nice if and only if it has cardinality not equal to $2$.
+
+See `IMOSLLean4/Generalization/IMO2024N6/IMO2024N6.lean` for the implementation.
 -/
 
 namespace IMOSL
@@ -238,10 +239,10 @@ end
 
 
 /-!
-### Reduction of cases over finite fields
+### Reduction over finite fields
 
 Let `F` be a finite field and `a, b ∈ F` be fixed elements.
-The main statement is that to show that every function `f : F → F` is good,
+The main statement is that to prove every function `f : F → F` is good,
   it suffices to check those with `f(F) = Fˣ` and `f(a) = f(b)`.
 -/
 
@@ -283,8 +284,9 @@ theorem linear_transform_solver [DivisionRing F] {a b c d : F} (h : a ≠ b) (h0
 /-- Let `F` be a finite field, and fix two distinct elements `a, b ∈ F`.
   Suppose that every function `f : F → F` with `f(a) = f(b)` and `0 ∉ f(F)` is good.
   Then every function `f : F → F` is good. -/
-theorem good_of_forall_map_pair_eq_map_ne_zero [Field F] [Fintype F] [DecidableEq F]
-    {a b : F} (hab : a ≠ b) (hF : ∀ f : F → F, f a = f b → (∀ r, f r ≠ 0) → good f) :
+theorem FiniteField.good_of_forall_map_pair_eq_map_ne_zero
+    [Field F] [Fintype F] [DecidableEq F] {a b : F} (hab : a ≠ b)
+    (hF : ∀ f : F → F, f a = f b → (∀ r, f r ≠ 0) → good f) :
     ∀ f : F → F, good f := by
   ---- Reduce to the case where `f` does not attain `0`.
   refine good_of_forall_map_ne_zero λ f hf ↦ ?_
@@ -312,7 +314,7 @@ theorem good_of_map_ne_of_ne_zero [Ring R] [NoZeroDivisors R]
 /-- Let `F` be a finite field, and fix two distinct elements `a, b ∈ F`.
   Suppose that every function `f : F → F` with `f(a) = f(b)` and `f(F) = Fˣ` is good.
   Then every function `f : F → F` is good. -/
-theorem good_of_forall_map_pair_eq_of_image_eq_units
+theorem FiniteField.good_of_forall_map_pair_eq_of_image_eq_units
     [Field F] [Fintype F] [DecidableEq F] {a b : F} (hab : a ≠ b)
     (hF : ∀ f : F → F, f a = f b → (∀ r, f r ≠ 0) → (∀ x ≠ 0, ∃ r, f r = x) → good f) :
     ∀ f : F → F, good f := by
@@ -371,7 +373,7 @@ theorem exists_ne_map_ne_of_four [Fintype S] [DecidableEq S] {f : S → S}
   · exact hy0 z hzc hza
 
 
-section FiniteField
+namespace FiniteField
 
 variable [Field F] [Fintype F] [DecidableEq F]
 
@@ -425,7 +427,7 @@ end FiniteField
 
 /-- If `p` is an odd prime, then `ZMod p` is nice. -/
 theorem ZMod_nice_of_prime_ne_two (p) [Fact (Nat.Prime p)] (hp : p ≠ 2) : nice (ZMod p) :=
-  nice_of_char_ne_two ((ZMod.ringChar_zmod_n p).trans_ne hp)
+  FiniteField.nice_of_char_ne_two ((ZMod.ringChar_zmod_n p).trans_ne hp)
 
 
 
@@ -498,9 +500,11 @@ theorem natGood_iff_of_pos (hn : n > 0) :
   rcases ha with ⟨b, c, h⟩
   simp only [zero_mul, zero_add] at h
   refine ⟨n, Int.natCast_ne_zero.mpr hn.ne.symm, b, c, λ k ↦ ?_⟩
-  rw [Int.add_assoc, Int.add_mul, Int.mul_assoc, Int.dvd_self_mul_add, ← Int.sub_sub,
-    Int.sub_eq_add_neg (a := f k), add_sub_right_comm, Int.mul_add, ← Int.mul_neg,
-    Int.mul_left_comm, Int.add_comm, Int.dvd_self_mul_add]
+  have h0 : ((n * k ^ 2 + b * k + c : ℤ) : ZMod n) = (b * k + c : ℤ) := by
+    rw [Int.add_assoc, Int.cast_add, Int.cast_mul, Int.cast_natCast,
+      CharP.cast_eq_zero, zero_mul, zero_add]
+  rw [← ZMod.intCast_zmod_eq_zero_iff_dvd, Int.cast_mul, Int.cast_sub, h0,
+    ← Int.cast_sub, ← Int.cast_mul,ZMod.intCast_zmod_eq_zero_iff_dvd]
   exact h k
 
 /-- An integer polynomial `P` is `n`-good if and only if `φ(P)` is `good`,
@@ -510,11 +514,11 @@ theorem natGood_polynomial_iff_good (hn : n > 0) (P : ℤ[X]) :
   set φ : ℤ →+* ZMod n := Int.castRingHom (ZMod n)
   have hφ : (φ : ℤ → ZMod n).Surjective := ZMod.ringHom_surjective φ
   rw [natGood_iff_of_pos hn, good, hφ.exists₃]
-  refine exists_congr λ a ↦ exists_congr λ b ↦ exists_congr λ c ↦ ?_
-  rw [hφ.forall]; refine forall_congr' λ k ↦ ?_
-  rw [← ZMod.intCast_zmod_eq_zero_iff_dvd, Int.cast_mul,
-    Int.cast_sub, eq_intCast φ k, eval_intCast_map, Int.cast_eq]
-  simp_rw [Int.cast_add, Int.cast_mul, Int.cast_pow, eq_intCast]
+  conv_rhs =>
+    right; ext a; right; ext b; right; ext c
+    rw [hφ.forall]; intro x
+    rw [← φ.map_pow, ← φ.map_mul, ← φ.map_mul, ← φ.map_add, ← φ.map_add, eval_map_apply,
+      ← φ.map_sub, ← φ.map_mul, eq_intCast, Ne, ZMod.intCast_zmod_eq_zero_iff_dvd]
 
 /-- Final solution -/
 theorem final_solution (hn : n > 0) : (∀ P : ℤ[X], natGood n P.eval) ↔ n > 2 := by

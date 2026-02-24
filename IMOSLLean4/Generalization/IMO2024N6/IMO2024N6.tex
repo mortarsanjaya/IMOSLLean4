@@ -1,0 +1,51 @@
+Given a ring $R$, we say that a function $f : R \to R$ is \textbf{good} if there exists $a, b, c \in R$ such that for any $r \in R$,
+$$ (ar^2 + br + c)(f(r) - (ar^2 + br + c)) \neq 0. $$
+We say that $R$ is \textbf{nice} if every polynomial over $R$ is good.
+Find all nice finite commutative rings.
+
+
+
+\subsection*{Progress}
+
+A finite field is nice if and only if it has cardinality not equal to $2$.
+
+
+
+\subsection*{Solution}
+
+This solution follows the outline of Solution 2 of the \href{https://www.imo-official.org/problems/IMO2024SL.pdf}{official solution}.
+As shown in the official solution, the only prime number $p$ such that $\F_p$ is not nice is $p = 2$.
+Thus we just have to prove that finite fields of characteristic $2$ other than $\F_2$ are nice.
+
+Let $F$ be a finite field of characteristic $2$ with $|F| \neq 2$.
+Let $f : F \to F$ be an arbitrary function.
+We start in similar fashion to Solution 1 of the official solution.
+
+First, if $f$ does not attain some non-zero value, say $u$, then setting $a = b = 0$ and $c = u$ shows that $f$ is good.
+On the other hand, if $f$ is not good, the function $g : F \to F$ defined by $g(x) = f(x)$ if $f(x) \neq 0$ and $g(x) = 1$ if $f(x) = 0$ is not good either.
+Thus, we may assume $f(F) = F^{\times}$; in particular $f$ is not injective.
+Second, if $f$ is good, then the function $x \mapsto f(ux + v)$ is good for any $u \in F^{\times}$ and $v \in F$.
+Thus, we way assume in addition that $f(0) = f(1)$.
+
+Consider the set $S = \{x^2 + x : x \in F\}$.
+First fix an arbitrary element $x_0 \in F \setminus S$, and consider the choice $(a, b, c) = (a, a, -x_0 a)$ across all $a \in F^{\times}$.
+Then to show that $f$ is good, it is enough to show that for any $x \in F$,
+\[ f(x) \neq a(x^2 + x - x_0) \iff \frac{f(x)}{x^2 + x - x_0} \neq a. \]
+
+Suppose that such $a$ does not exist for a given $x_0$.
+Then the map $x \mapsto f(x)/(x^2 + x - x_0)$ is a surjection from $F$ to $F^{\times}$.
+Since $f(0) = f(1)$, it is in fact a bijection from $F^{\times}$ to $F^{\times}$.
+But so is $f$ by our initial assumption, so we get
+\[ \prod_{x \in F^{\times}} \frac{f(x)}{x^2 + x - x_0} = \prod_{x \in F^{\times}} x = \prod_{x \in F^{\times}} f(x)
+    \iff \prod_{x \in F^{\times}} (x^2 + x - x_0) = 1 \iff \prod_{x \in F} (x^2 + x - x_0) = -x_0. \]
+
+On the other hand, it can be shown that
+\[ \prod_{x \in F} (x^2 + x - x_0) = 1. \]
+For example, we have
+\[ \prod_{x \in F} (x^2 + x - x_0)^2
+    = \prod_{x \in F} (x^4 + x^2 - x_0^2)
+    = \prod_{x \in F} (x^2 + x - x_0^2)
+    = \prod_{x \in F} ((x + x_0)^2 + (x + x_0) - x_0^2)
+    = \prod_{x \in F} (x^2 + x - x_0), \]
+    where the third equality holds since the map $x \mapsto x^2$ is bijective on $F$.
+    
