@@ -13,9 +13,9 @@ import Mathlib.Data.Nat.Cast.Order.Ring
 # IMO 2006 A2
 
 Let $F$ be a totally ordered field.
-Consider the sequence $(a_n)_{n ≥ 0}$ of elements of $F$ defined by $a_0 = 1$ and
+Consider the sequence $(a_n)_{n ≥ 0}$ of elements of $F$ defined by $a_0 = -1$ and
 $$ a_n = -\sum_{k = 0}^{n - 1} \frac{a_k}{n + 1 - k}. $$
-Prove that $a_{n + 1} ≥ 0$ for all $n ≥ 0$.
+Prove that $a_n > 0$ if $n > 0$.
 
 ### Solution
 
@@ -86,8 +86,8 @@ lemma coeff_pos (hi : 0 < i) (hin : i < n) :
     add_lt_add_right (div_lt_div_of_pos_left (Nat.cast_pos.mpr hi) h h0) 1
   _ = _ := by rw [one_add_div h.ne.symm, ← Nat.cast_add, Nat.sub_add_cancel hin.le]
 
-/-- Final solution -/
-theorem final_solution (n) : 0 < a F (n + 1) := by
+/-- We have `a_{n + 1} > 0` for all `n ≥ 0`. -/
+theorem a_succ_pos (n) : 0 < a F (n + 1) := by
   ---- Proceed by strong induction on `n`.
   induction n using Nat.strong_induction_on with | h n n_ih => ?_
   ---- The base case `n = 0` is obvious.
@@ -109,3 +109,7 @@ theorem final_solution (n) : 0 < a F (n + 1) := by
   ---- Finally, prove that `∑_i b_i > 0`.
   rw [sum_range_succ', h, add_zero]
   exact sum_pos (λ i hi ↦ n_ih (mem_range.mp hi)) (nonempty_range_iff.mpr hn.ne.symm)
+
+/-- Final solution -/
+theorem final_solution {n} (hn : n > 0) : a F n > 0 :=
+  match n with | Nat.zero => absurd hn (Nat.lt_irrefl 0) | Nat.succ n => a_succ_pos n
