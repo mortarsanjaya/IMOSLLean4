@@ -5,22 +5,33 @@ Find all nice finite commutative rings.
 
 
 
-\subsection*{Progress}
+\subsection*{Answer}
 
-A finite field is nice if and only if it has cardinality not equal to $2$.
+We say that a ring $R$ is \textbf{boolean} if $r^2 = r$ for all $r \in R$.
+Then a finite commutative ring is nice if and only if it is not boolean.
 
 
 
 \subsection*{Solution}
 
-This solution follows the outline of Solution 2 of the \href{https://www.imo-official.org/problems/IMO2024SL.pdf}{official solution}.
-As shown in the official solution, the only prime number $p$ such that $\F_p$ is not nice is $p = 2$.
-Thus we just have to prove that finite fields of characteristic $2$ other than $\F_2$ are nice.
+For the case where $F$ is a finite field, we follow the \href{https://www.imo-official.org/problems/IMO2024SL.pdf}{official solution}.
+Then we extend the result to finite commutative rings using our own arguments.
 
-Let $F$ be a finite field of characteristic $2$ with $|F| \neq 2$.
+The constant $1$ polynomial is not good over a boolean ring, so boolean rings are not nice.
+Thus it remains to show that any other finite commutative rings are nice.
+We start by showing that any finite field of cardinality not equal to $2$ is nice.
+
+\begin{theorem}
+Let $F$ be a finite field.
+Then $F$ is nice if and only if $|F| \neq 2$.
+\end{theorem}
+\begin{proof}
+Solution 1 of the official solution solves the case where $F$ has characteristic not equal to $2$.
+So now, assume that $F$ has characteristic $2$ and $|F| \neq 2$.
+The rest of the proof adapts Solution 2 of the official solution.
+
 Let $f : F \to F$ be an arbitrary function.
 We start in similar fashion to Solution 1 of the official solution.
-
 First, if $f$ does not attain some non-zero value, say $u$, then setting $a = b = 0$ and $c = u$ shows that $f$ is good.
 On the other hand, if $f$ is not good, the function $g : F \to F$ defined by $g(x) = f(x)$ if $f(x) \neq 0$ and $g(x) = 1$ if $f(x) = 0$ is not good either.
 Thus, we may assume $f(F) = F^{\times}$; in particular $f$ is not injective.
@@ -37,10 +48,11 @@ Then the map $x \mapsto f(x)/(x^2 + x - x_0)$ is a surjection from $F$ to $F^{\t
 Since $f(0) = f(1)$, it is in fact a bijection from $F^{\times}$ to $F^{\times}$.
 But so is $f$ by our initial assumption, so we get
 \[ \prod_{x \in F^{\times}} \frac{f(x)}{x^2 + x - x_0} = \prod_{x \in F^{\times}} x = \prod_{x \in F^{\times}} f(x)
-    \iff \prod_{x \in F^{\times}} (x^2 + x - x_0) = 1 \iff \prod_{x \in F} (x^2 + x - x_0) = -x_0. \]
+    \iff \prod_{x \in F^{\times}} (x^2 + x - x_0) = 1 \iff \prod_{x \in F} (x^2 + x - x_0) = -x_0 = x_0. \]
 
 On the other hand, it can be shown that
-\[ \prod_{x \in F} (x^2 + x - x_0) = 1. \]
+\[ \prod_{x \in F} (x^2 + x - x_0) = 1, \]
+    giving us a contradiction.
 For example, we have
 \[ \prod_{x \in F} (x^2 + x - x_0)^2
     = \prod_{x \in F} (x^4 + x^2 - x_0^2)
@@ -48,4 +60,43 @@ For example, we have
     = \prod_{x \in F} ((x + x_0)^2 + (x + x_0) - x_0^2)
     = \prod_{x \in F} (x^2 + x - x_0), \]
     where the third equality holds since the map $x \mapsto x^2$ is bijective on $F$.
-    
+\end{proof}
+
+It is easy to see that a ring that surjects into a nice ring is also nice.
+Thus, if $R$ surjects into a finite field not isomorphic to $\F_2$, then $R$ is nice.
+From now on, assume that for any maximal ideal $\km \subseteq R$, the quotient $R/\km$ is isomorphic to $\F_2$.
+
+Our next step is the following lemma.
+
+\begin{lemma}
+Let $R$ be a ring.
+Suppose that there exists a (maximal) ideal $\km$ of $R$ such that $R/\km \cong \F_2$ and $\km^2 \subsetneq \km$.
+Then $R$ is nice.
+\end{lemma}
+\begin{proof}
+Since $R/\km \cong \F_2$, $R$ is a disjoint union of $\km$ and $1 + \km$.
+Now pick any element $\pi \in \km \setminus \km^2$.
+Let $P \in R[X]$ be a polynomial; we want to show that $P$ is good.
+\begin{itemize}
+    \item   If $P(R) \subseteq \km$, then $(a, b, c) = (0, 0, 1)$ works.
+    \item   If $P(R) \subseteq 1 + \km$, then $(a, b, c) = (0, 0, \pi)$ works.
+    \item   If $P(\km) \subseteq \km$ and $P(1 + \km) \subseteq 1 + \km$, then $(a, b, c) = (1, 0, \pi - 1)$ works.
+    \item   If $P(\km) \subseteq 1 + \km$ and $P(1 + \km) \subseteq \km$, then $(a, b, c) = (1, 0, \pi)$ works.
+\end{itemize}
+To see why the choices work, note that they are crafted so that $P(x) \not\equiv ax^2 + bx + c \pmod{\km}$ and $ax^2 + bx + c \notin \km^2$ for any $x \in R$. 
+\end{proof}
+
+We are now ready for the final step.
+Suppose that $R$ is a finite commutative ring that is not nice.
+Then for every maximal ideal $\km$ of $R$, $R/\km$ is isomorphic to $\F_2$.
+By the above lemma, we must have $\km^2 = \km$ for all maximal ideals $\km$.
+
+Let $J$ denote the Jacobson radical of $R$.
+Since $R$ is finite, thus artinian, $J$ is also equal to the nilradical of $R$ and $J^n = 0$ for some $n \geq 1$.
+But also $J$ is equal to the product of all maximal ideals of $R$.
+Since the maximal ideals $\km$ satisfy $\km^2 = \km$, we get $J^2 = J$ and so $J^n = J$ for all $n \geq 1$.
+This forces $J = 0$, so $R$ is reduced.
+
+Since $R$ is a reduced and finite, $R$ is isomorphic to the product of $R/\km$ across all maximal ideals $\km \leq R$.
+Recall that $R/\km \cong \F_2$ for each maximal ideal $\km$; thus $R$ is isomorphic to the product of copies of $\F_2$.
+This forces $R$ to be boolean, as desired.

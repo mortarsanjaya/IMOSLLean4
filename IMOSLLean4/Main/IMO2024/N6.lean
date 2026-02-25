@@ -47,7 +47,9 @@ The condition that $f$ attains all non-zero values is only
 
 ### Generalization
 
-It turns out that a finite field is nice if and only if it has cardinality not equal to $2$.
+We say that a ring is *boolean* if $r^2 = r$ for all $r ∈ R$.
+It turns out that a commutative ring is nice if and only if it is not boolean.
+In particular, a finite field is nice if and only if it has cardinality not equal to $2$.
 
 See `IMOSLLean4/Generalization/IMO2024N6/IMO2024N6.lean` for the implementation.
 -/
@@ -80,16 +82,16 @@ This implies that `ZMod 1` and `ZMod 2` are not nice.
 /-- A ring `R` is called *boolean* if `r^2 = r` for all `r ∈ R`. See also `BooleanRing`. -/
 def IsBoolean (R) [Ring R] := ∀ r : R, r ^ 2 = r
 
+namespace IsBoolean
+
 /-- Any trivial ring is boolean. -/
-theorem IsBoolean_of_Subsingleton (R) [Ring R] [Subsingleton R] : IsBoolean R :=
+theorem of_Subsingleton (R) [Ring R] [Subsingleton R] : IsBoolean R :=
   λ _ ↦ Subsingleton.allEq _ _
 
 /-- The ring `ZMod 2` is boolean. -/
-theorem IsBoolean_ZMod2 : IsBoolean (ZMod 2) :=
+theorem ZMod2 : IsBoolean (ZMod 2) :=
   λ r ↦ match r with | 0 => rfl | 1 => rfl
 
-
-namespace IsBoolean
 
 variable [Ring R] (hR : IsBoolean R)
 include hR
@@ -109,11 +111,11 @@ end IsBoolean
 
 /-- The ring `ZMod 1` is not nice. -/
 theorem not_nice_ZMod1 : ¬nice (ZMod 1) :=
-  (IsBoolean_of_Subsingleton _).not_nice
+  (IsBoolean.of_Subsingleton _).not_nice
 
 /-- The ring `ZMod 2` is not nice. -/
 theorem not_nice_ZMod2 : ¬nice (ZMod 2) :=
-  IsBoolean_ZMod2.not_nice
+  IsBoolean.ZMod2.not_nice
 
 
 
@@ -246,28 +248,21 @@ The main statement is that to prove every function `f : F → F` is good,
   it suffices to check those with `f(F) = Fˣ` and `f(a) = f(b)`.
 -/
 
-/-- Let `R` be a domain. Suppose that every function `f : R → R` with `0 ∉ f(R)` is good.
-  Then every function `f : R → R` is good. -/
-theorem good_of_forall_map_ne_zero [Ring R] [IsDomain R] [DecidableEq R]
-    (hR : ∀ f : R → R, (∀ r, f r ≠ 0) → good f) (f : R → R) : good f := by
-  /- Define `g : R → R` by `g(r) = 1` for `f(r) = 0` and `g(r) = f(r)` otherwise.
-    Then `g` takes only non-zero values, and so it is good. -/
-  obtain ⟨a, b, c, hg⟩ : good (λ r ↦ if f r = 0 then 1 else f r) := by
-    refine hR _ λ r ↦ ?_
-    split_ifs with hr
-    exacts [one_ne_zero, hr]
-  /- Pick `a, b, c : R` such that `(ar^2 + br + c)(g(r) - (ar^2 + br + c)) ≠ 0` for all `r`.
-    Then we claim that `(ar^2 + br + c)(f(r) - (ar^2 + br + c)) ≠ 0` for all `r`. -/
+/-- Let `R` be a domain, and let `f : R → R` be a function.
+  Define `g : R → R` by `g(r) = 1` if `f(r) = 0` and `g(r) = f(r)` otherwise.
+  If `g` is good, then `f` is good. -/
+theorem good_of_good_map_ite_zero [Ring R] [IsDomain R] [DecidableEq R]
+    {f g : R → R} (hfg : ∀ r, g r = if f r = 0 then 1 else f r) (hg : good g) : good f := by
+  ---- Use the same `a, b, c : F` for `g` to show that `f` is good.
+  rcases hg with ⟨a, b, c, h⟩
   refine ⟨a, b, c, λ r ↦ ?_⟩
-  ---- Fix `r`, and let `s = ar^2 + br + c` for convenience.
-  set s : R := a * r ^ 2 + b * r + c
-  replace hg : s * ((if f r = 0 then 1 else f r) - s) ≠ 0 := hg r
-  split_ifs at hg with hr
-  ---- If `f(r) = 0`, then we had `s(1 - s) ≠ 0` while our goal is `s^2 ≠ 0`.
+  specialize h r
+  by_cases hr : f r = 0
+  ---- if `f(r) = 0`, then the goal reduces to `ar^2 + br + c ≠ 0`.
   · rw [hr, zero_sub, mul_neg, neg_ne_zero, mul_self_ne_zero]
-    exact left_ne_zero_of_mul hg
-  ---- If `f(r) ≠ 0`, then `s(f(r) - s) = s(g(r) - s) ≠ 0`.
-  · exact hg
+    exact left_ne_zero_of_mul h
+  ---- If `f(r) ≠ 0`, then we already have `(ar^2 + br + c)(f(r) - (ar^2 + br + c)) ≠ 0`.
+  · rwa [hfg, if_neg hr] at h
 
 /-- Let `F` be a division ring. For any `a, b, c, d ∈ F` such that `a ≠ b` and `c ≠ d`,
   there exists `u ∈ Fˣ` and `v ∈ F` such that `uc + v = a` and `ud + v = b`. -/
@@ -281,29 +276,6 @@ theorem linear_transform_solver [DivisionRing F] {a b c d : F} (h : a ≠ b) (h0
   refine ⟨u, a - u * c, add_sub_cancel _ _, ?_⟩
   rw [add_sub_left_comm, ← mul_sub, hu, div_mul_cancel₀ _ h0, add_sub_cancel]
 
-/-- Let `F` be a finite field, and fix two distinct elements `a, b ∈ F`.
-  Suppose that every function `f : F → F` with `f(a) = f(b)` and `0 ∉ f(F)` is good.
-  Then every function `f : F → F` is good. -/
-theorem FiniteField.good_of_forall_map_pair_eq_map_ne_zero
-    [Field F] [Fintype F] [DecidableEq F] {a b : F} (hab : a ≠ b)
-    (hF : ∀ f : F → F, f a = f b → (∀ r, f r ≠ 0) → good f) :
-    ∀ f : F → F, good f := by
-  ---- Reduce to the case where `f` does not attain `0`.
-  refine good_of_forall_map_ne_zero λ f hf ↦ ?_
-  /- Then `f` is not surjective, and so it is not injective either.
-    Let `c, d ∈ F` be two distinct elements such that `f(c) = f(d)`. -/
-  obtain ⟨c, d, h1, h2⟩ : ∃ c d, f c = f d ∧ c ≠ d := by
-    have h1 : ¬f.Surjective := λ h1 ↦ (h1 0).elim hf
-    replace h1 : ¬f.Injective := Finite.surjective_of_injective.mt h1
-    simpa only [Function.Injective, not_forall, exists_prop] using h1
-  ---- Now find `u ∈ Rˣ` and `v ∈ R` such that `uc + v = a` and `ud + v = b`.
-  obtain ⟨u, v, rfl, rfl⟩ : ∃ u : Fˣ, ∃ v : F, u * c + v = a ∧ u * d + v = b :=
-    linear_transform_solver hab h2
-  ---- Then `x ↦ f(u⁻¹(x - v))` being good implies that `f` is good.
-  refine (good_shift_scale_iff (u := u⁻¹) (v := u⁻¹ * -v)).mp (hF _ ?_ (λ _ ↦ hf _))
-  rwa [← mul_add, add_neg_cancel_right, Units.inv_mul_cancel_left,
-    ← mul_add, add_neg_cancel_right, Units.inv_mul_cancel_left]
-
 /-- If `R` is a domain and `f : R → R` does not attain some non-zero value, `f` is good. -/
 theorem good_of_map_ne_of_ne_zero [Ring R] [NoZeroDivisors R]
     {u : R} (hu : u ≠ 0) {f : R → R} (hf : ∀ r, f r ≠ u) : good f := by
@@ -316,14 +288,30 @@ theorem good_of_map_ne_of_ne_zero [Ring R] [NoZeroDivisors R]
   Then every function `f : F → F` is good. -/
 theorem FiniteField.good_of_forall_map_pair_eq_of_image_eq_units
     [Field F] [Fintype F] [DecidableEq F] {a b : F} (hab : a ≠ b)
-    (hF : ∀ f : F → F, f a = f b → (∀ r, f r ≠ 0) → (∀ x ≠ 0, ∃ r, f r = x) → good f) :
-    ∀ f : F → F, good f := by
-  ---- Reduce to the case where `f` does not attain zero.
-  refine good_of_forall_map_pair_eq_map_ne_zero hab λ f hf hf0 ↦ ?_
-  specialize hF f hf hf0
+    (hF : ∀ f : F → F, f a = f b → (∀ r, f r ≠ 0) → (∀ x ≠ 0, ∃ r, f r = x) → good f)
+    (f : F → F) : good f := by
+  ---- First, WLOG we can assume that `f` does not attain `0`.
+  wlog hf : ∀ r, f r ≠ 0 generalizing f
+  · refine good_of_good_map_ite_zero (λ _ ↦ rfl) (this _ λ r ↦ ?_)
+    split_ifs with hr
+    exacts [one_ne_zero, hr]
+  ---- Next, WLOG we can assume that `f(a) = f(b)`.
+  wlog hf0 : f a = f b generalizing f
+  · -- Indeed, `f` is not surjective, thus not injective.
+    obtain ⟨c, d, hcd, hcd0⟩ : ∃ c d, f c = f d ∧ c ≠ d := by
+      have h : ¬f.Surjective := λ h ↦ (h 0).elim hf
+      replace h : ¬f.Injective := Finite.surjective_of_injective.mt h
+      simpa only [Function.Injective, not_forall, exists_prop] using h
+    -- Now find `u ∈ Rˣ` and `v ∈ R` such that `uc + v = a` and `ud + v = b`.
+    obtain ⟨u, v, rfl, rfl⟩ : ∃ u : Fˣ, ∃ v : F, u * c + v = a ∧ u * d + v = b :=
+      linear_transform_solver hab hcd0
+    ---- Then `x ↦ f(u⁻¹(x - v))` being good implies that `f` is good.
+    refine (good_shift_scale_iff (u := u⁻¹) (v := u⁻¹ * -v)).mp (this _ (λ _ ↦ hf _) ?_)
+    iterate 2 rw [← mul_add, add_neg_cancel_right, Units.inv_mul_cancel_left]
+    exact hcd
   ---- If `f` attains all non-zero values, we are done.
   by_cases h : ∀ x ≠ 0, ∃ r, f r = x
-  · exact hF h
+  · exact hF f hf0 hf h
   ---- If `f` does not attain some non-zero value, we are also done.
   simp_rw [not_forall, exists_prop, not_exists] at h
   rcases h with ⟨u, hu, hu0⟩
