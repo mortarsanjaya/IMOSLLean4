@@ -29,7 +29,7 @@ open Finset
 def RGraph (R) [CommRing R] : SimpleGraph R where
   Adj x y := x ≠ y ∧ (x = y ^ 2 + 1 ∨ y = x ^ 2 + 1)
   symm _ _ h := ⟨h.1.symm, h.2.symm⟩
-  loopless _ h := h.1 rfl
+  loopless := ⟨λ _ h ↦ h.1 rfl⟩
 
 /-- An unordered pair is an edge of `G_R` if and only if it has the form `(x^2 + 1, x)`. -/
 theorem mem_edgeSet_RGraph_iff [CommRing R] :

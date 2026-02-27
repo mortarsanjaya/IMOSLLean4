@@ -142,7 +142,7 @@ theorem prod_univ_erase_zero_eq_one_of_image
       prod_congr rfl λ x hx ↦ (if_neg ((mem_filter_univ x).mp hx)).symm
     _ = ∏ x with x ≠ 0, x := by
       refine prod_bijective g hg (λ r ↦ ?_) (λ _ _ ↦ rfl)
-      simp_rw [g, mem_filter_univ, Ne, ite_eq_left_iff, _root_.not_imp, iff_self_and]
+      simp_rw [g, mem_filter_univ, Ne, ite_eq_left_iff, Classical.not_imp, iff_self_and]
       rintro -; exact hf0 r
 
 /-- If `q ≠ 2`, then every function from `F` to itself is good. -/

@@ -345,7 +345,7 @@ theorem exists_ne_map_ne_of_four [Fintype S] [DecidableEq S] {f : S → S}
       λ h0 ↦ h.not_ge (card_le_card_of_surjOn f h0)
     rw [Set.SurjOn, Set.subset_def, not_forall] at h
     rcases h with ⟨y, hy⟩
-    rw [_root_.not_imp, mem_coe, mem_compl, mem_singleton, Set.mem_image, not_exists] at hy
+    rw [Classical.not_imp, mem_coe, mem_compl, mem_singleton, Set.mem_image, not_exists] at hy
     refine ⟨y, hy.1, λ z ↦ ?_⟩
     replace hy : ¬(z ∈ (({c, a}ᶜ : Finset S) : Set S) ∧ f z = y) := hy.2 z
     rw [not_and, mem_coe, mem_compl, mem_insert, not_or, mem_singleton] at hy
