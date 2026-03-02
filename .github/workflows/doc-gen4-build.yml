@@ -27,9 +27,32 @@ jobs:
       - name: Get Mathlib cache
         run: lake exe cache get
 
+      - name: Create directory docbuild and work on the directory
+        run: |
+          mkdir docbuild
+          cd docbuild
+
+      - name: create lakefile.toml for doc-gen4
+        run: |
+          cat <<EOF > lakefile.toml
+          name = "docbuild"
+          reservoir = false
+          version = "0.1.0"
+          packagesDir = "../.lake/packages"
+
+          [[require]]
+          name = "IMOSLLean4"
+          path = "../"
+
+          [[require]]
+          scope = "leanprover"
+          name = "doc-gen4"
+          rev = "v4.28.0"
+          EOF
+
       - name: Build documentation
         run: |
-          lake -R -Kdoc=on build IMOSLLean4:docs
+          lake -R build IMOSLLean4:docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
