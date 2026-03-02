@@ -52,6 +52,7 @@ jobs:
 
       - name: Build documentation
         run: |
+          MATHLIB_NO_CACHE_ON_UPDATE=1 lake update doc-gen4
           lake -R build IMOSLLean4:docs
         working-directory: ./docbuild
 
