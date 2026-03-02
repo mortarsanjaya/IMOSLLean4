@@ -14,7 +14,3 @@ require mathlib from git
 @[default_target]
 lean_lib «IMOSLLean4» where
   -- add any library configuration options here
-
-meta if get_config? doc = some "on" then
-require «doc-gen4» from git
-  "https://github.com/leanprover/doc-gen4" @ "main"
