@@ -21,7 +21,7 @@ jobs:
 
       - name: Install elan
         run: |
-          curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -- -y
+          curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Get Mathlib cache
