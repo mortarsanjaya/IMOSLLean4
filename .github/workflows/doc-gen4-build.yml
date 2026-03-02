@@ -30,7 +30,6 @@ jobs:
       - name: Create directory docbuild and work on the directory
         run: |
           mkdir docbuild
-          cd docbuild
 
       - name: create lakefile.toml for doc-gen4
         run: |
@@ -49,16 +48,18 @@ jobs:
           name = "doc-gen4"
           rev = "v4.28.0"
           EOF
+        working-directory: ./docbuild
 
       - name: Build documentation
         run: |
           lake -R build IMOSLLean4:docs
+        working-directory: ./docbuild
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .lake/build/doc
-
+          path: ./docbuild/.lake/build/doc
+        
   deploy:
     needs: build
     runs-on: ubuntu-latest
