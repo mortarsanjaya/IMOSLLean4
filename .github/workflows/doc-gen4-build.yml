@@ -27,9 +27,8 @@ jobs:
       - name: Get Mathlib cache
         run: lake exe cache get
 
-      - name: Create directory docbuild and work on the directory
-        run: |
-          mkdir docbuild
+      - name: Create directory docbuild
+        run: mkdir docbuild
 
       - name: create lakefile.toml for doc-gen4
         run: |
@@ -50,10 +49,12 @@ jobs:
           EOF
         working-directory: ./docbuild
 
+      - name: Update doc-gen4
+        run: MATHLIB_NO_CACHE_ON_UPDATE=1 lake update doc-gen4
+        working-directory: ./docbuild
+
       - name: Build documentation
-        run: |
-          MATHLIB_NO_CACHE_ON_UPDATE=1 lake update doc-gen4
-          lake -R build IMOSLLean4:docs
+        run: lake build IMOSLLean4:docs
         working-directory: ./docbuild
 
       - name: Upload artifact
