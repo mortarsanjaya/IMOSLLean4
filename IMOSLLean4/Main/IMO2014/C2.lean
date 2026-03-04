@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.ALgebra.BigOperators.Group.Multiset.Basic
+import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
 import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
