@@ -9,7 +9,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Data.Fin.VecNotation
 
 /-!
-# IMO 2012 A1
+# IMO 2012 A1 (P4)
 
 A triple $(a, b, c)$ of integers is called a *Heron triple* if
 $$ a^2 + b^2 + c^2 = 2ab + 2bc + 2ca. $$
@@ -37,7 +37,6 @@ The difference is that $k(n - 1)^2 ≠ k(n - 3)^2$ is not always true this time,
 
 namespace IMOSL
 namespace IMO2012A1
-
 
 /-! ### Heron triples -/
 
