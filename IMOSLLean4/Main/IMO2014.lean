@@ -6,4 +6,4 @@ import IMOSLLean4.Main.IMO2014.C2
 import IMOSLLean4.Main.IMO2014.C4.C4
 import IMOSLLean4.Main.IMO2014.N2.N2
 import IMOSLLean4.Main.IMO2014.N3.N3
-import IMOSLLean4.Main.IMO2014.N4.N4
+import IMOSLLean4.Main.IMO2014.N4
