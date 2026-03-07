@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.NatSequence.SeqMax
+import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.Algebra.Order.Group.Defs
 import Mathlib.Algebra.Order.Group.Unbundled.Abs
 import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
@@ -26,6 +26,8 @@ Explicitly, prove that $|a_n| ≤ 2 \max\{B, C - B\}$, where
 namespace IMOSL
 namespace IMO2017A4
 
+open Finset
+
 variable [AddCommGroup G] [LinearOrder G]
 
 /-! ### Two definitions -/
@@ -44,37 +46,48 @@ abbrev good2 {G} [AddCommGroup G] (D : ℕ) (a : ℕ → G) :=
 
 variable [IsOrderedAddMonoid G]
 
-theorem abs_le_max_seqMax (a : ℕ → G) (n : ℕ) :
-    |a n| ≤ max (Extra.seqMax (-a) n) (2 • Extra.seqMax a n) := by
+theorem abs_le_max_range_sup' (a : ℕ → G) (n : ℕ) :
+    |a n| ≤ max ((range (n + 1)).sup' nonempty_range_add_one (-a))
+      (2 • (range (n + 1)).sup' nonempty_range_add_one a) := by
   rw [le_max_iff]; refine (le_total (a n) 0).imp (λ h ↦ ?_) (λ h ↦ ?_)
-  · exact (abs_of_nonpos h).trans_le (Extra.le_seqMax_self (-a) n)
+  · exact (abs_of_nonpos h).trans_le (le_sup' (-a) (self_mem_range_succ _))
   · rw [abs_of_nonneg h, two_nsmul]
-    have h0 := Extra.le_seqMax_self a n
+    have h0 : a n ≤ (range (n + 1)).sup' nonempty_range_add_one a :=
+      le_sup' a (self_mem_range_succ _)
     exact le_add_of_le_of_nonneg h0 (h.trans h0)
 
 theorem good1_bdd_above {a : ℕ → G} (h : good1 D a) (h0 : D ≤ n) :
-    a (n + 1) ≤ Extra.seqMax (-a) n - Extra.seqMax a n := by
-  rcases Extra.exists_map_eq_seqMax a n with ⟨i, h2, h1⟩
-  obtain ⟨j, rfl⟩ : ∃ j, n = i + j := Nat.exists_eq_add_of_le h2
+    a (n + 1) ≤ (range (n + 1)).sup' nonempty_range_add_one (-a)
+      - (range (n + 1)).sup' nonempty_range_add_one a := by
+  obtain ⟨i, h2, h1⟩ :
+      ∃ i ∈ range (n + 1), (range (n + 1)).sup' nonempty_range_add_one a = a i :=
+    exists_mem_eq_sup' nonempty_range_add_one a
+  obtain ⟨j, rfl⟩ : ∃ j, n = i + j := Nat.exists_eq_add_of_le (mem_range_succ_iff.mp h2)
   apply (h i j h0).trans
-  rw [← h1, neg_add_rev, ← sub_eq_add_neg]
-  exact sub_le_sub_right (Extra.le_seqMax_of_le (-a) (j.le_add_left i)) (a i)
+  rw [h1, neg_add_rev, ← sub_eq_add_neg, sub_le_sub_iff_right]
+  exact le_sup' (-a) (mem_range_succ_iff.mpr (Nat.le_add_left j i))
 
-theorem good1_seqMax {a : ℕ → G} (h : good1 D a) (h0 : D ≤ n) :
-    Extra.seqMax a (n + 1) ≤
-      max (Extra.seqMax a n) (Extra.seqMax (-a) n - Extra.seqMax a n) :=
-  max_le_max (le_refl _) (good1_bdd_above h h0)
+theorem good1_range_sup' {a : ℕ → G} (h : good1 D a) (h0 : D ≤ n) :
+    (range (n + 2)).sup' nonempty_range_add_one a ≤
+      max ((range (n + 1)).sup' nonempty_range_add_one a)
+        ((range (n + 1)).sup' nonempty_range_add_one (-a)
+          - (range (n + 1)).sup' nonempty_range_add_one a) := by
+  simp_rw [range_add_one (n := n + 1), sup'_insert nonempty_range_add_one, max_comm (a _)]
+  refine max_le_max (le_refl _) (good1_bdd_above h h0)
 
 theorem good2_bdd_below {a : ℕ → G} (h : good2 D a) (h0 : D ≤ n) :
-    -a (n + 1) ≤ 2 • Extra.seqMax a n := by
+    -a (n + 1) ≤ 2 • (range (n + 1)).sup' nonempty_range_add_one a := by
   rcases h n h0 with ⟨i, j, rfl, h0⟩
   rw [h0, neg_neg, two_nsmul]
-  exact add_le_add (Extra.le_seqMax_of_le a (i.le_add_right j))
-    (Extra.le_seqMax_of_le a (j.le_add_left i))
+  exact add_le_add (le_sup' a (mem_range_succ_iff.mpr (Nat.le_add_right i j)))
+    (le_sup' a (mem_range_succ_iff.mpr (Nat.le_add_left j i)))
 
-theorem good2_seqMax {D : ℕ} {a : ℕ → G} (h : good2 D a) {n : ℕ} (h0 : D ≤ n) :
-    Extra.seqMax (-a) (n + 1) ≤ max (Extra.seqMax (-a) n) (2 • Extra.seqMax a n) :=
-  max_le_max (le_refl _) (good2_bdd_below h h0)
+theorem good2_range_sup' {D : ℕ} {a : ℕ → G} (h : good2 D a) {n : ℕ} (h0 : D ≤ n) :
+    (range (n + 2)).sup' nonempty_range_add_one (-a)
+      ≤ max ((range (n + 1)).sup' nonempty_range_add_one (-a))
+        (2 • (range (n + 1)).sup' nonempty_range_add_one a) := by
+  simp_rw [range_add_one (n := n + 1), sup'_insert nonempty_range_add_one, max_comm ((-a) _)]
+  exact max_le_max (le_refl _) (good2_bdd_below h h0)
 
 
 
@@ -128,11 +141,21 @@ end SeqMax
 
 
 
-/-! ### Final solution -/
+/-! ### Summary -/
+
+/-- For any function `f : ℕ → α`, the function `g(n) = max{f(0), …, f(n)}` is monotone. -/
+theorem range_sup'_monotone [LinearOrder α] (f : ℕ → α) :
+    Monotone (λ n ↦ (range (n + 1)).sup' nonempty_range_add_one f) :=
+  λ _ _ hmn ↦ sup'_mono _ (range_subset_range.mpr (Nat.succ_le_succ hmn)) _
 
 /-- Final solution -/
 theorem final_solution {a : ℕ → G} (h : good1 D a) (h0 : good2 D a) (n : ℕ) :
-    |a n| ≤ max (2 • Extra.seqMax a D) (2 • (Extra.seqMax (-a) D - Extra.seqMax a D)) :=
-  (abs_le_max_seqMax a n).trans <|
-    max_two_nsmul_b_and_c_bdd (λ _ ↦ good1_seqMax h) (λ _ ↦ good2_seqMax h0)
-      (λ _ _ ↦ Extra.seqMax_mono a) (λ _ _ ↦ Extra.seqMax_mono (-a)) n
+    |a n| ≤ max (2 • (range (D + 1)).sup' nonempty_range_add_one a)
+      (2 • ((range (D + 1)).sup' nonempty_range_add_one (-a)
+        - (range (D + 1)).sup' nonempty_range_add_one a)) := by
+  refine (abs_le_max_range_sup' a n).trans ?_
+  exact max_two_nsmul_b_and_c_bdd (G := G)
+    (b := λ n ↦ ((range (n + 1)).sup' nonempty_range_add_one a))
+    (c := λ n ↦ ((range (n + 1)).sup' nonempty_range_add_one (-a)))
+    (λ _ ↦ good1_range_sup' h) (λ _ ↦ good2_range_sup' h0)
+    (range_sup'_monotone _) (range_sup'_monotone _) n

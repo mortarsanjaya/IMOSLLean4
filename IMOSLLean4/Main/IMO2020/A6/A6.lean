@@ -4,16 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.Init
-import Mathlib.Data.Nat.Basic
-import Mathlib.Logic.Function.Iterate
-import IMOSLLean4.Extra.NatSequence.SeqMax
-import Mathlib.Tactic.Lift
+import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # IMO 2020 A6
 
-Find all functions $f : ℤ → ℤ$ such that, for any $a, b ∈ ℤ$,
+Find all functions $f : ℤ → ℤ$ such that for any $a, b ∈ ℤ$,
 $$ f^{a^2 + b^2}(a + b) = a f(a) + b f(b). $$
 -/
 
@@ -91,6 +87,7 @@ theorem exists_iter_add_large_eq (a : ℤ) : ∀ k, ∃ N, f^[N + k] a = f^[N] (
     ← map_iterate_sq_add_one h, Commute.iterate_iterate_self, ← h0,
     ← iterate_add_apply, Nat.add_comm _ (N + k), Nat.add_add_add_comm]
 
+open Finset in
 theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
     ∃ M, ∀ n, (f^[n] 0).natAbs < M := by
   ---- First get `f(a + k) = f(a)` for some `k > 0`
@@ -129,11 +126,11 @@ theorem orbit_zero_bdd_of_not_injective (h0 : ¬f.Injective) :
       h0, ← f.iterate_add_apply, ← f.iterate_add_apply, Nat.add_comm]
   ---- Now show that `|f^n(0)| < max{f^j(0) : j ≤ N + k} + 1` for all `n`
   rcases h0 with ⟨k, N, hk, h0⟩
-  refine ⟨Extra.seqMax (λ n ↦ (f^[n] 0).natAbs) (N + k) + 1, ?_⟩
+  refine ⟨(range (N + k + 1)).sup' nonempty_range_add_one (λ n ↦ (f^[n] 0).natAbs) + 1, ?_⟩
   suffices ∀ n, ∃ j ≤ N + k, f^[n] 0 = f^[j] 0 from λ n ↦ by
     obtain ⟨j, h1, h2⟩ := this n
     rw [h2, Nat.lt_succ_iff]
-    exact Extra.le_seqMax_of_le (λ n ↦ (f^[n] 0).natAbs) h1
+    exact le_sup' (λ n ↦ (f^[n] 0).natAbs) (mem_range_succ_iff.mpr h1)
   ---- The goal reduces to `f^n(0) = f^j(0)` for some `j < N + k`
   refine Nat.rec ⟨0, (N + k).zero_le, rfl⟩ λ n ⟨j, hj, h1⟩ ↦ ?_
   obtain h2 | rfl : j < N + k ∨ j = N + k := Nat.lt_or_eq_of_le hj

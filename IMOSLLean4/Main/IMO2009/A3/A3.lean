@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.NatSequence.SeqMax
 import Mathlib.Data.PNat.Basic
+import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # IMO 2009 A3 (P5)
@@ -43,6 +43,7 @@ lemma isNatTriangleSide.zero_left_imp (h : isNatTriangleSide 0 x y) : x = y :=
 
 def good (f : ℕ → ℕ) := ∀ x y, isNatTriangleSide x (f y) (f (y + f x))
 
+open Finset in
 /-- Final solution, `Nat` version -/
 theorem final_solution_Nat : good f ↔ f = λ x ↦ x := by
   ---- First solve the `←` direction
@@ -56,10 +57,10 @@ theorem final_solution_Nat : good f ↔ f = λ x ↦ x := by
     Nat.rec rfl λ k h1 ↦ by rw [Nat.mul_succ, ← Nat.add_assoc, ← h0, h1]
   replace h0 : f 0 = 0 := by
     refine (f 0).eq_zero_or_pos.resolve_right λ h1 ↦ ?_
-    replace h0 (y) : f y ≤ Extra.seqMax f (f 0) := by
+    replace h0 (y) : f y ≤ (range (f 0 + 1)).sup' nonempty_range_add_one f := by
       rw [← y.mod_add_div (f 0), h0]
-      exact Extra.le_seqMax_of_le f (y.mod_lt h1).le
-    apply (h (2 * Extra.seqMax f (f 0) + 1) 0).side_x.not_gt
+      exact le_sup' _ (mem_range_succ_iff.mpr (y.mod_lt h1).le)
+    apply (h (2 * (range (f 0 + 1)).sup' nonempty_range_add_one f + 1) 0).side_x.not_gt
     rw [Nat.lt_succ_iff, Nat.two_mul]
     exact Nat.add_le_add (h0 _) (h0 _)
   ---- Next show `f(f(x)) = x` for all `x`

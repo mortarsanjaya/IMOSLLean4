@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.NatSequence.SeqMax
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.Algebra.Order.Ring.Rat
 import Mathlib.Data.Rat.Cast.Defs
@@ -12,8 +11,8 @@ import Mathlib.Data.Rat.Cast.Defs
 /-!
 # IMO 2020 N1
 
-Prove that, for any positive integer $k$, there exists a prime $p$ and
-  distinct elements $x_1, x_2, …, x_{k + 3} \in 𝔽_p^×$ such that for all $i ≤ k$,
+Prove that for any positive integer $k$, there exists a prime $p$ and
+  distinct elements $x_1, x_2, …, x_{k + 3} ∈ 𝔽_pˣ$ such that for all $i ≤ k$,
 $$ x_i x_{i + 1} x_{i + 2} x_{i + 3} = i. $$
 -/
 
@@ -199,16 +198,17 @@ theorem ratSeq_injective : ratSeq.Injective := λ i j h ↦ by
 
 /-! ### Final solution -/
 
-open Fin.NatCast in
+open Finset Fin.NatCast in
 /-- Final solution -/
 theorem final_solution (k : ℕ) :
     ∃ (p : ℕ) (_ : p.Prime) (a : Fin (k + 4) → ZMod p), a.Injective ∧ (∀ i, a i ≠ 0) ∧
         (∀ i ≤ k, a i * a (i + 1) * a (i + 2) * a (i + 3) = i.succ) := by
   obtain ⟨M, hM, hM0⟩ : ∃ M, (∀ n : Fin (k + 4), (ratSeq n).num.natAbs < M) ∧
       (∀ n : Fin (k + 4), (ratSeq n).den < M) :=
-    let f := λ n ↦ max (ratSeq n).num.natAbs (ratSeq n).den
-    let X (n : Fin (k + 4)) := Extra.le_seqMax_of_le f (Nat.le_of_lt_succ n.2)
-    ⟨Extra.seqMax f (k + 3) + 1, λ n ↦ Nat.lt_succ_of_le (le_of_max_le_left (X n)),
+    let f (n : ℕ) : ℕ := max (ratSeq n).num.natAbs (ratSeq n).den
+    let X (n : Fin (k + 4)) : f n ≤ (range (k + 4)).sup' nonempty_range_add_one f :=
+      le_sup' _ (mem_range.mpr n.2)
+    ⟨_, λ n ↦ Nat.lt_succ_of_le (le_of_max_le_left (X n)),
       λ n ↦ Nat.lt_succ_of_le (le_of_max_le_right (X n))⟩
   obtain ⟨p, h, hp⟩ : ∃ p, 2 * (M * M) < p ∧ p.Prime := Nat.exists_infinite_primes _
   haveI : Fact p.Prime := ⟨hp⟩
