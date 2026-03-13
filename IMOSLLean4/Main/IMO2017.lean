@@ -1,5 +1,5 @@
 -- Root for the `IMO2017` problems.
-import IMOSLLean4.Main.IMO2017.A1.A1
+import IMOSLLean4.Main.IMO2017.A1
 import IMOSLLean4.Main.IMO2017.A2
 import IMOSLLean4.Main.IMO2017.A3.A3
 import IMOSLLean4.Main.IMO2017.A4.A4
