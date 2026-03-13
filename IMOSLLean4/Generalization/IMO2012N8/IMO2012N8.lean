@@ -32,8 +32,13 @@ namespace IMO2012N8
 
 open Finset
 
-/-- Auxiliary definition, which is not given in the main file since they aren't as
-  focused on representing elements of `F` specifically as `a^2 + b^5`. -/
+/--
+A finite field `F` is called *good* if every element of `F`
+  can be written as `a^2 + b^5` for some `a, b : F`.
+
+This is an auxiliary definition, which is not given in the main file since
+  they aren't as focused on representing elements of `F` specifically as `a^2 + b^5`.
+-/
 def good (R) [Add R] [Monoid R] := ∀ r : R, ∃ a b, a ^ 2 + b ^ 5 = r
 
 /-- If two rings, `R` and `S`, are isomorphic and `R` is good, then `S` is good. -/
@@ -54,7 +59,7 @@ theorem good.of_RingEquiv [Semiring R] [Semiring S] (hR : good R) (φ : R ≃+* 
 variable {F} [Field F] [Fintype F] [DecidableEq F]
 local notation "q" => Fintype.card F
 
-/-- A finite field of cardinality `q > 40` is `good`. -/
+/-- A finite field of cardinality `q > 40` is good. -/
 theorem good_of_card_big_enough (hF : 40 < q) : good F := by
   obtain hF0 | hF0 : ringChar F ≠ 2 ∨ ringChar F = 2 := ne_or_eq _ _
   ---- We have done the `char(F) ≠ 2` case.
@@ -85,7 +90,7 @@ theorem exists_eq_pow_n_of_gcd_eq_one (hn : n ≠ 0) (h : Nat.Coprime n (q - 1))
       rw [zpow_sub, h, Int.natCast_one, zpow_one, zpow_mul, zpow_natCast]
     _ = x := by rw [← Fintype.card_units, pow_card_eq_one, one_zpow, inv_one, mul_one]
 
-/-- A finite field of cardinality `q ≢ 1 (mod 2)` is `good`. -/
+/-- A finite field of cardinality `q ≢ 1 (mod 2)` is good. -/
 theorem good_of_card_mod_2_ne_one (hF : ¬2 ∣ q - 1) : good F := by
   intro r
   ---- Find `a ∈ F` such that `a^2 = r`.
@@ -96,7 +101,7 @@ theorem good_of_card_mod_2_ne_one (hF : ¬2 ∣ q - 1) : good F := by
   refine ⟨a, 0, ?_⟩
   rw [zero_pow (Nat.succ_ne_zero 4), add_zero]
 
-/-- A finite field of cardinality `q ≢ 1 (mod 5)` is `good`. -/
+/-- A finite field of cardinality `q ≢ 1 (mod 5)` is good. -/
 theorem good_of_card_mod_5_ne_one (hF : ¬5 ∣ q - 1) : good F := by
   intro r
   ---- Find `b ∈ F` such that `b^5 = r`.
@@ -107,22 +112,22 @@ theorem good_of_card_mod_5_ne_one (hF : ¬5 ∣ q - 1) : good F := by
   refine ⟨0, b, ?_⟩
   rw [zero_pow (Nat.succ_ne_zero 1), zero_add]
 
-/-- A finite field of cardinality `q ≢ 1 (mod 10)` is `good`. -/
+/-- A finite field of cardinality `q ≢ 1 (mod 10)` is good. -/
 theorem good_of_card_mod_10_ne_one (hF : ¬10 ∣ q - 1) : good F := by
   obtain h | h : ¬2 ∣ q - 1 ∨ ¬5 ∣ q - 1 := by rwa [← not_and_or, ← Nat.lcm_dvd_iff]
   exacts [good_of_card_mod_2_ne_one h, good_of_card_mod_5_ne_one h]
 
-/-- `ZMod 11` is not `good`. -/
+/-- The field `ZMod 11` is not good. -/
 theorem ZMod11_is_not_good : ¬good (ZMod 11) :=
   not_forall_of_exists_not ⟨7, by decide⟩
 
 omit [DecidableEq F] in
-/-- A field of cardinality `11` is not `good`. -/
+/-- A field of cardinality `11` is not good. -/
 theorem not_good_of_card_eq_11 (hF : q = 11) : ¬good F :=
   λ h ↦ ZMod11_is_not_good
     (h.of_RingEquiv (ZMod.ringEquivOfPrime F Nat.prime_eleven hF).symm)
 
-/-- `ZMod 31` is `good`. -/
+/-- The field `ZMod 31` is good. -/
 theorem ZMod31_is_good : good (ZMod 31) := by
   intro r
   /- All elements of `𝔽_{31}` are of the form
@@ -137,7 +142,7 @@ theorem ZMod31_is_good : good (ZMod 31) := by
 theorem prime_31 : Nat.Prime 31 := by decide
 
 omit [DecidableEq F] in
-/-- A field of cardinality `31` is `good`. -/
+/-- A field of cardinality `31` is good. -/
 theorem good_of_card_eq_31 (hF : q = 31) : good F :=
   ZMod31_is_good.of_RingEquiv (ZMod.ringEquivOfPrime F prime_31 hF)
 

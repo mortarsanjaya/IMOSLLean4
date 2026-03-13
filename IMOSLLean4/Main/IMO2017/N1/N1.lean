@@ -12,10 +12,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 
 For each $n ∈ ℕ$, define $f(n)$ by $\sqrt{n}$ if $n$ is a square and $n + 3$ otherwise.
 Find all $N ∈ ℕ$ such that $\{n : f^n(N) = a\}$ is infinite for some $a ∈ ℕ$.
-
-### Extra notes
-
-Why is this so long? :(
 -/
 
 namespace IMOSL

@@ -29,7 +29,7 @@ We follow Solution 1 of the
 We generalize $ℝ$ to any commutative ring $R$ of characteristic zero.
 The same solution works if $ℝ$ is replaced by any commutative ring of characteristic zero.
 We modify the integer set we pick for modulo $8$ argument.
-We pick $\{0, 1, 4, 8, 16, 24, …\}$ instead of $\{0, 1, 4, 8, 12, 16, …\}.
+We pick $\{0, 1, 4, 8, 16, 24, …\}$ instead of $\{0, 1, 4, 8, 12, 16, …\}$.
 
 We say that $B ⊆ R$ is $q$-*nice* if for any $x, y ∈ B$, there exists $a, b, c, d ∈ B$ with
 $$ qxy = a^2 + b^2 - (c^2 + d^2). $$
@@ -253,7 +253,7 @@ theorem good.Int_le_two (hn : n ≥ 2) {q : ℤ} (h : good n q) : q ≤ 2 := by
     ⟨1, mem_sub.mpr ⟨1, h0 1 hn, 0, h0 0 (Nat.zero_lt_of_lt hn), rfl⟩, Int.one_ne_zero⟩
   refine h.Int_le_two h0
 
-/-- In `ℤ/8ℤ`, `{0, 1, 3, 4, 5, 7}` is not `1`-nice. -/
+/-- Over `ZMod 8`, the set `{0, 1, 3, 4, 5, 7}` is not `1`-nice. -/
 theorem not_nice_one_013457 : ¬nice (1 : ZMod 8) ({0, 1, 3, 4, 5, 7} : Finset (ZMod 8)) := by
   ---- Let `B = {0, 1, 4, 7}` and `C = {x^2 : x ∈ B}`.
   set B : Finset (ZMod 8) := {0, 1, 3, 4, 5, 7}

@@ -26,6 +26,7 @@ $\text{lcm}(1, 2, …, ⌊√N⌋)/2$.
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2008SL.pdf).
 We skip the characterization of the $k$-friends of $(0, 0)$.
+We also hard-code the area of a lattice triangle instead of proving the area formula.
 
 ### Implementation details
 
@@ -90,13 +91,13 @@ theorem friends_iff {k : ℕ} {p q : ℤ × ℤ} :
       rw [Int.mul_neg, Int.mul_neg, ← Int.neg_add, h0, Int.neg_neg]
   _ ↔ Int.gcd (p.1 - q.1) (p.2 - q.2) ∣ 2 * k := Int.gcd_dvd_iff.symm
 
-/-- The point `(p_1, p_2)` is a `k`-friend of `(q_1, q_2)`
-  if and only if `(p_2, p_1)` is a `k`-friend of `(q_2, q_1)`. -/
+/-- The point `(p₁, p₂)` is a `k`-friend of `(q₁, q₂)`
+  if and only if `(p₂, p₁)` is a `k`-friend of `(q₂, q₁)`. -/
 theorem friends_coord_comm : friends k (p₁, p₂) (q₁, q₂) ↔ friends k (p₂, p₁) (q₂, q₁) := by
   rw [friends_iff, friends_iff, Int.gcd_comm]
 
-/-- If a subset `S ⊆ ℤ × ℤ` has cardinality greater than `m^2`, `m > 0`, then there exist
-  two distinct points `p, q ∈ S` such that `m ∣ gcd(p_1 - q_1, p_2 - q_2)`. -/
+/-- If a subset `S ⊆ ℤ × ℤ` has cardinality greater than `m^2`, where `m > 0`, then
+  there exist two distinct points `p, q ∈ S` such that `m ∣ gcd(p₁ - q₁, p₂ - q₂)`. -/
 theorem exist_dvd_gcd_of_sq_lt_card (hm : m > 0) {S : Finset (ℤ × ℤ)} (hS : m ^ 2 < #S) :
     ∃ p ∈ S, ∃ q ∈ S, p ≠ q ∧ m ∣ Int.gcd (p.1 - q.1) (p.2 - q.2) := by
   haveI : NeZero m := NeZero.of_pos hm

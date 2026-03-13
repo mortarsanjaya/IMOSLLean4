@@ -17,9 +17,10 @@ Determine all **well-ordered sets** $S$ such that there exists a Spanish couple 
 
 ### Answer
 
-Those order-isomorphic to lexicographic $T × ℕ × ℕ$, with order prioritizing $T$.
-In terms of ordinals, this holds if and only if the ordinal number $o_S$ of $S$ is
-  of the form $ω^2 o$ for some ordinal $o$, where $ω$ is the ordinal number of $ℕ$.
+Such sets are precisely those order-isomorphic to $T × ℕ × ℕ$ with lexicographical order,
+  for some well-ordered set $T$.
+In terms of ordinals, this holds if and only if the ordinal number of $S$ is of
+  the form $ω^2 o$ for some ordinal $o$, where $ω$ is the ordinal number of $ℕ$.
 
 ### Implementation details
 
@@ -27,7 +28,7 @@ We define an ordered set $S$ to be `good` if there exists a Spanish couple on $S
 The theorem `good.conjOrderIso_iff` shows that `good` is preserved under order isomorphisms.
 We define `isGoodOrdinal` to be the quotient predicate of `good` on ordinals.
 We state the main result in terms of well-ordered sets.
-For the ordinal version, see `IMOSL.IMO2008A3.isGoodOrdinal.iff_omega0_sq_dvd`.
+For the ordinal version, see `isGoodOrdinal.iff_omega0_sq_dvd`.
 
 The construction of Spanish couple on lexicographical product is implemented via
   `SpanishCouple.prodLexLeft`, while the construction of Spanish couple on an upper subset
@@ -76,7 +77,7 @@ theorem sum_getRight_of_strictMono_apply :
   Sum.inr_getRight _ _
 
 /-- Given a strictly increasing function `f : α ⊕ₗ β → α ⊕ₗ β`, where `α` and `β`
-  are well-ordered, the restrictiion to `β` is also strictly increasing. -/
+  are well-ordered, the restriction to `β` is also strictly increasing. -/
 theorem sum_getRight_of_strictMono_strictMono :
     StrictMono (sum_getRight_of_strictMono hf) :=
   λ _ _ h ↦ by simpa only [← Sum.Lex.inr_lt_inr_iff (α := α) (β := β),
@@ -138,11 +139,11 @@ def good (α) [Preorder α] := Nonempty (SpanishCouple α)
 theorem PUnit_is_not_good : ¬good PUnit :=
   λ ⟨X⟩ ↦ X.spec default
 
-/-- `ℕ` is not good. -/
+/-- `Nat` is not good. -/
 theorem Nat_is_not_good : ¬good ℕ :=
   λ ⟨X⟩ ↦ final_solution_part1.elim X
 
-/-- `ℕ ×ₗ ℕ` is good. -/
+/-- `Nat ×ₗ Nat` is good. -/
 theorem NatNatLex_is_good : good (ℕ ×ₗ ℕ) :=
   ⟨final_solution_part2⟩
 
@@ -176,8 +177,8 @@ end good
 
 open Ordinal
 
-/-- The ordinal type of `ℕ ×ₗ ℕ` is `ω^2`. -/
-theorem type_NatNatLex : type (λ x y : ℕ ×ₗ ℕ ↦ x < y) = ω ^ 2 :=
+/-- The ordinal type of `Nat ×ₗ Nat` is `ω^2`. -/
+theorem type_LexNatNat : type (λ x y : ℕ ×ₗ ℕ ↦ x < y) = ω ^ 2 :=
   (sq (type λ m n : ℕ ↦ m < n)).symm.trans (congrArg (· ^ 2) type_nat_lt)
 
 /-- Every ordinal is either a successor ordinal or is divisible by `ω`.
@@ -227,19 +228,19 @@ theorem isGoodOrdinal_iff_good'.{u, v} {α : Type u} [LinearOrder α] [WellFound
   obtain ⟨e⟩ := lift_type_eq.{_, _, 0}.mp ho
   exact isGoodOrdinal_iff_good.trans (good.conjOrderIso_iff (OrderIso.ofRelIsoLT e))
 
-/-- `1` is not a good ordinal. -/
+/-- The ordinal `1` is not good. -/
 theorem one_not_isGoodOrdinal : ¬isGoodOrdinal 1 := by
   rw [← type_eq_one_of_unique (λ x y : PUnit ↦ x < y), isGoodOrdinal_iff_good]
   exact PUnit_is_not_good
 
-/-- `ω` is not a good ordinal. -/
+/-- The ordinal `ω` is not good. -/
 theorem omega0_not_isGoodOrdinal : ¬isGoodOrdinal ω :=
   mt (isGoodOrdinal_iff_good' lift_omega0).mp Nat_is_not_good
 
-/-- `ω^2` is a good ordinal. -/
+/-- The ordinal `ω^2` is good. -/
 theorem omega0_sq_isGoodOrdinal : isGoodOrdinal (ω ^ 2) := by
   refine (isGoodOrdinal_iff_good' ?_).mpr NatNatLex_is_good
-  rw [type_NatNatLex, lift_uzero, sq, sq, lift_mul, lift_omega0]
+  rw [type_LexNatNat, lift_uzero, sq, sq, lift_mul, lift_omega0]
 
 
 namespace isGoodOrdinal
