@@ -120,7 +120,7 @@ theorem div_add_mul_add_lt {a b c : F} (ha : a > 0) (hb : b > 0) (hc : c > 0) :
   rw [← one_div, div_lt_div_iff₀ h h0, one_mul, ← sub_pos, h1]
   exact mul_pos hb hc
 
-/-- The estimate `|(a + c)/((a + c + b)(a + c + d)) - (b + d)/((b + d + c)(b + d + a))
+/-- The estimate `|(a + c)/((a + c + b)(a + c + d)) - (b + d)/((b + d + c)(b + d + a))|
   < 1/((a + c) + (b + d))`. -/
 theorem abs_sub_estimate {x : Fin 4 → F} (hx : ∀ i, x i > 0) :
     |(x 0 + x 2) / ((x 0 + x 2 + x 1) * (x 0 + x 2 + x 3))
