@@ -12,7 +12,8 @@ import Mathlib.Tactic.Field
 
 Let $F$ be a totally ordered field.
 Let $x_0, x_1, x_2, x_3 ∈ F$ be positive elements, and denote
-$$ L = \sum_{i = 0}^3 \frac{(x_i - x_{i + 1})(x_i - x_{i + 2})}{x_i + x_{i + 1} + x_{i + 2}}. $$
+$$ L = \sum_{i = 0}^3 \frac{(x_i - x_{i + 1})(x_i - x_{i + 2})}{x_i + x_{i + 1} + x_{i + 2}}, $$
+  where we set $x_{i + 4} = x_i$ for all $i ≥ 0$.
 1. Prove that $L ≥ 0$.
 2. Determine when $L = 0$ holds.
 
