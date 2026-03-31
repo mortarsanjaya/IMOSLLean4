@@ -20,7 +20,7 @@ Then we prove more:
 
 Please follow the instructions at https://leanprover-community.github.io/install/project.html about working on an existing project.
 
-This project depends on [Mathlib4](https://github.com/leanprover-community/mathlib4) and is currently using version **4.28.0**.
+This project depends on [Mathlib4](https://github.com/leanprover-community/mathlib4) and is currently using version **4.29.0**.
 
 ## Documentation
 
