@@ -224,7 +224,7 @@ theorem isGoodOrdinal_iff_good [LinearOrder α] [WellFoundedLT α] :
 theorem isGoodOrdinal_iff_good'.{u, v} {α : Type u} [LinearOrder α] [WellFoundedLT α]
     {o : Ordinal.{v}} (ho : lift.{u, v} o = lift.{v, u} (type λ x y : α ↦ x < y)) :
     isGoodOrdinal o ↔ good α := by
-  induction o using Ordinal.inductionOnWellOrder with | H β => ?_
+  induction o using Ordinal.inductionOnWellOrder with | type β => ?_
   obtain ⟨e⟩ := lift_type_eq.{_, _, 0}.mp ho
   exact isGoodOrdinal_iff_good.trans (good.conjOrderIso_iff (OrderIso.ofRelIsoLT e))
 
@@ -248,8 +248,8 @@ namespace isGoodOrdinal
 /-- If `a` is a good ordinal, then `ab` is a good ordinal for any ordinal `b`. -/
 theorem mul_right (ha : isGoodOrdinal a) (b : Ordinal) : isGoodOrdinal (a * b) := by
   ---- Indeed, if `a = [α]` and `b = [β]`, then `ab = [β ×ₗ α]`.
-  induction a using Ordinal.inductionOnWellOrder with | H α => ?_
-  induction b using Ordinal.inductionOnWellOrder with | H β => ?_
+  induction a using Ordinal.inductionOnWellOrder with | type α => ?_
+  induction b using Ordinal.inductionOnWellOrder with | type β => ?_
   change isGoodOrdinal (type λ x y : β ×ₗ α ↦ x < y)
   exact isGoodOrdinal_iff_good.mpr ((isGoodOrdinal_iff_good.mp ha).prodLexLeft β)
 
@@ -260,8 +260,8 @@ theorem trans_dvd (ha : isGoodOrdinal a) (h : a ∣ b) : isGoodOrdinal b :=
 /-- If `a + b` is a good ordinal, then `b` is a good ordinal. -/
 theorem add_left_cancel (h : isGoodOrdinal (a + b)) : isGoodOrdinal b := by
   ---- Indeed, if `a = [α]` and `b = [β]`, then `a + b = [α ⊕ₗ β]`.
-  induction a using Ordinal.inductionOnWellOrder with | H α => ?_
-  induction b using Ordinal.inductionOnWellOrder with | H β => ?_
+  induction a using Ordinal.inductionOnWellOrder with | type α => ?_
+  induction b using Ordinal.inductionOnWellOrder with | type β => ?_
   change isGoodOrdinal (type (λ x y : α ⊕ₗ β ↦ x < y)) at h
   exact isGoodOrdinal_iff_good.mpr (isGoodOrdinal_iff_good.mp h).sumLexRestrictRight
 
@@ -309,7 +309,7 @@ theorem Generalization.final_solution {α : Type} [LinearOrder α] [WellFoundedL
   obtain ⟨o₀, ho₀⟩ : ω ^ 2 ∣ type (λ x y : α ↦ x < y) :=
     (isGoodOrdinal_iff_good.mpr hα).omega0_sq_dvd
   ---- Write `[α] = ω^2 [β]` for some well-ordered set `β`.
-  induction o₀ using Ordinal.inductionOnWellOrder with | H β => ?_
+  induction o₀ using Ordinal.inductionOnWellOrder with | type β => ?_
   ---- Now this `β` works.
   refine ⟨β, by assumption, by assumption, ?_⟩
   rw [sq, ← type_nat_lt] at ho₀

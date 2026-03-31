@@ -34,7 +34,7 @@ open Finset
 /-- For any finite set `S ⊆ ℕ`, the sum of all elements of `S` is at least `C(#S, 2)`. -/
 theorem card_choose_le_nat_sum (S : Finset ℕ) : Nat.choose #S 2 ≤ ∑ s ∈ S, s := by
   ---- Induction on `S` via inserting greater elements; the base case is trivial.
-  induction S using Finset.induction_on_max with | h0 => rfl | step m S hmS hS => ?_
+  induction S using Finset.induction_on_max with | empty => rfl | insert m S hmS hS => ?_
   ---- Since `m` is greater than all elements of `S`, we have `#S ≤ m`.
   have hmS0 : #S ≤ m := calc
     #S ≤ #(range m) := card_le_card λ k hk ↦ mem_range.mpr (hmS k hk)

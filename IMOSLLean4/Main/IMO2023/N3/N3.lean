@@ -19,50 +19,47 @@ Prove the following:
 namespace IMOSL
 namespace IMO2023N3
 
+set_option backward.isDefEq.respectTransparency false
+
 /-! ### Extra lemmas -/
 
 lemma le_padicValNat_iff (ha : 1 < a) (hb : 0 < b) : n ≤ padicValNat a b ↔ a ^ n ∣ b :=
-  padicValNat.padicValNat_eq_maxPowDiv ▸
-    ⟨λ h ↦ Nat.pow_dvd_of_le_of_pow_dvd h (Nat.maxPowDiv.pow_dvd a b),
-    Nat.maxPowDiv.le_of_dvd ha hb.ne.symm⟩
+  (Nat.pow_dvd_iff_le_padicValNat ha.ne.symm hb.ne.symm).symm
 
-lemma padicValNat_eq_iff (ha : 1 < a) (hb : 0 < b) :
+lemma padicValNat_eq_iff (ha : a ≠ 1) (hb : b ≠ 0) :
     padicValNat a b = n ↔ a ^ n ∣ b ∧ ¬a ^ (n + 1) ∣ b := by
-  rw [← le_padicValNat_iff ha hb, ← le_padicValNat_iff ha hb, Nat.not_le, Nat.lt_succ_iff]
-  exact ⟨λ h ↦ by rw [h, and_self], λ h ↦ Nat.le_antisymm h.2 h.1⟩
+  rw [Nat.pow_dvd_iff_le_padicValNat ha hb, Nat.pow_dvd_iff_le_padicValNat ha hb,
+    Nat.not_le, Nat.lt_succ_iff, ← Nat.le_antisymm_iff, eq_comm]
 
 lemma padicValNat_pow_left (a b k) : padicValNat (a ^ k) b = padicValNat a b / k := by
-  obtain rfl | hk : k = 0 ∨ k ≠ 0 := eq_or_ne k 0
-  ---- Side case 1: `k = 0`
-  · rw [Nat.pow_zero, Nat.div_zero]; rfl
-  obtain rfl | rfl | ha : a = 0 ∨ a = 1 ∨ 1 < a :=
-    a.eq_zero_or_pos.imp_right LE.le.eq_or_lt'
-  ---- Side case 2: `a = 0`
-  · rw [Nat.zero_pow (Nat.zero_lt_of_ne_zero hk), padicValNat.padicValNat_eq_maxPowDiv,
-      Nat.maxPowDiv.zero_base, Nat.zero_div]
-  ---- Side case 3: `a = 1`
-  · rw [Nat.one_pow]; exact k.zero_div.symm
-  obtain rfl | hb : b = 0 ∨ 0 < b := b.eq_zero_or_pos
-  ---- Side case 4: `b = 0`
-  · rw [padicValNat.zero, padicValNat.zero, Nat.zero_div]
-  ---- Main case: `a > 1`, `b > 0`, and `k ≠ 0`
-  refine (padicValNat_eq_iff (Nat.one_lt_pow hk ha) hb).mpr ⟨?_, ?_⟩
-  · rw [← Nat.pow_mul, ← le_padicValNat_iff ha hb]
+  ---- Side case 1: `k = 0`.
+  obtain rfl | hk : k = 0 ∨ k ≠ 0 := eq_or_ne _ _
+  · rw [Nat.pow_zero, padicValNat_one_left, Nat.div_zero]
+  ---- Side case 2: `a = 1`.
+  obtain rfl | ha : a = 1 ∨ a ≠ 1 := eq_or_ne _ _
+  · rw [Nat.one_pow, padicValNat_one_left, Nat.zero_div]
+  ---- Side case 3: `b = 0`.
+  obtain rfl | hb : b = 0 ∨ b ≠ 0 := eq_or_ne _ _
+  · rw [padicValNat_zero_right, padicValNat_zero_right, Nat.zero_div]
+  ---- Main case: `a ≠ 1`, `b ≠ 0`, and `k ≠ 0`.
+  refine (padicValNat_eq_iff (mt Nat.pow_eq_one.mp (not_or.mpr ⟨ha, hk⟩)) hb).mpr ⟨?_, ?_⟩
+  · rw [← Nat.pow_mul, Nat.pow_dvd_iff_le_padicValNat ha hb]
     exact Nat.mul_div_le _ _
-  · rw [← Nat.pow_mul, ← le_padicValNat_iff ha hb, Nat.not_le,
+  · rw [← Nat.pow_mul, Nat.pow_dvd_iff_le_padicValNat ha hb, Nat.not_le,
       Nat.mul_comm, ← Nat.div_lt_iff_lt_mul (Nat.zero_lt_of_ne_zero hk)]
     exact Nat.lt_succ_self _
 
 lemma padicValNat_prime_mul_left
     [Fact (Nat.Prime p)] [Fact (Nat.Prime q)] (h : p ≠ q) (n : ℕ) :
     padicValNat (p * q) n = min (padicValNat p n) (padicValNat q n) := by
-  obtain rfl | hn : n = 0 ∨ 0 < n := n.eq_zero_or_pos
-  · simp only [padicValNat.zero]; rfl
+  obtain rfl | hn : n = 0 ∨ n ≠ 0 := eq_or_ne n 0
+  · simp only [padicValNat_zero_right]; rfl
   have hp : p.Prime := Fact.out
   have hq : q.Prime := Fact.out
-  have hp0 : 1 < p := hp.one_lt
-  have hq0 : 1 < q := hq.one_lt
-  refine (padicValNat_eq_iff (Nat.mul_lt_mul'' hp0 hq0) hn).mpr ⟨?_, λ h0 ↦ ?_⟩
+  have hp0 : p ≠ 1 := hp.ne_one
+  have hq0 : q ≠ 1 := hq.ne_one
+  refine (padicValNat_eq_iff (λ h ↦ hp0 (Nat.eq_one_of_mul_eq_one_right h)) hn).mpr
+    ⟨?_, λ h0 ↦ ?_⟩
   · have h0 : p.Coprime q :=
       hp.coprime_iff_not_dvd.mpr λ h0 ↦ h ((Nat.prime_dvd_prime_iff_eq hp hq).mp h0)
     rw [Nat.mul_pow]; apply (h0.pow _ _).mul_dvd_of_dvd_of_dvd
@@ -72,8 +69,9 @@ lemma padicValNat_prime_mul_left
     · refine this h.symm n hn hq hp hq0 hp0 ?_ (Nat.le_of_not_le h1)
       rwa [min_comm, Nat.mul_comm]
     rw [min_eq_left h1, Nat.mul_pow] at h0
-    apply absurd ((le_padicValNat_iff hp0 hn).mpr ((Nat.dvd_mul_right _ _).trans h0))
-    exact Nat.not_succ_le_self _
+    replace h0 : p ^ (padicValNat p n + 1) ∣ n := dvd_of_mul_right_dvd h0
+    rw [Nat.pow_dvd_iff_le_padicValNat hp0 hn, Nat.add_one_le_iff] at h0
+    exact h0.ne rfl
 
 lemma padicValNat_factorial_prime_le
     [Fact (Nat.Prime p)] [Fact (Nat.Prime q)] (h : p ≤ q) (n : ℕ) :
@@ -108,7 +106,7 @@ lemma padicValNat_10_factorial_eq (n : ℕ) :
   rw [padicValNat_10_factorial_eq', ← sub_one_mul_padicValNat_factorial,
     Nat.mul_div_cancel_left _ (Nat.succ_pos 3)]
 
-lemma Nat_digits_self_pow (hb : 1 < b) :
+lemma Nat_digits_self_pow {b : ℕ} (hb : 1 < b) :
     ∀ n, b.digits (b ^ n) = List.replicate n 0 ++ [1] := by
   refine Nat.rec ?_ λ n hn ↦ ?_
   · rw [Nat.pow_zero, Nat.digits_of_lt _ _ Nat.one_ne_zero hb]; rfl
@@ -120,7 +118,7 @@ lemma Nat_ofDigits_replicate_zero (b) : ∀ n, Nat.ofDigits b (List.replicate n 
   refine Nat.rec rfl λ n hn ↦ ?_
   rw [List.replicate_succ, Nat.ofDigits_cons, hn, Nat.mul_zero]
 
-lemma Nat_digits_sum_pos (b : ℕ) (h : 0 < n) : 0 < (b.digits n).sum := by
+lemma Nat_digits_sum_pos (b : ℕ) {n : ℕ} (h : 0 < n) : 0 < (b.digits n).sum := by
   rw [Nat.pos_iff_ne_zero, Ne, List.sum_eq_zero_iff]
   intro h0; apply h.ne.symm
   rw [← b.ofDigits_digits n, List.eq_replicate_of_mem h0, Nat_ofDigits_replicate_zero]

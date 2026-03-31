@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.NumberTheory.Padics.PadicVal.Basic
-import Mathlib.Data.Finite.Prod
 
 /-!
 # IMO 2007 N7
@@ -35,7 +34,7 @@ theorem padicValNat_add_factorial_of_lt_dvd
   have hp0 : p > 0 := hp.out.pos
   ---- Induction on `k`, with the base case `k = 0` obvious as then `r = 0`.
   induction k generalizing r m with
-    | zero => rw [Nat.lt_one_iff.mp hr, Nat.factorial_zero, padicValNat.one]; rfl
+    | zero => rw [Nat.lt_one_iff.mp hr, Nat.factorial_zero, padicValNat_one_right]; rfl
     | succ k k_ih => ?_
   ---- Write `r = pq + s` and `m = pn`, where `q < p^k`, `p^k ∣ n`, and `s < p`.
   obtain ⟨q, s, hs, rfl⟩ : ∃ q, ∃ s < p, q * p + s = r :=
@@ -97,8 +96,8 @@ theorem padicValNat_sum_stdSeq (i : ι) (S : Finset ℕ) :
       = ∑ k ∈ S, padicValNat (p i) (stdSeq p k).factorial := by
   ---- We induct with respect to the largest element of `S`, with the case `S = ∅` trivial.
   induction S using Finset.induction_on_max with
-    | h0 => exact padicValNat.one
-    | step m S hmS S_ih => ?_
+    | empty => exact padicValNat_one_right _
+    | insert m S hmS S_ih => ?_
   ---- If the largest element `m` is equal to `0` then `S = {0}` and we are done.
   obtain rfl | ⟨n, rfl⟩ : m = 0 ∨ ∃ n, m = n + 1 :=
     (Nat.eq_zero_or_eq_succ_pred m).imp_right λ hm ↦ ⟨Nat.pred m, hm⟩

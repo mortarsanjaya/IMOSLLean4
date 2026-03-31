@@ -33,6 +33,8 @@ However, adding the condition allows us to generalize the functional equation.
 namespace IMOSL
 namespace IMO2020N5
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- Given `f : ℕ+ → α` and `n : ℕ`, we say that `n` is `f`-*nice*
   if `f(a) = f(b)` whenever `a + b = n`. -/
 def nice (f : ℕ+ → α) (n : ℕ+) := ∀ a b, a + b = n → f a = f b

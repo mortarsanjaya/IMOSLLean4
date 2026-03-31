@@ -33,6 +33,8 @@ We assume that an empty sum and product evaluates to $0$ and $1$, respectively.
 namespace IMOSL
 namespace IMO2024N3
 
+set_option backward.isDefEq.respectTransparency false
+
 open Finset
 
 /-! ### Extra lemmas -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.MvPolynomial.CommRing
+import Mathlib.Algebra.MvPolynomial.Eval
 import Mathlib.Algebra.Order.Group.PosPart
 
 /-!
@@ -274,7 +274,7 @@ end MetaClosure
 /-! ### Summary for polynomials -/
 
 /-- The image of `MvPolynomial σ R` in `(σ → R) → R` as a ring. -/
-abbrev MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → R) :=
+noncomputable def MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → R) :=
   (Pi.ringHom (MvPolynomial.eval (R := R) (σ := σ))).range
 
 open MetaClosure in

@@ -17,10 +17,12 @@ Find all triplets $(a, b, n)$ of positive integers such that
 namespace IMOSL
 namespace IMO2021N1
 
+set_option backward.isDefEq.respectTransparency false
+
 /-! ### Formulas over `PNat` -/
 
-theorem PNat_two_mul (k : ℕ+) : k + k = 2 * k := by
-  change k + k = (1 + 1) * k; rw [add_mul, one_mul]
+theorem PNat_two_mul (k : ℕ+) : k + k = 2 * k :=
+  PNat.coe_inj.mp (Nat.two_mul _).symm
 
 theorem PNat_add_sq (a b : ℕ+) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by
   rw [sq, add_mul, mul_add, mul_add, ← add_assoc, ← sq, ← sq,

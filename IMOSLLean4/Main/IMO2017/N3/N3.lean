@@ -25,6 +25,8 @@ $$ n ∣ a_1 + a_2 + … + a_n. $$
 namespace IMOSL
 namespace IMO2017N3
 
+set_option backward.isDefEq.respectTransparency false
+
 open Finset
 
 /-! ### Extra lemmas -/

@@ -41,32 +41,10 @@ We will use $b_k = (-c + 1) f^k(r) + c^2$ instead.
 namespace IMOSL
 namespace IMO2006A1
 
-variable [Ring R] [LinearOrder R] [FloorRing R]
+variable [Ring R] [LinearOrder R] [FloorRing R] [IsStrictOrderedRing R]
 
 /-- The function `f(r) = ⌊r⌋ (r - ⌊r⌋)`. -/
 abbrev f (r : R) := ⌊r⌋ * Int.fract r
-
-
-
-/-! ### Extra lemmas -/
-
-variable [IsStrictOrderedRing R]
-
-/-- TODO: Remove this once it gets into `mathlib`. -/
-lemma sub_lt_one_of_floor_eq_floor {a b : R} (h : ⌊a⌋ = ⌊b⌋) : a - b < 1 :=
-  calc a - b
-    _ < ⌊a⌋ + 1 - ⌊b⌋ := sub_lt_sub_iff.mpr <|
-      add_lt_add_of_lt_of_le (Int.lt_floor_add_one a) (Int.floor_le b)
-    _ = 1 := by rw [h, add_sub_cancel_left]
-
-/-- A small lemma generalizing `Int.abs_sub_lt_one_of_floor_eq_floor` from `mathlib`.
-  TODO: Remove this once it gets into `mathlib`. -/
-lemma abs_sub_lt_one_of_floor_eq_floor {a b : R} (h : ⌊a⌋ = ⌊b⌋) : |a - b| < 1 :=
-  abs_sub_lt_iff.mpr ⟨sub_lt_one_of_floor_eq_floor h, sub_lt_one_of_floor_eq_floor h.symm⟩
-
-
-
-/-! ### Start of the problem -/
 
 /-- For any `r ∈ R`, we have `|⌊f(r)⌋| ≤ |⌊r⌋|`. -/
 theorem floor_f_abs_le_floor_abs (r : R) : |⌊f r⌋| ≤ |⌊r⌋| := by
@@ -175,7 +153,7 @@ theorem f_formula_of_archimedean_of_floor_eq_neg_nat
   replace h1 : 0 < (C : R) + 1 :=
     add_pos (two_pos.trans_le (Nat.ofNat_le_cast.mpr hC)) one_pos
   rw [abs_mul, abs_eq_self.mpr h1.le, lt_mul_iff_one_lt_right h1] at hk
-  exact hk.not_gt (abs_sub_lt_one_of_floor_eq_floor ((h k).trans (h 0).symm))
+  exact hk.not_gt (Int.abs_sub_lt_one_of_floor_eq_floor ((h k).trans (h 0).symm))
 
 /-- Suppose that `R` is archimedean and `C ≥ 2` is an positive integer.
   If `⌊f^N(r)⌋ = -C` for all `n ≥ N`, then `(C + 1) f^N(r) + C^2 = 0`. -/
