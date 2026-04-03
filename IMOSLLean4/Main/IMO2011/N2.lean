@@ -57,7 +57,7 @@ theorem general_result_Nat {S T : Finset ℕ} (h : #T < #S) :
       _ = m ^ #T := prod_const m
       _ < x + d := hxd
       _ = ∏ p ∈ (x + d).primeFactors, ordProj[p] (x + d) :=
-        (Nat.factorization_prod_pow_eq_self (Nat.ne_zero_of_lt hxd)).symm
+        (Nat.prod_factorization_pow_eq_self (Nat.ne_zero_of_lt hxd)).symm
       _ ≤ ∏ p ∈ T, ordProj[p] (x + d) :=
         prod_le_prod_of_subset_of_one_le' (h0 d) (λ p hp _ ↦ Nat.pow_pos (hT p hp).pos)
     obtain ⟨p, hp, hp0⟩ : ∃ p ∈ T, m < ordProj[p] (x + d) := exists_lt_of_prod_lt' hxd

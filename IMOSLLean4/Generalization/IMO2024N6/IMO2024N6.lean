@@ -268,7 +268,8 @@ theorem Ideal_inf_eq_prod_of_pairwise_isCoprime [CommSemiring R] [DecidableEq ι
   | insert i S hiS S_ih =>
       have h : IsCoprime (f i) (⨅ a ∈ S, f a) :=
         Ideal.isCoprime_biInf λ j hj ↦ hf (ne_of_mem_of_not_mem hj hiS).symm
-      replace h : f i ⊓ ⨅ a ∈ S, f a = f i * ⨅ a ∈ S, f a := Ideal.inf_eq_mul_of_isCoprime h
+      replace h : f i ⊓ ⨅ a ∈ S, f a = f i * ⨅ a ∈ S, f a :=
+        (Ideal.mul_eq_inf_of_isCoprime h).symm
       rw [inf_insert, prod_insert hiS, ← S_ih, Finset.inf_eq_iInf, h]
 
 /-- The maximal ideals of a ring are pairwise coprime. -/
