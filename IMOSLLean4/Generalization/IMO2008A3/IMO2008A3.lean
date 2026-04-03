@@ -173,26 +173,9 @@ end good
 
 
 
-/-! ### Miscellaneous lemmas on ordinals -/
+/-! ### The quotient predicate `isGoodOrdinal` of `good` -/
 
 open Ordinal
-
-/-- The ordinal type of `Nat ×ₗ Nat` is `ω^2`. -/
-theorem type_LexNatNat : type (λ x y : ℕ ×ₗ ℕ ↦ x < y) = ω ^ 2 :=
-  (sq (type λ m n : ℕ ↦ m < n)).symm.trans (congrArg (· ^ 2) type_nat_lt)
-
-/-- Every ordinal is either a successor ordinal or is divisible by `ω`.
-  TODO: If a version of `Ordinal.zero_or_succ_or_isSuccLimit` for `SuccPrelimit` appears,
-    replace this with a `SuccPrelimit` version. -/
-theorem succ_or_omega0_dvd (o : Ordinal) : o ∈ Set.range Order.succ ∨ ω ∣ o :=
-  o.zero_or_succ_or_isSuccLimit.elim (λ ho ↦ Or.inr (ho ▸ dvd_zero _))
-    (Or.imp_right λ ho ↦ (isSuccLimit_iff_omega0_dvd.mp ho).2)
-
-
-
-
-
-/-! ### The quotient predicate `isGoodOrdinal` of `good` -/
 
 namespace good
 
@@ -237,6 +220,10 @@ theorem one_not_isGoodOrdinal : ¬isGoodOrdinal 1 := by
 theorem omega0_not_isGoodOrdinal : ¬isGoodOrdinal ω :=
   mt (isGoodOrdinal_iff_good' lift_omega0).mp Nat_is_not_good
 
+/-- The ordinal type of `Nat ×ₗ Nat` is `ω^2`. -/
+theorem type_LexNatNat : type (λ x y : ℕ ×ₗ ℕ ↦ x < y) = ω ^ 2 :=
+  (sq (type λ m n : ℕ ↦ m < n)).symm.trans (congrArg (· ^ 2) type_nat_lt)
+
 /-- The ordinal `ω^2` is good. -/
 theorem omega0_sq_isGoodOrdinal : isGoodOrdinal (ω ^ 2) := by
   refine (isGoodOrdinal_iff_good' ?_).mpr NatNatLex_is_good
@@ -265,25 +252,30 @@ theorem add_left_cancel (h : isGoodOrdinal (a + b)) : isGoodOrdinal b := by
   change isGoodOrdinal (type (λ x y : α ⊕ₗ β ↦ x < y)) at h
   exact isGoodOrdinal_iff_good.mpr (isGoodOrdinal_iff_good.mp h).sumLexRestrictRight
 
+
+set_option trace.profiler true
+set_option trace.profiler.threshold 200
+
 /-- If `o` is a good ordinal, then `ω ∣ o`. -/
 theorem omega0_dvd (ho : isGoodOrdinal o) : ω ∣ o := by
-  ---- Suppose not; then `o = o₀ + 1` for some ordinal `o₀`.
-  refine (succ_or_omega0_dvd o).resolve_left ?_
-  rintro ⟨o₀, rfl⟩
-  ---- Since `o = o₀ + 1` is good, `1` good; contradiction.
-  exact one_not_isGoodOrdinal ho.add_left_cancel
+  ---- If not, then `o = o₀ + 1` is good; but then `1` is good, contradiction.
+  obtain ⟨o₀, rfl⟩ | ho : o ∈ Set.range Order.succ ∨ Order.IsSuccPrelimit o :=
+    Order.mem_range_succ_or_isSuccPrelimit o
+  exacts [absurd ho.add_left_cancel one_not_isGoodOrdinal,
+    isSuccPrelimit_iff_omega0_dvd.mp ho]
 
 /-- If `o` is a good ordinal, then `ω^2 ∣ o`. -/
 theorem omega0_sq_dvd (ho : isGoodOrdinal o) : ω ^ 2 ∣ o := by
-  ---- First write `o = ωo₀`, and reduce to `ω ∣ o₀`.
+  ---- First write `o = ωo₀` for some ordinal `o₀`.
   obtain ⟨o₀, rfl⟩ : ω ∣ o := ho.omega0_dvd
-  suffices ω ∣ o₀ from sq ω ▸ mul_dvd_mul_left ω this
-  ---- Now suppose `ω ∤ o₀`, and write `o₀ = o₁ + 1`.
-  refine (succ_or_omega0_dvd o₀).resolve_left ?_
-  rintro ⟨o₁, rfl⟩
-  ----- Then `o = ωo₀ = ωo_1 + ω` is good, so `ω` is good; contradiction.
-  rw [mul_succ] at ho
-  exact omega0_not_isGoodOrdinal ho.add_left_cancel
+  ---- Either `o₀ = o₁ + 1` for some `o₁` or `o₀` is a limit ordinal.
+  obtain ⟨o₀, rfl⟩ | ho₀ : o₀ ∈ Set.range Order.succ ∨ Order.IsSuccPrelimit o₀ :=
+    Order.mem_range_succ_or_isSuccPrelimit o₀
+  ---- If `o₀ = o₁ + 1` for some `o₁`, then `ω` is good; contradiction.
+  · rw [Order.succ_eq_add_one, mul_add_one] at ho
+    exact absurd ho.add_left_cancel omega0_not_isGoodOrdinal
+  ---- If `o₀` is a limit ordinal, then `ω ∣ o₀` and so `ω^2 ∣ o`.
+  · exact sq ω ▸ mul_dvd_mul_left ω (isSuccPrelimit_iff_omega0_dvd.mp ho₀)
 
 /-- An ordinal `o` is good if and only if `ω^2 ∣ o`. -/
 theorem iff_omega0_sq_dvd : isGoodOrdinal o ↔ ω ^ 2 ∣ o :=
