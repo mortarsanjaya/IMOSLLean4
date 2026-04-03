@@ -5,6 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Order.Monotone.Basic
+import Mathlib.Order.OrderIsoNat
 
 /-!
 # Antitone sequence of naturals
@@ -21,14 +22,12 @@ namespace IMOSL
 namespace Extra
 
 /-- An antitone sequence of natural numbers converge to a constant. -/
+@[deprecated WellFoundedGT.monotone_chain_condition (since := "2026-04-03")]
 theorem NatSeq_antitone_converges {a : ℕ → ℕ} (ha : Antitone a) :
     ∃ C N, ∀ n ≥ N, a n = C := by
-  obtain ⟨D, N, h⟩ : ∃ D N, ∀ n ≥ N, a 0 - a n = D :=
-    converges_of_monotone_of_bounded (c := a 0)
-      (monotone_nat_of_le_succ λ n ↦ Nat.sub_le_sub_left (ha n.le_succ) _)
-      (λ n ↦ Nat.sub_le _ _)
-  refine ⟨a 0 - D, N, λ n hn ↦ ?_⟩
-  rw [← h n hn, Nat.sub_sub_self (ha n.zero_le)]
+  obtain ⟨n, hn⟩ : ∃ n, ∀ m, n ≤ m → a n = a m :=
+    WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨_, ha⟩
+  exact ⟨a n, n, λ m hm ↦ (hn m hm).symm⟩
 
 @[deprecated NatSeq_antitone_converges (since := "2025-07-17")]
 theorem NatSeq_antitone_imp_const {a : ℕ → ℕ} (ha : Antitone a) :
