@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.NatSequence.AntitoneConst
 import Mathlib.Algebra.Field.Basic
 import Mathlib.Algebra.Field.Rat
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Order.OrderIsoNat
 
 /-!
 # IMO 2018 N4 (P5)
@@ -78,20 +78,28 @@ theorem final_solution {a : ℕ → ℕ} (ha : ∀ n, 0 < a n)
       (a 0).gcd (a (n + K)) * a (n + 1 + K) ∣ a 0 * a (n + K) + a (n + 1 + K) ^ 2 :=
     n.add_right_comm K 1 ▸ hK _ (K.le_add_left n)
   have hK0 (n) : 0 < (a 0).gcd (a n) := Nat.gcd_pos_of_pos_left _ (ha 0)
-  obtain ⟨M, C, h⟩ : ∃ C M, ∀ n, a 0 / (a 0).gcd (a (n + M + K)) = C := by
+  obtain ⟨C, M, h⟩ : ∃ C M, ∀ n, a 0 / (a 0).gcd (a (n + M + K)) = C := by
     let b (n) : ℕ := a 0 / (a 0).gcd (a (n + K))
-    refine Extra.NatSeq_antitone_imp_const (a := b) (antitone_nat_of_succ_le λ n ↦ ?_)
-    exact Nat.div_le_div_left (Nat.le_of_dvd (hK0 _) (lemma2 (hK n))) (hK0 _)
-  obtain ⟨N, D, h0⟩ : ∃ D N, ∀ n, a (n + N + K) / (a 0).gcd (a (n + N + K)) = D := by
+    have hb : Antitone b :=
+      antitone_nat_of_succ_le λ n ↦
+        Nat.div_le_div_left (Nat.le_of_dvd (hK0 _) (lemma2 (hK n))) (hK0 _)
+    obtain ⟨N, hN⟩ : ∃ N, ∀ n ≥ N, b N = b n :=
+      WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨b, hb⟩
+    exact ⟨b N, N, λ n ↦ (hN _ (Nat.le_add_left N n)).symm⟩
+  obtain ⟨D, N, h0⟩ : ∃ D N, ∀ n, a (n + N + K) / (a 0).gcd (a (n + N + K)) = D := by
     let b (n) : ℕ := a (n + K) / (a 0).gcd (a (n + K))
-    refine Extra.NatSeq_antitone_imp_const (a := b) (antitone_nat_of_succ_le λ n ↦ ?_)
-    exact Nat.div_le_div_of_mul_le_mul (hK0 _).ne.symm (Nat.gcd_dvd_right _ _)
-      (Nat.le_of_dvd (Nat.mul_pos (ha _) (hK0 _)) (lemma3 (hK n)))
+    have hb : Antitone b :=
+      antitone_nat_of_succ_le λ n ↦
+        Nat.div_le_div_of_mul_le_mul (hK0 _).ne.symm (Nat.gcd_dvd_right _ _)
+          (Nat.le_of_dvd (Nat.mul_pos (ha _) (hK0 _)) (lemma3 (hK n)))
+    obtain ⟨N, hN⟩ : ∃ N, ∀ n ≥ N, b N = b n :=
+      WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨b, hb⟩
+    exact ⟨b N, N, λ n ↦ (hN _ (Nat.le_add_left N n)).symm⟩
   ---- Now finish
-  refine ⟨a 0 / M * N, C + D + K, λ n ↦ ?_⟩
-  replace h : a 0 = (a 0).gcd (a (n + D + C + K)) * M :=
+  refine ⟨a 0 / C * D, M + N + K, λ n ↦ ?_⟩
+  replace h : a 0 = (a 0).gcd (a (n + N + M + K)) * C :=
     Nat.eq_mul_of_div_eq_right (Nat.gcd_dvd_left _ _) (h _)
-  have hM : 0 < M := Nat.pos_of_dvd_of_pos (Dvd.intro_left _ h.symm) (ha 0)
+  have hM : 0 < C := Nat.pos_of_dvd_of_pos (Dvd.intro_left _ h.symm) (ha 0)
   rw [h, Nat.mul_div_cancel _ hM, n.add_right_comm,
-    ← h0 (n + C), ← n.add_assoc, ← n.add_assoc]
+    ← h0 (n + M), ← n.add_assoc, ← n.add_assoc]
   exact (Nat.mul_div_cancel' (Nat.gcd_dvd_right _ _)).symm

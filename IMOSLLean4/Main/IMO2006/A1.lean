@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 import Mathlib.Algebra.Order.Archimedean.Basic
-import IMOSLLean4.Extra.NatSequence.AntitoneConst
+import Mathlib.Order.OrderIsoNat
 
 /-!
 # IMO 2006 A1
@@ -68,8 +68,12 @@ theorem floor_f_abs_le_floor_abs (r : R) : |⌊f r⌋| ≤ |⌊r⌋| := by
 theorem floor_f_iter_converges (r : R) : ∃ (C N : ℕ), ∀ n ≥ N, ⌊f^[n] r⌋ = -C := by
   ---- First, `(|⌊f^k(r)⌋|)_{k ≥ 0}` converges to some `C : ℕ`.
   obtain ⟨C, N, h⟩ : ∃ C N, ∀ n ≥ N, ⌊f^[n] r⌋.natAbs = C := by
-    refine Extra.NatSeq_antitone_converges (antitone_nat_of_succ_le λ n ↦ ?_)
-    simpa [f.iterate_succ_apply', ← Int.ofNat_le] using floor_f_abs_le_floor_abs _
+    have h : Antitone (λ n ↦ ⌊f^[n] r⌋.natAbs) :=
+      antitone_nat_of_succ_le λ n ↦ by
+        simpa [f.iterate_succ_apply', ← Int.ofNat_le] using floor_f_abs_le_floor_abs _
+    obtain ⟨N, hN⟩ : ∃ N, ∀ n ≥ N, ⌊f^[N] r⌋.natAbs = ⌊f^[n] r⌋.natAbs :=
+      WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨_, h⟩
+    exact ⟨⌊f^[N] r⌋.natAbs, N, λ n hn ↦ (hN n hn).symm⟩
   ---- We claim that this `C` works.
   refine ⟨C, N, λ n hn ↦ ?_⟩
   ---- We have `⌊f^n(r)⌋ ∈ {C, -C}`; it remains to consider the case `⌊f^n(r)⌋ = C > 0`.
