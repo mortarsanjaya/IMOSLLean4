@@ -84,7 +84,7 @@ theorem final_solution {a : ℕ → ℕ} (ha : ∀ n, 0 < a n)
       antitone_nat_of_succ_le λ n ↦
         Nat.div_le_div_left (Nat.le_of_dvd (hK0 _) (lemma2 (hK n))) (hK0 _)
     obtain ⟨N, hN⟩ : ∃ N, ∀ n ≥ N, b N = b n :=
-      WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨b, hb⟩
+      WellFoundedLT.antitone_chain_condition hb
     exact ⟨b N, N, λ n ↦ (hN _ (Nat.le_add_left N n)).symm⟩
   obtain ⟨D, N, h0⟩ : ∃ D N, ∀ n, a (n + N + K) / (a 0).gcd (a (n + N + K)) = D := by
     let b (n) : ℕ := a (n + K) / (a 0).gcd (a (n + K))
@@ -93,7 +93,7 @@ theorem final_solution {a : ℕ → ℕ} (ha : ∀ n, 0 < a n)
         Nat.div_le_div_of_mul_le_mul (hK0 _).ne.symm (Nat.gcd_dvd_right _ _)
           (Nat.le_of_dvd (Nat.mul_pos (ha _) (hK0 _)) (lemma3 (hK n)))
     obtain ⟨N, hN⟩ : ∃ N, ∀ n ≥ N, b N = b n :=
-      WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨b, hb⟩
+      WellFoundedLT.antitone_chain_condition hb
     exact ⟨b N, N, λ n ↦ (hN _ (Nat.le_add_left N n)).symm⟩
   ---- Now finish
   refine ⟨a 0 / C * D, M + N + K, λ n ↦ ?_⟩

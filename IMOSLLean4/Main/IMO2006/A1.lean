@@ -72,7 +72,7 @@ theorem floor_f_iter_converges (r : R) : ∃ (C N : ℕ), ∀ n ≥ N, ⌊f^[n] 
       antitone_nat_of_succ_le λ n ↦ by
         simpa [f.iterate_succ_apply', ← Int.ofNat_le] using floor_f_abs_le_floor_abs _
     obtain ⟨N, hN⟩ : ∃ N, ∀ n ≥ N, ⌊f^[N] r⌋.natAbs = ⌊f^[n] r⌋.natAbs :=
-      WellFoundedGT.monotone_chain_condition (α := ℕᵒᵈ) ⟨_, h⟩
+      WellFoundedLT.antitone_chain_condition h
     exact ⟨⌊f^[N] r⌋.natAbs, N, λ n hn ↦ (hN n hn).symm⟩
   ---- We claim that this `C` works.
   refine ⟨C, N, λ n hn ↦ ?_⟩
