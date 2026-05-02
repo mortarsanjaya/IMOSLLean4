@@ -296,9 +296,8 @@ theorem Generalization.final_solution {α : Type} [LinearOrder α] [WellFoundedL
   ---- Now suppose that `α` is good. Then `ω^2` divides the ordinal number `o = [α]`.
   obtain ⟨o₀, ho₀⟩ : ω ^ 2 ∣ type (λ x y : α ↦ x < y) :=
     (isGoodOrdinal_iff_good.mpr hα).omega0_sq_dvd
-  ---- Write `[α] = ω^2 [β]` for some well-ordered set `β`.
+  ---- If we write `[α] = ω^2 [β]`, then `β` works.
   induction o₀ using Ordinal.inductionOnWellOrder with | type β => ?_
-  ---- Now this `β` works.
   refine ⟨β, by assumption, by assumption, ?_⟩
-  rw [sq, ← type_nat_lt] at ho₀
-  exact (type_eq.mp ho₀).elim λ e ↦ ⟨OrderIso.ofRelIsoLT e⟩
+  rw [← type_LexNatNat, ← type_prod_lex, type_eq] at ho₀
+  exact ho₀.map OrderIso.ofRelIsoLT
