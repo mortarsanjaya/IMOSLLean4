@@ -252,10 +252,6 @@ theorem add_left_cancel (h : isGoodOrdinal (a + b)) : isGoodOrdinal b := by
   change isGoodOrdinal (type (λ x y : α ⊕ₗ β ↦ x < y)) at h
   exact isGoodOrdinal_iff_good.mpr (isGoodOrdinal_iff_good.mp h).sumLexRestrictRight
 
-
-set_option trace.profiler true
-set_option trace.profiler.threshold 200
-
 /-- If `o` is a good ordinal, then `ω ∣ o`. -/
 theorem omega0_dvd (ho : isGoodOrdinal o) : ω ∣ o := by
   ---- If not, then `o = o₀ + 1` is good; but then `1` is good, contradiction.
