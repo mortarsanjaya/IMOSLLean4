@@ -148,16 +148,13 @@ theorem toPerm_last_add_toPerm_zero_bound :
     ← succ_div_two_eq, Nat.two_mul, Nat.add_le_add_iff_left] at h
   exact Nat.le_of_mul_le_mul_left h Nat.two_pos
 
-theorem toPerm_last_max_toPerm_zero_bound :
-    (if N = 0 then 0 else (N + 1) / 4 + 1)
-      ≤ (X.toPerm (Fin.last N)).1.max (X.toPerm 0) := by
-  split_ifs with h
-  · exact Nat.zero_le _
-  · calc (N + 1) / 4
-      _ = (N + 1) / 2 / 2 := (Nat.div_div_eq_div_mul (N + 1) 2 2).symm
-      _ ≤ _ / 2 := Nat.div_le_div_right X.toPerm_last_add_toPerm_zero_bound
-      _ < _ := add_div_two_lt_max_of_ne λ h0 ↦
-        h (Fin.last_eq_zero_iff.mp (X.toPerm.injective (Fin.eq_of_val_eq h0)))
+theorem toPerm_last_max_toPerm_zero_bound (hN : N ≠ 0) :
+    (N + 1) / 4 + 1 ≤ (X.toPerm (Fin.last N)).1.max (X.toPerm 0) :=
+  calc (N + 1) / 4
+    _ = (N + 1) / 2 / 2 := (Nat.div_div_eq_div_mul (N + 1) 2 2).symm
+    _ ≤ _ / 2 := Nat.div_le_div_right X.toPerm_last_add_toPerm_zero_bound
+    _ < _ := add_div_two_lt_max_of_ne λ h0 ↦
+      hN (Fin.last_eq_zero_iff.mp (X.toPerm.injective (Fin.eq_of_val_eq h0)))
 
 end nicePerm
 

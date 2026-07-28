@@ -28,7 +28,7 @@ open Finset
 /-- The graph `G_R`, defined for all commutative rings `R`. -/
 def RGraph (R) [CommRing R] : SimpleGraph R where
   Adj x y := x ≠ y ∧ (x = y ^ 2 + 1 ∨ y = x ^ 2 + 1)
-  symm _ _ h := ⟨h.1.symm, h.2.symm⟩
+  symm := ⟨λ _ _ h ↦ ⟨h.1.symm, h.2.symm⟩⟩
   loopless := ⟨λ _ h ↦ h.1 rfl⟩
 
 /-- An unordered pair is an edge of `G_R` if and only if it has the form `(x^2 + 1, x)`. -/

@@ -56,7 +56,7 @@ def mkGood (k l : ℤ) : Fin 4 → ℤ :=
   ![2 * (k * l) + (k - l), 2 * (k * l) - (k - l),
     2 * (k * l) + (k + l), 2 * (k * l) - (k + l)]
 
-def mkGood_good (k l : ℤ) : good (mkGood k l) := by
+theorem mkGood_good (k l : ℤ) : good (mkGood k l) := by
   show (_ + _) * (_ - _) - (_ + _) * (_ - _) = (_ + _) + (_ - _)
     ∧ (_ + _) + (_ - _) = (_ + _) + (_ - _)
   rw [← sq_sub_sq, ← sq_sub_sq, sub_sub_sub_cancel_left, sq_sub_sq]

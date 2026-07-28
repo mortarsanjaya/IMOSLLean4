@@ -110,7 +110,7 @@ variable [Add G] [Preorder G]
 
 instance : FunLike (GoodFun G n) (Fin n) (Fin 3 → G) where
   coe := toFun
-  coe_injective' _ _ := GoodFun.ext
+  coe_injective _ _ := GoodFun.ext
 
 /-- If `f` is a good function, then the function `i ↦ f(i, j)` is monotone for each `j`. -/
 theorem monotone_left (f : GoodFun G n) (j) : Monotone (λ i ↦ f i j) :=
@@ -171,7 +171,7 @@ variable [AddZero G] [Preorder G] (a : NiceSeq G n)
 
 instance : FunLike (NiceSeq G n) (Fin (n + 1)) G where
   coe := toFun
-  coe_injective' _ _ := NiceSeq.ext
+  coe_injective _ _ := NiceSeq.ext
 
 /-- If `a : Fin (n + 1) → G` is a nice sequence, then `a` is strictly monotone. -/
 theorem strictMono : StrictMono a :=

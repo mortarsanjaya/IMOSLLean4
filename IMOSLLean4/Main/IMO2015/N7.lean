@@ -46,7 +46,7 @@ theorem not_good_one (f) : ¬good 1 f := by
   intro h
   replace h (m n) (hmn : m ≠ n) : (f m + n).val % 2 = 1 ∨ (f n + m).val % 2 = 1 := by
     rw [← Nat.two_dvd_ne_zero, ← Nat.two_dvd_ne_zero, ← not_and_or, ← Nat.dvd_gcd_iff,
-      ← PNat.gcd_coe, PNat.le_one_iff.mp (h m n hmn), Nat.two_dvd_ne_zero]; rfl
+      ← PNat.gcd_coe, le_one_iff_eq_one.mp (h m n hmn), Nat.two_dvd_ne_zero]; rfl
   ---- There exists `m` such that `f(2m)` is odd.
   obtain ⟨m, hm⟩ : ∃ m, (f (2 * m) : ℕ) % 2 = 1 := by
     obtain h0 | h0 : (f 2 + 4 : ℕ) % 2 = 1 ∨ (f 4 + 2 : ℕ) % 2 = 1 := h 2 4 (by decide)
@@ -228,5 +228,5 @@ theorem good_two_goodFn : good 2 goodFn :=
 
 /-- Final solution -/
 theorem final_solution : (∃ f, good k f) ↔ k ≥ 2 :=
-  ⟨λ ⟨f, hf⟩ ↦ k.one_le.eq_or_lt'.resolve_left λ hk ↦ not_good_one f (hk ▸ hf),
+  ⟨λ ⟨f, hf⟩ ↦ one_lt_of_ne_one λ hk ↦ not_good_one f (hk ▸ hf),
   λ hk ↦ ⟨goodFn, good_two_goodFn.of_ge hk⟩⟩

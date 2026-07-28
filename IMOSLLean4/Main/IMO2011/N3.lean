@@ -7,7 +7,7 @@ Authors: Gian Cordana Sanjaya
 import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Algebra.Order.Ring.Int
 import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Data.Fintype.Units
+import Mathlib.Algebra.GroupWithZero.Units.Fintype
 import Mathlib.Data.Int.ModEq
 import Mathlib.Data.Nat.Prime.Int
 import Mathlib.Data.Nat.PrimeFin

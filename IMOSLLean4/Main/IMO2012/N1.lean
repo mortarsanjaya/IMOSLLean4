@@ -11,7 +11,7 @@ import Mathlib.RingTheory.Ideal.Span
 # IMO 2012 N1
 
 Let $R$ be a commutative ring.
-A set $A ⊆ R$ is called *admissible* if  for any $x, y ∈ A$ and $r ∈ R$,
+A set $A ⊆ R$ is called *admissible* if for any $x, y ∈ A$ and $r ∈ R$,
 $$ x^2 + rxy + y^2 ∈ A. $$
 Determine all pairs $(x, y) ∈ R^2$ such that the only
   admissible set containing $x$ and $y$ is $R$.

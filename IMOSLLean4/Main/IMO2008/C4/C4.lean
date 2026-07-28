@@ -114,15 +114,8 @@ lemma card_lamp_le_step [Fintype I] [Fintype Λ] (s : NSequence I Λ) :
   obtain ⟨a, ha⟩ := s.exists_mem_fiber_one l
   exact ⟨a, congrArg Prod.snd ((s.fiber_spec _ _).mp ha)⟩
 
-
-
-variable [DecidableEq I] [Fintype I] [Fintype Λ]
-
-noncomputable instance : Fintype (NSequence I Λ) :=
+noncomputable instance [DecidableEq I] [Fintype I] [Fintype Λ] : Fintype (NSequence I Λ) :=
   Fintype.ofInjective steps λ _ _ ↦ ext
-
-instance isEmpty (h : Fintype.card I < Fintype.card Λ) : IsEmpty (NSequence I Λ) :=
-  ⟨λ s ↦ h.not_ge s.card_lamp_le_step⟩
 
 end NSequence
 
@@ -154,14 +147,8 @@ lemma card_lamp_le_step [Fintype I] [Fintype Λ] (s : MSequence I Λ) :
   obtain ⟨a, ha⟩ := s.exists_mem_fiber_one l
   exact ⟨a, (s.fiber_spec _ _).mp ha⟩
 
-
-variable [DecidableEq I] [Fintype I] [Fintype Λ]
-
-noncomputable instance : Fintype (MSequence I Λ) :=
+noncomputable instance [DecidableEq I] [Fintype I] [Fintype Λ] : Fintype (MSequence I Λ) :=
   Fintype.ofInjective steps λ _ _ ↦ ext
-
-instance isEmpty (h : Fintype.card I < Fintype.card Λ) : IsEmpty (MSequence I Λ) :=
-  ⟨λ s ↦ h.not_ge s.card_lamp_le_step⟩
 
 end MSequence
 
@@ -333,8 +320,8 @@ theorem final_solution :
     Fintype.card (NSequence I Λ) =
       2 ^ (Fintype.card I - Fintype.card Λ) * Fintype.card (MSequence I Λ) := by
   obtain h | h := lt_or_ge (Fintype.card I) (Fintype.card Λ)
-  · have h0 := NSequence.isEmpty h
-    have h1 := MSequence.isEmpty h
+  · have h0 : IsEmpty (NSequence I Λ) := ⟨λ s ↦ h.not_ge s.card_lamp_le_step⟩
+    have h1 : IsEmpty (MSequence I Λ) := ⟨λ s ↦ h.not_ge s.card_lamp_le_step⟩
     rw [Fintype.card_of_isEmpty, Fintype.card_of_isEmpty (α := MSequence I Λ), Nat.mul_zero]
   · rw [← Nat.mul_right_inj (Nat.pos_iff_ne_zero.mp (Nat.two_pow_pos (Fintype.card Λ))),
       card_NSeq_vs_MSeq, ← Nat.mul_assoc, ← Nat.pow_add, Nat.add_sub_cancel' h]

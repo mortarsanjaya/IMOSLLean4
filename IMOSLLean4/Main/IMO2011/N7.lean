@@ -54,7 +54,7 @@ def NumDvdSubgroup (d : ℤ) : AddSubgroup ℚ where
       h0.mul_dvd_of_dvd_of_dvd (Nat.gcd_dvd_left _ _) (Int.natAbs_dvd_natAbs.mpr h)
     replace h0 : N.natAbs.gcd (a.den * b.den) * d ∣ N := by
       rwa [← Int.natAbs_dvd_natAbs, Int.natAbs_mul, Int.natAbs_natCast]
-    rw [Set.mem_setOf_eq, Rat.num_add]
+    rw [Set.mem_ofPred_eq, Rat.num_add]
     exact Int.dvd_div_of_mul_dvd h0
 
 /-- Definition of membership on `NumDvdSubgroup`. -/

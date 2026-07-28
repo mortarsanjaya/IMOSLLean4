@@ -115,15 +115,15 @@ theorem ofNonnegHalf (i : ι) : AddMaxClosed {v : ι → ℤ | 0 ≤ v i} where
 
 theorem ofNonposHalf (i : ι) : AddMaxClosed {v : ι → ℤ | v i ≤ 0} where
   add_mem := λ _ hv _ hw ↦ Int.add_nonpos hv hw
-  sup_mem := λ _ hv _ hw ↦ Set.mem_setOf_eq.mpr (sup_le_iff.mpr ⟨hv, hw⟩)
+  sup_mem := λ _ hv _ hw ↦ Set.mem_ofPred_eq.mpr (sup_le_iff.mpr ⟨hv, hw⟩)
 
 theorem ofSlopedHalf {x y : ℤ} (hx : 0 ≤ x) (hy : 0 ≤ y) (i j : ι) :
     AddMaxClosed {v : ι → ℤ | x * v i ≤ y * v j} where
   add_mem := λ v hv w hw ↦ by
-    simp only [Set.mem_setOf_eq, Pi.add_apply, Int.mul_add]
+    simp only [Set.mem_ofPred_eq, Pi.add_apply, Int.mul_add]
     exact Int.add_le_add hv hw
   sup_mem := λ v hv w hw ↦ by
-    simp only [Set.mem_setOf_eq, Pi.sup_apply]
+    simp only [Set.mem_ofPred_eq, Pi.sup_apply]
     rw [mul_max_of_nonneg _ _ hx, mul_max_of_nonneg _ _ hy]
     exact max_le_max hv hw
 
@@ -306,7 +306,7 @@ theorem doubleton_AddSupGenerator_imp₂ (h0 : i ≠ j) : v i * v j < 0 := by
     rintro _ (rfl | rfl)
     exacts [Int.le_of_eq (mul_comm _ _), h1]
   replace h2 : Pi.single i 1 ∈ {x : ι → ℤ | v j * x i ≤ v i * x j} := h2 ▸ Set.mem_univ _
-  rw [Set.mem_setOf_eq, Pi.single_eq_same, mul_one,
+  rw [Set.mem_ofPred_eq, Pi.single_eq_same, mul_one,
     Pi.single_eq_of_ne h0.symm, mul_zero] at h2
   exact hvj.not_ge h2
 

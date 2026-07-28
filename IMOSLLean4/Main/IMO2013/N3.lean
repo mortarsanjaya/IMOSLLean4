@@ -113,5 +113,5 @@ theorem final_solution :
   simp only [Nat.pow_mul _ 2 2]
   refine general_result (λ n ↦ (n ^ 2 + n + 1).primeFactorsList.foldr max 0) ?_
   have h0 (n) : n ^ 2 + n + 1 ≠ 0 := Nat.succ_ne_zero _
-  intro n; simp only; rw [special_formula, ← foldr_max_zero_append]
+  intro n; rw [special_formula, ← foldr_max_zero_append]
   exact (Nat.perm_primeFactorsList_mul (h0 n) (h0 (n + 1))).foldr_eq _

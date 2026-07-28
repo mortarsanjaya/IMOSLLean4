@@ -25,12 +25,12 @@ $\text{lcm}(1, 2, …, ⌊√N⌋)/2$.
 ### Solution
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2008SL.pdf).
-We skip the characterization of the $k$-friends of $(0, 0)$.
-We also hard-code the area of a lattice triangle instead of proving the area formula.
 
 ### Implementation details
 
 We implement the triangles as a function `Fin 3 → ℤ × ℤ`.
+We skip the characterization of the $k$-friends of $(0, 0)$.
+We also hard-code the area of a lattice triangle instead of proving the area formula.
 -/
 
 namespace IMOSL
@@ -177,7 +177,7 @@ theorem two_dvd_lcm_range_succ (hk : k ≥ 2) : 2 ∣ (range k).lcm Nat.succ :=
 
 /-- For any `k`, we have `lcm(1, 2, …, k) > 0`. -/
 theorem lcm_range_succ_pos (k) : 0 < (range k).lcm Nat.succ := by
-  rw [Nat.pos_iff_ne_zero, lcm_ne_zero_iff]
+  rw [Nat.pos_iff_ne_zero, Finset.lcm_ne_zero_iff]
   rintro x -; exact Nat.succ_ne_zero x
 
 /-- Final solution -/

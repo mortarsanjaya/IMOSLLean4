@@ -66,7 +66,7 @@ namespace NiceFun
 
 instance : FunLike (NiceFun α) α α where
   coe := NiceFun.toFun
-  coe_injective' := λ f g h ↦ by
+  coe_injective := λ f g h ↦ by
     rw [mk.injEq]
     refine ⟨h, funext λ n ↦ Finset.ext λ a ↦ ?_⟩
     obtain rfl | hn : n = 0 ∨ n > 0 := n.eq_zero_or_pos

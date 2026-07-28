@@ -89,7 +89,7 @@ theorem exactIterRange_spec (n : ℕ) :
     (h.exactIterRange n : Set α) = Set.range f^[n] \ Set.range f^[n + 1] :=
   Set.ext λ a ↦ by
     rw [exactIterRange, coe_image, h.rangeCompl_spec, iterate_succ,
-      Set.range_comp _ f, Set.range_diff_image (h.injective.iterate n)]
+      Set.range_comp _ f, Set.range_sdiff_image (h.injective.iterate n)]
 
 theorem exactIterRange_zero : h.exactIterRange 0 = h.rangeCompl :=
   image_id
@@ -128,7 +128,7 @@ theorem iterRangeCompl_spec :
               iterate_zero, Set.range_id, Set.compl_univ]
   | n + 1 => by
       rw [h.iterRangeCompl_succ, coe_union, iterRangeCompl_spec n,
-        h.exactIterRange_spec, Set.diff_eq, Set.inter_union_distrib_right,
+        h.exactIterRange_spec, Set.sdiff_eq, Set.inter_union_distrib_right,
         Set.union_compl_self, Set.univ_inter, ← Set.compl_inter]
       exact congrArg _ (Set.inter_eq_left.mpr λ x ⟨y, h1⟩ ↦ ⟨f y, h1⟩)
 

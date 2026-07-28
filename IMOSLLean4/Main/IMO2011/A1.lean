@@ -43,7 +43,7 @@ namespace Card4NatSet
 
 instance : FunLike Card4NatSet (Fin 4) ℕ where
   coe := toFun
-  coe_injective' _ _ := Card4NatSet.ext
+  coe_injective _ _ := Card4NatSet.ext
 
 /-- Each `a_i` is positive. -/
 theorem pos (A : Card4NatSet) (i) : A i > 0 :=

@@ -21,7 +21,7 @@ namespace IMO2018N6
 lemma PNat_eq_of_dvd_of_lt_mul_one_add_one
     {a b : ℕ+} (h : a ∣ b) (h0 : b < a * (1 + 1)) : b = a := by
   rcases h with ⟨c, rfl⟩
-  rw [mul_lt_mul_iff_left, PNat.lt_add_one_iff, PNat.le_one_iff] at h0
+  rw [mul_lt_mul_iff_left, PNat.lt_add_one_iff, le_one_iff_eq_one] at h0
   rw [h0, mul_one]
 
 lemma PNat_exists_greatest_infinite_fiber {f : ℕ+ → ℕ+} (h : ∃ N, ∀ n, f n ≤ N) :
@@ -31,7 +31,7 @@ lemma PNat_exists_greatest_infinite_fiber {f : ℕ+ → ℕ+} (h : ∃ N, ∀ n,
     intro N; obtain ⟨n, -, hn⟩ := this (N + 1) 1
     exact ⟨n, PNat.add_one_le_iff.mp hn⟩
   intro M; induction M using PNat.recOn with
-  | one => intro N; exact ⟨N, le_refl N, (f N).one_le⟩
+  | one => intro N; exact ⟨N, le_refl N, one_le⟩
   | succ M M_ih =>
       by_contra! h0; rcases h0 with ⟨K, hK⟩
       have h0 (N) : ∃ n ≥ N, f n = M := by
@@ -66,7 +66,7 @@ variable [Add G]
 
 instance : FunLike (GoodFun G) G ℕ+ where
   coe f := f.toFun
-  coe_injective' f g h := by rwa [GoodFun.mk.injEq]
+  coe_injective f g h := by rwa [GoodFun.mk.injEq]
 
 @[ext] theorem ext {f g : GoodFun G} : (∀ x, f x = g x) → f = g :=
   DFunLike.ext _ _
@@ -312,7 +312,7 @@ theorem eventually_bound_and_dvd_iff_period_imp {f : GoodFun ℕ+} (hN : ∀ n �
       (dvd_of_eq ((hd0 (k + m) (hk.trans (k.lt_add_right m).le)).mpr h).symm)
   ---- Second, `f(k) ∣ f(m)` whenever `k, m ≥ N` not divisible by `d` but `d ∣ k + m`.
   replace hd0 : f (N * d) = M :=
-    (hd0 _ (le_mul_of_one_le_right' d.one_le)).mpr (Nat.dvd_mul_left _ _)
+    (hd0 _ (le_mul_of_one_le_right' one_le)).mpr (Nat.dvd_mul_left _ _)
   replace hd0 {k m : ℕ+} (hk : k ≥ N) (hm : m ≥ N) (hk0 : ¬d.val ∣ k)
       (hm0 : ¬d.val ∣ m) (h : d.val ∣ k + m) : (f k).val ∣ f m := by
     have h0 : f k + f m = M := hN hk hm hk0 hm0 h
@@ -328,7 +328,7 @@ theorem eventually_bound_and_dvd_iff_period_imp {f : GoodFun ℕ+} (hN : ∀ n �
   ---- Finish
   intro k hk hk0
   obtain ⟨m, hm, h1⟩ : ∃ m ≥ N, d.val ∣ k + m := by
-    refine ⟨k * (d - 1), le_mul_of_le_of_one_le hk (PNat.one_le _), ?_⟩
+    refine ⟨k * (d - 1), le_mul_of_le_of_one_le hk one_le, ?_⟩
     rw [← PNat.add_coe, ← PNat.dvd_iff, ← mul_one_add, PNat.add_sub_of_lt hd]
     exact dvd_mul_left d k
   have hm0 : ¬d.val ∣ m := λ hm0 ↦ hk0 ((Nat.dvd_add_iff_left hm0).mpr h1)
@@ -342,7 +342,7 @@ theorem exists_smul_eventually_eq_one_or_one_two {f : GoodFun ℕ+} (h : ∃ N, 
     (∃ (C : ℕ+) (g : GoodFun ℕ+), f = C • g ∧ ∃ d : ℕ+, d > 1 ∧
       ∃ N, ∀ n ≥ N, g n = if d.val ∣ n then 2 else 1) := by
   obtain ⟨M, ⟨N, hN⟩, ⟨d, hd⟩⟩ := exists_limsup_and_dvd_map_iff h
-  apply d.one_le.eq_or_lt.imp
+  apply (eq_one_or_one_lt d).imp
   ---- Case 1: `d = 1`
   · rintro rfl; exact ⟨M, eq_set_cofinite_imp ⟨N, λ n hn ↦ (hN n hn).antisymm <|
       PNat.le_of_dvd <| PNat.dvd_iff.mpr <| (hd n).mpr n.1.one_dvd⟩⟩

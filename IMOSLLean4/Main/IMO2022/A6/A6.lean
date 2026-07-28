@@ -30,7 +30,7 @@ namespace InfectiousFun
 
 instance [Add G] : FunLike (InfectiousFun G) G G where
   coe f := f.toFun
-  coe_injective' f g h := by rwa [InfectiousFun.mk.injEq]
+  coe_injective f g h := by rwa [InfectiousFun.mk.injEq]
 
 @[ext] theorem ext [Add G] {f g : InfectiousFun G} : (∀ x, f x = g x) → f = g :=
   DFunLike.ext _ _

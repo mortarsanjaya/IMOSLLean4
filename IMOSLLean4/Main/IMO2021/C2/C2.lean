@@ -16,10 +16,6 @@ Fix some positive integer $n$, and denote $[n] = \{0, 1, …, n - 1\}$.
 Find all positive integers $m ∈ ℕ$ such that there exists a
   function $f : ℤ/mℤ → [n]$ with the following property:
   for any $k ∈ ℤ/mℤ$ and $i ∈ [n]$, there exists $j ≤ n$ such that $f(k + j) = i$.
-
-### TODO
-
-Replace `Nat.Icc_insert_succ_right` with `Finset.insert_Icc_eq_Icc_succ_right`
 -/
 
 namespace IMOSL

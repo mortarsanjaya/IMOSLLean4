@@ -239,7 +239,7 @@ theorem nice.Int_le_two {B : Finset ℤ} (hB : ∃ N ∈ B, N ≠ 0) (h : nice q
     _ = q * (x₀ * x₀) := congrArg (q * ·) (sq _)
     _ = a ^ 2 + b ^ 2 - (c ^ 2 + d ^ 2) := h0
     _ ≤ a ^ 2 + b ^ 2 :=
-      Int.sub_le_self _ (Int.add_nonneg (Int.sq_nonnneg _) (Int.sq_nonnneg _))
+      Int.sub_le_self _ (Int.add_nonneg (Int.sq_nonneg _) (Int.sq_nonneg _))
     _ ≤ x₀ ^ 2 + x₀ ^ 2 := Int.add_le_add (hx₀0 a ha) (hx₀0 b hb)
     _ = 2 * x₀ ^ 2 := (Int.two_mul _).symm
 
@@ -260,7 +260,7 @@ theorem not_nice_one_013457 : ¬nice (1 : ZMod 8) ({0, 1, 3, 4, 5, 7} : Finset (
   let C : Finset (ZMod 8) := B.image (λ x ↦ x ^ 2)
   ---- Then `4 = a + b - (c + d)` for some `a, b, c, d ∈ B`.
   intro h; replace h : ∃ a ∈ C, ∃ b ∈ C, ∃ c ∈ C, ∃ d ∈ C, 4 = a + b - (c + d) := by
-    simpa only [C, exists_mem_image] using h 1 (by decide) 4 (by decide)
+    simpa only [C, exists_mem_image, one_mul] using h 1 (by decide) 4 (by decide)
   ---- it is easy to see that `C = {0, 1}`.
   have hC : C = {0, 1} := by decide
   clear_value C; subst hC

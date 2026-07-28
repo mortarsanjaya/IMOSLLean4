@@ -36,7 +36,8 @@ theorem monochromatic_of_triangle
     have hv₀ := C.incidence_finite v₀
     let f (v : V) : Set.range (C.colour v₀) := ⟨C.colour v₀ v, v, rfl⟩
     obtain ⟨⟨c, _⟩, hc⟩ := Finite.exists_infinite_fiber f
-    exact ⟨c, by simpa [f, Set.preimage] using hc⟩
+    simp only [f, Set.preimage, Set.mem_singleton_iff, ← Subtype.coe_inj] at hc
+    exact ⟨c, hc⟩
   ---- Reduce to showing that edges incident with `v₀` has colour `c`.
   suffices ∀ v ≠ v₀, C.colour v₀ v = c by
     refine ⟨c, λ x y h0 ↦ ?_⟩
@@ -51,7 +52,8 @@ theorem monochromatic_of_triangle
       ∃ w₁ w₂ : { x // C.colour v₀ x = c }, w₁ ≠ w₂ ∧ C.colour v w₁ = C.colour v w₂ := by
     have hv' := C.incidence_finite v
     let f (w : { x // C.colour v₀ x = c }) : Set.range (C.colour v) := ⟨C.colour v w, w, rfl⟩
-    simpa only [f, Subtype.mk.injEq] using Finite.exists_ne_map_eq_of_infinite f
+    simpa only [f, Subtype.mk.injEq, exists_prop, ← Subtype.coe_inj]
+      using Finite.exists_ne_map_eq_of_infinite f
   replace h0 : w₁ ≠ w₂ := by simpa using h0
   rw [C.colour_symm, C.colour_symm v₀]
   refine h hv ?_

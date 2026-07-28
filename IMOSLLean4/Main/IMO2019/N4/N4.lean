@@ -18,7 +18,7 @@ Find all functions $f : ℕ → ℕ$ such that $a + f(b) ∣ a^2 + b f(a)$
 
 ### Notes
 
-The original functional equation is of type $ℕ^+ → ℕ^+$.
+The original functional equation is of type $ℕ⁺ → ℕ⁺$.
 However, the solution can be deduced from this $ℕ$-version as well.
 We do both versions in this file.
 -/
@@ -148,7 +148,8 @@ theorem goodPNat_is_linear (h : goodPNat C f) : ∃ k : ℕ+, f = (k * ·) := by
       exact PNat.dvd_iff.mp (h ⟨a, ha⟩ ⟨b, hb⟩ H)
   rcases good_is_linear h0 with ⟨k, h1⟩
   replace h0 : 0 < k := by rw [← k.mul_one, ← congr_fun h1]; exact (f 1).pos
-  refine ⟨⟨k, h0⟩, funext λ x ↦ ?_⟩
+  let k0 : ℕ+ := ⟨k, h0⟩
+  refine ⟨k0, funext λ x ↦ ?_⟩
   rw [← PNat.coe_inj, PNat.mul_coe, PNat.mk_coe, ← congr_fun h1, eq_comm]
   exact dif_pos x.pos
 

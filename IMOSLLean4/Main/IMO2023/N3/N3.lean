@@ -19,8 +19,6 @@ Prove the following:
 namespace IMOSL
 namespace IMO2023N3
 
-set_option backward.isDefEq.respectTransparency false
-
 /-! ### Extra lemmas -/
 
 lemma le_padicValNat_iff (ha : 1 < a) (hb : 0 < b) : n ≤ padicValNat a b ↔ a ^ n ∣ b :=

@@ -171,7 +171,7 @@ lemma sub_mem (ha : MetaClosure (· ∈ S) a) (hb : MetaClosure (· ∈ S) b) :
 
 /-- The meta-closure of a subgroup as a subgroup. -/
 def AddGroup_mk : AddSubgroup G :=
-  { carrier := setOf (MetaClosure (· ∈ S))
+  { carrier := Set.ofPred (MetaClosure (· ∈ S))
     add_mem' := add_mem S
     zero_mem' := zero_mem S
     neg_mem' := neg_mem S }
@@ -275,12 +275,12 @@ end MetaClosure
 
 /-- The image of `MvPolynomial σ R` in `(σ → R) → R` as a ring. -/
 noncomputable def MvPolynomial_image (σ R : Type*) [CommRing R] : Subring ((σ → R) → R) :=
-  (Pi.ringHom (MvPolynomial.eval (R := R) (σ := σ))).range
+  (RingHom.pi (MvPolynomial.eval (R := R) (σ := σ))).range
 
 open MetaClosure in
 /-- Final solution -/
 theorem final_solution (σ R) [CommRing R] [LinearOrder R] [IsOrderedRing R] :
     ∃ T : Subring ((σ → R) → R), T.carrier =
-      setOf (BinOpClosure Max.max (BinOpClosure Min.min (· ∈ MvPolynomial_image σ R))) :=
+      Set.ofPred (BinOpClosure Max.max (BinOpClosure Min.min (· ∈ MvPolynomial_image σ R))) :=
   ⟨PiSubring_mk (MvPolynomial_image σ R),
-  congrArg setOf (SupInfClosure_eq_MetaClosure _).symm⟩
+  congrArg Set.ofPred (SupInfClosure_eq_MetaClosure _).symm⟩

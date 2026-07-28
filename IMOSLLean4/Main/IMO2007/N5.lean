@@ -169,7 +169,7 @@ theorem eq_id_of_surjective (hf0 : f.Surjective) : f = id := by
   ---- For each `p`, the smallest `d` for which `p ∣ f(d)` is greater than `1`.
   have hf3 (p : Nat.Primes) : PNat.find (hf1 p) > 1 := by
     -- Suppose that `d = 1`, and choose `x` such that `f(x) = 1`.
-    refine (PNat.one_le _).lt_of_ne' λ h ↦ ?_
+    refine one_lt_of_ne_one λ h ↦ ?_
     obtain ⟨x, hx⟩ : ∃ x, f x = 1 := hf0 1
     -- Then `d ∣ x ↔ p ∣ f(x) = 1`; contradiction.
     have h0 : (PNat.find (hf1 p) : ℕ) ∣ x := h ▸ Nat.one_dvd _

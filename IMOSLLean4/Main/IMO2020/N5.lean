@@ -63,7 +63,7 @@ theorem padic_eq_of_add_eq_ppow {p : Nat.Primes} {N} {a b : ℕ+} (h : a + b = p
     (PNat.factorMultiset a).count p = (PNat.factorMultiset b).count p := by
   ---- Induction on `N`, but the base case `N = 0` is impossible, as `a + b > 1`.
   induction N generalizing a b with
-  | zero => exact absurd (a.one_le.trans_lt (a.lt_add_right b)) h.not_gt
+  | zero => exact absurd (one_le.trans_lt (a.lt_add_right b)) h.not_gt
   | succ N N_ih => ?_
   ---- Auxiliary statement: `p ∣ a + b` over `ℕ`.
   have X : ((p : ℕ+) : ℕ) ∣ a + b := by
@@ -203,7 +203,7 @@ theorem base_prime_pow_is_nice (k) : nice f (hf.base_prime_PNat ^ k) := by
 /-- If `p ∤ n`, then `f(n) = 0`. -/
 theorem map_eq_zero_of_coprime_base_prime (hn : ¬hf.base_prime_PNat ∣ n) : f n = 0 := by
   ---- Assume `n > 1`; we are done otherwise.
-  obtain rfl | hn0 : n = 1 ∨ 1 < n := n.one_le.eq_or_lt'
+  obtain rfl | hn0 : n = 1 ∨ 1 < n := eq_one_or_one_lt n
   · exact hf.map_one
   ---- Write `p^{φ(n)} = x + 1` for some `x ∈ ℕ+`.
   obtain ⟨x, hx⟩ : ∃ x : ℕ+, hf.base_prime_PNat ^ n.1.totient = x + 1 := by

@@ -126,7 +126,8 @@ lemma floor_ne_neg_one : ⌊α⌋ ≠ -1 := by
   cases n with | zero => rwa [one_nsmul] | succ k => ?_
   ---- Since `α` is good, we have `k + 2 ∣ ∑_{m ≤ k + 2} ⌊mα⌋ + (k + 2) = ⌊(k + 2)α⌋ + 1`.
   replace hα : ((k + 2 : ℕ) : ℤ) ∣ ⌊(k + 2) • α⌋ + 1 := by
-    convert dvd_add_self_right.mpr (hα (k + 2)) using 1
+    suffices ⌊(k + 2) • α⌋ + 1 = ∑ k ∈ range (k + 2 + 1), ⌊k • α⌋ + ↑(k + 2)
+      by rw [this, dvd_add_self_right]; exact hα (k + 2)
     -- There is no way to avoid tons of bash here...
     rw [Nat.cast_succ, ← add_assoc, add_left_inj, sum_range_succ, add_right_comm,
       right_eq_add, sum_range_succ', zero_nsmul, Int.floor_zero, add_zero,

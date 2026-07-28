@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # IMO 2009 A4
@@ -56,7 +56,7 @@ theorem Hölder_one_and_half
   ---- If `∑_i z_i = 0` we are done.
   obtain hz | hz : ∑ i ∈ I, z i = 0 ∨ ∑ i ∈ I, z i > 0 := eq_zero_or_pos _
   · rw [hz, pow_succ, mul_zero, sqrt_zero]
-    exact zero_le _
+    exact zero_le
   ---- If `∑_i z_i > 0`, then multiply both sides by `√(∑_i z_i)`.
   refine le_of_mul_le_mul_of_pos_right ?_ (sqrt_pos.mpr hz)
   ---- Then apply double Cauchy-Schwarz afterwards.
@@ -64,8 +64,8 @@ theorem Hölder_one_and_half
     _ = (∑ i ∈ I, z i) ^ 2 := by
       rw [← sqrt_mul, ← pow_succ, pow_mul _ 2 2, sqrt_sq]
     _ ≤ (∑ i ∈ I, sqrt (x i)) * ∑ i ∈ I, sqrt (y i) * sqrt (z i) := by
-      refine sum_sq_le_sum_mul_sum_of_sq_eq_mul _
-        (λ _ _ ↦ zero_le _) (λ _ _ ↦ zero_le _) (λ i hi ↦ ?_)
+      refine sum_sq_le_sum_mul_sum_of_sq_le_mul _
+        (λ _ _ ↦ zero_le) (λ _ _ ↦ zero_le) (λ i hi ↦ le_of_eq ?_)
       rw [← sqrt_mul, ← sqrt_mul, eq_comm, sqrt_eq_iff_eq_sq,
         ← pow_mul, pow_succ, h i hi, mul_assoc]
     _ ≤ (∑ i ∈ I, sqrt (x i)) * (sqrt (∑ i ∈ I, y i) * sqrt (∑ i ∈ I, z i)) :=

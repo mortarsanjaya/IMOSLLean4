@@ -35,8 +35,6 @@ def PeriodEquiv [AddCommSemigroup R] (f : R → S) : AddCon R where
 
 namespace PeriodEquiv
 
-instance [AddCommSemigroup R] (f : R → S) : Setoid R := (PeriodEquiv f).toSetoid
-
 lemma iff_def [AddCommSemigroup R] {f : R → S} {c d : R} :
     PeriodEquiv f c d ↔ ∀ x, f (x + c) = f (x + d) :=
   Eq.to_iff rfl

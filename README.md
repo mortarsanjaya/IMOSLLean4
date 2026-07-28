@@ -20,7 +20,7 @@ Then we prove more:
 
 Please follow the instructions at https://leanprover-community.github.io/install/project.html about working on an existing project.
 
-This project depends on [Mathlib4](https://github.com/leanprover-community/mathlib4) and is currently using version **4.29.0**.
+This project depends on [Mathlib4](https://github.com/leanprover-community/mathlib4) and is currently using version **4.33.0-rc1**.
 
 ## Documentation
 
@@ -43,7 +43,7 @@ That being said, feel free to fork this repository for your needs.
 
 ## Progress
 
-Below are some statistics on the number of problems formalized in this repository as of **March 17, 2026**.
+Below are some statistics on the number of problems formalized in this repository as of **July 28, 2026**.
 Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for Number Theory.
 
 <table align=center>
@@ -276,6 +276,17 @@ Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for N
       <td align=center>8</td>
       <td align=center>7</td>
       <td align=center>23</td>
+    </tr>
+    <tr>
+      <td align=center>2025</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
+      <td align=center>0</td>
     </tr>
     <tr>
       <td align=center>Total</td>

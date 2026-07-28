@@ -209,7 +209,7 @@ theorem eq_cons_one_replicate_of_sum_map_pow_eq
     refine Set.infinite_of_injOn_mapsTo (f := λ n ↦ N + n + 1)
       (Set.injOn_of_injective (Nat.succ_injective.comp (add_right_injective N)))
       (λ n hn ↦ ?_) (Set.infinite_coe_iff.mp ha)
-    rw [Set.mem_setOf_eq, ← hn, hy]
+    rw [Set.mem_ofPred_eq, ← hn, hy]
   exact ⟨a, λ M ↦ (ha.exists_gt M).imp λ n hn ↦ ⟨hn.2.le, hn.1⟩⟩
 
 /-- Suppose that `∑_{i ≤ N} {x_i, …, x_i} = {1, a, …, a}`,

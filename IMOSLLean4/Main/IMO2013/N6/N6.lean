@@ -17,7 +17,7 @@ namespace IMOSL
 namespace IMO2013N6
 
 def good (f : ℚ → ℤ) :=
-    ∀ (x : ℚ) (a : ℤ) (b : ℕ), 0 < b → f ((f x + a) / b) = f ((x + a) / b)
+  ∀ (x : ℚ) (a : ℤ) (b : ℕ), 0 < b → f ((f x + a) / b) = f ((x + a) / b)
 
 
 

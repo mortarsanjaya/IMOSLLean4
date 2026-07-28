@@ -43,7 +43,7 @@ theorem final_solution {f : ℕ+ → ℕ+} :
     obtain rfl | ⟨k, rfl⟩ : n = 1 ∨ ∃ k, n = k + 1 :=
       (eq_or_ne n 1).imp_right PNat.exists_eq_succ_of_ne_one
     -- The case `n = 1` is obvious.
-    · exact (f 1).one_le
+    · exact one_le
     -- For `n = k + 1`, do the substitution `m = k + 1`.
     · replace h := PNat.le_of_dvd (h (k + 1) (k + 1))
       rw [add_one_mul k, add_right_comm, add_assoc, add_one_mul k, add_assoc] at h

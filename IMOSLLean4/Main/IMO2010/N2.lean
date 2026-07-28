@@ -54,7 +54,7 @@ theorem good_iff_nice :
   have h0 (n : ℕ) : 0 < (3 : ℤ) ^ n := Int.pow_pos three_pos
   have h1 (n : ℕ) : 0 < (2 : ℤ) * 3 ^ n := Int.mul_pos two_pos (h0 n)
   have hm : 0 < m * (2 ^ (n + 1) - 1) := calc
-    _ < m ^ 2 + 2 * 3 ^ n := Int.add_pos_of_nonneg_of_pos (Int.sq_nonnneg m) (h1 n)
+    _ < m ^ 2 + 2 * 3 ^ n := Int.add_pos_of_nonneg_of_pos (Int.sq_nonneg m) (h1 n)
     _ = m * (2 ^ (n + 1) - 1) := h
   replace hm : 0 ≤ m := by
     have h0 : (1 : ℤ) < 2 ^ (n + 1) := one_lt_pow₀ one_lt_two (Nat.succ_ne_zero n)
@@ -180,7 +180,7 @@ theorem multiplicity_three_four_pow_sub_one {r : ℕ} (hr : r ≠ 0) :
     Int.finiteMultiplicity_iff.mpr ⟨h, hr0.ne.symm⟩
   replace hr : FiniteMultiplicity 3 r := by
     refine Nat.finiteMultiplicity_iff.mpr ⟨h, Nat.pos_of_ne_zero hr⟩
-  rw [← ENat.coe_inj, ← hr0.emultiplicity_eq_multiplicity, Nat.cast_succ,
+  rw [← ENat.natCast_inj, ← hr0.emultiplicity_eq_multiplicity, Nat.cast_succ,
     ← hr.emultiplicity_eq_multiplicity, emultiplicity_three_four_pow_sub_one]
 
 /-- If `(p, q)` is a nice pair, then `p + q + 1 = 2r`

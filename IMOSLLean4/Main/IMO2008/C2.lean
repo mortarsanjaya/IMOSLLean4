@@ -177,10 +177,10 @@ theorem snoc_equiv_injective [NeZero n] : (snoc_equiv (n := n)).Injective := by
   | false, false => exact Prod.mk_right_inj.mpr (snoc_zero_equiv_injective h)
   | false, true =>
       refine absurd (Equiv.congr_fun h (Fin.last n)) ?_
-      simpa only [snoc_equiv_apply_last] using h0.symm
+      simpa [snoc_equiv_apply_last] using h0.symm
   | true, false =>
       refine absurd (Equiv.congr_fun h (Fin.last n)) ?_
-      simpa only [snoc_equiv_apply_last] using h0
+      simpa [snoc_equiv_apply_last] using h0
   | true, true => exact Prod.mk_right_inj.mpr (snoc_last_equiv_injective h)
 
 

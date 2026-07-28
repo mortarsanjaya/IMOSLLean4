@@ -56,7 +56,7 @@ theorem general_result
     _ = 2 * 1 := (mul_one _ ).symm
     _ ≤ a 1 + b 1 :=
       have h : 1 ^ 2 = a 1 * b 1 := by rw [hab0, Nat.cast_one, one_pow]
-      two_mul_le_add_of_sq_eq_mul (ha _).le (hb _) h
+      two_mul_le_add_of_sq_le_mul (ha _).le (hb _) h.le
     _ ≤ a 1 + (a 0 + b 0) := add_le_add_right (hab 0) _
     _ = a 0 + a 1 := by rw [hb0, add_zero, add_comm]
     _ = ∑ i ∈ range 2, a i := by rw [sum_range_succ, sum_range_one]

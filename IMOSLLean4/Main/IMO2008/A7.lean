@@ -79,8 +79,8 @@ theorem CauchySchwarzEngel2 (a b : F) (hc : c > 0) (hd : d > 0) :
         rw [mul_mul_mul_comm, div_mul_div_comm, ← mul_pow, mul_comm d]
         exact (div_mul_cancel₀ _ (mul_pos hc hd).ne.symm).symm
       add_le_add_right (a := a ^ 2 + b ^ 2) <|
-        two_mul_le_add_of_sq_eq_mul (mul_nonneg (div_nonneg (sq_nonneg a) hc.le) hd.le)
-          (mul_nonneg (div_nonneg (sq_nonneg b) hd.le) hc.le) h
+        two_mul_le_add_of_sq_le_mul (mul_nonneg (div_nonneg (sq_nonneg a) hc.le) hd.le)
+          (mul_nonneg (div_nonneg (sq_nonneg b) hd.le) hc.le) h.le
     _ = a ^ 2 / c * c + a ^ 2 / c * d + (b ^ 2 / d * d + b ^ 2 / d * c) := by
       rw [div_mul_cancel₀ _ hc.ne.symm, div_mul_cancel₀ _ hd.ne.symm, add_add_add_comm]
     _ = (a ^ 2 / c + b ^ 2 / d) * (c + d) := by
