@@ -38,7 +38,7 @@ namespace IMO2024A1
 
 open Finset
 
-variable [Ring R] [LinearOrder R] [FloorRing R] [IsStrictOrderedRing R]
+variable [Ring R] [LinearOrder R] [FloorRing R] [IsOrderedRing R]
 
 /-- We say that `α ∈ R` is *good* if `n ∣ ∑ k ≤ n, ⌊kα⌋` for all `n ∈ ℕ`. -/
 def good (α : R) := ∀ n : ℕ, (n : ℤ) ∣ ∑ k ∈ range (n + 1), ⌊k • α⌋
