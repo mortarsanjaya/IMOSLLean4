@@ -12,12 +12,13 @@ import Mathlib.Order.Bounds.Defs
 
 Define the function $f : ℕ^3 → ℕ^3$ by
 $$ f(a, b, c) = (a + \gcd(b, c), b + \gcd(c, a), c + \gcd(a, b)). $$
-Determine the smallest possible value of the first entry of $f^{2025}(a, b, c)$
+Let $N ≥ 2$ be an integer.
+Determine the smallest possible value of the first entry of $f^{3N}(a, b, c)$
   across all triples $(a, b, c)$ of positive integers.
 
 ### Answer
 
-$3 · 2^{675}$.
+$3 · 2^N$.
 
 ### Solution
 
