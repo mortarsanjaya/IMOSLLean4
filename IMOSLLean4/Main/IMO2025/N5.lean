@@ -24,7 +24,6 @@ $3 · 2^N$.
 
 We follow the [official solution](https://www.imo-official.org/problems/2025/).
 To obtain the bound on the first entry, we proceed by induction.
-We find a lower bound on the first entry of $f^N(a, b, c)$ for $N ≤ 6$.
 
 ### Notes
 
