@@ -158,7 +158,7 @@ theorem f_iter3_exists_two_nsmul (x) : ∃ y, f^[3] x = 2 • y := by
 end
 
 
-/-- All entries of `f^{3N}(a, b, c)` are even. -/
+/-- All entries of `f^{3N}(a, b, c)` are multiples of `2^N`. -/
 theorem f_iter3N_exists_two_pow_N_nsmul (x N) : ∃ y, f^[3 * N] x = 2 ^ N • y := by
   induction N with
   | zero =>
