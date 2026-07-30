@@ -43,7 +43,7 @@ That being said, feel free to fork this repository for your needs.
 
 ## Progress
 
-Below are some statistics on the number of problems formalized in this repository as of **July 29, 2026**.
+Below are some statistics on the number of problems formalized in this repository as of **July 30, 2026**.
 Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for Number Theory.
 
 <table align=center>
@@ -281,8 +281,8 @@ Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for N
       <td align=center>2025</td>
       <td align=center>0</td>
       <td align=center>0</td>
-      <td align=center>1</td>
-      <td align=center>1</td>
+      <td align=center>2</td>
+      <td align=center>2</td>
       <td align=center>8</td>
       <td align=center>8</td>
       <td align=center>8</td>
@@ -292,8 +292,8 @@ Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for N
       <td align=center>Total</td>
       <td align=center>75</td>
       <td align=center>22</td>
-      <td align=center>72</td>
-      <td align=center>169</td>
+      <td align=center>73</td>
+      <td align=center>170</td>
       <td align=center>144</td>
       <td align=center>154</td>
       <td align=center>149</td>
