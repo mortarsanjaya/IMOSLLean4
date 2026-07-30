@@ -279,10 +279,10 @@ Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for N
     </tr>
     <tr>
       <td align=center>2025</td>
-      <td align=center>0</td>
+      <td align=center>1</td>
       <td align=center>0</td>
       <td align=center>2</td>
-      <td align=center>2</td>
+      <td align=center>3</td>
       <td align=center>8</td>
       <td align=center>8</td>
       <td align=center>8</td>
@@ -290,10 +290,10 @@ Here, "A" stands for Algebra, "C" stands for Combinatorics, and "N" stands for N
     </tr>
     <tr>
       <td align=center>Total</td>
-      <td align=center>75</td>
+      <td align=center>76</td>
       <td align=center>22</td>
       <td align=center>73</td>
-      <td align=center>170</td>
+      <td align=center>171</td>
       <td align=center>144</td>
       <td align=center>154</td>
       <td align=center>149</td>
