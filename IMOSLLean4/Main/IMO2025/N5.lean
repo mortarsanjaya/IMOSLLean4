@@ -24,14 +24,13 @@ $3 · 2^N$.
 
 We follow the [official solution](https://www.imo-official.org/problems/2025/).
 To obtain the bound on the first entry, we proceed by induction.
+We prove more: the smallest possible value of the first entry of $f^N(a, b, c)$ is
+  $(3 + N \% 3) 2^{⌊N/3⌋}$ for $N ≥ 6$, all attained by $(a, b, c) = (3, 5, 6)$.
 
 ### Notes
 
-The smallest possible value $g(N)$ of the first entry of $f^N(a, b, c)$ is given by
-  $g(N) = N + 1$ for $N ≤ 3$, $g(4) = 6$, $g(5) = 8$, and for $N ≥ 6$,
-$$ g(N) = (3 + N \% 3) 2^{⌊N/3⌋}. $$
-The lower bound for $N ≤ 5$ is obtained by the triple $(1, 1, 4)$.
-For $N ≥ 6$, the triple $(3, 5, 6)$ used in the official solution gives the lower bound.
+For $N ≤ 5$, the smallest possible value of the first entry of $f^N(a, b, c)$
+  are indeed $1, 2, 3, 4, 6, 8$, attained by $(a, b, c) = (1, 1, 4)$.
 -/
 
 namespace IMOSL
@@ -46,6 +45,8 @@ def triple_pos (x : ℕ × ℕ × ℕ) := x.1 > 0 ∧ x.2.1 > 0 ∧ x.2.2 > 0
 
 
 
+
+
 /-! ### Basic lemmas -/
 
 /-- If `a, b, c` are positive, then all entries of `f(a, b, c)` are also positive. -/
@@ -53,12 +54,17 @@ theorem f_triple_pos (hx : triple_pos x) : triple_pos (f x) :=
   hx.imp (Nat.add_pos_left · _) (And.imp (Nat.add_pos_left · _) (Nat.add_pos_left · _))
 
 /-- If `a, b, c` are positive, then all entries of `f^N(a, b, c)` are also positive. -/
-theorem f_iter_triple_pos (hx : triple_pos x) (N) : triple_pos (f^[N] x) :=
+theorem triple_pos.f_iter (hx : triple_pos x) (N) : triple_pos (f^[N] x) :=
   Nat.recOn N hx λ _ ↦ f.iterate_succ_apply' _ _ ▸ f_triple_pos
 
 /-- If `na, nb, nc > 0`, then `a, b, c > 0`. -/
-theorem triple_pos_of_nsmul {n : ℕ} (h : triple_pos (n • x)) : triple_pos x :=
+theorem triple_pos.of_nsmul {n : ℕ} (h : triple_pos (n • x)) : triple_pos x :=
   h.imp Nat.pos_of_mul_pos_left (And.imp Nat.pos_of_mul_pos_left Nat.pos_of_mul_pos_left)
+
+/-- If `f^N(a, b, c) = k(d, e, f)` and `a, b, c > 0`, then `d, e, f > 0`. -/
+theorem triple_pos.of_f_iter_nsmul (h : triple_pos x) {k : ℕ} (h0 : f^[N] x = k • y) :
+    triple_pos y :=
+  (h0 ▸ h.f_iter N).of_nsmul
 
 /-- We have `f(na, nb, nc) = n f(a, b, c)` for any `n, a, b, c : ℕ`. -/
 theorem f_nsmul (n : ℕ) (x : ℕ × ℕ × ℕ) : f (n • x) = n • f x := by
@@ -75,7 +81,9 @@ theorem f_iter_nsmul (N n : ℕ) (x : ℕ × ℕ × ℕ) : f^[N] (n • x) = n �
 
 
 
-/-! ### The first entry of`f^{3N}(3, 5, 6)` is `2^N * 3` -/
+
+
+/-! ### The first entry of`f^N(3, 5, 6)` is `2 ^ (N / 3) * (3 + N % 3)` -/
 
 /-- The entries of `(3, 5, 6)` are positive. -/
 theorem triple_pos_356 : triple_pos (3, 5, 6) := by
@@ -90,6 +98,21 @@ theorem f_iter3N_356 (N : ℕ) : f^[3 * N] (3, 5, 6) = 2 ^ N • (3, 5, 6) := by
     _ = (2 ^ (N + 1) * 3, 2 ^ (N + 1) * 5, 2 ^ (N + 1) * 6) :=
       have h (a) : 2 * (2 ^ N * a) = 2 ^ (N + 1) * a := by rw [Nat.pow_succ', Nat.mul_assoc]
       Prod.ext (h 3) (Prod.ext (h 5) (h 6))
+
+/-- We have `f^N(3, 5, 6) = 2^{N / 3} f^{N % 3}(3, 5, 6)` for any `N`. -/
+theorem f_iterN_356 (N : ℕ) : f^[N] (3, 5, 6) = 2 ^ (N / 3) • f^[N % 3] (3, 5, 6) := by
+  rw [← f_iter_nsmul, ← f_iter3N_356, ← f.iterate_add_apply, Nat.mod_add_div]
+
+/-- The first entry of `f^N(3, 5, 6)` is `3 + N` if `N < 3`. -/
+theorem f_iterN_356_fst_of_lt_three (hN : N < 3) : (f^[N] (3, 5, 6)).1 = 3 + N := by
+  match N with | 0 => rfl | 1 => rfl | 2 => rfl
+
+/-- The first entry of `f^N(3, 5, 6)` is `2^{N / 3} (3 + N % 3)`. -/
+theorem f_iterN_356_fst (N) : (f^[N] (3, 5, 6)).1 = 2 ^ (N / 3) * (3 + N % 3) :=
+  (congrArg Prod.fst (f_iterN_356 N)).trans <| congrArg (2 ^ (N / 3) * ·) <|
+    f_iterN_356_fst_of_lt_three (Nat.mod_lt N (Nat.succ_pos 2))
+
+
 
 
 
@@ -173,7 +196,9 @@ theorem f_iter3N_exists_two_pow_N_nsmul (x N) : ∃ y, f^[3 * N] x = 2 ^ N • y
 
 
 
-/-! ### The first entry of `f^{3N}(x)` is at least `2^N * 3` -/
+
+
+/-! ### The first entry of `f^N(x)` is at least `2 ^ (N / 3) * (3 + N % 3)` -/
 
 /-- If `a, b, c` are positive, then the first entry of `f(a, b, c)` is at least `a + 1`. -/
 theorem f_fst_of_triple_pos (hx : triple_pos x) : x.1 + 1 ≤ (f x).1 :=
@@ -183,7 +208,7 @@ theorem f_fst_of_triple_pos (hx : triple_pos x) : x.1 + 1 ≤ (f x).1 :=
 theorem f_iter_fst_of_triple_pos (N : ℕ) (hx : triple_pos x) : x.1 + N ≤ (f^[N] x).1 :=
   Nat.recOn N (Nat.le_refl _)
     λ n hn ↦ f.iterate_succ_apply' _ _ ▸
-      Nat.lt_of_le_of_lt hn (f_fst_of_triple_pos (f_iter_triple_pos hx n))
+      Nat.lt_of_le_of_lt hn (f_fst_of_triple_pos (hx.f_iter n))
 
 /-- If `a, b, c` are positive, then the first entry of `f^3(a, b, c)` is at least `4`. -/
 theorem four_le_f_iter3_fst_of_triple_pos (hx : triple_pos x) : 4 ≤ (f^[3] x).1 :=
@@ -194,7 +219,7 @@ theorem f_iter6_form_of_triple_pos (hx : triple_pos x) :
     ∃ z, f^[6] x = 4 • z ∧ 3 ≤ z.1 := by
   ---- First write `f^3(x) = 2y` for some triple `y` and show that `y.1 ≥ 2`.
   obtain ⟨y, hy⟩ : ∃ y, f^[3] x = 2 • y := f_iter3_exists_two_nsmul x
-  have hy0 : triple_pos y := triple_pos_of_nsmul (hy ▸ f_iter_triple_pos hx 3)
+  have hy0 : triple_pos y := hx.of_f_iter_nsmul hy
   have hy1 : 2 ≤ y.1 :=
     Nat.le_of_mul_le_mul_left (hc := Nat.two_pos)
       (Nat.le_trans (four_le_f_iter3_fst_of_triple_pos hx) (hy ▸ Nat.le_refl _))
@@ -212,40 +237,66 @@ theorem f_iter6_form_of_triple_pos (hx : triple_pos x) :
       _ = 2 * z.1 := congrArg Prod.fst hz
     exact Nat.lt_of_mul_lt_mul_left (a := 2) hz0
 
-/-- If `a ≥ 3`, then the first entry of `f^{3N}(a, b, c)` is at least `2^N * 3`. -/
-theorem f_iter3N_of_three_le_fst {x} (hx : triple_pos x) (hx0 : 3 ≤ x.1) (N) :
-    2 ^ N * 3 ≤ (f^[3 * N] x).1 := by
-  induction N with | zero => exact hx0 | succ N N_ih => ?_
-  obtain ⟨y, hy⟩ : ∃ y, f^[3 * N] x = 2 ^ N • y := f_iter3N_exists_two_pow_N_nsmul x N
+/-- If `a ≥ 3`, `b, c > 0`, and `f^{3N}(a, b, c) = 2^N (d, e, f)`, then `d ≥ 3`. -/
+theorem f_iter3N_div_two_pow_N_fst
+    (hx : triple_pos x) (hx0 : 3 ≤ x.1) (hy : f^[3 * N] x = 2 ^ N • y) : 3 ≤ y.1 := by
+  induction N generalizing y with
+    | zero => subst hy; exact Nat.one_mul y.1 ▸ hx0
+    | succ N N_ih => ?_
+  obtain ⟨z, hz⟩ : ∃ z, f^[3 * N] x = 2 ^ N • z := f_iter3N_exists_two_pow_N_nsmul x N
+  have hz0 : triple_pos z := hx.of_f_iter_nsmul hz
+  replace N_ih : 6 ≤ (f^[3] z).1 := calc
+    _ ≤ z.1 + 3 := Nat.add_le_add_right (N_ih hz) 3
+    _ ≤ (f^[3] z).1 := f_iter_fst_of_triple_pos 3 hz0
+  replace hy : 2 ^ N * (f^[3] z).1 = 2 ^ (N + 1) * y.1 :=
+    calc (2 ^ N • f^[3] z).1
+    _ = (f^[3] (f^[3 * N] x)).1 := by rw [hz, f_iter_nsmul]
+    _ = (f^[3 * (N + 1)] x).1 := by rw [Nat.mul_succ, Nat.add_comm, f.iterate_add_apply]
+    _ = 2 ^ (N + 1) * y.1 := congrArg Prod.fst hy
+  refine Nat.le_of_mul_le_mul_left ?_ (Nat.two_pow_pos (N + 1))
   calc 2 ^ (N + 1) * 3
     _ = 2 ^ N * 6 := by rw [Nat.pow_succ, Nat.mul_assoc]
-    _ ≤ 2 ^ N * (f^[3] y).1 := by
-      replace N_ih : 3 ≤ y.1 :=
-        Nat.le_of_mul_le_mul_left (by rwa [hy] at N_ih) (Nat.two_pow_pos N)
-      replace hx0 : y.1 + 3 ≤ (f^[3] y).1 :=
-        f_iter_fst_of_triple_pos 3 (triple_pos_of_nsmul (hy ▸ (f_iter_triple_pos hx _)))
-      exact Nat.mul_le_mul_left _ (Nat.le_trans (Nat.add_le_add_right N_ih 3) hx0)
-    _ = (f^[3 * (N + 1)] x).1 := by
-      rw [Nat.mul_succ, Nat.add_comm, f.iterate_add_apply, hy, f_iter_nsmul]; rfl
+    _ ≤ 2 ^ N * (f^[3] z).1 := Nat.mul_le_mul_left _ N_ih
+    _ = 2 ^ (N + 1) * y.1 := hy
 
-/-- If `a, b, c > 0` and `N ≥ 2`, then `f^{3N}(a, b, c) ≥ 2^N * 3`. -/
-theorem f_iter3N_fst_lower_bound_of_ge_two (hN : N ≥ 2) (hx : triple_pos x) :
-    2 ^ N * 3 ≤ (f^[3 * N] x).1 := by
-  obtain ⟨k, rfl⟩ : ∃ k, N = k + 2 := Nat.exists_eq_add_of_le' hN
-  obtain ⟨z, hz, hz0⟩ : ∃ z, f^[6] x = 4 • z ∧ 3 ≤ z.1 := f_iter6_form_of_triple_pos hx
-  have hz1 : triple_pos z := triple_pos_of_nsmul (hz ▸ f_iter_triple_pos hx _)
-  calc 2 ^ (k + 2) * 3
-    _ = 4 * (2 ^ k * 3) := by rw [Nat.add_comm, Nat.pow_add, Nat.mul_assoc]
-    _ ≤ 4 * (f^[3 * k] z).1 := Nat.mul_le_mul_left _ (f_iter3N_of_three_le_fst hz1 hz0 _)
-    _ = (f^[3 * k] (4 • z)).1 := congrArg Prod.fst (f_iter_nsmul _ _ _).symm
-    _ = (f^[3 * (k + 2)] x).1 := by rw [Nat.mul_add, f.iterate_add_apply, hz]
+/-- If `a ≥ 3` and `b, c > 0`, then the first entry
+  of `f^N(a, b, c)` is at least `2^{N/3} * (3 + N % 3)`. -/
+theorem f_iterN_of_three_le_fst {x} (hx : triple_pos x) (hx0 : 3 ≤ x.1) (N) :
+    2 ^ (N / 3) * (3 + N % 3) ≤ (f^[N] x).1 := by
+  obtain ⟨y, hy⟩ : ∃ y, f^[3 * (N / 3)] x = 2 ^ (N / 3) • y :=
+    f_iter3N_exists_two_pow_N_nsmul _ _
+  calc 2 ^ (N / 3) * (3 + N % 3)
+    _ ≤ (2 ^ (N / 3) • f^[N % 3] y).1 :=
+      Nat.mul_le_mul_left _ <| Nat.le_trans
+        (Nat.add_le_add_right (f_iter3N_div_two_pow_N_fst hx hx0 hy) _)
+        (f_iter_fst_of_triple_pos _ (hx.of_f_iter_nsmul hy))
+    _ = (f^[N] x).1 := by
+      rw [← f_iter_nsmul, ← hy, ← f.iterate_add_apply, Nat.mod_add_div]
+
+/-- If `a, b, c > 0` and `N ≥ 6`, then `f^N(a, b, c) ≥ 2^{N/3} * (3 + N % 3)`. -/
+theorem f_iterN_fst_of_ge_six (hN : N ≥ 6) (hx : triple_pos x) :
+    2 ^ (N / 3) * (3 + N % 3) ≤ (f^[N] x).1 := by
+  obtain ⟨K, rfl⟩ : ∃ K, N = K + 6 := Nat.exists_eq_add_of_le' hN
+  obtain ⟨z, hz0, hz⟩ : ∃ z, f^[6] x = 4 • z ∧ 3 ≤ z.1 := f_iter6_form_of_triple_pos hx
+  rw [f.iterate_add_apply, hz0, f_iter_nsmul, Nat.add_mul_mod_self_left _ 3 2,
+    Nat.add_mul_div_left K 2 (Nat.succ_pos 2), Nat.add_comm, Nat.pow_add, Nat.mul_assoc]
+  exact Nat.mul_le_mul_left _ (f_iterN_of_three_le_fst (hx.of_f_iter_nsmul hz0) hz K)
+
+
 
 
 
 /-! ### Summary -/
 
+/-- The general result: the smallest possible value of the first entry of
+  `f^N(a, b, c)` is `2^{N / 3} (3 + N % 3)` if `N ≥ 6`. -/
+theorem general_result (hN : N ≥ 6) :
+    IsLeast ((Set.ofPred triple_pos).image λ x ↦ (f^[N] x).1) (2 ^ (N / 3) * (3 + N % 3)) :=
+  ⟨⟨(3, 5, 6), triple_pos_356, f_iterN_356_fst N⟩,
+  λ _ ⟨_, hx, h⟩ ↦ h ▸ f_iterN_fst_of_ge_six hN hx⟩
+
 /-- Final solution -/
-theorem final_solution {N : ℕ} (hN : N ≥ 2) :
-    IsLeast ((Set.ofPred triple_pos).image (λ x ↦ (f^[3 * N] x).1)) (2 ^ N * 3) :=
-  ⟨⟨(3, 5, 6), triple_pos_356, congrArg Prod.fst (f_iter3N_356 N)⟩,
-  λ _ ⟨_, hx, h⟩ ↦ h ▸ f_iter3N_fst_lower_bound_of_ge_two hN hx⟩
+theorem final_solution (hN : N ≥ 2) :
+    IsLeast ((Set.ofPred triple_pos).image λ x ↦ (f^[3 * N] x).1) (2 ^ N * 3) := by
+  simpa only [Nat.mul_div_right _ (Nat.succ_pos 2), Nat.mul_mod_right]
+    using general_result (Nat.mul_le_mul_left 3 hN)
