@@ -52,8 +52,6 @@ theorem min_mul_bound : ∀ k, min (3 * k) 2 ≤ 2 * k
   cubefree : ∀ p, (a ^ 2 + b + 3).factorMultiset.count p ≤ 2
   eqn : a * b + 3 * b + 8 = n * (a ^ 2 + b + 3)
 
-
-
 theorem good_iff_of_sol_form :
     good (k + 1) (2 * k) 2 ↔ ∀ p, (k + 2).factorMultiset.count p ≤ 1 := by
   have h0 : (k + 1) * (2 * k) + 3 * (2 * k) + 8 = 2 * (k + 2) ^ 2 := by
@@ -81,14 +79,14 @@ theorem good_imp (h : good a b n) : n = 2 ∧ b + 2 = 2 * a := by
     exact (le_min_iff.mpr ⟨h1, h.cubefree p⟩).trans (min_mul_bound _)
   replace h1 : (a + 1) ^ 2  = a ^ 2 + b + 3 := by
     rcases h1 with ⟨t, h1⟩
-    rw [← mul_one (a ^ 2 + b + 3), h1, mul_right_inj, ← PNat.le_one_iff]
+    rw [← mul_one (a ^ 2 + b + 3), h1, mul_right_inj, ← le_one_iff_eq_one]
     refine PNat.lt_add_one_iff.mp (lt_of_not_ge λ h2 ↦ h1.not_lt ?_)
     apply (mul_le_mul_right h2 _).trans_lt' ?_
     ---- Prove the bound `(a + 1)^2 < 2(a^2 + b + 3)`
     rw [add_right_comm, add_mul, mul_add, mul_one, sq, mul_add_one _ a, add_one_mul a]
     apply (PNat.lt_add_right _ _).trans'
     rw [sq, add_assoc, add_assoc, add_lt_add_iff_left, ← add_assoc, add_left_comm]
-    obtain (rfl | h3) : 1 = a ∨ 2 ≤ a := le_iff_eq_or_lt.mp a.one_le
+    obtain (rfl | h3) : a = 1 ∨ 2 ≤ a := eq_one_or_one_lt _
     · exact PNat.lt_add_right 3 4
     · refine add_lt_add_of_le_of_lt ?_ (PNat.lt_add_right 1 5)
       rw [PNat_two_mul]; exact mul_le_mul_left h3 a
