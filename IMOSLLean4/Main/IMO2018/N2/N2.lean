@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.ModEq
-import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-import Mathlib.Algebra.Ring.Int.Defs
+module
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 # IMO 2018 N2
@@ -19,6 +20,8 @@ For each $i ≤ n$, let $R_i$ and $C_i$ be the product of
 Prove that
 $$ \sum_{i = 1}^n R_i ≡ \sum_{i = 1}^n C_i \pmod{n^4}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2018N2

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # IMO 2018 C1
@@ -14,6 +15,8 @@ We say that $S$ is *good* if for each $m ∈ ℕ$ with $2 ≤ m ≤ n - 2$, ther
   of size $m$ such that the sum of all elements in $T$ and $S \setminus T$ are equal.
 Prove that for any $n ≥ 4$, there exists a good set of size $n$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2018C1

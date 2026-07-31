@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Algebra.Order.Chebyshev
+module
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-!
 # IMO 2012 N8
@@ -51,6 +52,8 @@ By direct search, $q = 31$ succeeds, while $q = 11$ fails with
 
 See `IMOSLLean4/Generalization/IMO2012N8/IMO2012N8.lean` for the implementation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012N8

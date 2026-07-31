@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Prime.Defs
+module
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Nat.Prime.Defs
 
 /-!
 # IMO 2021 A2
@@ -15,6 +16,8 @@ $$ 4 \sum_{i = 1}^n \sum_{j = 1}^n \left\lfloor \frac{ij}{n + 1} \right\rfloor
   ≥ n^2 (n - 1). $$
 Determine the equality cases.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021A2

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Tactic.Ring
 
 /-!
 # Explicit construction of `ℤφ`
@@ -16,6 +17,8 @@ We prove just the necessary properties for the purpose of the main problem.
 TODO:
 * Remove the need for `ring` tactic in `ℤφ.mul_assoc` if possible.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

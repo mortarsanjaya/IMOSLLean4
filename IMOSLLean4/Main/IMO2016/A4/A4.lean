@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Basic
-import Mathlib.Algebra.Ring.Defs
+module
+public import Mathlib.Algebra.Group.Basic
+public import Mathlib.Algebra.Ring.Defs
 
 /-!
 # IMO 2016 A4
@@ -14,6 +15,8 @@ Let $M$ be an integral multiplicative monoid with a cancellative, distributive a
 Find all functions $f : M → M$ such that, for all $x, y ∈ M$,
 $$ x f(x^2) f(f(y)) + f(y f(x)) = f(xy) \left(f(f(y^2)) + f(f(x^2))\right). $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016A4

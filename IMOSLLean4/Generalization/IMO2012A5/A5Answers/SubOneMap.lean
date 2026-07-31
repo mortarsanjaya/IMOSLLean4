@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
-import Mathlib.Algebra.Ring.Hom.Defs
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # IMO 2012 A5 (`x ↦ x - 1`)
@@ -13,6 +14,8 @@ import Mathlib.Algebra.Ring.Hom.Defs
 We show that the map `x : R ↦ x - 1` on a ring `R` is a good map.
 Then we implement the `f(x + 1) = f(x) + 1` solver.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

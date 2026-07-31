@@ -4,15 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
-import IMOSLLean4.Generalization.IMO2012A5.Extra.ExplicitRings.F4
-import IMOSLLean4.Generalization.IMO2012A5.Extra.ExplicitRings.Zphi
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+public import IMOSLLean4.Generalization.IMO2012A5.Extra.ExplicitRings.F4
+public import IMOSLLean4.Generalization.IMO2012A5.Extra.ExplicitRings.Zphi
 
 /-!
 # IMO 2012 A5 (`𝔽₄Map`)
 
 We define `𝔽₄Map : 𝔽₄ → ℤφ` and prove that it is a (non-trivial) good map.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

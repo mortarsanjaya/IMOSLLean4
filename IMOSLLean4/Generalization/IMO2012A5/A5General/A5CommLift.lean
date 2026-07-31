@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
-import Mathlib.Algebra.Ring.Subring.Basic
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+public import Mathlib.Algebra.Ring.Subring.Basic
 
 /-!
 # IMO 2012 A5 (Lift to commutative subrings)
@@ -14,6 +15,8 @@ Let `f : R → S` be a non-trivial good function, and fix `x : R`.
 We lift `f` to `f' : ℤ[x] → S'` for some commutative subring `S' ⊆ S`.
 This is useful as this allows us to generalize commutative-based results.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

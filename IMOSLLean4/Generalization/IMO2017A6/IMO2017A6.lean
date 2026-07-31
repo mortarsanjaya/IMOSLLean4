@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.RingTheory.Congruence.Defs
-import Mathlib.Algebra.Regular.SMul
+module
+public import Mathlib.RingTheory.Congruence.Defs
+public import Mathlib.Algebra.Regular.SMul
 
 /-!
 # IMO 2017 A6 (P2, Generalization)
@@ -22,6 +23,8 @@ Let $a$ be an element of the centre $Z(R/I)$ of $R/I$ such that $a^2 = 1$.
 Then the function $f(x) = \phi(a(1 - [x]))$ is a solution to the functional equation.
 If $2$ and $3$ are non-zero-divisors of $R$, then these are all the functions.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A6

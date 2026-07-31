@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.PNat.Factors
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.PNat.Factors
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2024 N3
@@ -29,6 +30,8 @@ We follow Solution 1 of the
 Note that the existence of $A$ and $G$ are vacuous if $k = 0$.
 We assume that an empty sum and product evaluates to $0$ and $1$, respectively.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024N3

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Field.Basic
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Data.Nat.Cast.Order.Basic
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Field.Basic
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-!
 # IMO 2015 A1
@@ -22,6 +23,8 @@ $$ a_0 + a_1 + … + a_{n - 1} ≥ n. $$
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2015SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015A1

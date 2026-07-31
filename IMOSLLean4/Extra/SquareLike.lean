@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Hom.Instances
+module
+public import Mathlib.Algebra.Group.Hom.Instances
 
 /-!
 # Square-like functions
@@ -14,6 +15,8 @@ Let `f : G → H` be a function such that `f(x + y) + f(x - y) = 2(f(x) + f(y))`
 We show that there exists a ℤ-bilinear map `φ : G × G → H` such that
   `φ` is symmetric and `2 f(x) = φ(x, x)` for all `x : G`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace Extra

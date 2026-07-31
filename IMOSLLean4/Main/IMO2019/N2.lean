@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+module
+
 /-!
 # IMO 2019 N2
 
@@ -21,6 +23,8 @@ The estimate $a^3 - b^3 > 1$ in the solution is unnecessary; we only need $a^3 >
 On the other hand, we reuse the inequality $a^2 ≤ b^3 + 1$ and $b^2 ≤ 2a$
   to prove that the only working pair $(a, b)$ with $a ≥ b ≥ c = 1$ is $(3, 2)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2019N2

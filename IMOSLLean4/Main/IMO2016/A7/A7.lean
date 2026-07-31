@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Algebra.Ring.Commute
-import Mathlib.Algebra.Group.Pi.Basic
+module
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Algebra.Ring.Commute
+public import Mathlib.Algebra.Group.Pi.Basic
 
 /-!
 # IMO 2016 A7
@@ -15,6 +16,8 @@ Let $R$ be a ring and $S$ be a totally ordered commutative ring.
 Find all functions $f : R → S$ such that, for any $x, y ∈ R$,
 $$ f(x + y)^2 = 2 f(x) f(y) + \max\{f(x^2) + f(y^2), f(x^2 + y^2)\}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016A7

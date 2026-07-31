@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.Ring.Int
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Algebra.GroupWithZero.Units.Fintype
-import Mathlib.Data.Int.ModEq
-import Mathlib.Data.Nat.Prime.Int
-import Mathlib.Data.Nat.PrimeFin
+module
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Algebra.Order.Ring.Int
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.Algebra.GroupWithZero.Units.Fintype
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.Data.Nat.Prime.Int
+public import Mathlib.Data.Nat.PrimeFin
 
 /-!
 # IMO 2011 N3
@@ -26,6 +27,8 @@ $f(x) = αx^d + c$ for some $α ∈ ℤˣ$, $c ∈ ℤ$, and a positive factor $
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2011SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011N3

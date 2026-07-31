@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Group.Defs
+module
+public import Mathlib.Algebra.Order.Group.Defs
 
 /-!
 # IMO 2017 A8
@@ -13,6 +14,8 @@ Let $G$ be a dense totally ordered abelian group.
 Suppose that for any $x, y ∈ R$, if $f(x) + y < f(y) + x$, then $f(x) + y ≤ 0 ≤ f(y) + x$.
 Prove that $f(x) + y ≤ f(y) + x$ for all $x ≥ y$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A8

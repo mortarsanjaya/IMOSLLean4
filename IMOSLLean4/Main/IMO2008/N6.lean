@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.PrimesCongruentOne
-import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+module
+public import Mathlib.NumberTheory.PrimesCongruentOne
+public import Mathlib.NumberTheory.LegendreSymbol.QuadraticChar.Basic
 
 /-!
 # IMO 2008 N6 (P3)
@@ -33,6 +34,8 @@ In the implementation, we use `Nat.sqrt` instead of `Real.sqrt`.
 Note that `Nat.sqrt` computes the **floor** of the square root of a natural number.
 This does not change the statement to be proved.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008N6

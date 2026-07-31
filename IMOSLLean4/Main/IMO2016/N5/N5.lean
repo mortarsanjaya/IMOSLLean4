@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.Ring.Abs
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2016 N5
@@ -16,6 +17,8 @@ Prove that the following two statements are equivalent:
 * There exists a nice pair $(x, y)$ with $x ≥ 0$ and $x^2 > a$;
 * There exists a nice pair $(x, y)$ with $x ≥ 0$ and $x^2 ≤ a$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016N5

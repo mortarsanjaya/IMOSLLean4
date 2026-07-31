@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2006 N7
@@ -22,6 +23,8 @@ Furthermore, the usage of $d = \gcd(a, k)$ in the official solution is unnecessa
   one could apply the induction hypothesis on $k$ instead of $d$.
 Our implementation will also avoid using $d = \gcd(a, k)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006N7

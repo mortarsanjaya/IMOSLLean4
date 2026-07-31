@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Defs
+module
+public import Mathlib.Algebra.Order.Ring.Defs
 
 /-!
 # IMO 2023 A2
@@ -26,6 +27,8 @@ We follow Solution 1 of the
 The main idea is just looking at the inequality
 $$ f(x + y) (f(x - y) + f(y - x)) ≥ (g(x) - g(y)) + (g(y) - g(x)) = 0. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023A2

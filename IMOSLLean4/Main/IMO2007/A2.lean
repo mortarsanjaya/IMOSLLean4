@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
+module
+public import Mathlib.Data.PNat.Basic
 
 /-!
 # IMO 2007 A2
@@ -48,6 +49,8 @@ Then $g(m + N + 1) ≥ g(m) + g(g(N)) ≥ g(m) + (N + 2)$ for any $m ∈ ℕ$.
 By induction, we get $g((N + 1)m) ≥ (N + 2)m$ for any $m ∈ ℕ$.
 But then $g((N + 1)^2) - (N + 1)^2 ≥ N + 1 > N$; contradiction.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007A2

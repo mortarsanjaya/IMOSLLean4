@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Multiset.Fintype
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Algebra.Order.Field.Rat
-import Mathlib.Algebra.Order.BigOperators.Group.Multiset
+module
+public import Mathlib.Data.Multiset.Fintype
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Algebra.Order.Field.Rat
+public import Mathlib.Algebra.Order.BigOperators.Group.Multiset
 
 /-!
 # IMO 2014 N3 (P5)
@@ -18,6 +19,8 @@ A partition of $C$ into $N$ groups is called an *$N$-Cape Town* partition
 Prove that if the total value of coins in $C$ is at most $N + 1/2$,
   then $C$ has an $(N + 1)$-Cape Town partition.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014N3

@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Order.Basic
-import Mathlib.Data.Nat.Find
-import Mathlib.Tactic.WLOG
+module
+public import Mathlib.Order.Basic
+public import Mathlib.Data.Nat.Find
+public import Mathlib.Tactic.WLOG
 
 /-!
 # IMO 2010 A6
@@ -15,6 +16,8 @@ Let $f, g : ℕ → ℕ$ be functions such that $f(g(x)) = f(x) + 1$
   and $g(f(x)) = g(x) + 1$ for all $x ∈ ℕ$.
 Prove that $f = g$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010A6

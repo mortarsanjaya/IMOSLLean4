@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Chebyshev
+module
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.Chebyshev
 
 /-!
 # IMO 2010 A2
@@ -21,6 +22,8 @@ We follow the outline of Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2010SL.pdf),
   based on the identity $(x - 1)^4 = x^4 - 4x^3 + 6x^2 - 4x + 1$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010A2

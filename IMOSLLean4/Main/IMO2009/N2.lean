@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
-import Mathlib.Data.Fintype.Pigeonhole
+module
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
 # IMO 2009 N2
@@ -21,6 +22,8 @@ For convenience, we denote $Ω(0) = 0$.
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2009SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009N2

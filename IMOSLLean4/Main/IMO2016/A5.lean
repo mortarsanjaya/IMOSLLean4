@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Parity
+module
+public import Mathlib.Algebra.Ring.Parity
 
 /-!
 # IMO 2016 A5
@@ -19,6 +20,8 @@ import Mathlib.Algebra.Ring.Parity
 We follow the [official solution](https://www.imo-official.org/problems/IMO2016SL.pdf).
 Note that for part 1, we also include the case $n = 0$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016A5

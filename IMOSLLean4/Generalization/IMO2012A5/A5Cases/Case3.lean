@@ -4,15 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2Map
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2eMap
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F4Map
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5CommLift
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5QuasiPeriodic
-import IMOSLLean4.Extra.CharTwo.Ring
-import IMOSLLean4.Extra.CharTwo.Hom
-import Mathlib.Algebra.Ring.Equiv
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2Map
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2eMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F4Map
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5CommLift
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5QuasiPeriodic
+public import IMOSLLean4.Extra.CharTwo.Ring
+public import IMOSLLean4.Extra.CharTwo.Hom
+public import Mathlib.Algebra.Ring.Equiv
 
 /-!
 # IMO 2012 A5 (Case 3: `char(R) ∣ 2`)
@@ -21,6 +22,8 @@ We solve the case where `f` is reduced good and `char(R) ∣ 2`.
 
 TODO: Optimize/clean up the proofs if possible, starting from `R_elts_claim1`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

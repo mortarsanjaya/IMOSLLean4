@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
 
 /-!
 # IMO 2012 A5 (The zero map)
@@ -12,6 +13,8 @@ import IMOSLLean4.Generalization.IMO2012A5.A5Defs
 We show that the zero map `0 : R → S` is a good map.
 Furthermore, if `f` is good and `f(0) ≠ -1`, then `f` has to be the zero map.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

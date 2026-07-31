@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Notation.Prod
-import Mathlib.Order.Bounds.Defs
+module
+public import Mathlib.Algebra.Notation.Prod
+public import Mathlib.Order.Bounds.Defs
 
 /-!
 # IMO 2025 N5
@@ -32,6 +33,8 @@ We prove more: the smallest possible value of the first entry of $f^N(a, b, c)$ 
 For $N ≤ 5$, the smallest possible value of the first entry of $f^N(a, b, c)$
   are indeed $1, 2, 3, 4, 6, 8$, attained by $(a, b, c) = (1, 1, 4)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2025N5

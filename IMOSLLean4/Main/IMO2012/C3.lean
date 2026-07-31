@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2012 C3
@@ -26,6 +27,8 @@ $12N^4$.
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012C3

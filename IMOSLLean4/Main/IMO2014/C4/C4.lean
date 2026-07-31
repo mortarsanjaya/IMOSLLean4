@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
+module
+public import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
 
 /-!
 # IMO 2014 C4
@@ -14,6 +15,8 @@ Let $S ⊆ ℕ^2$ be a multiset, and suppose that it can be partitioned into ske
 Prove that the parity of the number of skew-tetrominoes used per
   each type in the partition does not depend on the partition.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014C4

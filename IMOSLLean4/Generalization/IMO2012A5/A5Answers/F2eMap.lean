@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
-import IMOSLLean4.Generalization.IMO2012A5.Extra.ExplicitRings.F2e
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+public import IMOSLLean4.Generalization.IMO2012A5.Extra.ExplicitRings.F2e
 
 /-!
 # IMO 2012 A5 (`𝔽₂εMap`)
 
 We define `𝔽₂εMap : 𝔽₂ε → ℤ` and prove that it is a good map.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

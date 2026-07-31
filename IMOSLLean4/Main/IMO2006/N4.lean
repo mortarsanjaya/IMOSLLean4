@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Polynomial.Roots
+module
+public import Mathlib.Algebra.Polynomial.Roots
 
 /-!
 # IMO 2006 N4 (P5)
@@ -49,6 +50,8 @@ The definition of $G$-**good** sets is generalized accordingly.
 The solution also proves that $f₀ ∘ f$ has no more than
   $n$ integer fixed points for any polynomial $f₀ ∈ R[X]$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006N4

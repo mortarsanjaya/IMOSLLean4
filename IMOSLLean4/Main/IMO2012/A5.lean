@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Analysis.Real.Sqrt
+module
+public import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # IMO 2012 A5
@@ -37,6 +38,8 @@ It is even possible to find all functions $f : R → S$ satisfying the functiona
   where $R$ is a ring and $S$ is a domain; no commutativity is assumed.
 See `IMOSLLean4/Generalization/IMO2012A5/IMO2012A5.lean` for the implementation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

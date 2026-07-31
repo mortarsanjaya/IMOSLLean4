@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Nat.Prime.Infinite
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Data.PNat.Find
+module
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Nat.Prime.Infinite
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.PNat.Find
 
 /-!
 # IMO 2007 N5
@@ -48,6 +49,8 @@ If $f(ℕ⁺)$ is unbounded, then Kobayashi's theorem does imply that infinitely
 I conjecture that in this case, $f$ has to be linear.
 But I still have no idea about how to prove it.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007N5

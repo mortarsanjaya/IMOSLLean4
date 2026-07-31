@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.CharP.Two
-import Mathlib.Tactic.Field
+module
+public import Mathlib.Algebra.CharP.Two
+public import Mathlib.Tactic.Field
 
 /-!
 # IMO 2017 A6 (P2)
@@ -41,6 +42,8 @@ We can also solve the functional equation under a milder assumption:
   $2$ and $3$ are not zero divisors of $R$.
 See `IMOSLLean4/Generalization/IMO2017A6/IMO2017A6.lean` for the implementation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A6

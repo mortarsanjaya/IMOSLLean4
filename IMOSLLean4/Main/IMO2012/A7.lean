@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.MvPolynomial.Eval
-import Mathlib.Algebra.Order.Group.PosPart
+module
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.Algebra.Order.Group.PosPart
 
 /-!
 # IMO 2012 A7
@@ -30,6 +31,8 @@ However, the official solution essentially proves that $S$ is a ring.
 We define the *meta-closure* of a subset $S$ of a lattice to be the smallest set
   containing $S$ that is closed under both infimum and supremum.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A7

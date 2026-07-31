@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Lattice.Fold
-import Mathlib.Algebra.Order.Group.Defs
-import Mathlib.Algebra.Order.Group.Unbundled.Abs
-import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
+module
+public import Mathlib.Data.Finset.Lattice.Fold
+public import Mathlib.Algebra.Order.Group.Defs
+public import Mathlib.Algebra.Order.Group.Unbundled.Abs
+public import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 
 /-!
 # IMO 2017 A4
@@ -22,6 +23,8 @@ Prove that $(a_n)_{n ≥ 0}$ is bounded.
 Explicitly, prove that $|a_n| ≤ 2 \max\{B, C - B\}$, where
   $B = \max_{n ≤ D} a_n$ and $C = \max_{n ≤ D} (-a_n)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A4

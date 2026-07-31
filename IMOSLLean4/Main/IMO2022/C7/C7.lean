@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Finsupp
-import Mathlib.Algebra.Order.Ring.Int
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Finset.Order
+module
+public import Mathlib.Algebra.Group.Finsupp
+public import Mathlib.Algebra.Order.Ring.Int
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Finset.Order
 
 /-!
 # IMO 2022 C7
@@ -19,6 +20,8 @@ A set $G ⊆ ℤ^m$ is called an *add-sup generator* if
   the only add-sup closed set containing $G$ is $ℤ^m$.
 Find the smallest possible size of an add-sup generator, in terms of $m$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022C7

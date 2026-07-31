@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
+module
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 # IMO 2023 N3
@@ -15,6 +16,8 @@ Prove the following:
 1. there are infinitely many $n$ such that $ν_{10}(n!) > ν_9(n!)$; and
 2. there are infinitely many $n$ such that $ν_{10}(n!) < ν_9(n!)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023N3

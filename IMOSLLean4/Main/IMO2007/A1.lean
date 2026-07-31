@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Group.Abs
-import Mathlib.Data.Finset.Lattice.Fold
+module
+public import Mathlib.Algebra.Order.Group.Abs
+public import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # IMO 2007 A1 (P1)
@@ -31,6 +32,8 @@ It is easy to see that for $G = ℝ$, this formulation implies the original form
 In our implementation, the sequences are infinite.
 In part 2, we even let the whole infinite sequence be non-decreasing.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007A1

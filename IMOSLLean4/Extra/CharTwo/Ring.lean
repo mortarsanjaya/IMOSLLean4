@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.CharTwo.Defs
-import Mathlib.Algebra.Ring.Defs
+module
+public import IMOSLLean4.Extra.CharTwo.Defs
+public import Mathlib.Algebra.Ring.Defs
 
 /-!
 # Characteristic two (semi)rings
@@ -13,6 +14,8 @@ import Mathlib.Algebra.Ring.Defs
 We prove several lemmas about `CharTwo` semirings.
 The lemmas here do not need extra imports beyond `Mathlib.Algebra.Ring.Defs`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace Extra

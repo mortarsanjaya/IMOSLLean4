@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Archimedean.Basic
+module
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.Archimedean.Basic
 
 /-!
 # IMO 2024 A1 (P1)
@@ -32,6 +33,8 @@ Before proceeding into cases as in Solution 1, we assume WLOG that $-1 ≤ α < 
 In particular, when $⌊α⌋ = -1$, we show that $⌊nα⌋ = -1$ for all $n > 0$.
 Note that the original condition assumes $n > 0$, but the case $n = 0$ is obvious.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024A1

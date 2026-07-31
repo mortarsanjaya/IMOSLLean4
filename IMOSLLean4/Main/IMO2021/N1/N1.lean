@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Factors
+module
+public import Mathlib.Data.PNat.Factors
 
 /-!
 # IMO 2021 N1
@@ -13,6 +14,8 @@ Find all triplets $(a, b, n)$ of positive integers such that
 * $a^2 + b + 3$ is cubefree; and
 * $ab + 3b + 8 = n(a^2 + b + 3)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021N1

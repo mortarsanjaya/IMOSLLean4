@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Prod.Lex
-import Mathlib.Order.WellFounded
+module
+public import Mathlib.Data.Prod.Lex
+public import Mathlib.Order.WellFounded
 
 /-!
 # IMO 2008 A3
@@ -50,6 +51,8 @@ In terms of ordinals, this is just saying that the ordinal number $o_S$ of $S$
 
 See `IMOSLLean4/Generalization/IMO2008A3/IM2008A3.lean` for the implementation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008A3

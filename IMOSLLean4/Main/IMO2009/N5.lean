@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Dynamics.PeriodicPts.Defs
-import Mathlib.Algebra.Polynomial.Div
-import Mathlib.Data.Int.ModEq
-import Mathlib.NumberTheory.Divisors
+module
+public import Mathlib.Dynamics.PeriodicPts.Defs
+public import Mathlib.Algebra.Polynomial.Div
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.NumberTheory.Divisors
 
 /-!
 # IMO 2009 N5
@@ -23,6 +24,8 @@ We follow a variant of Solution 2 of the
   [official solution](https://www.imo-official.org/problems/IMO2009SL.pdf).
 Namely, $p$ does not have to be prime; we have $P(0) ≡ P(n) \pmod{q}$ for any $n > 0$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009N5

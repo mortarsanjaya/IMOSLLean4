@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Data.Nat.Cast.Basic
+module
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Data.Nat.Cast.Basic
 
 /-!
 # IMO 2008 A5
@@ -17,6 +18,8 @@ $$ \sum_{i = 1}^4 a_i > \sum_{i = 1}^4 \frac{a_i}{a_{i + 1}}. $$
 Prove that
 $$ \sum_{i = 1}^4 a_i < \sum_{i = 1}^4 \frac{a_{i + 1}}{a_i}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008A5

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Order.Interval.Finset.Nat
+module
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Order.Interval.Finset.Nat
 
 /-!
 # IMO 2012 C1
@@ -33,6 +34,8 @@ The goal is to show that every state is losing.
 Instead of considering $\sum_i i x_i$, we consider $\sum_i (i - 1) x_i$.
 This modification is solely made to simplify the implementation; the proof stays the same.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012C1

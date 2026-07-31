@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Digits.Defs
-import Mathlib.Data.Int.Interval
-import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Data.Int.ModEq
+module
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Algebra.Order.Ring.Abs
+public import Mathlib.Data.Int.ModEq
 
 /-!
 # IMO 2019 N3
@@ -18,6 +19,8 @@ A set $S ⊆ ℤ$ is called *rootiful* if for any $a_0, a_1, … a_n ∈ S$, not
 Fix an integer $N$ with $|N| > 1$.
 Find all rootiful sets containing $N^{a + 1} - N^{b + 1}$ for all $a, b ∈ ℕ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2019N3

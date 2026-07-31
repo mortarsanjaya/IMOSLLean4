@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.PNat.Basic
-import Mathlib.Data.List.Basic
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.PNat.Basic
+public import Mathlib.Data.List.Basic
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2009 N4
@@ -29,6 +30,8 @@ The solutions in AoPS resemble Solution 1 of the official solution, but with a
 In our case, assuming $n < m$, we write $m^2 + 1 = (n + 1)(k + 1)$ and
   prove $m + 1 ∣ k^2 + 1$ by directly trying to prove $nk ≡ 1 \pmod{x + 1}$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009N4

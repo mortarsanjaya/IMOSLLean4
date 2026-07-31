@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Ring.Pow
+module
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.Ring.Pow
 
 /-!
 # IMO 2017 A1
@@ -24,6 +25,8 @@ We will need all exponents we work with to be natural numbers,
   so we also need to raise the power of both sides by $M$.
 In addition, we use Bernoulli's inequality in place of the AM-GM inequality.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A1

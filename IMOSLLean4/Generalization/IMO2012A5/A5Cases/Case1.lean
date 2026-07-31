@@ -4,16 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map1
-import Mathlib.Algebra.Ring.Equiv
-import Mathlib.Data.Int.Cast.Basic
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map1
+public import Mathlib.Algebra.Ring.Equiv
+public import Mathlib.Data.Int.Cast.Basic
 
 /-!
 # IMO 2012 A5 (Case 1: `f(-1) ≠ 0`)
 
 We solve the case where `f` is reduced good and `f(-1) ≠ 0`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

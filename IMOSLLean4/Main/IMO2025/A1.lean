@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Order.OrderIsoNat
+module
+public import Mathlib.Order.OrderIsoNat
 
 /-!
 # IMO 2025 A1
@@ -38,6 +39,8 @@ If the entries are allowed to be zero, then $(n, 0)$ also works for $n ≠ 0$.
 In the documentation of the lemmas about good sequences,
   we always denote the good sequences by $((a_i, b_i))_{i ≥ 0}$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2025A1

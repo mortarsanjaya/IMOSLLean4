@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Positive.Ring
+module
+public import Mathlib.Algebra.Order.Positive.Ring
 
 /-!
 # IMO 2007 A4
@@ -21,6 +22,8 @@ $f(x) = 2x$.
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2007SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007A4

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Interval.Finset.Basic
-import Mathlib.Algebra.Order.Interval.Finset.SuccPred
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.Int.ModEq
-import Mathlib.Data.Int.SuccPred
+module
+public import Mathlib.Algebra.Order.Interval.Finset.Basic
+public import Mathlib.Algebra.Order.Interval.Finset.SuccPred
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.Data.Int.SuccPred
 
 /-!
 # IMO 2024 C5
@@ -33,6 +34,8 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2024S
 The merging operation uses $2S ∪ (2T + 1)$ instead of $(2S - 1) ∪ 2T$.
 Throughout the file, we use $[N]$ to denote $\{0, 1, …, N - 1\}$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024C5

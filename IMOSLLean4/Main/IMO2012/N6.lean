@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.FieldTheory.Finite.Basic
+module
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2012 N6
@@ -17,6 +18,8 @@ Prove that $x = 1$.
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012N6

@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Data.Fintype.Pigeonhole
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
 # IMO 2006 N2
@@ -30,6 +31,8 @@ We generalize the setting even more by working over archimedean ring with floor.
 We use a custom definition of being rational, implemented as `IMOSL.IMO2006N2.isRational`:
   an element $r$ is "rational" if there exist integers $m > 0$ and $n$ with $mr = n$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006N2

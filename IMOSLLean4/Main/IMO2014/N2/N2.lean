@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Data.Int.GCD
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.Ring.Abs
+public import Mathlib.Data.Int.GCD
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2014 N2
@@ -14,6 +15,8 @@ import Mathlib.Tactic.Ring
 Determine all pairs $(x, y)$ of integers such that
 $$ 7x^2 - 13xy + y^2 = (|x - y| + 1)^3. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014N2

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2009 A2
@@ -16,6 +17,8 @@ Prove that
 $$ \frac{1}{(2a + b + c)^2} + \frac{1}{(2b + c + a)^2} + \frac{1}{(2c + a + b)^2}
   ≤ \frac{3}{16}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A2

@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.Order.Ring.Rat
-import Mathlib.Data.Rat.Cast.Defs
+module
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.Order.Ring.Rat
+public import Mathlib.Data.Rat.Cast.Defs
 
 /-!
 # IMO 2020 N1
@@ -15,6 +16,8 @@ Prove that for any positive integer $k$, there exists a prime $p$ and
   distinct elements $x_1, x_2, …, x_{k + 3} ∈ 𝔽_pˣ$ such that for all $i ≤ k$,
 $$ x_i x_{i + 1} x_{i + 2} x_{i + 3} = i. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2020N1

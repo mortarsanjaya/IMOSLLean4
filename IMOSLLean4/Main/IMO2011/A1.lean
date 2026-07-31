@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Prod
+module
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fintype.Prod
 
 /-!
 # IMO 2011 A1 (P1)
@@ -26,6 +27,8 @@ After getting $a_1 + a_4 = a_2 + a_3$, we write $a_1 + a_2 + a_3 + a_4$ as $2(a_
 We implement the set of pairs $(i, j)$ with the given property as
   `IMOSL.IMO2011A1.Card4NatSet.pSet`, so $p_A$ is the cardinality of this set.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011A1

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Data.Fin.VecNotation
+module
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # IMO 2020 A3
@@ -13,6 +14,8 @@ import Mathlib.Data.Fin.VecNotation
 Find the smallest possible value of $a/b + b/c + c/d + d/a$ across
   all $a, b, c, d ∈ ℝ$ such that $(a + c)(b + d) = ac + bd$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2020A3

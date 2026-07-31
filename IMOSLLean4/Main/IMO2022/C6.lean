@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
-import Mathlib.Data.Nat.Factors
-import Mathlib.Order.Bounds.Defs
+module
+public import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
+public import Mathlib.Data.Nat.Factors
+public import Mathlib.Order.Bounds.Defs
 
 /-!
 # IMO 2022 C6
@@ -35,6 +36,8 @@ We represent a pile as a nonnegative integer and the board state as a multiset.
 We define `canReach X Y` to denote that we can transform the state `X` to `Y`
   after several moves; in addition, we allow adding and removing empty piles.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022C6

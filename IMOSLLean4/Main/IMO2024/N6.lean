@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.FieldTheory.Finite.Basic
+module
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2024 N6
@@ -53,6 +54,8 @@ In particular, a finite field is nice if and only if it has cardinality not equa
 
 See `IMOSLLean4/Generalization/IMO2024N6/IMO2024N6.lean` for the implementation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024N6

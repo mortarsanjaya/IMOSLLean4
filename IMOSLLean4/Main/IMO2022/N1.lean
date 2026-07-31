@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Order.Bounds.Defs
-import Mathlib.Tactic.NormNum.Prime
+module
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Order.Bounds.Defs
+public import Mathlib.Tactic.NormNum.Prime
 
 /-!
 # IMO 2022 N1
@@ -29,6 +30,8 @@ Using the official solution, we show that if $p > 19$ is a prime with $p ≡ 1 \
 This more general version is implemented as
   `IMOSL.IMO2022N1.IsLeast_Norwegian_prime_one_mod_six`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022N1

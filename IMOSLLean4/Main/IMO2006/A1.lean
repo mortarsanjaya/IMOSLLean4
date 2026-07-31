@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Archimedean.Basic
-import Mathlib.Order.OrderIsoNat
+module
+public import Mathlib.Algebra.Order.Archimedean.Basic
+public import Mathlib.Order.OrderIsoNat
 
 /-!
 # IMO 2006 A1
@@ -37,6 +38,8 @@ Since there is no division, in the case $⌊f^k(r)⌋ → c ≤ -2$, we need to 
   the sequence $b_k = (c - 1) f^k(r) - c^2$ as opposed to $b_k = f^k(r) - c^2/(c - 1)$.
 We will use $b_k = (-c + 1) f^k(r) + c^2$ instead.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006A1

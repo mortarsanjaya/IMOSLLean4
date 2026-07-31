@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.ArithmeticFunction.Misc
+module
+public import Mathlib.NumberTheory.ArithmeticFunction.Misc
 
 /-!
 # IMO 2016 C2
@@ -27,6 +28,8 @@ A table satisfying the latter two conditions is called a *good table*
   if distinct cells of the table contain distinct positive integers.
 Note that this definition does not refer to $n$ at all.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016C2

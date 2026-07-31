@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.GeomSum
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.Ring.Int
+module
+public import Mathlib.Algebra.Ring.GeomSum
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2008 N1
@@ -36,6 +37,8 @@ The original problem considers $m = 3$, but the same method works for any odd $m
 However, the statement is false when $p = 4$ and $m = 3$.
 A counterexample is given by $(x_1, x_2, x_3) = (7, -5, 1)$ with $n = 2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008N1

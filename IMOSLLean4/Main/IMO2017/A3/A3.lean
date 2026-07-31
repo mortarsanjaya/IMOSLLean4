@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fintype.Pigeonhole
-import Mathlib.Data.Finite.Prod
+module
+public import Mathlib.Data.Fintype.Pigeonhole
+public import Mathlib.Data.Finite.Prod
 
 /-!
 # IMO 2017 A3
@@ -14,6 +15,8 @@ Let $S$ be a finite set, and fix some $f : S → S$.
 Suppose that for any $g : S → S$, $f ∘ g ∘ f = g ∘ f ∘ g$ implies $g = f$.
 Prove that $f^2(S) = f(S)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A3

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Field.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Cast.Order.Ring
+module
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Field.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Nat.Cast.Order.Ring
 
 /-!
 # IMO 2006 A2
@@ -21,6 +22,8 @@ Prove that $a_n > 0$ if $n > 0$.
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2006SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006A2

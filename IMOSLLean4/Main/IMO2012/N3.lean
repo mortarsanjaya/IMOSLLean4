@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Nat.Choose.Basic
-import Mathlib.Data.Nat.GCD.Basic
+module
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Data.Nat.GCD.Basic
 
 /-!
 # IMO 2012 N3
@@ -24,6 +25,8 @@ Note that the original problem restricts $n$ to the range $m/3 ≤ n ≤ m/2$.
 We do not add the restriction since we use the convention $\binom{n}{k} = 0$ for $k > n$.
 This is also the convention used by `Nat.choose`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012N3

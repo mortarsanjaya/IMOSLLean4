@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Nat.Prime.Infinite
-import Mathlib.Data.Int.Basic
+module
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Nat.Prime.Infinite
+public import Mathlib.Data.Int.Basic
 
 /-!
 # IMO 2009 N3
@@ -41,6 +42,8 @@ This proves the claim.
 
 The rest is the same as the official solution.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009N3

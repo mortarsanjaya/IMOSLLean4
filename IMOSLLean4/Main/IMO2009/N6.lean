@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Polynomial.Inductions
-import IMOSLLean4.Extra.ExplicitRings.F4
+module
+public import Mathlib.Algebra.Polynomial.Inductions
+public import IMOSLLean4.Extra.ExplicitRings.F4
 
 /-!
 # IMO 2009 N6
@@ -35,6 +36,8 @@ It is easy to check that $Q$ is the companion of $P$.
 For convenience, we say that $P(0) + Q(-1)$ is the *companion constant* of $P$,
   where $Q$ is the companion of $P$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009N6

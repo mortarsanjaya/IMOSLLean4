@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fintype.Pigeonhole
+module
+public import Mathlib.Data.Fintype.Pigeonhole
 
 /-!
 # IMO 2021 C1
@@ -15,6 +16,8 @@ Each edge $xy$ is coloured such that for each vertex $v$, there exists only
 Prove that if some of the edges has distinct colours, then there exists
   $x, y, z ∈ V$, pairwise distinct, such that $c_{xy} = c_{xz} ≠ c_{yz}$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021C1

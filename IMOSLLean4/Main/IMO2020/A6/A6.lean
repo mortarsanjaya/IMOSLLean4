@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Lattice.Fold
+module
+public import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # IMO 2020 A6
@@ -12,6 +13,8 @@ import Mathlib.Data.Finset.Lattice.Fold
 Find all functions $f : ℤ → ℤ$ such that for any $a, b ∈ ℤ$,
 $$ f^{a^2 + b^2}(a + b) = a f(a) + b f(b). $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2020A6

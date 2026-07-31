@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Cases.Case1
-import IMOSLLean4.Generalization.IMO2012A5.A5Cases.Case2
-import IMOSLLean4.Generalization.IMO2012A5.A5Cases.Case3
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.Common
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.ZeroMap
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5Periodic
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Cases.Case1
+public import IMOSLLean4.Generalization.IMO2012A5.A5Cases.Case2
+public import IMOSLLean4.Generalization.IMO2012A5.A5Cases.Case3
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.Common
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.ZeroMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5Periodic
 
 /-!
 # IMO 2012 A5
@@ -54,6 +55,8 @@ Three files prove that no other functions are good:
 
 The current implementation is horrible and needs a massive reorganization.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

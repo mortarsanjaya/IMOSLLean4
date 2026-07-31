@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Factors
+module
+public import Mathlib.Data.Nat.Factors
 
 /-!
 # IMO 2013 N3
@@ -33,6 +34,8 @@ Otherwise, we have $f(n) > f(n + 1)$ for all $n$ large enough.
 Then $f$ is eventually strictly increasing, again contradicting the
   given functional equation as $n < n + 1 < (n + 1)^2$ for all $n ≥ 1$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013N3

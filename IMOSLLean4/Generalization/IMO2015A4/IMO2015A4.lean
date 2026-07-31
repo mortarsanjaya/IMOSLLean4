@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2015.A4
+module
+public import IMOSLLean4.Main.IMO2015.A4
 
 /-!
 # IMO 2015 A4 (P5, Generalization)
@@ -17,6 +18,8 @@ $$ f(x + f(x + y)) + f(xy) = x + f(x + y) + f(x) y. $$
 
 If $R$ is a domain, then the answer is $x ↦ x$ and $x ↦ 2 - x$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015A4

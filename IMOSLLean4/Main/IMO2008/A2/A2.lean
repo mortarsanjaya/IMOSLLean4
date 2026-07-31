@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Rat
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.Field.Rat
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2008 A2 (P2)
@@ -17,6 +18,8 @@ Prove that $$ \frac{x^2}{(x - 1)^2} + \frac{y^2}{(y - 1)^2} + \frac{z^2}{(z - 1)
 2. Show that there exists infinitely many triplets $(x, y, z) ∈ (ℚ \setminus \{1\})^3$
   with $xyz = 1$ such that the above inequality becomes equality.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008A2

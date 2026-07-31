@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Factorization.Basic
+module
+public import Mathlib.Data.Nat.Factorization.Basic
 
 /-!
 # IMO 2024 N1
@@ -21,6 +22,8 @@ $1$, $2$, $4$, and $12$.
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2024SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024N1

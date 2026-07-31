@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5QuasiPeriodic
-import Mathlib.RingTheory.Congruence.Basic
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5QuasiPeriodic
+public import Mathlib.RingTheory.Congruence.Basic
 
 /-!
 # IMO 2012 A5 (Periodic elements)
@@ -19,6 +20,8 @@ Then we prove that the induced map `R/I → S` is a reduced good function.
 Instead of using ideals explicitly, we use the `RingCon` API.
 The `RingCon` relation is implemented as `PeriodEquiv`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

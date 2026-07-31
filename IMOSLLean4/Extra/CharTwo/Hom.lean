@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.CharTwo.Defs
-import Mathlib.Algebra.Group.Hom.Defs
+module
+public import IMOSLLean4.Extra.CharTwo.Defs
+public import Mathlib.Algebra.Group.Hom.Defs
 
 /-!
 # Characteristic two monoids and homomorphisms
 
 We prove some results relating characteristic two monoids and homomorphism.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace Extra

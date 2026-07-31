@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Archimedean.Basic
+module
+public import Mathlib.Algebra.Order.Archimedean.Basic
 
 /-!
 # IMO 2014 A2
@@ -22,6 +23,8 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2014S
 We will not use the real numbers; instead they can be generalized to
   archimedean ordered commutative rings containing $1/2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014A2

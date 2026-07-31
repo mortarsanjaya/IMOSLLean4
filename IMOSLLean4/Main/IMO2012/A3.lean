@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.Ring.Pow
+module
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.Ring.Pow
 
 /-!
 # IMO 2012 A3 (P2)
@@ -19,6 +20,8 @@ Prove that $$ (1 + x_0)^2 (1 + x_1)^3 … (1 + x_n)^{n + 2} > (n + 2)^{n + 2}. $
 We follow the [official solution](https://www.imo-official.org/problems/IMO2012SL.pdf),
   but we avoid the given substitution, relying on Bernoulli's inequality instead.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A3

@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Data.Nat.Periodic
-import Mathlib.Algebra.Ring.Regular
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Data.Nat.Periodic
+public import Mathlib.Algebra.Ring.Regular
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2018 A2 (P2)
@@ -20,6 +21,8 @@ $$ a_{k + 2} = a_k a_{k + 1} + 1. $$
 
 Original problem: Find all possible periods of such sequence.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2018A2

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
-import Mathlib.Analysis.SpecialFunctions.Log.Base
+module
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 # IMO 2024 A3
@@ -26,6 +27,8 @@ We follow the [solution](https://artofproblemsolving.com/community/c6h3610463p35
   in the AoPS thread post #3 by **OronSH**.
 It is based on the inequality $(x_1 + x_2)^y ≥ x_1^y + x_2^y$ for $x_1, x_2 ≥ 0$, $y ≥ 1$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024A3

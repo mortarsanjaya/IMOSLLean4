@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.Basic
-import Mathlib.Algebra.Field.Rat
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Order.OrderIsoNat
+module
+public import Mathlib.Algebra.Field.Basic
+public import Mathlib.Algebra.Field.Rat
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Order.OrderIsoNat
 
 /-!
 # IMO 2018 N4 (P5)
@@ -16,6 +17,8 @@ Let $(a_n)_{n ≥ 1}$ be a sequence of positive integers such that for $n$ large
 $$ \frac{a_1}{a_2} + \frac{a_2}{a_3} + … + \frac{a_{n - 1}}{a_n} + \frac{a_n}{a_1} ∈ ℤ. $$
 Prove that $(a_n)_{n ≥ 1}$ is eventually constant.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2018N4

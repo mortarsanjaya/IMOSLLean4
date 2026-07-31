@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Cast.Order.Ring
+module
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Nat.Cast.Order.Ring
 
 /-!
 # IMO 2023 A3 (P4)
@@ -17,6 +18,8 @@ Let $x_1, x_2, …, x_N ∈ F$ be distinct positive elements
 $$ a_n^2 = \left(\sum_{i = 1}^n x_i\right) \left(\sum_{i = 1}^n \frac{1}{x_i}\right). $$
 Prove that $a_N ≥ ⌊3N/2⌋$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023A3

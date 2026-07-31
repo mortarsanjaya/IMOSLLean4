@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Data.Nat.Prime.Factorial
+module
+public import Mathlib.Algebra.BigOperators.Field
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Data.Nat.Prime.Factorial
 
 /-!
 # IMO 2011 N7
@@ -25,6 +26,8 @@ We follow Solution 1 of the
 Throughout the documentation of this formalization, $G_d$ denotes the subgroup of $ℚ$
   consisting of rational numbers whose numerator (after normalizing) is divisible by $d$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011N7

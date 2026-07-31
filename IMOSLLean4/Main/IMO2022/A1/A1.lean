@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Basic
+module
+public import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # IMO 2022 A1
@@ -14,6 +15,8 @@ Let $(a_n)_{n ≥ 0}$ be a sequence of non-negative elements of $R$ such that fo
 $$ a_{n + 1}^2 + a_n a_{n + 2} ≤ a_n + a_{n + 2}. $$
 Show that $a_N ≤ 1$ for all $N ≥ 2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022A1

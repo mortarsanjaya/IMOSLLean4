@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Bool.Basic
-import Mathlib.Data.Nat.Init
+module
+public import Mathlib.Data.Bool.Basic
+public import Mathlib.Data.Nat.Init
 
 /-!
 # IMO 2021 N2 (P1)
@@ -19,6 +20,8 @@ Prove that there exists $a, b ∈ ℕ$ of the same colour such that
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2021SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021N2

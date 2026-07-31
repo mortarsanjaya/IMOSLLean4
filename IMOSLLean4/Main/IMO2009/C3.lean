@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+module
+
 /-!
 # IMO 2009 C3
 
@@ -33,6 +35,8 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2009S
 The original statement follows from the general statement by picking $Γ = \{0, 1\}$
   and $(k_0, k_1, m_0, m_1, X, Y, Z) = (2, 3, 3, 1, 2, 1, 7)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009C3

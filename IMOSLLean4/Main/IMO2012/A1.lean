@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Tactic.Ring
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Data.Fin.VecNotation
+module
+public import Mathlib.Tactic.Ring
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # IMO 2012 A1 (P4)
@@ -34,6 +35,8 @@ The difference is that $k(n - 1)^2 ≠ k(n - 3)^2$ is not always true this time,
   but $k(n - 1)^2 = k(n - 3)^2$ would imply either $k = 0$, $R$ has characteristic $2$,
   or $n = 2$ in $R$, and in all cases we still get $f(n + 1) = k(n + 1)^2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A1

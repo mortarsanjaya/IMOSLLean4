@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
-import Mathlib.Algebra.Ring.Hom.Defs
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # IMO 2012 A5 (Good maps and ring homomorphisms)
@@ -13,6 +14,8 @@ import Mathlib.Algebra.Ring.Hom.Defs
 We prove some results relating good maps and ring homomorphisms.
 Namely, good maps behave well with respect to composing with ring homomorphisms.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

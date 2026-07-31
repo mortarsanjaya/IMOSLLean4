@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Squarefree
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Data.Nat.Squarefree
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2023 N7
@@ -13,6 +14,8 @@ import Mathlib.Data.Nat.ModEq
 Find all possible values of $a + b + c + d$ across all $a, b, c, d ∈ ℕ^+$ satisfying
 $$ \frac{ab}{a + b} + \frac{cd}{c + d} = \frac{(a + b)(c + d)}{a + b + c + d}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023N7

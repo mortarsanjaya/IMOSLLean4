@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2008.A3
-import Mathlib.SetTheory.Ordinal.Arithmetic
+module
+public import IMOSLLean4.Main.IMO2008.A3
+public import Mathlib.SetTheory.Ordinal.Arithmetic
 
 /-!
 # IMO 2008 A3 (Generalization)
@@ -35,6 +36,8 @@ The construction of Spanish couple on lexicographical product is implemented via
   is implemented via `SpanishCouple.sumLexRestrictRight`, where we view the whole set as a
   disjoint union `α ⊕ₗ β` with the subset being `β`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008A3

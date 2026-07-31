@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Dist
+module
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Nat.Dist
 
 /-!
 # IMO 2023 A5
@@ -21,6 +22,8 @@ Prove that $\max\{a_0, a_N\} ≥ \lfloor (N + 1)/4 \rfloor + 1$.
 The lower bound is known to be sharp when $N \equiv 2 \pmod{4}$.
 We won't implement this at least until later when we figure out the other cases.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023A5

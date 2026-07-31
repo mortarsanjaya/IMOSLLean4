@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.Padics.PadicVal.Basic
+module
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
 
 /-!
 # IMO 2007 N7
@@ -20,6 +21,8 @@ We follow Solution 1 of the
 We modify the sequence a bit; instead of taking powers with base $p_1 … p_k$,
   we take powers with base number $2 p_1 … p_k$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007N7

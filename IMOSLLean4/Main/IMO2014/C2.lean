@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
-import Mathlib.Algebra.Order.Ring.Nat
+module
+public import Mathlib.Algebra.BigOperators.Group.Multiset.Basic
+public import Mathlib.Algebra.Order.Ring.Nat
 
 /-!
 # IMO 2014 C2
@@ -24,6 +25,8 @@ The board is modelled as a multiset of non-negative integers.
 We say that a pair $(M, N)$ of multisets *good* if
   we can obtain $N$ from $M$ by applying one operation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014C2

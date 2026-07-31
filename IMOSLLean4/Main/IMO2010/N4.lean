@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.FieldTheory.Finite.Basic
+module
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2010 N4
@@ -40,6 +41,8 @@ Then for $p ≡ 1 (mod 3)$, one can check that $p ∣ b$ is impossible, so $p �
 Claim 3 follows by Hensel lifting: if $P$ is $p$-good and $P'$ has no root modulo $p$,
   then $P$ is $p^k$-good for all $k ≥ 0$, and therefore $P$ is very good.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010N4

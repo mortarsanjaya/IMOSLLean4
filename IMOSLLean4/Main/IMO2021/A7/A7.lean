@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2021 A7
@@ -17,6 +18,8 @@ $$ x_{n + 1} x_{n + 2} ≥ x_n^2 + 1. $$
 Show that for any $N ∈ ℕ$,
 $$ 27 (x_0 + x_1 + … + x_{N + 1})^2 > 8 N^3. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021A7

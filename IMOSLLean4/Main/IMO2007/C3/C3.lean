@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Fintype.Pi
-import Mathlib.Data.Fintype.Prod
-import Mathlib.Algebra.Group.Fin.Basic
+module
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Prod
+public import Mathlib.Algebra.Group.Fin.Basic
 
 /-!
 # IMO 2007 C3
@@ -15,6 +16,8 @@ import Mathlib.Algebra.Group.Fin.Basic
 Find all finite groups $G$ such that there exists a subset $S ⊆ G$ for which
   the number of triples $(x, y, z) ∈ S^3 ∪ (G \ S)^3$ such that $xyz = 1$ is $2007$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007C3

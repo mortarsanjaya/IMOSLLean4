@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2012.N8
-import Mathlib.Data.Nat.Factorization.PrimePow
+module
+public import IMOSLLean4.Main.IMO2012.N8
+public import Mathlib.Data.Nat.Factorization.PrimePow
 
 /-!
 # IMO 2012 N8 (Generalization)
@@ -26,6 +27,8 @@ For `ZMod 11`, we show by computer search that $a^2 + b^5 ≠ 7$ for any $a, b �
 For `ZMod 31`, we show that every element of $𝔽_{31}$, other than $22 = 4^2 - 5^5$ and
   $27 = 1^2 + 6^5$, takes the form $a^2$, $a^2 + 1$, or $a^2 - 6^5$ for some $a ∈ 𝔽_{31}$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012N8

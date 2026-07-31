@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Pow
+module
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Pow
 
 /-!
 # IMO 2011 A2
@@ -27,6 +28,8 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2011S
 The official solution directly assumes $a$ is positive, which can indeed be assumed.
 The sign of $a$ does not matter if $n$ is odd, and we must have $a > 0$ if $n$ is even.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011A2

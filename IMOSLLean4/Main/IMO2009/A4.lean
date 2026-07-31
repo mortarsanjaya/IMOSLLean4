@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Analysis.Real.Sqrt
+module
+public import Mathlib.Analysis.Real.Sqrt
 
 /-!
 # IMO 2009 A4
@@ -24,6 +25,8 @@ $$ \sum_{i = 1}^n \sqrt{\frac{x_i^2 + y_i^2}{x_i + y_i}}
   ≤ \sqrt{2} \sum_{i = 1}^n \sqrt{x_i + y_i}. $$
 This general inequality is proved in `IMOSL.IMO2009A4.general_ineq`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A4

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Data.Nat.Factorial.BigOperators
+module
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Data.Nat.Factorial.BigOperators
 
 /-!
 # IMO 2023 N4
@@ -15,6 +16,8 @@ Let $a_0, a_1, …, a_{n - 1}, b_0, b_1, …, b_{n - 1} ∈ ℕ^+$ and
 $$ b_0 b_1 … b_i a_{i + 1} … a_{n - 1} = b_0 b_1 … b_{i - 1} a_i … a_{n - 1} + D. $$
 Determine the smallest possible value of $D$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023N4

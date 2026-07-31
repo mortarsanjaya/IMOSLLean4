@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Order.Bounds.Defs
+module
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Order.Bounds.Defs
 
 /-!
 # IMO 2010 A3
@@ -18,6 +19,8 @@ $$ x_n + x_{n + 1} + x_{n + 2} ≤ 2c. $$
 Determine the maximum possible value of
 $$ \sum_{k = 1}^{2N} (x_k x_{k + 2} + x_{k + 1} x_{k + 3}). $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010A3

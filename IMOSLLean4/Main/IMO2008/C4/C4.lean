@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Powerset
+module
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Powerset
 
 /-!
 # IMO 2008 C4 (P5)
@@ -33,6 +34,8 @@ Thus, a sequence of toFun is `I → Λ`.
 The set `S_N` is implemented as a structure of `I → Fin 2 × Λ` with extra conditions.
 However, `S_M` will be implemented as `I → Λ` instead of `I → Fin 2 × Λ`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008C4

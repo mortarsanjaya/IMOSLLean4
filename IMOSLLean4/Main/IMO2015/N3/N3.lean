@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Factorization.Basic
-import Mathlib.Data.Nat.Log
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+module
+public import Mathlib.Data.Nat.Factorization.Basic
+public import Mathlib.Data.Nat.Log
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # IMO 2015 N3
@@ -15,6 +16,8 @@ Let $m$ and $n > 1$ be positive integers such that $k ∣ m$ whenever $n ≤ k <
 Prove that $L - 1$ is not a power of $2$, where
 $$ L = \prod_{k = n}^{2n - 1} \left(\frac{m}{k} + 1\right). $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015N3

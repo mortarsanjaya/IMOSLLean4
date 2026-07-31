@@ -4,16 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2Map
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2eMap
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map1
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map2
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F4Map
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.Z4Map
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SqSubOneMap
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5Hom
-import IMOSLLean4.Generalization.IMO2012A5.Extra.BundledRingFun
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2Map
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F2eMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map1
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map2
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F4Map
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.Z4Map
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SqSubOneMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SubOneMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5Hom
+public import IMOSLLean4.Generalization.IMO2012A5.Extra.BundledRingFun
 
 /-!
 # IMO 2012 A5 (Description of answers)
@@ -28,6 +29,8 @@ The proof that they are the only ones is the main content of the problem.
 * `isNontrivialAnswer f` says that `f` is either `isPolyGoodMap` or `isFinGoodMap`.
 * `isNontrivialAnswer.NontrivialGood` is a proof the above functions are non-trivial good.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

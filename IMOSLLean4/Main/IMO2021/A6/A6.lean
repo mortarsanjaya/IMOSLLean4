@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # IMO 2021 A6 (P6)
@@ -15,6 +16,8 @@ Suppose that there exists subsets $B_0, B_1, …, B_{m - 1}$ of $[k]$
   such that for each $i ∈ [m]$, $$ \sum_{j ∈ B_i} a_j = m^{i + 1}. $$
 Prove that $k ≥ m/2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021A6

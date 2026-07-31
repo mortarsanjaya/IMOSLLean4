@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2013.A5.FinChainFn
+module
+public import IMOSLLean4.Main.IMO2013.A5.FinChainFn
 
 /-!
 # IMO 2013 A5
@@ -12,6 +13,8 @@ import IMOSLLean4.Main.IMO2013.A5.FinChainFn
 Find all functions $f : ℕ → ℕ$ such that, for any $n ∈ ℕ$,
 $$ f(f(f(n))) = f(n + 1) + 1. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013A5

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.GCD.Basic
-import Mathlib.Order.Basic
+module
+public import Mathlib.Data.Nat.GCD.Basic
+public import Mathlib.Order.Basic
 
 /-!
 # IMO 2016 N4
@@ -16,6 +17,8 @@ Prove that one of the following holds:
 * $m = 1$ and $ℓ = 2k$; or
 * $k = (t + 1)ℓ$ and $m(n^ℓ - 1) = n^{t ℓ} - 1$ for some $t > 0$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016N4

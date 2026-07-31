@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Analysis.MeanInequalities
+module
+public import Mathlib.Analysis.MeanInequalities
 
 /-!
 # IMO 2020 A4 (P2)
@@ -20,6 +21,8 @@ We start with $a + 2b + 3c + 4d ≤ a + 3(b + c + d) = 3 - 2a$.
 Then we use the bound $a^a b^b c^c d^d ≤ a$ when $a < 1/2$ and the weighted AM-GM
   $a^a b^b c^c d^d ≤ a^2 + b^2 + c^2 + d^2$ when $1/2 ≤ a < 1$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2020A4

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Int.ModEq
-import Mathlib.Algebra.Order.Ring.Int
+module
+public import Mathlib.Data.Int.ModEq
+public import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2007 N6 (P5)
@@ -18,6 +19,8 @@ Prove that $x = y$.
 We follow the [official solution](https://www.imo-official.org/problems/IMO2007SL.pdf).
 However, instead of inducting on $2x + y$, we induct on $x$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007N6

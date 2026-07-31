@@ -1,21 +1,21 @@
----- Root for the main formalization project
-import IMOSLLean4.Main.IMO2006
-import IMOSLLean4.Main.IMO2007
-import IMOSLLean4.Main.IMO2008
-import IMOSLLean4.Main.IMO2009
-import IMOSLLean4.Main.IMO2010
-import IMOSLLean4.Main.IMO2011
-import IMOSLLean4.Main.IMO2012
-import IMOSLLean4.Main.IMO2013
-import IMOSLLean4.Main.IMO2014
-import IMOSLLean4.Main.IMO2015
-import IMOSLLean4.Main.IMO2016
-import IMOSLLean4.Main.IMO2017
-import IMOSLLean4.Main.IMO2018
-import IMOSLLean4.Main.IMO2019
-import IMOSLLean4.Main.IMO2020
-import IMOSLLean4.Main.IMO2021
-import IMOSLLean4.Main.IMO2022
-import IMOSLLean4.Main.IMO2023
-import IMOSLLean4.Main.IMO2024
-import IMOSLLean4.Main.IMO2025
+module
+public import IMOSLLean4.Main.IMO2006
+public import IMOSLLean4.Main.IMO2007
+public import IMOSLLean4.Main.IMO2008
+public import IMOSLLean4.Main.IMO2009
+public import IMOSLLean4.Main.IMO2010
+public import IMOSLLean4.Main.IMO2011
+public import IMOSLLean4.Main.IMO2012
+public import IMOSLLean4.Main.IMO2013
+public import IMOSLLean4.Main.IMO2014
+public import IMOSLLean4.Main.IMO2015
+public import IMOSLLean4.Main.IMO2016
+public import IMOSLLean4.Main.IMO2017
+public import IMOSLLean4.Main.IMO2018
+public import IMOSLLean4.Main.IMO2019
+public import IMOSLLean4.Main.IMO2020
+public import IMOSLLean4.Main.IMO2021
+public import IMOSLLean4.Main.IMO2022
+public import IMOSLLean4.Main.IMO2023
+public import IMOSLLean4.Main.IMO2024
+public import IMOSLLean4.Main.IMO2025

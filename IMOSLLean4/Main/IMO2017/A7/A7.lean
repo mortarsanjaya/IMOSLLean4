@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.Order.Group.Unbundled.Abs
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Algebra.Order.Group.Unbundled.Abs
 
 /-!
 # IMO 2017 A7
@@ -17,6 +18,8 @@ Let $(a_n)_{n ≥ 0}$ be a sequence of integers defined by $a_0 = 0$, $a_1 = 1$,
 
 Prove that $\max\{a_n, a_{n + 1}\} ≥ n$ for any $n ≥ 0$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A7

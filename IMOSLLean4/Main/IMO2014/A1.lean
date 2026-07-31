@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # IMO 2014 A1 (P1)
@@ -17,6 +18,8 @@ $$ n z_n < \sum_{j = 0}^n z_j ≤ n z_{n + 1}. $$
 
 We follow the [official solution](https://www.imo-official.org/problems/IMO2014SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014A1

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.Order.Ring.Unbundled.Rat
-import Mathlib.NumberTheory.Divisors
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.Order.Ring.Unbundled.Rat
+public import Mathlib.NumberTheory.Divisors
 
 /-!
 # IMO 2006 N3
@@ -22,6 +23,8 @@ $$ f(n) = \frac{1}{n} \sum_{k = 1}^n \left\lfloor \frac{n}{k} \right\rfloor. $$
 We follow the [official solution](https://www.imo-official.org/problems/IMO2006SL.pdf).
 Throughout the code documentation, `d` denotes the divisor function.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006N3

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
-import Mathlib.Data.Finset.Lattice.Fold
+module
+public import Mathlib.Data.PNat.Basic
+public import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # IMO 2009 A3 (P5)
@@ -18,6 +19,8 @@ Find all functions $f : ℕ → ℕ$ such that for any $x, y ∈ ℕ$, the non-n
 The original version using signature $ℕ^+ → ℕ^+$ is that $x$, $f(y)$,
   and $f(y + f(x) - 1)$ for the sides of a non-degenerate triangle.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A3

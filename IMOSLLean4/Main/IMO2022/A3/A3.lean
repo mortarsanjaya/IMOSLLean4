@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Positive.Ring
-import Mathlib.Algebra.GroupWithZero.Basic
+module
+public import Mathlib.Algebra.Order.Positive.Ring
+public import Mathlib.Algebra.GroupWithZero.Basic
 
 /-!
 # IMO 2022 A3 (P2)
@@ -14,6 +15,8 @@ Let $R$ be a totally ordered commutative ring, and let $R_{>0} = \{x ∈ R : x >
 Find all functions $f : R_{>0} → R_{>0}$ such that for any $x ∈ R_{>0}$,
   there exists a unique $y ∈ R_{>0}$ such that $x f(y) + y f(x) ≤ 2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022A3

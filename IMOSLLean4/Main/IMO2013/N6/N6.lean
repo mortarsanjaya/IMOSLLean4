@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Rat.Floor
+module
+public import Mathlib.Data.Rat.Floor
 
 /-!
 # IMO 2013 N6
@@ -12,6 +13,8 @@ import Mathlib.Data.Rat.Floor
 Determine all functions $f : ℚ → ℤ$ such that for any $x ∈ ℚ$, $a ∈ ℤ$, and $b ∈ ℕ^+$,
 $$ f\left(\frac{f(x) + a}{b}\right) = f\left(\frac{x + a}{b}\right). $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013N6

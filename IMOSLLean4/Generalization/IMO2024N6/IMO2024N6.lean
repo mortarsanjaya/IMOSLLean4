@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Main.IMO2024.N6
-import Mathlib.RingTheory.Artinian.Ring
-import Mathlib.Algebra.CharP.CharAndCard
+module
+public import IMOSLLean4.Main.IMO2024.N6
+public import Mathlib.RingTheory.Artinian.Ring
+public import Mathlib.Algebra.CharP.CharAndCard
 
 /-!
 # IMO 2024 N6 (Generalization)
@@ -22,6 +23,8 @@ Given a finite commutative ring $R$, determine whether $R$ is nice or not.
 We say that a ring $R$ is *boolean* if $r^2 = r$ for all $r ∈ R$.
 Then a finite commutative ring is nice if and only if it is not boolean.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024N6

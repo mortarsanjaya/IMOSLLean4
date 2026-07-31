@@ -4,15 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Algebra.Group.Units.Equiv
-import Mathlib.Algebra.Order.Group.Unbundled.Basic
-import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
-import Mathlib.Algebra.Order.Monoid.Defs
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Order.Bounds.Defs
+module
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Algebra.Group.Units.Equiv
+public import Mathlib.Algebra.Order.Group.Unbundled.Basic
+public import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
+public import Mathlib.Algebra.Order.Monoid.Defs
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Fintype.Basic
+public import Mathlib.Order.Bounds.Defs
 
 /-!
 # IMO 2009 A1
@@ -43,6 +44,8 @@ For convenience, we define the following notions:
 
 We use nice sequences to construct good functions with only one triangular index.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A1

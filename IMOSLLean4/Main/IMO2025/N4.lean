@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
-import Mathlib.Data.Set.Finite.Basic
+module
+public import Mathlib.Data.PNat.Basic
+public import Mathlib.Data.Set.Finite.Basic
 
 /-!
 # IMO 2025 N4
@@ -38,6 +39,8 @@ By injectivity, all the $e_k$'s are equal to some positive integer $e$.
 Then $e = e_2 = e_3$ divides both $2n$ and $3n$, which means $e ∣ n$.
 But we also have $-f(e) = n ∣ e$, so $e = n$, proving $f(n) = -n$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2025N4

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Logic.Function.Iterate
+module
+public import Mathlib.Logic.Function.Iterate
 
 /-!
 # IMO 2015 N1
@@ -27,6 +28,8 @@ Our formulation is noticably different from the original formulation, but it is 
 The original formulation only asks for odd and positive $M$; our $M$ corresponds to $2M + 1$.
 We make no attempt to formalize the original formulation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015N1

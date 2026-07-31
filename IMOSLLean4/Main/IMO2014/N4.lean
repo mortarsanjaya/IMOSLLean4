@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2014 N4
@@ -20,6 +21,8 @@ We follow Solution 2 of the
 That is, we take $k$ to be powers of $n - 1$.
 It can be proved by induction on $m$ that $(d + 1)^{d^m} ≡ 1 \pmod{d^{m + 1}}$ for any $d$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014N4

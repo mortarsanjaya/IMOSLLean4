@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Defs
+module
+public import Mathlib.Algebra.Ring.Defs
 
 /-!
 # IMO 2012 A5 (Definitions)
@@ -24,6 +25,8 @@ They file `IMOSLLean4/IMO2012/A5/A5Answers/Common.lean` collects all these funct
 The file `IMOSLLean4/IMO2012/A5/A5.lean` proves that these are
   precisely the good functions, up to ring homomorphism.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

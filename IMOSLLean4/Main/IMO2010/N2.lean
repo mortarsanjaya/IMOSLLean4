@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.Multiplicity
+module
+public import Mathlib.NumberTheory.Multiplicity
 
 /-!
 # IMO 2010 N2
@@ -23,6 +24,8 @@ While we allow $m$ to be negative, the given equation implies that $m$ is non-ne
 For lower bounding $\min\{p, q\}$, we use the LTE (lifting the exponent) lemma instead,
   giving us the stronger inequality $\min\{p, q\} ≤ \log_3(p + q + 1)$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010N2

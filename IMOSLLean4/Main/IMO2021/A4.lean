@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Analysis.Convex.SpecificFunctions.Pow
-import Mathlib.Analysis.Convex.Jensen
+module
+public import Mathlib.Analysis.Convex.SpecificFunctions.Pow
+public import Mathlib.Analysis.Convex.Jensen
 
 /-!
 # IMO 2021 A4 (P2)
@@ -28,6 +29,8 @@ Instead of taking $T$ large enough, we split into three cases:
 2. $x_i ≤ 0$ for all $i$;
 3. some of the $x_i$'s are positive while some others are negative.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021A4

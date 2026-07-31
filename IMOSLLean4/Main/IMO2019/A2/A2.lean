@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Algebra.Order.BigOperators.Group.Multiset
-import Mathlib.Algebra.BigOperators.Ring.Multiset
-import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
+module
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Algebra.Order.BigOperators.Group.Multiset
+public import Mathlib.Algebra.BigOperators.Ring.Multiset
+public import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 
 /-!
 # IMO 2019 A2
@@ -17,6 +18,8 @@ $$ x_1 + x_2 + … + x_n = 0. $$
 Let $a, b ∈ R$ such that $b ≤ x_i ≤ a$ for all $i ≤ n$.
 Show that $$ nab + \sum_{i = 1}^n x_i^2 ≤ 0. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2019A2

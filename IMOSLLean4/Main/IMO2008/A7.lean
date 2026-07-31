@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
-import Mathlib.Tactic.Field
+module
+public import Mathlib.Algebra.Order.Field.Basic
+public import Mathlib.Tactic.Field
 
 /-!
 # IMO 2008 A7
@@ -53,6 +54,8 @@ Both expressions inside the absolute value are non-negative and bounded above by
 $$ L \geq \frac{2(|ε_1| + |ε_2|)^2}{3S} - \frac{3|ε_1||ε_2|}{2S}
   = \frac{4(|ε_1| + |ε_2|)^2 - 9|ε_1||ε_2|}{6S}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008A7

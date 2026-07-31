@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.GroupTheory.OrderOfElement
+module
+public import Mathlib.GroupTheory.OrderOfElement
 
 /-!
 # IMO 2022 A6
@@ -15,6 +16,8 @@ $$ f(x + f(y)) = f(x) + f(y) \quad ∀ x, y ∈ G. $$
 Find all pairs $(m, n)$ of integers such that for any infectious functions
   $f : G → G$, there exists $z ∈ G$ such that $m f(z) = nz$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022A6

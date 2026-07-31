@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
+module
+public import Mathlib.Data.PNat.Basic
 
 /-!
 # IMO 2013 N1
@@ -22,6 +23,8 @@ We follow both Solution 1 and Solution 2 of the
   [official solution](https://www.imo-official.org/problems/IMO2013SL.pdf).
 For the → direction, we use Solution 2 for $f(n) ≤ n$ and we use Solution 1 for $f(n) ≥ n$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013N1

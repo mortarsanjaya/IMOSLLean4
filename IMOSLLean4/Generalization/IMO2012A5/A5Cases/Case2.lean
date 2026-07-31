@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SqSubOneMap
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map2
-import IMOSLLean4.Generalization.IMO2012A5.A5Answers.Z4Map
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5CommLift
-import IMOSLLean4.Generalization.IMO2012A5.A5General.A5QuasiPeriodic
-import IMOSLLean4.Extra.SquareLike
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.SqSubOneMap
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.F3Map2
+public import IMOSLLean4.Generalization.IMO2012A5.A5Answers.Z4Map
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5CommLift
+public import IMOSLLean4.Generalization.IMO2012A5.A5General.A5QuasiPeriodic
+public import IMOSLLean4.Extra.SquareLike
 
 /-!
 # IMO 2012 A5 (Case 2: `f(-1) = 0`, `char(R) ∤ 2`)
@@ -17,6 +18,8 @@ import IMOSLLean4.Extra.SquareLike
 We solve the case where `f` is reduced good, `f(-1) = 0`, and `char(R) ∤ 2`.
 Actually, `f(-1) = 0` implies that `f` is even, so the latter is assumed instead.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

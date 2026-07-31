@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Data.Int.ModEq
+module
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Data.Int.ModEq
 
 /-!
 # IMO 2009 N1 (P1)
@@ -20,6 +21,8 @@ Here, we denote $a_{k + 1} = a_1$.
 We follow Solution 2 of the
   [official solution](https://www.imo-official.org/problems/IMO2009SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009N1

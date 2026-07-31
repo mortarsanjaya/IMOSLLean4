@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # IMO 2006 A4
@@ -17,6 +18,8 @@ Prove the inequality
 $$ \sum_{i < j} \frac{a_i a_j}{a_i + a_j}
   ≤ \frac{n}{2(a_1 + a_2 + … + a_n)} \sum_{i < j} a_i a_j. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006A4

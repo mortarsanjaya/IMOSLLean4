@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Prime
-import Mathlib.FieldTheory.Finite.Basic
+module
+public import Mathlib.Data.PNat.Prime
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2015 N7
@@ -28,6 +29,8 @@ For the final contradiction, we directly show that the only possible odd divisor
   $\gcd(f(m) + n, f(n) + m)$ is $1$, instead of looking at any odd prime divisor.
 The occurences of $p - 1$ is replaced by totient function evaluated at the odd divisor.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015N7

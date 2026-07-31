@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Hom.Defs
+module
+public import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # Explicit construction of `𝔽₃`
@@ -12,6 +13,8 @@ import Mathlib.Algebra.Ring.Hom.Defs
 In this file, we explicitly construct `𝔽₃`, the field of 3 elements.
 We prove that it is a ring, and we construct ring homomorphisms from `𝔽₃`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

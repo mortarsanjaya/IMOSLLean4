@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Generalization.IMO2012A5.A5Defs
-import Mathlib.Algebra.Ring.Commute
+module
+public import IMOSLLean4.Generalization.IMO2012A5.A5Defs
+public import Mathlib.Algebra.Ring.Commute
 
 /-!
 # IMO 2012 A5 (Quasi-periodic elements)
@@ -18,6 +19,8 @@ We prove some more properties:
 * `QuasiPeriodic.reduced_main_cases`: Let `f` be a reduced good function.
   If there exists `c ∈ J` non-zero, then `R = {0, 1, c, c + 1}`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

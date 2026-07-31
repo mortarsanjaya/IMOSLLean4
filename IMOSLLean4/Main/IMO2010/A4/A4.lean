@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Digits.Defs
-import Mathlib.Data.Int.Bitwise
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+module
+public import Mathlib.Data.Nat.Digits.Defs
+public import Mathlib.Data.Int.Bitwise
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # IMO 2010 A4
@@ -15,6 +16,8 @@ Define the sequence $(x_n)_{n ≥ 0}$ recursively by $x_0 = 1$,
   $x_{2k} = (-1)^k x_k$, and $x_{2k + 1} = -x_k$ for all $k ∈ ℕ$.
 Prove that for any $n ∈ ℕ$, $$ \sum_{i < n} x_i ≥ 0. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010A4

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Set.Operations
-import Mathlib.Data.Nat.Init
+module
+public import Mathlib.Data.Set.Operations
+public import Mathlib.Data.Nat.Init
 
 /-!
 # IMO 2023 N6
@@ -17,6 +18,8 @@ A non-negative integer $m$ is said to be *kawaii* if it belongs to some kawaii s
 Let $m ∈ ℕ$ such that both $m$ and $m + 1$ are kawaii.
 Prove that $3 ∣ m$ and $m/3$ belongs to a kawaii sequence.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023N6

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.IntLinearSolver
+module
+public import IMOSLLean4.Extra.IntLinearSolver
 
 /-!
 # IMO 2019 A1 (P1)
@@ -23,6 +24,8 @@ We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2019SL.pdf).
 After obtaining linearity, we substitute $b = 0$ to the original functional equation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2019A1

@@ -1,3 +1,3 @@
--- Root of the `IMOSLLean4` library.
-import IMOSLLean4.Main
-import IMOSLLean4.Generalization
+module
+public import IMOSLLean4.Main
+public import IMOSLLean4.Generalization

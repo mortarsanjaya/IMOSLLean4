@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Multiset
-import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Multiset
+module
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Multiset
+public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Multiset
 
 /-!
 # IMO 2016 A1
@@ -16,6 +17,8 @@ Let $a_1, a_2, …, a_n, c ∈ R$ non-negative such that $a_i a_j ≥ c$ wheneve
 Let $r ∈ R$ non-negative such that $nr ≥ a_1 + a_2 + … + a_n$.
 Prove that $$ \prod_{i = 1}^n (a_i^2 + c) ≤ (r^2 + c)^n. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2016A1

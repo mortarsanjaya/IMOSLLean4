@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Union
+module
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Finset.Union
 
 /-!
 # Finite-chain functions
@@ -14,6 +15,8 @@ A "finite-chain" function is an injective function
   `f : α → α` such that `α ∖ f(α)` is finite.
 We prove some properties of finite-chain functions.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013A5

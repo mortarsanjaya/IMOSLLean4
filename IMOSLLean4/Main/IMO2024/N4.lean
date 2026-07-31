@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.FieldTheory.Finite.Basic
+module
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2024 N4 (P2)
@@ -25,6 +26,8 @@ That is, pick some $n₀ ≥ N$ such that $a^{n₀ + 1} ≡ b^{n₀ + 1} ≡ 1 \
   then plug $n = n₀$ and $n = n₀ + 1$ (typically one chooses $n₀ ≡ -1 \pmod{φ(ab + 1)}$).
 Note that all solutions that I am aware of so far considers $ab + 1$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2024N4

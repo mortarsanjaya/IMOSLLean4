@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.GCDMonoid.Nat
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.Ring.Int
+module
+public import Mathlib.Algebra.GCDMonoid.Nat
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2007 N2
@@ -22,6 +23,8 @@ Take $k = b^2$, and write $b - a^n = b^2 d$ for some integers $a$ and $d$.
 Then rearranging gives $a^n = b(1 - bd)$.
 Since $b > 0$ and $\gcd(b, 1 - bd) = 1$, so $b$ must be an $n$th power.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007N2

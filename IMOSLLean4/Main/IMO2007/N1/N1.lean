@@ -4,15 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Algebra.Ring.Parity
-import Mathlib.Algebra.Ring.Int.Defs
+module
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Algebra.Ring.Parity
+public import Mathlib.Algebra.Ring.Int.Defs
 
 /-!
 # IMO 2007 N1
 
 Find all pairs $(k, n) ∈ ℕ^2$ such that $7^k - 3^n ∣ k^4 + n^2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007N1

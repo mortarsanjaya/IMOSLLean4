@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Defs
+module
+public import Mathlib.Algebra.Order.Ring.Defs
 
 /-!
 # IMO 2011 A6 (P3)
@@ -30,6 +31,8 @@ In particular, combining with $x f(x) ≤ 0$ yields $f(x) = 0$ whenever $x < 0$.
 Finally, pick any $y < 0$, say $y = -1$.
 Then $0 = f(y) ≤ f(f(y)) = f(0) ≤ 0$, so $f(0) = 0$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011A6

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Combinatorics.Colex
-import Mathlib.Data.Nat.Factorization.Basic
+module
+public import Mathlib.Combinatorics.Colex
+public import Mathlib.Data.Nat.Factorization.Basic
 
 /-!
 # IMO 2009 C1
@@ -24,6 +25,8 @@ Assume that $A$ and $B$ uses the best strategy.
 1. Show that the game always ends.
 2. Determine the outcome of the game.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009C1

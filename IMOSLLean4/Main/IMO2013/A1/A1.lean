@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.LinearAlgebra.Matrix.Notation
+module
+public import Mathlib.LinearAlgebra.Matrix.Notation
 
 /-!
 # IMO 2013 A1
@@ -16,6 +17,8 @@ Then set $$ f(a_1, a_2, …, a_n) = u_{n + 1}. $$
 Prove that, for any $a_1, a_2, a_3, …, a_n ∈ R$, we have
 $$ f(a_1, a_2, …, a_n) = f(a_n, a_{n - 1}, …, a_1). $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013A1

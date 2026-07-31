@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Basic
+module
+public import Mathlib.Data.Nat.Prime.Basic
 
 /-!
 # IMO 2023 N2
@@ -12,6 +13,8 @@ import Mathlib.Data.Nat.Prime.Basic
 Find all pairs $(a, p) ∈ ℕ^2$ with $a > 0$ and $p$ prime
   such that $p^a + a^4$ is a perfect square.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023N2

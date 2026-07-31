@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Choose.Basic
+module
+public import Mathlib.Data.Nat.Choose.Basic
 
 /-!
 # IMO 2015 N2
@@ -12,6 +13,8 @@ import Mathlib.Data.Nat.Choose.Basic
 Let $a, b ∈ ℕ$ such that $a! + b! ∣ a! b!$.
 Prove that $3a ≥ 2b + 2$, and find all the equality cases.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015N2

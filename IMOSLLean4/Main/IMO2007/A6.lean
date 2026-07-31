@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+module
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 
 /-!
 # IMO 2007 A6
@@ -54,6 +55,8 @@ Then we have
 
 In the implementation, we assume the smallest value among the $x_i$'s is $x_0$ instead.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007A6

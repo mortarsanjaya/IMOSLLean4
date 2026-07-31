@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
+module
+public import Mathlib.Data.PNat.Basic
 
 /-!
 # IMO 2011 A4
@@ -45,6 +46,8 @@ This implies $f(n + 1) > f(n)$ for all $n ∈ ℕ$, so $f$ is strictly increasin
 Then $f(n + 1) > f^2(n)$ also implies $n + 1 > f(n)$, so $f(n) ≤ n$ for all $n ∈ ℕ$.
 Together with $f(n) ≥ n$, we get $f(n) = n$ for all $n ∈ ℕ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011A4

@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Int
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Data.Fin.VecNotation
+module
+public import Mathlib.Algebra.Order.Ring.Int
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Data.Fin.VecNotation
 
 /-!
 # IMO 2018 N5
@@ -14,6 +15,8 @@ import Mathlib.Data.Fin.VecNotation
 Determine whether there exists $x, y, z, t ∈ ℕ^+$ such that
   $xy - zt = x + y = z + t$ and both $xy$ and $zt$ are perfect squares.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2018N5

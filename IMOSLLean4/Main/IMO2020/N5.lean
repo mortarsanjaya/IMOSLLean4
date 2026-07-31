@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Factors
-import Mathlib.Data.PNat.Find
-import Mathlib.FieldTheory.Finite.Basic
+module
+public import Mathlib.Data.PNat.Factors
+public import Mathlib.Data.PNat.Find
+public import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2020 N5
@@ -29,6 +30,8 @@ Our implementation manually requires $f(1) = 0$; this does not do anything to th
   original functional equation since it can be deduced from $f(xy) = f(x) + f(y)$.
 However, adding the condition allows us to generalize the functional equation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2020N5

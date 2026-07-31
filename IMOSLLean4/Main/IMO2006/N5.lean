@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Algebra.BigOperators.ModEq
+module
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Algebra.BigOperators.ModEq
 
 /-!
 # IMO 2006 N5
@@ -26,6 +27,8 @@ We formalize this stronger version instead of the original version.
 We modify the solution in the case $y ≡ 2 \pmod{p}$ a bit; instead of looking at
   $y^{p - 3} + y^{p - 4} + … + 1$ mod $p$, we look at $y^{p - 2} - 1$ mod $p$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006N5

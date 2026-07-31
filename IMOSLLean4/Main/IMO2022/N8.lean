@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
+module
+public import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 
 /-!
 # IMO 2022 N8
@@ -17,6 +18,8 @@ We follow Solution 2 of the
   [official solution](https://www.imo-official.org/problems/IMO2022SL.pdf).
 The solution works with $65$ replaced by any positive integer $N ≡ 5 \pmod{60}$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2022N8

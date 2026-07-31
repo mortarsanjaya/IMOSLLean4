@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Finset.Sort
+module
+public import Mathlib.Data.Finset.Sort
 
 /-!
 # IMO 2021 A1
@@ -12,6 +13,8 @@ import Mathlib.Data.Finset.Sort
 Let $n$ be an integer and $A$ be a subset of $\{0, 1, …, 5^n\}$ of size $4n + 2$.
 Prove that there exists $a, b, c ∈ A$ such that $a < b < c$ and $c + 2a > 3b$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021A1

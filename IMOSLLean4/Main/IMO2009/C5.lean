@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
+module
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-!
 # IMO 2009 C5
@@ -38,6 +39,8 @@ The invariant condition is as follows: there exists an index $i$ such that
   (before A's turn) or $x_i, x_{i + 1} ≤ 2r$ (before B's turn).
 The predicate `IMOSL.IMO2009C5.GameState.good` implements this invariant.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009C5

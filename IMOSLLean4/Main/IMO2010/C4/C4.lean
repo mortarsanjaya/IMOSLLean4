@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+module
+
 /-!
 # IMO 2010 C4 (P5)
 
@@ -14,6 +16,8 @@ At any time, one of the following operations are done:
 Is it possible that, after some operations, we are left with stack $0$
   containing $A = 2010^{2010^{2010}}$ coins and all other stacks empty?
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010C4

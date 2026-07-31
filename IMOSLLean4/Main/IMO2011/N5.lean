@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Basic
+module
+public import Mathlib.Algebra.Group.Basic
 
 /-!
 # IMO 2011 N5 (P5)
@@ -36,6 +37,8 @@ Since $0 < f(x), f(y - x) < f(y)$, this forces $f(x) = f(y - x)$, as desired.
 
 We implement $f$ as a function from $G$ to $ℤ$ such that $f(x) > 0$ for all $x ∈ G$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011N5

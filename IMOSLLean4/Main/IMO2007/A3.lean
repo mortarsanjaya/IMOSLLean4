@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Field.GeomSum
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.Order.Ring.Basic
+module
+public import Mathlib.Algebra.Field.GeomSum
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.Order.Ring.Basic
 
 /-!
 # IMO 2007 A3
@@ -23,6 +24,8 @@ $$ \left(\sum_{k = 1}^n \frac{1 + x^{2k}}{1 + x^{4k}}\right)
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2007SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2007A3

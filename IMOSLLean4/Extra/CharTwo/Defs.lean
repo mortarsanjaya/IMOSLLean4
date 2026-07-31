@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Defs
+module
+public import Mathlib.Algebra.Group.Defs
 
 /-!
 # Characteristic two monoids
@@ -12,6 +13,8 @@ import Mathlib.Algebra.Group.Defs
 We say that a monoid `M` has *characteristic two* if `x + x = 0` for any `x : M`.
 Such monoids are secretly abelian groups, and subtraction is the same as addition.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace Extra

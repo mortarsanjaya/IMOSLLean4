@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Floor.Ring
+module
+public import Mathlib.Algebra.Order.Floor.Ring
 
 /-!
 # IMO 2010 A1 (P1)
@@ -39,6 +40,8 @@ Finally, since $⌊-α⌋ = -1$, plugging $x = -α$ gives $f ≡ 0$.
 It can be shown that there exists $α ∈ R$ such that $0 < α < 1$
   as long as $R$ is not isomorphic to $ℤ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010A1

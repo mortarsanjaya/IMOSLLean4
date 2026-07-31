@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
+module
+
 /-!
 # Linear solver for functions $f : ℕ → ℤ$ and $f : ℤ → ℤ$
 
@@ -12,6 +14,8 @@ Suppose that $f(n + 1) = c + f(n)$ for all $n ∈ ℕ$.
 Then $f(n) = cn + f(0)$ for all $n ∈ ℕ$.
 We prove similar statement for $ℤ → ℤ$ and $ℕ → ℕ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace Extra

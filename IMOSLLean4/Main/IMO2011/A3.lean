@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Basic
-import Mathlib.Algebra.Ring.Defs
+module
+public import Mathlib.Algebra.Group.Basic
+public import Mathlib.Algebra.Ring.Defs
 
 /-!
 # IMO 2011 A3
@@ -25,6 +26,8 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2011S
 We still need the equations $g(f(x)) = f(-x)$ and $f(-a) = f(-b) + (a - b) g(a + b)$.
 Many steps of the problem generalize; we do not even require associativity on $R$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011A3

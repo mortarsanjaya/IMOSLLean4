@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Hom.Defs
-import IMOSLLean4.Extra.CharTwo.Ring
+module
+public import Mathlib.Algebra.Ring.Hom.Defs
+public import IMOSLLean4.Extra.CharTwo.Ring
 
 /-!
 # Explicit construction of `𝔽₂`
@@ -13,6 +14,8 @@ import IMOSLLean4.Extra.CharTwo.Ring
 In this file, we explicitly construct `𝔽₂`, the field of 2 elements.
 We prove that it is a ring, and we construct ring homomorphisms from `𝔽₂`.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Ring.Finset
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Bits
-import Mathlib.Algebra.Order.Group.Int
+module
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Data.Nat.Bits
+public import Mathlib.Algebra.Order.Group.Int
 
 /-!
 # IMO 2017 C1
@@ -24,6 +25,8 @@ Prove that there exists a small rectangle $R'$ with the following property:
   the distances from the sides of $R'$ to the respective sides
     of $R$ all have the same parity.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017C1

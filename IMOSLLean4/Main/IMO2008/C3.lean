@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Fin.VecNotation
-import Mathlib.Data.Int.Interval
-import Mathlib.Data.ZMod.Basic
+module
+public import Mathlib.Data.Fin.VecNotation
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Data.ZMod.Basic
 
 /-!
 # IMO 2008 C3
@@ -32,6 +33,8 @@ We implement the triangles as a function `Fin 3 → ℤ × ℤ`.
 We skip the characterization of the $k$-friends of $(0, 0)$.
 We also hard-code the area of a lattice triangle instead of proving the area formula.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008C3

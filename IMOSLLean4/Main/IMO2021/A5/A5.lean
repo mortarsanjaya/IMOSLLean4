@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Field.Basic
+module
+public import Mathlib.Algebra.Order.Field.Basic
 
 /-!
 # IMO 2021 A5
@@ -15,6 +16,8 @@ Let $r ∈ F$ be any positive element such that $r ≥ a_1 + a_2 + … + a_n$.
 Prove that
 $$ \sum_{k = 1}^n \frac{a_k}{r - a_k} (a_1 + a_2 + … + a_{k - 1})^2 < \frac{r^2}{3}. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021A5

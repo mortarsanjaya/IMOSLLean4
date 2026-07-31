@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Fib.Basic
-import Mathlib.Algebra.Order.Field.Rat
+module
+public import Mathlib.Data.Nat.Fib.Basic
+public import Mathlib.Algebra.Order.Field.Rat
 
 /-!
 # IMO 2017 N6
@@ -14,6 +15,8 @@ A multiset $S$ of positive rational numbers is called *nice* if
   both $\sum_{q ∈ S} q$ and $\sum_{q ∈ S} 1/q$ are integers.
 Find all $n ∈ ℕ$ such that there exists infinitely many nice multisets $S$ of size $n$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017N6

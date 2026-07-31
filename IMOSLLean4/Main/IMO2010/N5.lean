@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Nat.Prime.Infinite
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Data.PNat.Basic
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Nat.Prime.Infinite
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2010 N5 (P3)
@@ -27,6 +28,8 @@ The implementation is more comfortably done over $ℕ$ (the natural numbers),
   given a natural number $c$, find all functions $f : ℕ → ℕ$ such that
   $(f(m) + n + c)(f(n) + m + c)$ is a square any $m, n ∈ ℕ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2010N5

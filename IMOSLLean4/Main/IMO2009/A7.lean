@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.CharP.Two
+module
+public import Mathlib.Algebra.CharP.Two
 
 /-!
 # IMO 2009 A7
@@ -56,6 +57,8 @@ That is, we have $f(y + 1) = d = c + 1 = f(y) + 1$, as desired.
 We use $xx$ instead of $x^2$ to be able to define the
   functional equation over non-associative rings.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A7

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Data.Nat.Cast.Commute
+module
+public import Mathlib.Algebra.Order.Ring.Defs
+public import Mathlib.Data.Nat.Cast.Commute
 
 /-!
 # IMO 2009 A5
@@ -45,6 +46,8 @@ $$ 3f(-1) ≤ y(3f(y) - 3 + 3f(0)) + 3f(y) - 3 ≤ y(1 - 3 + 1) + 1 - 3 = -y - 2
 That is, we have $y ≤ -3f(-1) - 2$.
 Taking any $y > \max\\{0, -3f(-1) - 2\\}$ then yields a contradiction.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A5

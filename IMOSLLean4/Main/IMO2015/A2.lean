@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.IntLinearSolver
+module
+public import IMOSLLean4.Extra.IntLinearSolver
 
 /-!
 # IMO 2015 A2
@@ -26,6 +27,8 @@ If the slope is zero, then $f$ is constant, and $f(-f(f(0))) = -1$ yields $f = -
 If the slope is non-zero, then $f$ is injective, so $f(x + 1) = f(f(x))$ yields
   $f(x) = x + 1$ for all $x ∈ ℤ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015A2

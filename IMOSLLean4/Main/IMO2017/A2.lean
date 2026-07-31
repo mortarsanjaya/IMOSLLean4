@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Group.Pointwise.Finset.Basic
-import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Group.Pointwise.Finset.Basic
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2017 A2
@@ -35,6 +36,8 @@ We say that $B ⊆ R$ is $q$-*nice* if for any $x, y ∈ B$, there exists $a, b,
 $$ qxy = a^2 + b^2 - (c^2 + d^2). $$
 We say that $q$ is $n$-*good* if $A - A$ is $q$-nice for every subset $A ⊆ R$ of size $n$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017A2

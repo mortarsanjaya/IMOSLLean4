@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Data.Fintype.Perm
-import Mathlib.Data.Nat.ModEq
-import Mathlib.Data.Nat.Prime.Basic
+module
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Data.Fintype.Perm
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.Nat.Prime.Basic
 
 /-!
 # IMO 2008 C2
@@ -29,6 +30,8 @@ Note that the original version asks for permutations of $\{1, 2, …, n\}$.
 It is easy to see that these two versions are equivalent.
 We modify the official solution accordingly.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2008C2

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Basic
-import Mathlib.Data.Nat.Prime.Basic
-import Mathlib.Data.Nat.Prime.Infinite
-import Mathlib.Data.Nat.GCD.Basic
+module
+public import Mathlib.Data.PNat.Basic
+public import Mathlib.Data.Nat.Prime.Basic
+public import Mathlib.Data.Nat.Prime.Infinite
+public import Mathlib.Data.Nat.GCD.Basic
 
 /-!
 # IMO 2019 N4
@@ -23,6 +24,7 @@ However, the solution can be deduced from this $ℕ$-version as well.
 We do both versions in this file.
 -/
 
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2019N4

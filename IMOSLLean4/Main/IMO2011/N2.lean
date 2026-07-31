@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Factorization.Defs
+module
+public import Mathlib.Data.Nat.Factorization.Defs
 
 /-!
 ### IMO 2011 N2
@@ -18,6 +19,8 @@ Prove that there exists an integer $N$ such that for any integer $x ≥ N$,
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2011SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2011N2

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Tactic.Ring
-import Mathlib.Data.Int.Interval
-import Mathlib.Algebra.Order.Ring.Basic
-import Mathlib.Algebra.Order.Ring.Int
+module
+public import Mathlib.Tactic.Ring
+public import Mathlib.Data.Int.Interval
+public import Mathlib.Algebra.Order.Ring.Basic
+public import Mathlib.Algebra.Order.Ring.Int
 
 /-!
 # IMO 2012 N4
@@ -27,6 +28,8 @@ We follow the [official solution](https://www.imo-official.org/problems/IMO2012S
 We implement a stronger version of part 1: for any $N ∈ ℕ$,
   the set $\{1, 2, …, 4(N + 1)\}$ contains at least $N$ friendly integers.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012N4

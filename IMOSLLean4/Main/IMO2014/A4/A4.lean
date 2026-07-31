@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import IMOSLLean4.Extra.IntLinearSolver
-import Mathlib.Data.Finset.Card
-import Mathlib.Algebra.Order.Group.Unbundled.Int
+module
+public import IMOSLLean4.Extra.IntLinearSolver
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Algebra.Order.Group.Unbundled.Int
 
 /-!
 # IMO 2014 A4
@@ -15,6 +16,8 @@ Let $b$ and $c$ be integers with $|b| > 1$ and $c ≠ 0$.
 Find all functions $f : ℤ → ℤ$ such that, for any $x, y ∈ ℤ$,
 $$ f(y + f(x)) - f(y) = f(bx) - f(x) + c. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2014A4

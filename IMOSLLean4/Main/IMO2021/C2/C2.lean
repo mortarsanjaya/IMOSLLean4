@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-import Mathlib.Order.Interval.Finset.Nat
-import Mathlib.Data.Nat.ModEq
+module
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Order.Interval.Finset.Nat
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # IMO 2021 C2
@@ -17,6 +18,8 @@ Find all positive integers $m ∈ ℕ$ such that there exists a
   function $f : ℤ/mℤ → [n]$ with the following property:
   for any $k ∈ ℤ/mℤ$ and $i ∈ [n]$, there exists $j ≤ n$ such that $f(k + j) = i$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2021C2

@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.Nat.Prime.Defs
-import Mathlib.Algebra.BigOperators.Intervals
-import Mathlib.Algebra.BigOperators.Fin
-import Mathlib.Algebra.Group.Fin.Basic
-import Mathlib.Data.Nat.GCD.Basic
-import Mathlib.Algebra.Group.Units.Equiv
+module
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.Algebra.BigOperators.Intervals
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Group.Fin.Basic
+public import Mathlib.Data.Nat.GCD.Basic
+public import Mathlib.Algebra.Group.Units.Equiv
 
 /-!
 # IMO 2017 N3
@@ -21,6 +22,8 @@ $$ n ∣ a_i + a_{i + 1} + … + a_{i + f(i)}. $$
 Determine all $n > 1$ such that any special $n$-tuple $\mathbf{a}$ satisfies
 $$ n ∣ a_1 + a_2 + … + a_n. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017N3

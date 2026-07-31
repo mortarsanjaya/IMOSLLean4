@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Defs
-import Mathlib.Algebra.Group.Basic
+module
+public import Mathlib.Algebra.Ring.Defs
+public import Mathlib.Algebra.Group.Basic
 
 /-!
 # IMO 2015 A4 (P5)
@@ -35,6 +36,8 @@ However, this is a far stretch.
 
 See `IMOSLLean4/Generalization/IMO2015A4/IMO2015A4.lean` for the implementation.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2015A4

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.Ring.Abs
-import Mathlib.Tactic.Ring
+module
+public import Mathlib.Algebra.Order.Ring.Abs
+public import Mathlib.Tactic.Ring
 
 /-!
 # IMO 2006 A6 (P3)
@@ -14,6 +15,8 @@ Find the smallest $M ∈ ℝ$ such that for any $a, b, c ∈ ℝ$,
 $$ \left|ab(a^2 - b^2) + bc(b^2 - c^2) + ca(c^2 - a^2)\right|
   ≤ M\left(a^2 + b^2 + c^2\right)^2. $$
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006A6

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Data.PNat.Find
+module
+public import Mathlib.Data.PNat.Find
 
 /-!
 # IMO 2018 N6
@@ -12,6 +13,8 @@ import Mathlib.Data.PNat.Find
 Let $f : ℕ⁺ → ℕ⁺$ be a function such that $f(m + n) ∣ f(m) + f(n)$ for all $m, n ∈ ℕ⁺$.
 Prove that there exists $n₀ ∈ ℕ⁺$ such that $f(n₀) ∣ f(n)$ for all $n ∈ ℕ⁺$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2018N6

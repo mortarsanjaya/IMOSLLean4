@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Data.Nat.Prime.Infinite
-import Mathlib.Data.Nat.Find
+module
+public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+public import Mathlib.Data.Nat.Prime.Infinite
+public import Mathlib.Data.Nat.Find
 
 /-!
 # IMO 2023 N5
@@ -17,6 +18,8 @@ Let $(a_n)_{n ≥ 0}$ be a strictly increasing sequence of positive integers suc
 
 Prove that for any $n ∈ ℕ^+$, there exists $k ∈ ℕ$ such that $n ∣ a_k$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2023N5

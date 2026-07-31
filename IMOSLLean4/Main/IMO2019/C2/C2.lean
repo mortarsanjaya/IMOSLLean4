@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Order.BigOperators.Group.Multiset
-import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
+module
+public import Mathlib.Algebra.Order.BigOperators.Group.Multiset
+public import Mathlib.Algebra.Order.Monoid.Unbundled.Pow
 
 /-!
 # IMO 2019 C2
@@ -19,6 +20,8 @@ Suppose that each element of $S$ is greater than or equal to $g$.
 Prove that, for any $r ∈ G$ with $-2g ≤ r ≤ Σ_S$, there exists
   a sub-multiset $S'$ of $S$ such that $r ≤ Σ_{S'} ≤ r + 2g$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2019C2

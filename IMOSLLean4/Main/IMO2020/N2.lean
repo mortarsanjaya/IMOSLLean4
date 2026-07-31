@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
+module
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
 
 /-!
 # IMO 2020 N2
@@ -19,6 +20,8 @@ Prove that the graph $G_{𝔽_p}$ is disconnected for infinitely many primes $p$
 We follow Solution 1 of the
   [official solution](https://www.imo-official.org/problems/IMO2020SL.pdf).
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2020N2

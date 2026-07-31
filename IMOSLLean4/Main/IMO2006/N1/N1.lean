@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.RingTheory.Coprime.Lemmas
-import Mathlib.Tactic.NormNum.NatSqrt
+module
+public import Mathlib.RingTheory.Coprime.Lemmas
+public import Mathlib.Tactic.NormNum.NatSqrt
 
 /-!
 # IMO 2006 N1 (P4)
 
 Determine all pairs $(x, y) ∈ ℕ × ℤ$ such that $1 + 2^x + 2^{2x + 1} = y^2$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2006N1

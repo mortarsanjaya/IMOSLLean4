@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.BigOperators.Group.Multiset.Defs
-import Mathlib.Algebra.Field.Defs
-import Mathlib.Algebra.Ring.Parity
+module
+public import Mathlib.Algebra.BigOperators.Group.Multiset.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Ring.Parity
 
 /-!
 # IMO 2013 N2 (P1)
@@ -22,6 +23,8 @@ We follow Solution 1 of the
 The induction step is proved with $2^k - 1$ generalized to any positive integer.
 For generality, we work over fields of characteristic zero.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2013N2

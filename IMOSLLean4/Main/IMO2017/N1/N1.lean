@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Logic.Function.Iterate
-import Mathlib.Tactic.NormNum.NatSqrt
+module
+public import Mathlib.Logic.Function.Iterate
+public import Mathlib.Tactic.NormNum.NatSqrt
 
 /-!
 # IMO 2017 N1 (P1)
@@ -13,6 +14,8 @@ import Mathlib.Tactic.NormNum.NatSqrt
 For each $n ∈ ℕ$, define $f(n)$ by $\sqrt{n}$ if $n$ is a square and $n + 3$ otherwise.
 Find all $N ∈ ℕ$ such that $\{n : f^n(N) = a\}$ is infinite for some $a ∈ ℕ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2017N1

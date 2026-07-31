@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Algebra.Ring.Hom.Defs
+module
+public import Mathlib.Algebra.Ring.Hom.Defs
 
 /-!
 # Bundled functions betwen non-associative semirings
@@ -12,6 +13,8 @@ import Mathlib.Algebra.Ring.Hom.Defs
 We define bundled functions between non-associative semirings.
 We also define homomorphisms between them.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2012A5

@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gian Cordana Sanjaya
 -/
 
-import Mathlib.Order.Monotone.Basic
-import IMOSLLean4.Extra.IntLinearSolver
+module
+public import Mathlib.Order.Monotone.Basic
+public import IMOSLLean4.Extra.IntLinearSolver
 
 /-!
 # IMO 2009 A6 (P3)
@@ -15,6 +16,8 @@ Suppose that there exists $A, B, C, D ∈ ℕ$ such that
   $f(f(n)) = An + B$ and $f(f(n) + 1) = Cn + D$ for any $n ∈ ℕ$.
 Prove that there exists $M, N ∈ ℕ$ such that $f(n) = Mn + N$ for all $n ∈ ℕ$.
 -/
+
+@[expose] public section
 
 namespace IMOSL
 namespace IMO2009A6
