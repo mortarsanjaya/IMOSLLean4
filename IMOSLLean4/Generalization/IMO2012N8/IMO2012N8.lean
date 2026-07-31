@@ -172,11 +172,9 @@ theorem Generalization.final_solution : good F ↔ ¬q = 11 := by
     calc 40 ≤ 10 * k := Nat.mul_le_mul_left 10 h0
          _  < 10 * k + 1 := Nat.lt_succ_self _
          _  = q := h.symm
-  ---- If `k < 4`, then divide into four cases: `q = 1, 11, 21, 31`, respectively.
-  lift k to Fin 4 using h0
-  fin_cases k
-  exacts [
-    absurd h Fintype.one_lt_card.ne.symm,
-    absurd h hF,
-    absurd (FiniteField.isPrimePow_card F) (h ▸ not_IsPrimePow_21),
-    good_of_card_eq_31 h]
+  ---- If `k < 4`, then divide into four cases `q = 1, 11, 21, 31` directly.
+  match k with
+  | 0 => exact absurd h Fintype.one_lt_card.ne.symm
+  | 1 => exact absurd h hF
+  | 2 => exact absurd (FiniteField.isPrimePow_card F) (h ▸ not_IsPrimePow_21)
+  | 3 => exact good_of_card_eq_31 h
