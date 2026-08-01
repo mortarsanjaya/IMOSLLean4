@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 module
 public import Mathlib.RingTheory.Congruence.Defs
+public import Mathlib.GroupTheory.Congruence.Hom
 public import Mathlib.Algebra.Regular.SMul
 
 /-!
@@ -154,14 +155,11 @@ def Quotient : hf.inducedRingCon.Quotient → G :=
 theorem Quotient_is_nonperiodic : nonperiodic hf.Quotient :=
   Quotient.ind₂ λ _ _ h ↦ Quot.sound λ x ↦ h x
 
-end
-
-
 /-- The quotient map induced by `f` is `q ∘ ι`-good, where `q : R → R/I` is the quotient. -/
-theorem Quotient_is_good [Semiring R] [AddZero G] [IsCancelAdd G]
-    {ι : G →+ R} {f : R → G} (hf : good ι f) :
-    good (hf.inducedRingCon.mk'.toAddMonoidHom.comp ι) hf.Quotient :=
+theorem Quotient_is_good : good (hf.inducedRingCon.toAddCon.mk'.comp ι) hf.Quotient :=
   Quotient.ind₂ hf
+
+end
 
 
 
