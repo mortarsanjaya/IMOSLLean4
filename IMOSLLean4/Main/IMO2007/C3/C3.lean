@@ -14,7 +14,7 @@ public import Mathlib.Algebra.Group.Fin.Basic
 # IMO 2007 C3
 
 Find all finite groups $G$ such that there exists a subset $S ⊆ G$ for which
-  the number of triples $(x, y, z) ∈ S^3 ∪ (G \ S)^3$ such that $xyz = 1$ is $2007$.
+  the number of triples $(x, y, z) ∈ S^3 ∪ (G \setminus S)^3$ such that $xyz = 1$ is $2007$.
 -/
 
 @[expose] public section
