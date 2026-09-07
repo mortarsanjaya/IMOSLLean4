@@ -133,10 +133,10 @@ def g_1 (a b c : Fin 2) : Fin 2 := a + if b = 0 ∧ c = 0 then 0 else 1
 theorem gcd_mod_two (b c : ℕ) : b.gcd c % 2 = if b % 2 = 0 ∧ c % 2 = 0 then 0 else 1 := by
   by_cases h : b % 2 = 0 ∧ c % 2 = 0
   ---- Case 1: `b` and `c` are even.
-  · rw [if_pos h, ← Nat.dvd_iff_mod_eq_zero, Nat.dvd_gcd_iff]
+  · rw [ite_eq_left h, ← Nat.dvd_iff_mod_eq_zero, Nat.dvd_gcd_iff]
     exact ⟨Nat.dvd_of_mod_eq_zero h.1, Nat.dvd_of_mod_eq_zero h.2⟩
   ---- Case 2: `b` or `c` is odd.
-  · rw [if_neg h, ← Nat.mod_two_ne_zero, Ne, ← Nat.dvd_iff_mod_eq_zero, Nat.dvd_gcd_iff]
+  · rw [ite_eq_right h, ← Nat.mod_two_ne_zero, Ne, ← Nat.dvd_iff_mod_eq_zero, Nat.dvd_gcd_iff]
     exact λ h0 ↦ h (h0.imp Nat.mod_eq_zero_of_dvd Nat.mod_eq_zero_of_dvd)
 
 /-- The reduction to `Fin 2` of `a + gcd(b, c)` is exactly `g_1((a, b, c) mod 2)`. -/

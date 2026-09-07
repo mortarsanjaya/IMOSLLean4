@@ -49,7 +49,7 @@ theorem factorMultiset_inj {m n : ℕ+} : m.factorMultiset = n.factorMultiset �
 /-- TODO: Remove this once it gets into `mathlib`; it should have a chance. -/
 theorem factorMultiset_eq_iff_eq_prod {m : ℕ+} {S : PrimeMultiset} :
     m.factorMultiset = S ↔ m = S.prod :=
-  PNat.factorMultisetEquiv.apply_eq_iff_eq_symm_apply (x := m) (y := S)
+  (PNat.factorMultisetEquiv.eq_symm_apply (x := S) (y := m)).symm
 
 /-- TODO: Remove this once it gets into `mathlib`; it should have a chance. -/
 theorem PrimeMultiset_prod_sum (S : ι → PrimeMultiset) (I : Finset ι) :

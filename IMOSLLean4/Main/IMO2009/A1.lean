@@ -203,7 +203,7 @@ def mkFun (i : Fin (n + 1)) : Fin 3 → G :=
 
 /-- The value of `a.mkFun i 0` is `a_i` for `i ≠ n`. -/
 theorem mkFun_apply_zero_of_ne_last (hi : i ≠ Fin.last n) : a.mkFun i 0 = a i :=
-  if_neg hi
+  ite_eq_right hi
 
 /-- The value of `a.mkFun i 0` is `a_i` for `i < n`. -/
 theorem mkFun_apply_zero_of_lt_last (hi : i < Fin.last n) : a.mkFun i 0 = a i :=
@@ -211,7 +211,7 @@ theorem mkFun_apply_zero_of_lt_last (hi : i < Fin.last n) : a.mkFun i 0 = a i :=
 
 /-- The value of `a.mkFun n 0` is `2a_n`. -/
 theorem mkFun_last_zero : a.mkFun (Fin.last n) 0 = a (Fin.last n) + a (Fin.last n) :=
-  if_pos rfl
+  ite_eq_left rfl
 
 end
 
@@ -269,7 +269,7 @@ def mkGoodFun : GoodFun G (n + 1) where
 /-- The value of `a.mkGoodFun i` for `i ≠ n`. -/
 theorem mkGoodFun_apply_zero_of_ne_last (hi : i ≠ Fin.last n) :
     a.mkGoodFun i = ![a i, a i, a i + a i] :=
-  congrArg (![·, a i, a i + a i]) (if_neg hi)
+  congrArg (![·, a i, a i + a i]) (ite_eq_right hi)
 
 end
 
@@ -323,7 +323,7 @@ theorem final_solution
   · obtain ⟨g, hg⟩ : ∃ g : G, g > 0 := exists_pos_of_nontrivial G
     refine ⟨(NiceSeq.of_pos g hg n).mkGoodFun, ?_⟩
     simp only [NiceSeq.mkGoodFun_triangular_iff]
-    rw [filter_eq', if_pos (mem_univ _), card_singleton]
+    rw [filter_eq', ite_eq_left (mem_univ _), card_singleton]
   ---- Now show that the index `i` must always exist.
   · rintro _ ⟨f, rfl⟩
     exact one_le_card.mpr ⟨Fin.last n, (mem_filter_univ _).mpr f.last_is_triangular⟩

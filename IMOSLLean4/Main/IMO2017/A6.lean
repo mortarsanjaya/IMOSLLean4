@@ -272,7 +272,7 @@ theorem map_zero_eq_one_imp_injective [Field F] (f : F → F) :
     good f → f 0 = 1 → Injective f := by
   obtain hF | hF : (2 : F) ≠ 0 ∨ (2 : F) = 0 := ne_or_eq _ _
   · exact case1_injective hF
-  · haveI : CharP F 2 := CharTwo.of_one_ne_zero_of_two_eq_zero one_ne_zero hF
+  · have : CharP F 2 := CharTwo.of_one_ne_zero_of_two_eq_zero one_ne_zero hF
     exact case2_injective
 
 /-- Final solution -/

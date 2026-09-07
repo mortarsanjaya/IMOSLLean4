@@ -108,30 +108,30 @@ def applyBMove : GameState r hr where
 
 /-- The number `x_i` after B's move indexed `i`. -/
 theorem applyBMove_board_index : (X.applyBMove B).board B.index = 0 :=
-  if_pos (Or.inl rfl)
+  ite_eq_left (Or.inl rfl)
 
 /-- The number `x_{i + 1}` after B's move indexed `i`. -/
 theorem applyBMove_board_index_add_one : (X.applyBMove B).board (B.index + 1) = 0 :=
-  if_pos (Or.inr rfl)
+  ite_eq_left (Or.inr rfl)
 
 /-- The number `x_{i + 2}` after B's move indexed `i`. -/
 theorem applyBMove_board_index_add_two :
     (X.applyBMove B).board (B.index + 2) = X.board (B.index + 2) := by
-  refine if_neg ?_
+  refine ite_eq_right ?_
   rw [add_eq_left, add_right_inj]
   decide
 
 /-- The number `x_{i + 3}` after B's move indexed `i`. -/
 theorem applyBMove_board_index_add_three :
     (X.applyBMove B).board (B.index + 3) = X.board (B.index + 3) := by
-  refine if_neg ?_
+  refine ite_eq_right ?_
   rw [add_eq_left, add_right_inj]
   decide
 
 /-- The number `x_{i + 4}` after B's move indexed `i`. -/
 theorem applyBMove_board_index_add_four :
     (X.applyBMove B).board (B.index + 4) = X.board (B.index + 4) := by
-  refine if_neg ?_
+  refine ite_eq_right ?_
   rw [add_eq_left, add_right_inj]
   decide
 
@@ -204,7 +204,7 @@ theorem good.exists_BMove {r : G} {hr : r ≥ 0} {X : GameState r hr} (hX : good
   refine ⟨⟨B_index⟩, B_index, ?_, ?_, ?_⟩
   · rwa [applyBMove_board_index_add_two, applyBMove_board_index_add_four]
   · rwa [applyBMove_board_index_add_three]
-  · rw [cond_true, applyBMove_board_index, applyBMove_board_index_add_one, and_self]
+  · rw [Bool.cond_true, applyBMove_board_index, applyBMove_board_index_add_one, and_self]
 
 end
 

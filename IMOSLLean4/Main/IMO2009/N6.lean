@@ -51,7 +51,7 @@ theorem natDegree_comp_X_sub_one [Ring R] (P : R[X]) :
     (P.comp (X - 1)).natDegree = P.natDegree := by
   by_cases hP : P.leadingCoeff = 0
   · rw [leadingCoeff_eq_zero.mp hP, zero_comp]
-  · haveI : Nontrivial R := ⟨⟨P.leadingCoeff, 0, hP⟩⟩
+  · have : Nontrivial R := ⟨⟨P.leadingCoeff, 0, hP⟩⟩
     replace hP : P.leadingCoeff * (X - C 1 : R[X]).leadingCoeff ^ P.natDegree ≠ 0 := by
       rwa [leadingCoeff_X_sub_C, one_pow, mul_one]
     rw [← C_1, natDegree_comp_eq_of_mul_ne_zero hP, natDegree_X_sub_C, Nat.mul_one]
@@ -61,7 +61,7 @@ theorem natDegree_comp_X_add_one [Semiring R] (P : R[X]) :
     (P.comp (X + 1)).natDegree = P.natDegree := by
   by_cases hP : P.leadingCoeff = 0
   · rw [leadingCoeff_eq_zero.mp hP, zero_comp]
-  · haveI : Nontrivial R := ⟨⟨P.leadingCoeff, 0, hP⟩⟩
+  · have : Nontrivial R := ⟨⟨P.leadingCoeff, 0, hP⟩⟩
     replace hP : P.leadingCoeff * (X + C 1 : R[X]).leadingCoeff ^ P.natDegree ≠ 0 := by
       rwa [leadingCoeff_X_add_C, one_pow, mul_one]
     rw [← C_1, natDegree_comp_eq_of_mul_ne_zero hP, natDegree_X_add_C, Nat.mul_one]
@@ -99,7 +99,7 @@ theorem deg_mul_X_add_C_eq_add_one_imp [Semiring R]
   obtain rfl | hP : P = 0 ∨ P ≠ 0 := eq_or_ne _ _
   · rw [zero_mul, zero_add, natDegree_C] at h
     exact absurd h.symm (Nat.succ_ne_zero n)
-  · haveI : Nontrivial R := ⟨⟨P.leadingCoeff, 0, leadingCoeff_ne_zero.mpr hP⟩⟩
+  · have : Nontrivial R := ⟨⟨P.leadingCoeff, 0, leadingCoeff_ne_zero.mpr hP⟩⟩
     rwa [natDegree_add_C, natDegree_mul_X hP, Nat.succ_inj] at h
 
 /-- If `deg(P(X + 1) X + c) = n + 1`, then `deg(P) = n`. -/
@@ -153,7 +153,7 @@ noncomputable def companionConstant (P : R[X]) : R :=
 /-- The companion of a degree zero polynomial. -/
 theorem companion_of_natDegree_eq_zero {P : R[X]} (hP : P.natDegree = 0) :
     companion P = 0 := by
-  rw [companion, dif_pos hP]
+  rw [companion, dite_eq_left hP]
 
 /-- The companion of a constant polynomial. -/
 theorem companion_const (c : R) : companion (C c) = 0 :=
@@ -169,7 +169,7 @@ theorem companion_general_formula (P : R[X]) :
       + C ((P.divX.comp (X - 1)).coeff 0 + (companion (P.divX.comp (X - 1))).eval (-1)) := by
   ---- The formula is exactly the one given here if `P` is non-constant.
   obtain hP | hP : P.natDegree ≠ 0 ∨ P.natDegree = 0 := ne_or_eq _ _
-  · rw [companion, dif_neg hP]
+  · rw [companion, dite_eq_right hP]
   ---- If `P` is constant, then it is easy to compute both sides to be zero.
   obtain ⟨c, rfl⟩ : ∃ c, P = C c := ⟨P.coeff 0, eq_C_of_natDegree_eq_zero hP⟩
   rw [companion_const, divX_C, zero_comp, companion_zero, zero_comp,

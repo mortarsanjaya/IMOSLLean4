@@ -43,9 +43,9 @@ theorem main_equality :
         ← sub_sub, add_sub_add_right_eq_sub, sub_add_cancel, ← Int.mul_sub]
       specialize b_pos n; rw [← Int.add_one_le_iff, zero_add, le_iff_eq_or_lt] at b_pos
       rcases b_pos with h | h
-      · rw [if_pos h.symm, ← h]; rfl
+      · rw [ite_eq_left h.symm, ← h]; rfl
       · have h0 : 0 ≤ b n - 2 := sub_nonneg_of_le (Int.add_one_le_of_lt h)
-        rw [if_neg h.ne.symm, abs_of_nonneg h0, sub_sub_sub_cancel_left]; rfl
+        rw [ite_eq_right h.ne.symm, abs_of_nonneg h0, sub_sub_sub_cancel_left]; rfl
 
 theorem a_and_sum_nonneg : ∀ n, 0 ≤ a b n ∧ 0 ≤ (range n).sum λ i ↦ a b i * |b i - 2|
   | 0 => ⟨le_refl 0, le_refl 0⟩

@@ -130,7 +130,7 @@ lemma ratSeq_two_mul_den (n) : ¬2 ∣ (ratSeq (2 * n)).den := by
   replace h := h.trans (Rat.mul_den_dvd _ _)
   rw [Nat.prime_two.dvd_mul, or_iff_left (ratSeq_two_mul_den n)] at h
   replace h := h.trans (Rat.add_den_dvd _ _)
-  rw [Rat.den_ofNat, Nat.one_mul, Rat.inv_natCast_den, if_neg (Nat.succ_ne_zero _)] at h
+  rw [Rat.den_ofNat, Nat.one_mul, Rat.inv_natCast_den, ite_eq_right (Nat.succ_ne_zero _)] at h
   revert h; exact Nat.two_dvd_ne_zero.mpr (Nat.mul_add_mod 2 n 1)
 
 lemma num_odd_of_den_even {q : ℚ} (h : 2 ∣ q.den) : ¬2 ∣ q.num.natAbs :=
@@ -147,7 +147,7 @@ lemma ratSeq_two_mul_add_one_den (n) : 2 ∣ (ratSeq (2 * n + 1)).den := by
   have h : ¬2 ∣ q.num.natAbs := by
     have h := Rat.add_den_dvd (-1) q
     rw [Rat.neg_den, Rat.den_ofNat, one_mul, neg_add_cancel_left,
-      Rat.inv_natCast_den, if_neg (Nat.succ_ne_zero _)] at h
+      Rat.inv_natCast_den, ite_eq_right (Nat.succ_ne_zero _)] at h
     exact num_odd_of_den_even (dvd_trans ⟨n + 1, rfl⟩ h)
   have h0 : 2 ∣ r.den := ratSeq_two_mul_add_one_den n
   replace h : ¬2 ∣ q.num.natAbs * r.num.natAbs :=
@@ -214,7 +214,7 @@ theorem final_solution (k : ℕ) :
     ⟨_, λ n ↦ Nat.lt_succ_of_le (le_of_max_le_left (X n)),
       λ n ↦ Nat.lt_succ_of_le (le_of_max_le_right (X n))⟩
   obtain ⟨p, h, hp⟩ : ∃ p, 2 * (M * M) < p ∧ p.Prime := Nat.exists_infinite_primes _
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h' : M < p :=
     M.le_mul_self.trans_lt (h.trans_le' (Nat.le_mul_of_pos_left _ Nat.two_pos))
   ---- The denominators of `ratSeq` are non-zero mod `p` up to `k + 3`

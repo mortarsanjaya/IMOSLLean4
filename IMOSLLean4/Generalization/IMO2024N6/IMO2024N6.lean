@@ -133,16 +133,16 @@ theorem prod_univ_erase_zero_eq_one_of_image
   have hg : g.Surjective := by
     intro y
     obtain rfl | hy : y = 0 ∨ y ≠ 0 := eq_or_ne _ _
-    · exact ⟨0, if_pos rfl⟩
+    · exact ⟨0, ite_eq_left rfl⟩
     obtain ⟨x, rfl⟩ : ∃ x, f x = y := hf1 y hy
     obtain rfl | hx : x = 0 ∨ x ≠ 0 := eq_or_ne _ _
-    exacts [⟨1, (if_neg one_ne_zero).trans hf.symm⟩, ⟨x, if_neg hx⟩]
+    exacts [⟨1, (ite_eq_right one_ne_zero).trans hf.symm⟩, ⟨x, ite_eq_right hx⟩]
   ---- But then `g` is bijective.
   replace hg : g.Bijective := hg.bijective_of_finite
   ---- Now do the calculations.
   calc ∏ x with x ≠ 0, f x
     _ = ∏ x with x ≠ 0, g x :=
-      prod_congr rfl λ x hx ↦ (if_neg ((mem_filter_univ x).mp hx)).symm
+      prod_congr rfl λ x hx ↦ (ite_eq_right ((mem_filter_univ x).mp hx)).symm
     _ = ∏ x with x ≠ 0, x := by
       refine prod_bijective g hg (λ r ↦ ?_) (λ _ _ ↦ rfl)
       simp_rw [g, mem_filter_univ, Ne, ite_eq_left_iff, Classical.not_imp, iff_self_and]
@@ -205,7 +205,7 @@ end CharTwo
 theorem nice_of_card_ne_two (hF : q ≠ 2) : nice F := by
   obtain hF0 | hF0 : ringChar F = 2 ∨ ringChar F ≠ 2 := eq_or_ne _ _
   ---- Case 1: `char(F) = 2`.
-  · haveI : CharP F 2 := CharP.congr _ hF0
+  · have : CharP F 2 := CharP.congr _ hF0
     exact CharTwo.nice_of_card_ne_two hF
   ---- Case 2: `char(F) ≠ 2`.
   · exact nice_of_char_ne_two hF0
@@ -359,7 +359,7 @@ theorem sq_sub_sq_mem_sq [CommRing R] (m : Ideal R) [CharP (R ⧸ m) 2]
 theorem nice_of_maximal_sq_lt_card_quotient [CommRing R] [Fintype R] [DecidableEq R]
     {m : Ideal R} (hm : m.IsMaximal) (hm0 : m ^ 2 < m) (hm1 : Fintype.card (R ⧸ m) = 2) :
     nice R := by
-  haveI : CharP (R ⧸ m) 2 := charP_of_card_eq_prime hm1
+  have : CharP (R ⧸ m) 2 := charP_of_card_eq_prime hm1
   ---- For convenience, let `φ : R → R/m` denote the projection map.
   let φ : R →+* R ⧸ m := Ideal.Quotient.mk m
   have hφ : Function.Surjective φ := Ideal.Quotient.mk_surjective
@@ -451,7 +451,7 @@ theorem IsBoolean.of_not_nice [CommRing R] [Fintype R] [DecidableEq R] (hR : ¬n
     (Ideal.pow_le_self (Nat.succ_ne_zero 1)).lt_or_eq.resolve_left
       λ hm ↦ hR (nice_of_maximal_sq_lt_card_quotient m.isMaximal hm (hR0 m))
   ---- Since `R` is artinian (finite), we get that `R` is reduced.
-  haveI : IsReduced R := reduced_of_forall_maximal_sq_eq_self hR
+  have : IsReduced R := reduced_of_forall_maximal_sq_eq_self hR
   ---- We are now done by `IsBoolean.of_reduced_maximal_quotient_card`.
   exact of_reduced_maximal_quotient_card hR0
 

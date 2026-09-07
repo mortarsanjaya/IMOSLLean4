@@ -79,7 +79,7 @@ theorem exists_two_mul_le_of_exists_dvd_sq_add (hnc : ∃ m, n ∣ m ^ 2 + c) :
   such that `p ≥ 2n` and `p ∣ n^2 + 1`. -/
 theorem exists_two_mul_le_and_dvd_sq_add_one (hp : Nat.Prime p) (hp0 : p ≡ 1 [MOD 4]) :
     ∃ n, 2 * n ≤ p ∧ p ∣ n ^ 2 + 1 := by
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
   obtain ⟨c, hc⟩ : IsSquare (-1 : ZMod p) := by
     rw [FiniteField.isSquare_neg_one_iff, ZMod.card, hp0]; decide
   replace hc : p ∣ c.val ^ 2 + 1 := by

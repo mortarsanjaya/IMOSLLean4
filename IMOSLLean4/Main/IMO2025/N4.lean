@@ -100,7 +100,7 @@ theorem exists_divisor_perm (n : ℕ+) :
         _ ∣ (a + f (g a)) - (b + f (g b)) := Int.dvd_sub (hg a) (hg b)
         _ = a - b := by rw [h, Int.add_sub_add_right]
   ---- But `S` is finite, so `g` is bijective.
-  haveI : Finite S := by
+  have : Finite S := by
     let T : Set ℕ := Finset.range (n + 1)
     have hT : T.Finite := Finset.finite_toSet _
     have hT0 : {d | d ∣ n}.InjOn PNat.val := Set.injOn_of_injective PNat.coe_injective

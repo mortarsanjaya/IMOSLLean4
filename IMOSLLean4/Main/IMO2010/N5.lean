@@ -231,7 +231,7 @@ theorem final_solution {f : ℕ+ → ℕ+} :
   · calc g = id
     _ ↔ ∀ n : ℕ, (f n.succPNat).natPred = n := funext_iff
     _ ↔ ∀ n : ℕ, f n.succPNat = n.succPNat :=
-      forall_congr' λ _ ↦ σ.apply_eq_iff_eq_symm_apply
+      forall_congr' λ _ ↦ σ.eq_symm_apply.symm
     _ ↔ ∀ n : ℕ+, f n = n := σ.symm.forall_congr λ _ ↦ Iff.rfl
     _ ↔ f = id := funext_iff.symm
   ---- Subtask 2: show that `g = λ n ↦ n + k` iff `f = λ n ↦ n + k`.
@@ -240,7 +240,7 @@ theorem final_solution {f : ℕ+ → ℕ+} :
       _ ↔ ∀ n : ℕ, f n.succPNat = n.succPNat + k := by
         refine forall_congr' λ n ↦ ?_
         calc (f n.succPNat).natPred = n + ↑k
-          _ ↔ f n.succPNat = (n + k).succPNat := σ.apply_eq_iff_eq_symm_apply
+          _ ↔ f n.succPNat = (n + k).succPNat := σ.eq_symm_apply.symm
           _ ↔ f n.succPNat = n.succPNat + k := by
             refine Eq.congr_right (PNat.coe_injective ?_)
             rw [Nat.succPNat_coe, PNat.add_coe, Nat.succPNat_coe, Nat.succ_add]

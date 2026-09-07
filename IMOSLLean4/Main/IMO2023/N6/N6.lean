@@ -134,11 +134,11 @@ def drop_tail : KawaiiSequence S :=
     λ h ↦ of_mem ⟨0, Nat.eq_zero_of_not_pos h ▸ X.tail_coeff.2⟩
 
 lemma drop_tail_eq_of_pos (h : 0 < X.tail_coeff.1) : X.drop_tail = X.drop_tail_of_pos h :=
-  dif_pos h
+  dite_eq_left h
 
 lemma drop_tail_eq_of_zero (h : X.tail_coeff.1 = 0) :
     X.drop_tail = of_mem ⟨0, h ▸ X.tail_coeff.2⟩ :=
-  dif_neg (Nat.not_lt_of_le (Nat.le_zero.mpr h))
+  dite_eq_right (Nat.not_lt_of_le (Nat.le_zero.mpr h))
 
 lemma a_succ_drop_tail_formula (n) : X.a (n + 1) = X.tail_coeff * X.drop_tail.a n + 1 := by
   obtain h | h : X.tail_coeff.1 = 0 ∨ 0 < X.tail_coeff.1 := X.tail_coeff.1.eq_zero_or_pos

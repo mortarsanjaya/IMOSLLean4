@@ -111,7 +111,7 @@ theorem f_iter_alt_of_floor_f_iter_lim_one {r : R} (h : ∃ N, ∀ n ≥ N, ⌊f
     exact absurd h0 (Int.zero_ne_negSucc 0)
   ---- Now show using induction that `f^n(r)` takes the desired formula for `n ≥ 2N`.
   · intro n hn; induction n, hn using Nat.le_induction with
-    | base => rw [if_pos (Nat.mul_mod_right _ _), neg_neg]
+    | base => rw [ite_eq_left (Nat.mul_mod_right _ _), neg_neg]
     | succ n hn hn0 => ?_
     -- Base case is obvious, so now we just do the induction step.
     simp_rw [Nat.succ_mod_two_eq_zero_iff, ← Nat.mod_two_ne_zero]

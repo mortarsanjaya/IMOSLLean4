@@ -127,7 +127,7 @@ theorem final_solution (N) : ∃ p > N, Nat.Prime p ∧ ¬(RGraph (ZMod p)).Conn
   ---- Choose a prime `p > max{N, 3}` such that `x^2 + 1 = x` for some `x ∈ 𝔽_p`.
   obtain ⟨p, hpN, hp, ⟨x, hx⟩⟩ : ∃ p > max N 3, Nat.Prime p ∧ ∃ x : ZMod p, x ^ 2 + 1 = x :=
     exists_infinite_prime_cyclotomic3_has_root _
-  haveI h : NeZero p := NeZero.of_gt hpN
+  have : NeZero p := NeZero.of_gt hpN
   refine ⟨p, (le_max_left _ _).trans_lt hpN, hp,
     RGraph_disconnected_of_cyclotomic3_has_root hx ?_⟩
   ---- The only work we need to do is to check that `2x ≠ 1`, which is due to `p > 3`.

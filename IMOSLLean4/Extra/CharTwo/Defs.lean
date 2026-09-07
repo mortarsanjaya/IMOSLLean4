@@ -19,8 +19,7 @@ Such monoids are secretly abelian groups, and subtraction is the same as additio
 namespace IMOSL
 namespace Extra
 
-@[deprecated "Too greedy: import `Mathlib.Algebra.CharP.Two` instead."
-  (since := "2025-03-08")]
+@[deprecated "Too greedy: import `Mathlib.Algebra.CharP.Two` instead." (since := "2025-03-08")]
 class CharTwo (M) [AddMonoid M] : Prop where
   add_self_eq_zero : ∀ x : M, x + x = 0
 

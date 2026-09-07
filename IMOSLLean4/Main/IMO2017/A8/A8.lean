@@ -113,7 +113,7 @@ theorem discrete_counterexample (h : ¬DenselyOrdered G) :
   let f := λ x ↦ if x = 0 then -g else if x = g then g else -x
   refine ⟨f, λ h1 ↦ ?_, λ x y ↦ ?_⟩
   · apply (h1 0 g hg.le).not_gt; dsimp only [f]
-    rwa [if_pos rfl, neg_add_cancel, if_neg hg.ne.symm, if_pos rfl, add_zero]
+    rwa [ite_eq_left rfl, neg_add_cancel, ite_eq_right hg.ne.symm, ite_eq_left rfl, add_zero]
   ---- Finally, prove that `f` is good
   simp only [f]; split_ifs
   -- Case 1: `x = 0` and `y = 0`

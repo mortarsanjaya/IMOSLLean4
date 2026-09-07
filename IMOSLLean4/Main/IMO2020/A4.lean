@@ -89,7 +89,7 @@ theorem general_ineq [DecidableEq ι] {I : Finset ι} (hI : #I ≥ 3)
   ---- If `a < 1/2`, then `∏_i x_i^{x_i} ≤ a` and `(3 - 2a) a < 1`.
   · have h : ∏ i ∈ I, x i ^ x i ≤ a := calc
       _ ≤ ∏ i ∈ I, a ^ x i :=
-        prod_le_prod (λ i hi ↦ rpow_nonneg (hxI' i hi) _)
+        prod_le_prod₀ (λ i hi ↦ rpow_nonneg (hxI' i hi) _)
           (λ i hi ↦ rpow_le_rpow (hxI' i hi) (hxI0 i hi) (hxI' i hi))
       _ = a := by rw [← rpow_sum_of_pos (hxI _ hi₀), hxI1, rpow_one]
     calc (3 - 2 * a) * ∏ i ∈ I, x i ^ x i

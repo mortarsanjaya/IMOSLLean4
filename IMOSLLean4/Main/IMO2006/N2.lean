@@ -49,7 +49,7 @@ include hm
 open Fin.NatCast in
 /-- For any `k, m : ℕ` with `m > 0`, there exists `a < b` such that `k^a ≡ k^b (mod m)`. -/
 theorem exists_lt_pow_mod_eq : ∃ a, ∃ b > a, k ^ a % m = k ^ b % m := by
-  haveI : NeZero m := NeZero.of_pos hm
+  have : NeZero m := NeZero.of_pos hm
   obtain ⟨a, b, hab, h⟩ : ∃ a b, a ≠ b ∧ ((k ^ a : ℕ) : Fin m) = (k ^ b : ℕ) :=
     Finite.exists_ne_map_eq_of_infinite _
   obtain hab | hab : a < b ∨ b < a := Nat.lt_or_gt_of_ne hab

@@ -39,11 +39,11 @@ variable [CommRing R] [Invertible (2 : R)] [LinearOrder R]
 
 /-- If `x < 1/2` then `f(x) = x + 1/2`. -/
 theorem f_of_lt_invOf_two {x : R} (hx : x < ⅟2) : f x = x + ⅟2 :=
-  if_pos hx
+  ite_eq_left hx
 
 /-- If `x ≥ 1/2` then `f(x) = x^2`. -/
 theorem f_of_invOf_two_le {x : R} (hx : ⅟2 ≤ x) : f x = x ^ 2 :=
-  if_neg hx.not_gt
+  ite_eq_right hx.not_gt
 
 
 variable [IsStrictOrderedRing R]

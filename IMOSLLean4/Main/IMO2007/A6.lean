@@ -149,11 +149,11 @@ theorem exists_index_special
     [AddCommMonoid G] [LinearOrder G] [IsOrderedCancelAddMonoid G] [AddLeftStrictMono G]
     (hn : n ≥ 5) {x : Fin n → G} (hx : ∀ i, 0 ≤ x i) (j₁ j₂) :
     ∃ i₀, 4 • (x (i₀ + j₁) + x (i₀ + j₂)) ≤ x i₀ + 2 • ∑ i ∈ {i₀}ᶜ, x i := by
-  haveI : NeZero n := NeZero.of_gt hn
+  have : NeZero n := NeZero.of_gt hn
   ---- If not, summing over all `i₀` yields contradiction.
   by_contra! hx0
   suffices (2 * n) • ∑ i, x i < 9 • ∑ i, x i
-    from this.not_ge <| nsmul_le_nsmul_left (sum_nonneg' hx)
+    from this.not_ge <| nsmul_le_nsmul_left (sum_nonneg λ i _ ↦ hx i)
       (Nat.le_of_lt (Nat.mul_le_mul_left 2 hn))
   calc (2 * n) • ∑ i, x i
     _ = ∑ _ : Fin n, 2 • ∑ i, x i := by rw [sum_const, card_fin, mul_nsmul]

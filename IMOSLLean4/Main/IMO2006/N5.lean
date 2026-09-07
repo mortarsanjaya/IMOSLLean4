@@ -40,7 +40,7 @@ open Finset
 theorem FiniteField_prime_geom_sum_eq_zero_imp [Field F] [Fintype F] [DecidableEq F]
     (hp : Nat.Prime p) {x : F} (hx : x ≠ 1) (hx0 : ∑ i ∈ range p, x ^ i = 0) :
     Fintype.card F ≡ 1 [MOD p] := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   replace hx0 : x ^ p = 1 := by rw [← sub_eq_zero, ← geom_sum_mul, hx0, zero_mul]
   lift x to Fˣ using IsUnit.mk0 x ((pow_ne_zero_iff hp.ne_zero).mp (hx0.trans_ne one_ne_zero))
   replace hx1 : orderOf x = p :=
@@ -53,7 +53,7 @@ theorem FiniteField_prime_geom_sum_eq_zero_imp [Field F] [Fintype F] [DecidableE
 theorem Nat_prime_dvd_prime_geom_sum_imp
     (hp : Nat.Prime p) (hq : Nat.Prime q) {x : ℤ} (hx : (p : ℤ) ∣ ∑ i ∈ range q, x ^ i) :
     p = q ∨ p ≡ 1 [MOD q] := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   ---- First, work over `𝔽_p`; we have `∑_{i = 0}^{q - 1} x^i = 0`.
   replace hx : ∑ i ∈ range q, (x : ZMod p) ^ i = 0 :=
     calc ∑ i ∈ range q, (x : ZMod p) ^ i
@@ -158,7 +158,7 @@ theorem final_solution (hp : Nat.Prime p) (hp0 : p > 3) (x y : ℤ) :
     rcases h with h | h
     exacts [hp4 (neg_eq_zero.mp h), hp5 (neg_eq_iff_eq_neg.mp h)]
   ---- If `y - 2 ≡ 0 (mod p)`, then `2(y^{p - 2} - 1) ≡ -1 ≢ 0, 2 (mod p)`.
-  · haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  · have : Fact (Nat.Prime p) := ⟨hp⟩
     replace h0 : (y : ZMod p) = 2 := by
       rwa [Int.cast_sub, Int.cast_one, sub_eq_iff_eq_add, one_add_one_eq_two] at h0
     -- We have `2^{p - 2} - 1 ≡ y^{p - 2} - 1 ≡ 0, 1 (mod p)`.

@@ -107,7 +107,7 @@ theorem main_statement {x : ℕ → R} {n : ℕ}
       rw [prod_mul_distrib, prod_range_succ', Nat.cast_one, one_pow, mul_one]
     _ < ∏ i ∈ range n, ↑(i + 1) ^ (i + 1) * (1 + x i) ^ (i + 2) := by
       have h0 {i} (hi : i ∈ range n) : 0 ≤ 1 + x i := add_nonneg zero_le_one (hxn i hi).le
-      exact prod_lt_prod
+      exact prod_lt_prod₀
         (λ i hi ↦ mul_pos (pow_pos (Nat.cast_pos.mpr (Nat.succ_pos _)) _) (hxn i hi))
         (λ i hi ↦ bernoulli_special1 (h0 hi) _)
         (hxn0.imp λ k ⟨hk, hk0⟩ ↦ ⟨hk, bernoulli_special2 (h0 hk) hk0⟩)

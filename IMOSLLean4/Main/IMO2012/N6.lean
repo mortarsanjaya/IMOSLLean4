@@ -39,7 +39,7 @@ theorem prime_dvd_sq_sub_one_of_dvd_two_pow_sub_one
     exact ((Nat.modEq_iff_dvd' (Nat.pow_pos hx)).mpr hpx).symm
   ---- The order also divides `p - 1`, so this order divides `gcd(2^n, p - 1)`.
   have hx0 : (x : ZMod p) ^ (p - 1) = 1 := by
-    haveI : Fact (Nat.Prime p) := ⟨hp⟩
+    have : Fact (Nat.Prime p) := ⟨hp⟩
     refine ZMod.pow_card_sub_one_eq_one λ h ↦ zero_ne_one' (ZMod p) ?_
     rwa [h, zero_pow (Nat.two_pow_pos n).ne.symm] at hpx
   replace hpx : orderOf (x : ZMod p) ∣ Nat.gcd (2 ^ n) (p - 1) :=
@@ -174,7 +174,8 @@ theorem exists_infinite_prime_3mod4_dvd_two_pow_mul_add_one {y : ℕ} (hy : y > 
     -- For `p` odd prime, follows from `factorization_eq_of_modeq_of_lt`.
     refine factorization_eq_of_modeq_of_lt (X _) (X _) hT0 ?_
     rw [Nat.factorization_mul (X _) (Nat.ordCompl_pos _ hN).ne.symm, Finsupp.add_apply,
-      Nat.lt_add_right_iff_pos, Nat.factorization_ordCompl, Finsupp.erase_apply, if_neg hp1]
+      Nat.lt_add_right_iff_pos, Nat.factorization_ordCompl,
+        Finsupp.erase_apply, ite_eq_right hp1]
     exact hp0.factorization_pos_of_dvd hN (Nat.dvd_factorial hp0.pos hp)
   ---- Working modulo `4` gives `U ≡ V (mod 4)`.
   replace hT0 (A : ℕ) :

@@ -145,25 +145,25 @@ protected def periodic_one_two (d : ℕ+) : GoodFun ℕ+ where
   good_def' m n := by
     ---- If `d ∤ m + n`, we are done
     obtain h | h : ¬d.val ∣ (m + n : ℕ+) ∨ d.val ∣ (m + n : ℕ+) := dec_em' _
-    · simp only [if_neg h]; exact one_dvd _
-    simp only [if_pos h]; obtain h0 | h0 : d.val ∣ m ∨ ¬d.val ∣ m := dec_em _
+    · simp only [ite_eq_right h]; exact one_dvd _
+    simp only [ite_eq_left h]; obtain h0 | h0 : d.val ∣ m ∨ ¬d.val ∣ m := dec_em _
     ---- Case `d ∣ m` and `d ∣ n`
     · rw [PNat.add_coe, Nat.dvd_add_right h0] at h
-      rw [if_pos h0, if_pos h]
+      rw [ite_eq_left h0, ite_eq_left h]
       exact ⟨2, rfl⟩
     ---- Case `d ∣ m + n`, `d ∤ m`, and `d ∤ n`
     · replace h : ¬d.val ∣ n := λ h1 ↦ h0 (by rwa [PNat.add_coe, Nat.dvd_add_left h1] at h)
-      rw [if_neg h0, if_neg h]
+      rw [ite_eq_right h0, ite_eq_right h]
       exact dvd_refl 2
 
 @[simp] theorem periodic_one_two_apply (d n) :
     GoodFun.periodic_one_two d n = if d.val ∣ n then 2 else 1 := rfl
 
 theorem periodic_one_two_apply_of_dvd {d n : ℕ+} (h : d.val ∣ n) :
-    GoodFun.periodic_one_two d n = 2 := if_pos h
+    GoodFun.periodic_one_two d n = 2 := ite_eq_left h
 
 theorem periodic_one_two_apply_of_not_dvd {d n : ℕ+} (h : ¬d.val ∣ n) :
-    GoodFun.periodic_one_two d n = 1 := if_neg h
+    GoodFun.periodic_one_two d n = 1 := ite_eq_right h
 
 
 
@@ -386,7 +386,7 @@ theorem final_solution (f : GoodFun ℕ+) : ∃ m, ∀ n, f m ∣ f n := by
   ---- Case 3: `f` is eventually periodic with minimal period `d > 1`
   · obtain ⟨c, hc, hc0⟩ : ∃ c ≥ N, ¬d.val ∣ c := PNat_exists_big_not_dvd hd N
     refine ⟨c, λ n ↦ mul_dvd_mul_left C ?_⟩
-    rw [hN c hc, if_neg hc0]
+    rw [hN c hc, ite_eq_right hc0]
     exact one_dvd _
 
 alias final_solution_extra := GoodFun.exists_smul_id_or_eventually_eq_one_or_one_two

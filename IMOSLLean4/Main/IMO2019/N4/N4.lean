@@ -146,14 +146,14 @@ theorem goodPNat_is_linear (h : goodPNat C f) : ∃ k : ℕ+, f = (k * ·) := by
     · exact ⟨0, rfl⟩
     rcases b.eq_zero_or_pos with rfl | hb
     · rw [zero_mul]; exact ⟨a, sq a⟩
-    · dsimp only [g]; rw [dif_pos ha, dif_pos hb]
+    · dsimp only [g]; rw [dite_eq_left ha, dite_eq_left hb]
       exact PNat.dvd_iff.mp (h ⟨a, ha⟩ ⟨b, hb⟩ H)
   rcases good_is_linear h0 with ⟨k, h1⟩
   replace h0 : 0 < k := by rw [← k.mul_one, ← congr_fun h1]; exact (f 1).pos
   let k0 : ℕ+ := ⟨k, h0⟩
   refine ⟨k0, funext λ x ↦ ?_⟩
   rw [← PNat.coe_inj, PNat.mul_coe, PNat.mk_coe, ← congr_fun h1, eq_comm]
-  exact dif_pos x.pos
+  exact dite_eq_left x.pos
 
 /-- Final solution -/
 theorem final_solution : goodPNat C f ↔ ∃ k : ℕ+, f = (k * ·) :=

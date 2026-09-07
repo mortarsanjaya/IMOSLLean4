@@ -103,7 +103,7 @@ theorem friends_coord_comm : friends k (p₁, p₂) (q₁, q₂) ↔ friends k (
   there exist two distinct points `p, q ∈ S` such that `m ∣ gcd(p₁ - q₁, p₂ - q₂)`. -/
 theorem exist_dvd_gcd_of_sq_lt_card (hm : m > 0) {S : Finset (ℤ × ℤ)} (hS : m ^ 2 < #S) :
     ∃ p ∈ S, ∃ q ∈ S, p ≠ q ∧ m ∣ Int.gcd (p.1 - q.1) (p.2 - q.2) := by
-  haveI : NeZero m := NeZero.of_pos hm
+  have : NeZero m := NeZero.of_pos hm
   ---- First find `p ≠ q ∈ S` such that `p ≡ q (mod m)`.
   obtain ⟨p, hp, q, hq, hpq, h⟩ : ∃ p ∈ S, ∃ q ∈ S, p ≠ q ∧
       ((p.1, p.2) : ZMod m × ZMod m) = ((q.1, q.2) : ZMod m × ZMod m) := by

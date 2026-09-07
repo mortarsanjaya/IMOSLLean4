@@ -265,7 +265,7 @@ theorem good_of_good_map_ite_zero [Ring R] [IsDomain R] [DecidableEq R]
   · rw [hr, zero_sub, mul_neg, neg_ne_zero, mul_self_ne_zero]
     exact left_ne_zero_of_mul h
   ---- If `f(r) ≠ 0`, then we already have `(ar^2 + br + c)(f(r) - (ar^2 + br + c)) ≠ 0`.
-  · rwa [hfg, if_neg hr] at h
+  · rwa [hfg, ite_eq_right hr] at h
 
 /-- Let `F` be a division ring. For any `a, b, c, d ∈ F` such that `a ≠ b` and `c ≠ d`,
   there exists `u ∈ Fˣ` and `v ∈ F` such that `uc + v = a` and `ud + v = b`. -/
@@ -443,7 +443,7 @@ theorem ZMod_nice_iff {n : ℕ} (hn : n > 0) : nice (ZMod n) ↔ n > 2 := by
     Nat.eq_two_pow_or_exists_odd_prime_and_dvd n
   · rw [ZMod_two_pow_nice_iff, ← Nat.pow_lt_pow_iff_right Nat.one_lt_two]
   ---- Otherwise `n` has an odd prime factor and we are done using surjection.
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
   replace hp0 : p ≠ 2 := λ h ↦ Nat.not_even_iff_odd.mpr hp0 (h ▸ even_two)
   have hp1 : p > 2 := hp.two_le.lt_of_ne' hp0
   replace hp0 : nice (ZMod p) := ZMod_nice_of_prime_ne_two p hp0

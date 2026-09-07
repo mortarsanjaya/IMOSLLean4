@@ -128,7 +128,7 @@ theorem exists_add_mul_eq_sq_of_small_sq_mod
 def f (p k : ℕ) : ℕ := if k.sqrt ^ 2 = k then k.sqrt else k + p
 
 theorem f_sq (p x) : f p (x ^ 2) = x := by
-  rw [f, Nat.sqrt_eq', if_pos rfl]
+  rw [f, Nat.sqrt_eq', ite_eq_left rfl]
 
 theorem f_iterate_zero (p) : ∀ m, (f p)^[m] 0 = 0 :=
   Nat.rec rfl λ k hk ↦ by rw [(f p).iterate_succ_apply', hk]; rfl
@@ -162,7 +162,7 @@ theorem f_iterate_of_not_sq_mod (h : ∀ x, x ^ 2 % p ≠ k % p) :
     ∀ m, (f p)^[m] k = k + p * m := by
   refine Nat.rec rfl λ m hm ↦ ?_
   rw [(f p).iterate_succ_apply', hm, Nat.mul_succ, ← Nat.add_assoc]
-  refine if_neg λ h0 ↦ h (k + p * m).sqrt ?_
+  refine ite_eq_right λ h0 ↦ h (k + p * m).sqrt ?_
   rw [h0, Nat.add_mul_mod_self_left]
 
 theorem f_iterate_eq_or_exists_le_sqrt (p k) :
@@ -177,8 +177,8 @@ theorem f_iterate_eq_or_exists_le_sqrt (p k) :
   ---- Now resolve the case `f_p^m(k) = k + pm`
   refine (dec_em ((k + p * m).sqrt ^ 2 = k + p * m)).imp (λ h ↦ ?_) (λ h ↦ ?_)
   · refine ⟨m.succ, m.succ.le_refl, ?_⟩
-    rwa [(f p).iterate_succ_apply', hm, f, if_pos h]
-  · rw [(f p).iterate_succ_apply', hm, f, if_neg h, p.mul_succ, k.add_assoc]
+    rwa [(f p).iterate_succ_apply', hm, f, ite_eq_left h]
+  · rw [(f p).iterate_succ_apply', hm, f, ite_eq_right h, p.mul_succ, k.add_assoc]
 
 theorem exists_f_iterate_lt_self_of_big
     (hp : 0 < p) (hk : 2 * p < k) (h : ∃ x, x ^ 2 % p = k % p) :
@@ -274,7 +274,7 @@ theorem not_good_of_not_sq_mod (hp : 0 < p) (h : ∀ x, x ^ 2 % p ≠ k % p) : �
 /-- A version of `not_good_of_not_sq_mod` that allows testing non-good numbers by `decide` -/
 theorem not_good_of_not_sq_mod_fin (hp : 0 < p) (h : ∀ x : Fin p, x ^ 2 % p ≠ k % p) :
     ¬good p k := by
-  haveI : NeZero p := ⟨Nat.ne_zero_of_lt hp⟩
+  have : NeZero p := ⟨Nat.ne_zero_of_lt hp⟩
   refine not_good_of_not_sq_mod hp λ x hx ↦ h (Fin.ofNat p x) ?_
   rw [Fin.val_ofNat, ← Nat.pow_mod, hx]
 
@@ -393,19 +393,19 @@ lemma squarefree.dvd_of_mul_eq_sq (hk : p * k = x ^ 2) : p ∣ k := by
   exact ⟨m ^ 2, hk⟩
 
 lemma squarefree.f_self (h : p ≠ 1) : f p p = 2 * p := by
-  refine p.two_mul ▸ if_neg λ h0 ↦ absurd (hp p.sqrt ⟨1, ?_⟩) (λ h1 ↦ h ?_)
+  refine p.two_mul ▸ ite_eq_right λ h0 ↦ absurd (hp p.sqrt ⟨1, ?_⟩) (λ h1 ↦ h ?_)
   · rw [h0, p.mul_one]
   · rwa [h1, Nat.one_pow, eq_comm] at h0
 
 lemma squarefree.f_iterate_self (h : k < p) : (f p)^[k] p = p * (k + 1) := by
   induction k with | zero => exact p.mul_one.symm | succ k hk => ?_
   rw [(f p).iterate_succ_apply', hk (Nat.lt_of_succ_lt h), p.mul_succ (k + 1)]
-  exact if_neg λ h0 ↦ Nat.not_dvd_of_pos_of_lt k.succ_pos h (hp.dvd_of_mul_eq_sq h0.symm)
+  exact ite_eq_right λ h0 ↦ Nat.not_dvd_of_pos_of_lt k.succ_pos h (hp.dvd_of_mul_eq_sq h0.symm)
 
 lemma squarefree.f_iterate_self_self : (f p)^[p] p = p := by
   have h := congrArg (f p) (hp.f_iterate_self (Nat.pred_lt hp.ne_zero))
   rw [← (f p).iterate_succ_apply', ← Nat.succ_eq_add_one, Nat.succ_pred hp.ne_zero] at h
-  rw [h, ← Nat.pow_two, f, Nat.sqrt_eq', if_pos rfl]
+  rw [h, ← Nat.pow_two, f, Nat.sqrt_eq', ite_eq_left rfl]
 
 lemma squarefree.good_self : good p p := by
   refine ⟨p, λ m ↦ ⟨p * m, Nat.le_mul_of_pos_left m hp.pos, ?_⟩⟩

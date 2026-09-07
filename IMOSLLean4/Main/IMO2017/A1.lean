@@ -130,7 +130,7 @@ theorem main_statement [DecidableEq ι] {a : ι → ℕ} {I : Finset ι}
     _ = ∏ i ∈ I, (a i ^ M * (x + 1) ^ ∏ j ∈ I.erase i, a j) := by
       rw [mul_pow, Nat.cast_prod, ← pow_mul, ← hk,
         ← prod_pow_eq_pow_sum, prod_mul_distrib, prod_pow]
-    _ < ∏ i ∈ I, (x + a i) ^ M := prod_lt_prod hxa0 hxa1 hxa2
+    _ < ∏ i ∈ I, (x + a i) ^ M := prod_lt_prod₀ hxa0 hxa1 hxa2
     _ = (∏ i ∈ I, (x + a i)) ^ M := prod_pow _ _ _
 
 /-- Final solution -/
@@ -138,4 +138,4 @@ theorem final_solution [DecidableEq ι] {a : ι → ℕ} {I : Finset ι}
     (ha : ∏ i ∈ I, a i > 1) {k : ℕ} (hk : ∑ i ∈ I, (a i : ℚ)⁻¹ = k) {x : R} (hx : x > 0) :
     (∏ i ∈ I, a i : ℕ) * (x + 1) ^ k ≠ ∏ i ∈ I, (x + a i) := by
   refine (main_statement ?_ hk hx).ne
-  contrapose! ha; exact prod_le_one' ha
+  contrapose! ha; exact prod_le_one ha

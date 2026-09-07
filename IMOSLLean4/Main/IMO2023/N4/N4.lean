@@ -121,7 +121,7 @@ lemma factorial_le_D : n.factorial ≤ X.D := by
     rw [Nat.Ico_zero_eq_range, prod_range_add_one_eq_factorial, Nat.one_mul] at h
     rw [← X.spec_alt hn, prod_range_zero, Nat.one_mul, h]
     refine Nat.le_trans ?_ (Nat.le_mul_of_pos_right _ (X.b_sub_a_pos hn))
-    exact prod_le_prod' λ i hi ↦ X.succ_le_a (mem_Ico.mp hi).2
+    exact prod_le_prod λ i hi ↦ X.succ_le_a (mem_Ico.mp hi).2
 
 end goodSeq
 

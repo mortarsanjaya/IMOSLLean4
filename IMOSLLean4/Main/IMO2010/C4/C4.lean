@@ -92,7 +92,7 @@ theorem log2_monotone {m n : Nat} (h : m ≤ n) : m.log2 ≤ n.log2 :=
 theorem log2_two_pow : ∀ n : Nat, (2 ^ n).log2 = n
   | 0 => by simp [Nat.pow_zero, Nat.log2_def]
   | n + 1 => by rw [Nat.pow_succ, Nat.log2_def, Nat.mul_div_left _ Nat.two_pos,
-      log2_two_pow, if_pos (Nat.le_mul_of_pos_left 2 n.two_pow_pos)]
+      log2_two_pow, ite_eq_left (Nat.le_mul_of_pos_left 2 n.two_pow_pos)]
 
 
 

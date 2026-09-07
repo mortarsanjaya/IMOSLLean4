@@ -126,7 +126,7 @@ theorem insert_of_not_isWinning (hS : ¬isWinning S) (hnS : n ∉ S) :
   refine of_move (mem_insert_self n S) (k := e + 1) ?_
   suffices {s ∈ insert n S | ¬s ≡ n [ZMOD 2 ^ (e + 1)]} = S from this.symm ▸ hS
   ---- It remains to show that we deleted `n` and nothing else.
-  rw [filter_insert, if_neg (not_not.mpr (Int.ModEq.refl _)), filter_eq_self]
+  rw [filter_insert, ite_eq_right (not_not.mpr (Int.ModEq.refl _)), filter_eq_self]
   ---- That is, it remains to show that `x ≢ n (mod 2^k)` for all `x ∈ S`.
   intro x hxS h0
   replace h0 : ((2 : ℤ) ^ (e + 1)).natAbs ≤ (x - n).natAbs :=
@@ -188,7 +188,7 @@ theorem binary_merge_of_left_not_isWinning (hS : ¬isWinning S) (hT : T.Nonempty
   refine of_move (n := 2 * t + b) (k := 1) (mem_union_right _ (mem_image_of_mem _ ht)) ?_
   simp_rw [filter_union, filter_image, Int.ModEq,
     Int.pow_one, Int.mul_add_emod_self_left, filter_const]
-  rwa [if_pos hab, if_neg (not_not.mpr trivial),
+  rwa [ite_eq_left hab, ite_eq_right (not_not.mpr trivial),
     image_empty, union_empty, two_mul_translate_iff]
 
 /-- If `a ≢ b (mod 2)`, `S ≠ ∅`, and `T` is losing, then `(2S + a) ∪ (2T + b)` is winning. -/

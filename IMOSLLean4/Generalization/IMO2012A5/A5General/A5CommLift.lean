@@ -31,7 +31,7 @@ variable [CommSemiring R] [Ring S]
 
 def CommRing_of_good_map {f : R → S} (hf : good f) :
     CommRing (Subring.closure (Set.range f)) :=
-  Subring.closureCommRingOfComm λ _ ⟨a, h⟩ _ ⟨b, h0⟩ ↦
+  Subring.closureCommRingOfComm λ _ ⟨a, h⟩ _ ⟨b, h0⟩ _ ↦
     h ▸ h0 ▸ map_commute_of_commute hf (mul_comm a b)
 
 def codomainLift (f : R → S) (x : R) : Subring.closure (Set.range f) :=
@@ -53,7 +53,7 @@ end
 variable [Ring R] [Ring S] (c : R)
 
 instance instCommRingClosure_of_singleton : CommRing (Subring.closure {c}) :=
-  Subring.closureCommRingOfComm λ _ h _ h0 ↦ h ▸ h0 ▸ rfl
+  Subring.closureCommRingOfComm λ _ h _ h0 _ ↦ h ▸ h0 ▸ rfl
 
 def oneVarDomainLift (f : R → S) (x : Subring.closure {c}) : S := f x
 
@@ -68,8 +68,8 @@ lemma oneVarDomainLift_is_NontrivialGood {f : R → S} (hf : NontrivialGood f) :
 abbrev OneVarRange (f : R → S) : Type* :=
   Subring.closure (Set.range (oneVarDomainLift c f))
 
-def OneVarRange_commRing_of_good {f : R → S} (hf : good f) :
-    CommRing (OneVarRange c f) :=
+@[instance_reducible]
+def OneVarRange_commRing_of_good {f : R → S} (hf : good f) : CommRing (OneVarRange c f) :=
   CommRing_of_good_map (oneVarDomainLift_is_good c hf)
 
 def oneVarCommLift (f : R → S) : Subring.closure {c} → OneVarRange c f :=

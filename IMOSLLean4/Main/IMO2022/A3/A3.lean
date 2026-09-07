@@ -116,7 +116,7 @@ def posSubtypeExt (f : {x : R // 0 < x} → {x : R // 0 < x}) (x : R) : R :=
 omit [IsStrictOrderedRing R] in
 lemma posSubtypeExt_spec (f : {x : R // 0 < x} → {x : R // 0 < x}) (x : {x : R // 0 < x}) :
     posSubtypeExt f x.1 = f x :=
-  dif_pos _
+  dite_eq_left _
 
 def good (f : {x : R // 0 < x} → {x : R // 0 < x}) :=
   ∀ x, ∃! y, x * f y + y * f x ≤ ⟨2, two_pos⟩

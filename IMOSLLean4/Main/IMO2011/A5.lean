@@ -183,7 +183,7 @@ def binary_ext {n : ℕ} (X : GoodCollection (n / 2)) : GoodCollection n where
         have h : s + (n / 2 + 2) + (n - n / 2) = s + (n + 2) := by
           rw [Nat.add_assoc, Nat.add_right_comm, Nat.add_sub_cancel' hn]
         rwa [← h, Nat.add_left_inj, Nat.add_left_inj]
-      rw [dif_pos i.2, mem_sideLengths_iff]
+      rw [dite_eq_left i.2, mem_sideLengths_iff]
       right; exact hi
     ---- If `s ≥ 2⌊n/2⌋`, split into two cases: `s < n + ⌊n/2⌋` and `s ≥ n + ⌊n/2⌋`.
     obtain hs1 | hs1 : s < n + n / 2 ∨ n + n / 2 ≤ s := Nat.lt_or_ge _ _
@@ -193,7 +193,7 @@ def binary_ext {n : ℕ} (X : GoodCollection (n / 2)) : GoodCollection n where
       replace hs1 : s - n / 2 < n := Nat.sub_lt_right_of_lt_add hs hs1
       -- Pick `i = s - ⌊n/2⌋`.
       refine ⟨⟨s - n / 2, hs1⟩, ?_⟩
-      rw [dif_neg hs0.not_gt, mem_sideLengths_iff]
+      rw [dite_eq_right hs0.not_gt, mem_sideLengths_iff]
       -- Then choose side `b`.
       right; left; change s + (n + 2) = n + n / 2 + (s - n / 2 + 2)
       rw [Nat.add_assoc, ← Nat.add_assoc (n / 2),
@@ -204,7 +204,7 @@ def binary_ext {n : ℕ} (X : GoodCollection (n / 2)) : GoodCollection n where
       replace hs : s - n < n := Nat.sub_lt_right_of_lt_add hs0 (by rwa [← Nat.two_mul])
       -- Pick `i = s - n`.
       refine ⟨⟨s - n, hs⟩, ?_⟩
-      rw [dif_neg hs1.not_gt, mem_sideLengths_iff]
+      rw [dite_eq_right hs1.not_gt, mem_sideLengths_iff]
       -- Then choose side `c`.
       right; right; change s + (n + 2) = n + n + (s - n + 2)
       rw [Nat.add_assoc, ← Nat.add_assoc n (s - n),

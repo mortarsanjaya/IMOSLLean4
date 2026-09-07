@@ -88,7 +88,8 @@ theorem ite_dvd_add_one_is_good (hK : K ≠ 1) :
   · apply Nat.le_of_eq
     have hn0 : ¬K ∣ n + 1 + 1 := by rwa [Nat.dvd_add_right hn, Nat.dvd_one]
     calc (if K ∣ m + 1 then m + 1 else m) + _
-      _ = (if K ∣ m + 1 then m + 1 else m) + (n + 1) := by rw [if_pos hn, if_neg hn0]
+      _ = (if K ∣ m + 1 then m + 1 else m) + (n + 1) := by
+        rw [ite_eq_left hn, ite_eq_right hn0]
       _ = if K ∣ m + 1 then (m + 1) + (n + 1) else m + (n + 1) := ite_add _ _ _ _
       _ = if K ∣ (m + 1) + (n + 1) then (m + 1) + (n + 1) else m + (n + 1) :=
         if_congr (Nat.dvd_add_iff_left hn) rfl rfl
@@ -96,7 +97,7 @@ theorem ite_dvd_add_one_is_good (hK : K ≠ 1) :
         rw [Nat.add_add_add_comm]
   ---- Case 2: `K ∤ n + 1`.
   · calc (if K ∣ m + 1 then m + 1 else m) + _
-    _ = (if K ∣ m + 1 then m + 1 else m) + n := by rw [if_neg hn, if_neg hn]
+    _ = (if K ∣ m + 1 then m + 1 else m) + n := by rw [ite_eq_right hn, ite_eq_right hn]
     _ ≤ max (m + 1) m + n := Nat.add_le_add_right (ite_le_sup _ _ _) _
     _ = m + 1 + n := congrArg (· + n) (max_eq_left_of_lt (Nat.lt_succ_self m))
     _ = m + n + 1 := Nat.add_right_comm _ _ _
@@ -172,7 +173,8 @@ theorem eq_map_good_iff : (∃ g, good g ∧ g N = k) ↔ k ≤ N + 1 ∧ (N = 0
   · exact ⟨(· - (N - k)), sub_right_is_good _, Nat.sub_sub_self hk0⟩
   ---- If `k = N + 1`, then take `g(n) = n` for `N + 1 ∤ n` and `g(n) = n + 1` otherwise.
   exact ⟨λ n ↦ if N + 1 ∣ n + 1 then n + 1 else n,
-    ite_dvd_add_one_is_good (Nat.add_one_ne_add_one_iff.mpr hN), if_pos (Nat.dvd_refl _)⟩
+    ite_dvd_add_one_is_good (Nat.add_one_ne_add_one_iff.mpr hN),
+    ite_eq_left (Nat.dvd_refl _)⟩
 
 /-- Final solution -/
 theorem final_solution {N k : ℕ+} :
@@ -199,5 +201,5 @@ theorem final_solution {N k : ℕ+} :
           Nat.add_add_add_comm, PNat.natPred_add_one, PNat.natPred_add_one]; rfl
   _ ↔ k.natPred ≤ N.natPred + 1 ∧ (σ N = 0 → σ k = 0) := eq_map_good_iff
   _ ↔ k ≤ N + 1 ∧ (N = 1 → k = 1) := by
-    refine and_congr ?_ (imp_congr σ.apply_eq_iff_eq_symm_apply σ.apply_eq_iff_eq_symm_apply)
+    refine and_congr ?_ (imp_congr σ.eq_symm_apply.symm σ.eq_symm_apply.symm)
     rw [PNat.natPred_add_one, ← Nat.add_le_add_iff_right (n := 1), PNat.natPred_add_one]; rfl

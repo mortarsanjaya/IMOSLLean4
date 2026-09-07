@@ -334,5 +334,5 @@ theorem final_solution {N : ℕ} {x : Fin (N + 1) → ℕ} (hx : ∀ i, x i > 0)
           + 1 * x 0 ^ n :=
       Nat.le_add_left _ _
     _ = ∑ i : Fin (N + 1), (i + 1) * x i ^ n := by
-      rw [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', dif_pos (Nat.succ_pos N)]; rfl
+      rw [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', dite_eq_left (Nat.succ_pos N)]; rfl
   rwa [← Int.lt_add_one_iff, ← ha, Int.natCast_pos]

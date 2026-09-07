@@ -117,8 +117,7 @@ lemma exists_le_mul_div_add_eq (h : a ≤ b) (x : ℕ) (h0 : c ≤ a * m / b) :
     ∃ k ≤ m, a * (x + k) / b = a * x / b + c := by
   replace h0 : a * x / b + c ∈ Icc (a * x / b) (a * (x + m) / b) :=
     mem_Icc.mpr ⟨Nat.le_add_right _ _,
-      (Nat.add_le_add_left h0 _).trans
-        (a.mul_add x m ▸ Nat.add_div_le_add_div (a * x) (a * m) b)⟩
+      (Nat.add_le_add_left h0 _).trans (a.mul_add x m ▸ Nat.div_add_div_le_add_div)⟩
   rw [← image_mul_div h x (x + m) (x.le_add_right m), mem_image, x.add_comm] at h0
   rcases h0 with ⟨l, h0, h1⟩; rw [mem_Icc] at h0
   refine ⟨l - x, Nat.sub_le_of_le_add h0.2, ?_⟩

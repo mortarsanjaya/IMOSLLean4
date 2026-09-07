@@ -62,8 +62,8 @@ theorem general_result_Nat {S T : Finset ℕ} (h : #T < #S) :
       _ = ∏ p ∈ (x + d).primeFactors, ordProj[p] (x + d) :=
         (Nat.prod_factorization_pow_eq_self (Nat.ne_zero_of_lt hxd)).symm
       _ ≤ ∏ p ∈ T, ordProj[p] (x + d) :=
-        prod_le_prod_of_subset_of_one_le' (h0 d) (λ p hp _ ↦ Nat.pow_pos (hT p hp).pos)
-    obtain ⟨p, hp, hp0⟩ : ∃ p ∈ T, m < ordProj[p] (x + d) := exists_lt_of_prod_lt' hxd
+        prod_le_prod_of_subset_of_one_le (h0 d) (λ p hp _ ↦ Nat.pow_pos (hT p hp).pos)
+    obtain ⟨p, hp, hp0⟩ : ∃ p ∈ T, m < ordProj[p] (x + d) := exists_lt_of_prod_lt hxd
     exact ⟨⟨p, hp⟩, hp0⟩
   /- Since `#T < #S`, `f` is not injective, say `f(d₁) = f(d₂) = p` with `d₁ ≠ d₂`.
     (After `mathlib` update, should try using `Fintype.not_injective_of_card_lt`.) -/

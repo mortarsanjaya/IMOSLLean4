@@ -6,7 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 module
 public import Mathlib.Data.Fintype.Pigeonhole
-public import Mathlib.Data.Finite.Prod
+public import Mathlib.Basic.Finite.Prod
 
 /-!
 # IMO 2017 A3

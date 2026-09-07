@@ -425,7 +425,7 @@ theorem filter_nice_eq_image_snoc_equiv :
   is twice the number of nice permutations on `Fin n`. -/
 theorem card_nice_perm_of_ge_three :
     #{σ : Equiv.Perm (Fin (n + 1)) | nice σ} = 2 * #{σ : Equiv.Perm (Fin n) | nice σ} := by
-  haveI : NeZero n := NeZero.of_gt hn
+  have : NeZero n := NeZero.of_gt hn
   rw [filter_nice_eq_image_snoc_equiv hn, card_image_of_injective _ snoc_equiv_injective,
     card_product, card_univ, Fintype.card_bool]
 

@@ -271,5 +271,5 @@ theorem final_solution [Ring R] [NoZeroDivisors R] {f : R → R} :
   · replace h0 (x : R) : x = 0 := eq_zero_of_zero_eq_one h0.symm x
     funext y; rw [h0 (f y), h0 y]
   ---- Otherwise we get the case `char(R) = 2`.
-  · haveI : CharP R 2 := CharTwo.of_one_ne_zero_of_two_eq_zero h0 h
+  · have : CharP R 2 := CharTwo.of_one_ne_zero_of_two_eq_zero h0 h
     exact hf.char_eq2_solution
