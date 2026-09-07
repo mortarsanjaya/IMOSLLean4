@@ -14,16 +14,16 @@ public import Mathlib.Data.Fin.VecNotation
 
 A triple $(a, b, c)$ of integers is called a *Heron triple* if
 $$ a^2 + b^2 + c^2 = 2ab + 2bc + 2ca. $$
-Find all functions $f : ℤ → ℤ$ such that $f(a), f(b), f(c))$ is
+Find all functions $f : ℤ → ℤ$ such that $(f(a), f(b), f(c))$ is
   a Heron triple for any $a, b, c ∈ ℤ$ satisfying $a + b + c = 0$.
 
 ### Answer
 
-They are precisely the functions of the following form:
-* $f(n) = cn^2$;
-* $f(n) = \begin{cases} c & \text{if } 2 ∤ n, \\ 0 & \text{if } 2 ∣ n, \end{cases}$;
-* $f(n) = \begin{cases} c & \text{if } 2 ∤ n, \\ 4c & \text{if } n ≡ 2 \pmod{4}, \\
-    0 & \text{if } 2 ∣ n. \end{cases}$
+They are precisely the functions of one of the following form:
+$$ n ↦ cn^2, \quad
+  n ↦ \begin{cases} c & \text{if } 2 ∤ n, \\ 0 & \text{if } 2 ∣ n, \end{cases} \quad
+  n ↦ \begin{cases} c & \text{if } n ≡ 1, 3 \pmod{4}, \\
+    4c & \text{if } n ≡ 2 \pmod{4}, \\ 0 & \text{if } n ≡ 0 \pmod{4}. \end{cases} $$
 
 ### Solution
 
@@ -239,7 +239,7 @@ variable [CommRing R] [NoZeroDivisors R] {f : ℤ → R} (hf : good f) (hf0 : f 
 include hf hf0
 
 /-- If `f(0) = 0` and `f(N) = 0` for some `N : ℕ` nonzero, then for any `n : ℕ`,
-  we have `f(n) = f(x)` where `x` is the image of `n` in `Fin N`. -/
+  we have `f(n) = f(x)` where `x` is the image of `n` in `ZMod N`. -/
 theorem Int_map_ZMod_of_map_eq_zero {N : ℕ} [NeZero N] (hN : f N = 0) (n : ℤ) :
     f (n : ZMod N).val = f n := by
   obtain ⟨k, hk⟩ : (N : ℤ) ∣ n - (n : ZMod N).val := by
@@ -332,11 +332,14 @@ theorem Int_eq_smul_sq_of_map_three (hf1 : f 2 = f 1 * 2 ^ 2) (hf2 : f 3 = f 1 *
 end
 
 
+section
+
+variable [CommRing R] [NoZeroDivisors R] (hR : (3 : R) ≠ 0) {f : ℤ → R} (hf : good f)
+include hR hf
+
 /-- If `char(R) ≠ 3`, `f(2) = 4 f(1)`, and `f(3) = f(1)`, then `f(n) = f(1)` if `n` is odd,
   `f(n) = 4f(1)` if `n ≡ 2 (mod 4)`, and `f(n) = 0` if `4 ∣ n`. -/
-theorem Int_eq_smul_ZMod4_0141_of_map_three
-    [CommRing R] [NoZeroDivisors R] (hR : (3 : R) ≠ 0)
-    {f : ℤ → R} (hf : good f) (hf0 : f 2 = f 1 * 2 ^ 2) (hf1 : f 3 = f 1) :
+theorem Int_eq_smul_ZMod4_0141_of_map_three (hf0 : f 2 = f 1 * 2 ^ 2) (hf1 : f 3 = f 1) :
     f = λ n : ℤ ↦ f 1 * ![0, 1, 4, 1] (n : ZMod 4) := by
   have hR0 : (2 : R) ^ 2 = 4 := by rw [sq, mul_two, two_add_two_eq_four]
   have hf2 : f 0 = 0 := hf.map_zero_of_three_ne_zero hR
@@ -361,6 +364,22 @@ theorem Int_eq_smul_ZMod4_0141_of_map_three
   rwa [hf0, ← hf3, eq_comm, ← sub_eq_zero, ← mul_sub_one, hR0, mul_eq_zero,
     sub_eq_of_eq_add three_add_one_eq_four.symm, or_iff_left hR] at hf4
 
+open Fin.IntCast in
+/-- If `char(R) ≠ 3`, then a good function `f : ℤ → R` takes one of the
+  three forms we see above; squares, mod 2 functions, or mod 4 functions. -/
+theorem Int_solution_of_char_ne_three :
+    (∃ c, f = λ n : ℤ ↦ c * ![0, 1] n) ∨ (∃ c, f = λ n : ℤ ↦ c * ![0, 1, 4, 1] n)
+      ∨ (∃ c : R, f = λ n : ℤ ↦ c * n ^ 2) := by
+  have hf0 : f 0 = 0 := hf.map_zero_of_three_ne_zero hR
+  exact (hf.Int_map_two_eq hf0).symm.imp
+    (λ hf1 ↦ ⟨f 1, hf.Int_eq_smul_ZMod2_01_of_map_two hf0 hf1⟩)
+    (λ hf1 ↦ (hf.Int_map_three_eq_of_map_two hf0 hf1).symm.imp
+      (λ hf2 ↦ ⟨f 1, hf.Int_eq_smul_ZMod4_0141_of_map_three hR hf1 hf2⟩)
+      (λ hf2 ↦ ⟨f 1, hf.Int_eq_smul_sq_of_map_three hf0 hf1 hf2⟩))
+
+end
+
+
 end good
 
 
@@ -369,17 +388,9 @@ open Fin.IntCast in
 theorem final_solution {f : ℤ → ℤ} :
     good f ↔ (∃ c, f = λ n : ℤ ↦ c * ![0, 1] n)
       ∨ (∃ c, f = λ n : ℤ ↦ c * ![0, 1, 4, 1] n) ∨ (∃ c, f = λ n ↦ c * n ^ 2) := by
-  refine ⟨λ hf ↦ ?_, ?_⟩
-  ---- The `→` direction.
-  · have h : (3 : ℤ) ≠ 0 := by decide
-    have hf0 : f 0 = 0 := hf.map_zero_of_three_ne_zero h
-    exact (hf.Int_map_two_eq hf0).symm.imp
-      (λ hf1 ↦ ⟨f 1, hf.Int_eq_smul_ZMod2_01_of_map_two hf0 hf1⟩)
-      (λ hf1 ↦ (hf.Int_map_three_eq_of_map_two hf0 hf1).symm.imp
-        (λ hf2 ↦ ⟨f 1, hf.Int_eq_smul_ZMod4_0141_of_map_three h hf1 hf2⟩)
-        (λ hf2 ↦ ⟨f 1, hf.Int_eq_smul_sq_of_map_three hf0 hf1 hf2⟩))
-  ---- The `←` direction.
-  · rintro (⟨c, rfl⟩ | ⟨c, rfl⟩ | ⟨c, rfl⟩)
-    · exact (ZMod2_01_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 2))).smul_left _
-    · exact (ZMod4_0141_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 4))).smul_left _
-    · exact sq_is_good.smul_left c
+  refine ⟨λ hf ↦ hf.Int_solution_of_char_ne_three (by decide), ?_⟩
+  rintro (⟨c, rfl⟩ | ⟨c, rfl⟩ | ⟨c, rfl⟩)
+  exacts [
+    (ZMod2_01_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 2))).smul_left _,
+    (ZMod4_0141_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 4))).smul_left _,
+    sq_is_good.smul_left c]
