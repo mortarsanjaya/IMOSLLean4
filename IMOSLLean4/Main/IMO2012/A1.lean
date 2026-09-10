@@ -5,7 +5,6 @@ Authors: Gian Cordana Sanjaya
 -/
 
 module
-public import Mathlib.Tactic.Ring
 public import Mathlib.Data.ZMod.Basic
 public import Mathlib.Data.Fin.VecNotation
 
@@ -90,25 +89,33 @@ theorem mul_left (r : R) : HeronTriple (r * a) (r * b) (r * c) := by
 end
 
 
+section
+
 variable [CommRing R]
 
-/-- The main formula which inspires the name "Heron triple":
-  `2(a^2 b^2 + b^2 c^2 + c^2 a^2) - (a^4 + b^4 + c^4)` is equal to
-  `(a + b - c)(b + c - a)(c + a - b)(a + b + c)`. -/
-theorem reference_formula (a b c : R) :
-    2 * (a ^ 2 * b ^ 2 + b ^ 2 * c ^ 2 + c ^ 2 * a ^ 2)
-        - ((a ^ 2) ^ 2 + (b ^ 2) ^ 2 + (c ^ 2) ^ 2)
-      = (a + b - c) * (b + c - a) * (c + a - b) * (a + b + c) := by ring
+/-- An (asymmetric) alternative formulation of Heron triple. -/
+theorem alt_def {a b c : R} : HeronTriple a b c ↔ (c - (a + b)) ^ 2 = 2 ^ 2 * a * b :=
+  calc a ^ 2 + b ^ 2 + c ^ 2 = 2 * (a * b + b * c + c * a)
+  _ ↔ c ^ 2 + (a + b) ^ 2 = 2 * (a * b + b * c + c * a) + 2 * a * b := by
+    rw [add_sq', add_left_comm, ← add_assoc, add_left_inj]
+  _ ↔ c ^ 2 + (a + b) ^ 2 = (2 + 2) * (a * b) + 2 * (c * (a + b)) := by
+    apply Eq.congr_right; rw [add_assoc, mul_comm b, ← mul_add c,
+      mul_add, add_comm b, add_right_comm, mul_assoc, ← add_mul]
+  _ ↔ (c - (a + b)) ^ 2 = 2 ^ 2 * a * b := by
+    rw [← two_mul, ← sq, sub_sq', sub_eq_iff_eq_add, ← mul_assoc, ← mul_assoc]
 
 /-- The triple `(a^2, b^2, c^2)` is a Heron triple if `a + b + c = 0`. -/
 theorem squares_of_add_eq_zero {a b c : R} (h : a + b + c = 0) :
     HeronTriple (a ^ 2) (b ^ 2) (c ^ 2) := by
-  rw [HeronTriple, eq_comm, ← sub_eq_zero, reference_formula, h, mul_zero]
+  rw [eq_neg_of_add_eq_zero_right h, neg_sq, alt_def,
+    add_sq', add_sub_cancel_left, mul_pow, mul_pow]
+
+end
 
 
 section
 
-variable [NoZeroDivisors R]
+variable [CommRing R] [NoZeroDivisors R]
 
 /-- If `char(R) ≠ 3` and `(x, x, x)` is a Heron triple, then `x = 0`. -/
 theorem eq_zero_of_const (hR : (3 : R) ≠ 0) {c : R} (hc : HeronTriple c c c) : c = 0 := by
@@ -124,13 +131,11 @@ theorem iff_eq_of_zero_right {x y : R} : HeronTriple x y 0 ↔ x = y := by
   either `z = r(x + y)^2` or `z = r(x - y)^2`. -/
 theorem iff_eq_mul_add_or_sub_sq {r x y z : R} :
     HeronTriple (r * x ^ 2) (r * y ^ 2) z ↔ z = r * (x + y) ^ 2 ∨ z = r * (x - y) ^ 2 := by
-  calc HeronTriple (r * x ^ 2) (r * y ^ 2) z
-  _ ↔ (r * x ^ 2) ^ 2 + (r * y ^ 2) ^ 2 + z ^ 2
-      - 2 * ((r * x ^ 2) * (r * y ^ 2) + (r * y ^ 2) * z + z * (r * x ^ 2)) = 0 :=
-    sub_eq_zero.symm
-  _ ↔ (z - r * (x + y) ^ 2) * (z - r * (x - y) ^ 2) = 0 := Eq.congr_left (by ring)
-  _ ↔ z = r * (x + y) ^ 2 ∨ z = r * (x - y) ^ 2 := by
-    rw [mul_eq_zero, sub_eq_zero, sub_eq_zero]
+  rw [alt_def, ← mul_add, mul_assoc, mul_mul_mul_comm, ← sq, ← mul_pow,
+    ← mul_pow, ← mul_pow, mul_left_comm, ← mul_assoc,sq_eq_sq_iff_eq_or_eq_neg]
+  apply or_congr
+  · rw [add_sq', sub_eq_iff_eq_add', mul_assoc, ← mul_add, mul_assoc]
+  · rw [sub_sq', sub_eq_iff_eq_add', mul_assoc, ← sub_eq_add_neg, ← mul_sub, mul_assoc]
 
 /-- The triple `(r, r, z)` is a Heron triple if and only if `z = 4r` or `z = 0`. -/
 theorem iff_of_left_mid_eq {r z : R} : HeronTriple r r z ↔ z = r * 2 ^ 2 ∨ z = 0 := calc
@@ -175,11 +180,6 @@ theorem ZMod4_0141_is_good : good (![0, 1, 4, 1] : ZMod 4 → ℤ) := by
 
 namespace good
 
-/-- An alternative definition of `good` function when `G` is a group. -/
-theorem alt_def [AddGroup G] [CommSemiring R] {f : G → R} (hf : good f) (a b : G) :
-    HeronTriple (f a) (f b) (f (-(a + b))) :=
-  hf a b (-(a + b)) (add_neg_cancel _)
-
 /-- If `f : G → R` is good, then the function `rf : x ↦ rf(x)` is good for any `r : R`. -/
 theorem smul_left [AddZero G] [CommSemiring R]
     {f : G → R} (hf : good f) (r : R) : good (r • f) :=
@@ -212,7 +212,7 @@ theorem map_neg_of_map_zero (x) : f (-x) = f x := by
 /-- If `f : G → R` is good with `f(0) = 0` then
   `(f(x), f(y), f(x + y))` is a Heron triple for any `x, y : G`. -/
 theorem def_of_map_zero (x y : G) : HeronTriple (f x) (f y) (f (x + y)) := by
-  simpa only [hf.map_neg_of_map_zero hf0] using hf.alt_def x y
+  simpa only [hf.map_neg_of_map_zero hf0] using hf x y (-(x + y)) (add_neg_cancel _)
 
 /-- If `f : G → R` is good with `f(0) = 0` and `c : G` satisfies `f(c) = 0`,
   then `f(x + c) = f(x)` for any `x : G`. -/
@@ -239,7 +239,7 @@ variable [CommRing R] [NoZeroDivisors R] {f : ℤ → R} (hf : good f) (hf0 : f 
 include hf hf0
 
 /-- If `f(0) = 0` and `f(N) = 0` for some `N : ℕ` nonzero, then for any `n : ℕ`,
-  we have `f(n) = f(x)` where `x` is the image of `n` in `ZMod N`. -/
+  we have `f(x) = f(n)` where `x` is the image of `n` in `ZMod N`. -/
 theorem Int_map_ZMod_of_map_eq_zero {N : ℕ} [NeZero N] (hN : f N = 0) (n : ℤ) :
     f (n : ZMod N).val = f n := by
   obtain ⟨k, hk⟩ : (N : ℤ) ∣ n - (n : ZMod N).val := by
@@ -378,7 +378,6 @@ theorem Int_solution_of_char_ne_three :
       (λ hf2 ↦ ⟨f 1, hf.Int_eq_smul_sq_of_map_three hf0 hf1 hf2⟩))
 
 end
-
 
 end good
 
