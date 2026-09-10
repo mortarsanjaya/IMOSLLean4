@@ -33,6 +33,9 @@ Our implementation is slightly more complicated at the final step in the case wh
 The difference is that $k(n - 1)^2 ≠ k(n - 3)^2$ is not always true this time,
   but $k(n - 1)^2 = k(n - 3)^2$ would imply either $k = 0$, $R$ has characteristic $2$,
   or $n = 2$ in $R$, and in all cases we still get $f(n + 1) = k(n + 1)^2$.
+
+The same solution holds if the codomain is an integral domain of characteristic not $3$.
+Thus will be reflected in our implementation.
 -/
 
 @[expose] public section
@@ -85,6 +88,12 @@ theorem mul_left (r : R) : HeronTriple (r * a) (r * b) (r * c) := by
   iterate 3 rw [mul_pow, mul_mul_mul_comm r _ r]
   iterate 4 rw [← mul_add]
   rw [h, mul_left_comm, sq]
+
+/-- If `(a, b, c)` is a Heron triple, then `(φ(a), φ(b), φ(c))` is a Heron triple,
+  `φ : R → R₀` is a ring homomorphism to an arbitrary commutative semiring. -/
+theorem RingHom_apply [CommSemiring R₀] (φ : R →+* R₀) : HeronTriple (φ a) (φ b) (φ c) := by
+  simp_rw [HeronTriple, ← φ.map_pow, ← φ.map_mul, ← φ.map_add]
+  rw [h, φ.map_mul, map_ofNat]
 
 end
 
@@ -169,12 +178,12 @@ instance [DecidableEq G] [Fintype G] [AddZero G] [CommSemiring R] [DecidableEq R
 theorem sq_is_good [CommRing R] : good (λ r : R ↦ r ^ 2) :=
   λ _ _ _ ↦ squares_of_add_eq_zero
 
-/-- The function `f : ZMod 2 → ℤ` defined by `f(0) = 0` and `f(1) = 1` is good. -/
-theorem ZMod2_01_is_good : good (![0, 1] : ZMod 2 → ℤ) := by
+/-- The function `f : ZMod 2 → ℕ` defined by `0 ↦ 0, 1 ↦ 1` is good. -/
+theorem ZMod2_01_is_good : good (![0, 1] : ZMod 2 → ℕ) := by
   decide
 
-/-- The function `f : ZMod 4 → ℤ` defined by `0 ↦ 0, 1 ↦ 1, 2 ↦ 4, 3 ↦ 1` is good. -/
-theorem ZMod4_0141_is_good : good (![0, 1, 4, 1] : ZMod 4 → ℤ) := by
+/-- The function `f : ZMod 4 → ℕ` defined by `0 ↦ 0, 1 ↦ 1, 2 ↦ 4, 3 ↦ 1` is good. -/
+theorem ZMod4_0141_is_good : good (![0, 1, 4, 1] : ZMod 4 → ℕ) := by
   decide
 
 
@@ -188,8 +197,33 @@ theorem smul_left [AddZero G] [CommSemiring R]
 /-- If `f : G → R` is good and `φ : G₀ → G` is a group homomorphism, `f ∘ φ` is good. -/
 theorem comp_AddMonoidHom [AddZero G₀] [AddZero G] [CommSemiring R]
     {f : G → R} (hf : good f) (φ : G₀ →+ G) : good (f ∘ φ) :=
-  λ a b c h ↦ hf _ _ _ (by rw [← φ.map_add, ← φ.map_add, h, φ.map_zero])
+  λ _ _ _ h ↦ hf _ _ _ (by rw [← φ.map_add, ← φ.map_add, h, φ.map_zero])
 
+/-- if `f : G → R` is good and `φ : R → R₀` is a ring homomorphism, `φ ∘ f` is good. -/
+theorem RingHom_comp [AddZero G] [CommSemiring R] [CommSemiring R₀]
+    {f : G → R} (hf : good f) (φ : R →+* R₀) : good (φ ∘ f) :=
+  λ _ _ _ h ↦ (hf _ _ _ h).RingHom_apply φ
+
+end good
+
+
+/-- The function `f : ZMod 2 → R` defined by `0 ↦ 0, 1 ↦ 1` is good. -/
+theorem ZMod2_Semiring_is_good [CommSemiring R] : good (![0, 1] : ZMod 2 → R) := by
+  let φ : ℕ →+* R := Nat.castRingHom R
+  have h : φ ∘ ![0, 1] = ![0, 1] :=
+    funext λ x ↦ match x with | 0 => φ.map_zero | 1 => φ.map_one
+  simpa only [h] using ZMod2_01_is_good.RingHom_comp φ
+
+/-- The function `f : ZMod 4 → ℤ` defined by `0 ↦ 0, 1 ↦ 1, 2 ↦ 4, 3 ↦ 1` is good. -/
+theorem ZMod4_Semiring_is_good [CommSemiring R] : good (![0, 1, 4, 1] : ZMod 4 → R) := by
+  let φ : ℕ →+* R := Nat.castRingHom R
+  have h : φ ∘ ![0, 1, 4, 1] = ![0, 1, 4, 1] :=
+    funext λ x ↦ match x with
+      | 0 => φ.map_zero | 1 => φ.map_one | 2 => map_ofNat φ 4 | 3 => φ.map_one
+  simpa only [h] using ZMod4_0141_is_good.RingHom_comp φ
+
+
+namespace good
 
 section
 
@@ -384,12 +418,13 @@ end good
 
 open Fin.IntCast in
 /-- Final solution -/
-theorem final_solution {f : ℤ → ℤ} :
-    good f ↔ (∃ c, f = λ n : ℤ ↦ c * ![0, 1] n)
-      ∨ (∃ c, f = λ n : ℤ ↦ c * ![0, 1, 4, 1] n) ∨ (∃ c, f = λ n ↦ c * n ^ 2) := by
-  refine ⟨λ hf ↦ hf.Int_solution_of_char_ne_three (by decide), ?_⟩
+theorem final_solution [CommRing R] [NoZeroDivisors R] (hR : (3 : R) ≠ 0) {f : ℤ → R} :
+    good f ↔ (∃ c, f = λ n : ℤ ↦ c * ![0, 1] n) ∨ (∃ c, f = λ n : ℤ ↦ c * ![0, 1, 4, 1] n)
+      ∨ (∃ c, f = λ n : ℤ ↦ c * (n : R) ^ 2) := by
+  refine ⟨λ hf ↦ hf.Int_solution_of_char_ne_three hR, ?_⟩
   rintro (⟨c, rfl⟩ | ⟨c, rfl⟩ | ⟨c, rfl⟩)
-  exacts [
-    (ZMod2_01_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 2))).smul_left _,
-    (ZMod4_0141_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 4))).smul_left _,
-    sq_is_good.smul_left c]
+  · exact (ZMod2_Semiring_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 2))).smul_left c
+  · exact (ZMod4_Semiring_is_good.comp_AddMonoidHom (Int.castAddHom (ZMod 4))).smul_left c
+  · have h : (c • Int.castRingHom R ∘ fun r ↦ r ^ 2) = λ n : ℤ ↦ c * (n : R) ^ 2 :=
+      funext λ n ↦ congrArg (c * ·) (Int.cast_pow n 2)
+    simpa only [h] using (sq_is_good.RingHom_comp (Int.castRingHom R)).smul_left c
