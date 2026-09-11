@@ -35,7 +35,7 @@ The difference is that $k(n - 1)^2 ≠ k(n - 3)^2$ is not always true this time,
   or $n = 2$ in $R$, and in all cases we still get $f(n + 1) = k(n + 1)^2$.
 
 The same solution holds if the codomain is an integral domain of characteristic not $3$.
-Thus will be reflected in our implementation.
+This will be reflected in our implementation.
 -/
 
 @[expose] public section
