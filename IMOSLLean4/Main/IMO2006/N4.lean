@@ -110,7 +110,7 @@ theorem good_of_forall_mem_eq [hG : Nonempty G] [AddCommGroup M] [SMul G M]
     {A : Set M} (hA : ∀ x y : A, x = y) : good G A :=
   hG.elim λ g _ _ ↦ ⟨g, λ x y ↦ absurd (hA x y)⟩
 
-/-- If `|Rˣ| ≤ 2`, there is no good subset of any `R`-module. -/
+/-- If `|Rˣ| ≤ 2`, then any subset of any `R`-module is good. -/
 theorem good_of_card_units_le_two
     {R} [Ring R] [IsDomain R] [Fintype Rˣ] (hR : Fintype.card Rˣ ≤ 2)
     {M} [AddCommGroup M] [Module R M] [Module.IsTorsionFree R M] (A : Set M) :
