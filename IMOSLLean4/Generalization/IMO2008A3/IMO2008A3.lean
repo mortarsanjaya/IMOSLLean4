@@ -52,7 +52,7 @@ theorem StrictMono_conjOrderIso [Preorder α] [Preorder β]
 
 /-- TODO: Remove this instance once `mathlib` variant appears. -/
 instance [LT α] [WellFoundedLT α] [LT β] [WellFoundedLT β] : WellFoundedLT (α ⊕ₗ β) :=
-  ⟨Sum.lex_wf wellFounded_lt wellFounded_lt⟩
+  Sum.lex_wf wellFounded_lt wellFounded_lt
 
 
 section

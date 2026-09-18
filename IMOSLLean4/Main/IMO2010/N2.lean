@@ -235,14 +235,14 @@ theorem nice_iff : nice p q ↔ p = 2 ∧ (q = 1 ∨ q = 3) := by
     obtain h0 | h0 : ¬3 ∣ r ∨ 3 ∣ r := dec_em' _
     -- If `3 ∤ r` then `ν_3(r) = 0` and the inequality follows since `5 < 2r`.
     · calc 3 * multiplicity 3 r + 5
-      _ = 5 := by rw [multiplicity_eq_zero.mpr h0]
+      _ = 5 := by rw [multiplicity_eq_zero_of_not_dvd h0]
       _ < 2 * r := Nat.mul_le_mul_left 2 h.le
     -- If `3 ∣ r` then `r ≥ 6` and the inequality follows from `3 ν_3(r) ≤ r`.
     · have h1 : r ≠ 0 := Nat.ne_zero_of_lt h
       replace h : 2 * 3 ≤ r :=
         Nat.mul_le_of_le_div 3 2 r ((Nat.lt_div_iff_mul_lt' h0 1).mpr h)
       replace h0 : multiplicity 3 r ≤ Nat.log 3 r := calc
-        _ = padicValNat 3 r := (padicValNat_def h1).symm
+        _ = padicValNat 3 r := Nat.padicValNat_def.symm
         _ ≤ Nat.log 3 r := padicValNat_le_nat_log r
       replace h0 : 3 * multiplicity 3 r ≤ r := calc
         _ ≤ 3 * Nat.log 3 r := Nat.mul_le_mul_left 3 h0
