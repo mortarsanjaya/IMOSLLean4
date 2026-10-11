@@ -81,7 +81,7 @@ theorem eq_const_of_floor_map_zero_eq_one {f : R → S} (hf : good f) (hf0 : ⌊
 
 /-- Suppose there exists `α : R` such that `0 < α < 1`. Then `f(0) = 0` implies `f ≡ 0`. -/
 theorem eq_zero_of_map_zero_eq_zero
-    [IsStrictOrderedRing R] (hR : ∃ α : R, 0 < α ∧ α < 1) [IsStrictOrderedRing S]
+    [IsOrderedAddMonoid R] (hR : ∃ α : R, 0 < α ∧ α < 1) [IsOrderedAddMonoid S]
     {f : R → S} (hf : good f) (hf0 : f 0 = 0) : f = 0 := by
   ---- What we need from `0 < α < 1` is `⌊α⌋ = 0` and `⌊-α⌋ = -1`.
   rcases hR with ⟨α, hα0, hα1⟩
@@ -111,8 +111,8 @@ end good
 
 
 /-- Final solution -/
-theorem final_solution [IsStrictOrderedRing R] (hR : ∃ α : R, 0 < α ∧ α < 1)
-    [IsStrictOrderedRing S] {f : R → S} :
+theorem final_solution [IsOrderedAddMonoid R] (hR : ∃ α : R, 0 < α ∧ α < 1)
+    [IsOrderedAddMonoid S] {f : R → S} :
     good f ↔ f = 0 ∨ (∃ C : S, ⌊C⌋ = 1 ∧ f = λ _ ↦ C) := by
   refine ⟨λ hf ↦ ?_, λ hf ↦ ?_⟩
   · exact hf.map_zero_eq_zero_or_floor_eq_one.imp
