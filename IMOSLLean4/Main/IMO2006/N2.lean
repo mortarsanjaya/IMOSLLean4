@@ -94,53 +94,60 @@ end
 
 /-! ### The `n`th decimal digit -/
 
-variable [CommRing R] [LinearOrder R] [IsStrictOrderedRing R] [FloorRing R]
+variable [CommRing R] [LinearOrder R] [FloorRing R]
 
 /-- The `n`th decimal digit of an element of a ring with floor in base `b`. -/
-def nthDecimalDigit (b : ℕ) (r : R) (n : ℕ) : ℤ := ⌊b ^ (n + 1) * r⌋ % b
+def nthDecimalDigit (b : ℕ) (r : R) (n : ℕ) : ℤ := ⌊b ^ (n + 1) • r⌋ % b
 
-omit [IsStrictOrderedRing R] in
 /-- The `(n + d)`th decimal digit of `r` in base `b` is the
   same as the `n`th decimal digit of `b^d r` in base `b`. -/
 theorem nthDecimalDigit_add (b) (r : R) (n d) :
-    nthDecimalDigit b r (n + d) = nthDecimalDigit b (b ^ d * r) n := by
-  unfold nthDecimalDigit; rw [Nat.add_right_comm, pow_add, mul_assoc]
+    nthDecimalDigit b r (n + d) = nthDecimalDigit b (b ^ d • r) n := by
+  unfold nthDecimalDigit; rw [Nat.add_right_comm, pow_add, mul_nsmul']
+
+variable [IsOrderedAddMonoid R]
 
 /-- An alternative formula for the `n`th decimal digit, `⌊b^{n + 1} r⌋ - b⌊b^n r⌋`. -/
 theorem nthDecimalDigit_alt_formula (b : ℕ) (r : R) (n : ℕ) :
-    nthDecimalDigit b r n = ⌊b ^ (n + 1) * r⌋ - b * ⌊b ^ n * r⌋ := by
+    nthDecimalDigit b r n = ⌊b ^ (n + 1) • r⌋ - b * ⌊b ^ n • r⌋ := by
   obtain rfl | hb : b = 0 ∨ b ≠ 0 := eq_or_ne _ _
-  · rw [nthDecimalDigit, Int.natCast_zero, Int.zero_mul, Int.sub_zero, Int.emod_zero]
+  · simp [nthDecimalDigit]
   · rw [nthDecimalDigit, Int.emod_def, sub_right_inj, pow_succ',
-      mul_assoc, Int.natCast_mul_floor_div_cancel hb]
+      mul_nsmul', nsmul_eq_mul, Int.natCast_mul_floor_div_cancel hb]
 
 /-- A summation formula for `⌊b^n r⌋ - b^n⌊r⌋` in terms of base `b` decimal digits of `r`. -/
 theorem nthDecimalDigit_floor_sum_formula (b : ℕ) (r : R) (n : ℕ) :
     ∑ i ∈ range n, b ^ (n - (i + 1)) * nthDecimalDigit b r i
-      = ⌊b ^ n * r⌋ - b ^ n * ⌊r⌋ :=
-  let f (i : ℕ) : ℤ := b ^ (n - i) * ⌊b ^ i * r⌋
+      = ⌊b ^ n • r⌋ - b ^ n * ⌊r⌋ :=
+  let f (i : ℕ) : ℤ := b ^ (n - i) * ⌊b ^ i • r⌋
   calc ∑ i ∈ range n, b ^ (n - (i + 1)) * nthDecimalDigit b r i
     _ = ∑ i ∈ range n, (f (i + 1) - f i) := by
       refine sum_congr rfl λ i hi ↦ ?_
       rw [nthDecimalDigit_alt_formula, Int.mul_sub, Int.sub_right_inj, ← Int.mul_assoc,
         ← Int.pow_succ, ← Nat.succ_sub (mem_range.mp hi), Nat.succ_sub_succ]
-    _ = b ^ (n - n) * ⌊b ^ n * r⌋ - b ^ n * ⌊b ^ 0 * r⌋ := sum_range_sub _ _
-    _ = ⌊b ^ n * r⌋ - b ^ n * ⌊r⌋ := by
-      rw [Nat.sub_self, Int.pow_zero, Int.one_mul, pow_zero, one_mul]
+    _ = b ^ (n - n) * ⌊b ^ n • r⌋ - b ^ n * ⌊b ^ 0 • r⌋ := sum_range_sub _ _
+    _ = ⌊b ^ n • r⌋ - b ^ n * ⌊r⌋ := by
+      rw [Nat.sub_self, Int.pow_zero, Int.one_mul, pow_zero, one_nsmul]
 
 /-- A summation formula for `b^n{r} - {b^n r}` in terms of base `b` decimal digits of `r`. -/
 theorem nthDecimalDigit_fract_sum_formula (b : ℕ) (r : R) (n : ℕ) :
     ∑ i ∈ range n, b ^ (n - (i + 1)) * nthDecimalDigit b r i
-      = b ^ n * Int.fract r - Int.fract (b ^ n * r) := by
-  rw [Int.fract, mul_sub, Int.fract, ← sub_add, sub_sub_cancel_left,
-    neg_add_eq_sub, nthDecimalDigit_floor_sum_formula, Int.cast_sub,
-    Int.cast_mul, Int.cast_pow, Int.cast_natCast]
+      = b ^ n • Int.fract r - Int.fract (b ^ n • r) := by
+  rw [Int.fract, nsmul_sub, Int.fract, ← sub_add, sub_sub_cancel_left,
+    neg_add_eq_sub, nthDecimalDigit_floor_sum_formula]
+  simp
 
 /-- A rearrangement of `nthDecimalDigit_fract_sum_formula`. -/
 theorem nthDecimalDigit_fract_sum_formula2 (b : ℕ) (r : R) (n : ℕ) :
-    b ^ n * Int.fract r = Int.fract (b ^ n * r)
+    b ^ n • Int.fract r = Int.fract (b ^ n • r)
       + ∑ i ∈ range n, b ^ (n - (i + 1)) * nthDecimalDigit b r i := by
   rw [nthDecimalDigit_fract_sum_formula, add_sub_cancel]
+
+/-- A formula for `⌊b^n{r}⌋` based on `nthDecimalDigit_fract_sum_formula`. -/
+theorem nthDecimalDigit_fract_sum_formula3 (b : ℕ) (r : R) (n : ℕ) :
+    ⌊b ^ n • Int.fract r⌋ = ∑ i ∈ range n, b ^ (n - (i + 1)) * nthDecimalDigit b r i := by
+  rw [nthDecimalDigit_fract_sum_formula2,
+    Int.floor_add_intCast, Int.floor_fract, Int.zero_add]
 
 /-- If `r` and `s` has the same base `b` digits after decimal,
   then `|{r} - {s}|` is infinitesimal. -/
@@ -150,13 +157,11 @@ theorem infinitesimal_of_nthDecimalDigit_eq (hb : b > 1)
   calc n • |Int.fract r - Int.fract s|
   _ ≤ b ^ n • |Int.fract r - Int.fract s| :=
     nsmul_le_nsmul_left (abs_nonneg _) (Nat.le_of_lt (Nat.lt_pow_self hb))
-  _ = |b ^ n * Int.fract r - b ^ n * Int.fract s| := by
-    rw [← mul_sub, abs_mul, abs_pow, Nat.abs_cast, nsmul_eq_mul, Nat.cast_pow]
+  _ = |b ^ n • Int.fract r - b ^ n • Int.fract s| := by
+    rw [← nsmul_sub, abs_nsmul]
   _ < 1 := by
     refine Int.abs_sub_lt_one_of_floor_eq_floor ?_
-    iterate 2 rw [nthDecimalDigit_fract_sum_formula2,
-      Int.floor_add_intCast, Int.floor_fract, Int.zero_add]
-    rw [hrs]
+    rw [nthDecimalDigit_fract_sum_formula3, nthDecimalDigit_fract_sum_formula3, hrs]
 
 /-- If `R` is archimedean and `r` and `s` has the same base `b` digits after decimal,
   then `r - s` is an integer. -/
@@ -195,26 +200,20 @@ theorem isRational.nthDecimalDigit_eventually_periodic {r : R} (hr : isRational 
   ---- Then we claim that the same `N` and `d` works.
   refine ⟨N, d, hd, λ n hn ↦ ?_⟩
   ---- From `mz = b^{N + d} - b^N` we first deduce `b^{N + d} r = Tz + b^N r`.
-  replace hz : b ^ (N + d) * r = (T * z : ℤ) + b ^ N * r :=
-    calc b ^ (N + d) * r
-    _ = ((b ^ (N + d) : ℤ) : R) * r := by rw [Int.cast_pow, Int.cast_natCast]
-    _ = (m * z + (b ^ N : ℤ)) * r := by
-      rw [eq_add_of_sub_eq hz, Int.cast_add, Int.cast_mul, Int.cast_natCast]
-    _ = m * z * r + b ^ N * r := by rw [add_mul, Int.cast_pow, Int.cast_natCast]
-    _ = (T * z : ℤ) + b ^ N * r := by rw [mul_right_comm, ← nsmul_eq_mul, hr, Int.cast_mul]
+  replace hz : b ^ (N + d) • r = (T * z : ℤ) + b ^ N • r := by
+    rw [← natCast_zsmul, Int.natCast_pow, eq_add_of_sub_eq hz, add_zsmul, mul_zsmul',
+      natCast_zsmul, hr, ← Int.natCast_pow, natCast_zsmul, zsmul_eq_mul', Int.cast_mul]
   ---- Now do the main calculations.
   obtain ⟨k, rfl⟩ : ∃ k, n = N + k := Nat.exists_eq_add_of_le hn
-  calc ⌊b ^ (N + k + d + 1) * r⌋ % b
-    _ = ⌊b ^ (N + d) * r * b ^ (k + 1)⌋ % b := by
-      rw [Nat.add_assoc, Nat.add_add_add_comm, pow_add, mul_right_comm]
-    _ = ⌊((T * z : ℤ) + b ^ N * r) * b ^ (k + 1)⌋ % b := by rw [hz]
-    _ = ⌊(T * z : ℤ) * b ^ (k + 1) + b ^ (N + k + 1) * r⌋ % b := by
-      rw [add_mul, Nat.add_assoc, mul_right_comm, ← pow_add]
-    _ = ⌊(T * z * b ^ (k + 1) : ℤ) + b ^ (N + k + 1) * r⌋ % b := by
-      rw [Int.cast_mul (T * z), Int.cast_pow, Int.cast_natCast]
-    _ = (T * z * b ^ k * b + ⌊b ^ (N + k + 1) * r⌋) % b := by
-      rw [Int.floor_intCast_add, Int.pow_succ, ← Int.mul_assoc]
-    _ = ⌊b ^ (N + k + 1) * r⌋ % b := Int.mul_add_emod_self_right _ _ _
+  calc ⌊b ^ (N + k + d + 1) • r⌋ % b
+    _ = ⌊b ^ (k + 1) • b ^ (N + d) • r⌋ % b := by
+      rw [Nat.add_right_comm N, Nat.add_assoc, Nat.pow_add, mul_nsmul]
+    _ = ⌊b ^ (k + 1) • ↑(T * z) + b ^ (k + 1) • b ^ N • r⌋ % b := by rw [hz, nsmul_add]
+    _ = ((b ^ (k + 1) : ℕ) * (T * z) + ⌊b ^ (k + 1) • b ^ N • r⌋) % b := by
+      rw [← natCast_zsmul, zsmul_eq_mul, ← Int.cast_mul, Int.floor_intCast_add]
+    _ = ⌊b ^ (k + 1) • b ^ N • r⌋ % b := by
+      rw [Int.natCast_pow, Int.pow_succ', Int.mul_assoc, Int.mul_add_emod_self_left]
+    _ = ⌊b ^ (N + k + 1) • r⌋ % b := by rw [← mul_nsmul, Nat.add_assoc, ← Nat.pow_add]
 
 /-- If the decimal digit sequence base `b` of an element is eventually periodic,
   then that element is rational. -/
@@ -226,15 +225,15 @@ theorem isRational_of_nthDecimalDigit_eventually_periodic
     `n`th decimal digit of `r` in base `b` are equal for all `n ≥ N`. -/
   rcases hr with ⟨N, d, hd, h⟩
   ---- In other words, `b^{N + d} r` and `b^N r` has the same digits base `b` past decimal.
-  replace h : nthDecimalDigit b (b ^ (N + d) * r) = nthDecimalDigit b (b ^ N * r) := by
+  replace h : nthDecimalDigit b (b ^ (N + d) • r) = nthDecimalDigit b (b ^ N • r) := by
     funext n; rw [← nthDecimalDigit_add, ← nthDecimalDigit_add,
       ← Nat.add_assoc, h _ (Nat.le_add_left _ _)]
   ---- Thus `(b^{N + d} - b^N) r` is an integer, and note `b^{N + d} - b^N > 0`.
-  obtain ⟨z, hz⟩ : ∃ z : ℤ, ↑b ^ (N + d) * r - ↑b ^ N * r = z :=
+  obtain ⟨z, hz⟩ : ∃ z : ℤ, b ^ (N + d) • r - b ^ N • r = z :=
     sub_eq_intCast_of_nthDecimalDigit_eq hb h
   replace h : b ^ N < b ^ (N + d) := Nat.pow_lt_pow_right hb (Nat.lt_add_of_pos_right hd)
   replace hz : (b ^ (N + d) - b ^ N) • r = z := by
-    rw [nsmul_eq_mul, Nat.cast_sub (Nat.le_of_lt h), Nat.cast_pow, Nat.cast_pow, sub_mul, hz]
+    rw [sub_nsmul _ (Nat.le_of_lt h), ← sub_eq_add_neg, hz]
   ---- We get everything now.
   exact ⟨_, Nat.zero_lt_sub_of_lt h, z, hz⟩
 
