@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 module
 public import Mathlib.NumberTheory.ArithmeticFunction.Misc
+public import Mathlib.Data.Fintype.Prod
 
 /-!
 # IMO 2016 C2

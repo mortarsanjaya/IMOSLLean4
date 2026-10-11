@@ -5,7 +5,7 @@ Authors: Gian Cordana Sanjaya
 -/
 
 module
-public import Mathlib.Data.Prod.Lex
+public import Mathlib.Order.Prod.Lex.Basic
 public import Mathlib.Order.WellFounded
 
 /-!

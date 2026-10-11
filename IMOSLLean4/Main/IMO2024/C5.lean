@@ -9,7 +9,7 @@ public import Mathlib.Algebra.Order.Interval.Finset.Basic
 public import Mathlib.Algebra.Order.Interval.Finset.SuccPred
 public import Mathlib.Data.Int.Interval
 public import Mathlib.Data.Int.ModEq
-public import Mathlib.Data.Int.SuccPred
+public import Mathlib.Order.SuccPred.Int
 
 /-!
 # IMO 2024 C5

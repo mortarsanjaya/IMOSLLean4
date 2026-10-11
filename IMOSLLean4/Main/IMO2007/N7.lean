@@ -6,6 +6,7 @@ Authors: Gian Cordana Sanjaya
 
 module
 public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.Basic.Finite.Prod
 
 /-!
 # IMO 2007 N7

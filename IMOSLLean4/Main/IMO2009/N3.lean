@@ -7,6 +7,7 @@ Authors: Gian Cordana Sanjaya
 module
 public import Mathlib.Data.Nat.Prime.Basic
 public import Mathlib.Data.Nat.Prime.Infinite
+public import Mathlib.Data.Nat.Factorial.Basic
 public import Mathlib.Data.Int.Basic
 
 /-!

@@ -41,7 +41,7 @@ namespace IMO2024A1
 
 open Finset
 
-variable [Ring R] [LinearOrder R] [FloorRing R] [IsOrderedRing R]
+variable [Ring R] [LinearOrder R] [FloorRing R]
 
 /-- We say that `α ∈ R` is *good* if `n ∣ ∑ k ≤ n, ⌊kα⌋` for all `n ∈ ℕ`. -/
 def good (α : R) := ∀ n : ℕ, (n : ℤ) ∣ ∑ k ∈ range (n + 1), ⌊k • α⌋
@@ -49,6 +49,13 @@ def good (α : R) := ∀ n : ℕ, (n : ℤ) ∣ ∑ k ∈ range (n + 1), ⌊k �
 
 
 /-! ### The image of even integers in `R` are good -/
+
+/-- `0` is good. -/
+lemma zero_is_good : good (0 : R) :=
+  λ n ↦ ⟨0, by simp_rw [nsmul_zero]; rw [Int.floor_zero, sum_const_zero, mul_zero]⟩
+
+
+variable [IsOrderedAddMonoid R]
 
 /-- For any `α ∈ R` good and `N ∈ ℤ`, `α + 2N` is good. -/
 lemma good.add_two_mul_int {α : R} (hα : good α) (N : ℤ) : good (α + (2 * N : ℤ)) := by
@@ -64,10 +71,6 @@ lemma good.add_two_mul_int {α : R} (hα : good α) (N : ℤ) : good (α + (2 * 
 /-- For any `α ∈ R` good and `N ∈ ℤ`, `α - 2N` is good. -/
 lemma good.sub_two_mul_int {α : R} (hα : good α) (N : ℤ) : good (α - (2 * N : ℤ)) := by
   simpa only [Int.mul_neg, Int.cast_neg, sub_eq_add_neg] using hα.add_two_mul_int (-N)
-
-/-- `0` is good. -/
-lemma zero_is_good : good (0 : R) :=
-  λ n ↦ ⟨0, by simp_rw [nsmul_zero]; rw [Int.floor_zero, sum_const_zero, mul_zero]⟩
 
 /-- Any even integer, viewed as an element of `R`, is good. -/
 lemma two_mul_is_good (N : ℤ) : good ((2 * N : ℤ) : R) := by

@@ -29,10 +29,13 @@ section
 
 variable [CommSemiring R] [Ring S]
 
+@[instance_reducible]
 def CommRing_of_good_map {f : R → S} (hf : good f) :
     CommRing (Subring.closure (Set.range f)) :=
-  Subring.closureCommRingOfComm λ _ ⟨a, h⟩ _ ⟨b, h0⟩ _ ↦
-    h ▸ h0 ▸ map_commute_of_commute hf (mul_comm a b)
+  have : IsMulCommutative (Subring.closure (Set.range f)) :=
+    Subring.isMulCommutative_closure λ _ ⟨a, h⟩ _ ⟨b, h0⟩ _ ↦
+      h ▸ h0 ▸ map_commute_of_commute hf (mul_comm a b)
+  IsMulCommutative.instCommRing
 
 def codomainLift (f : R → S) (x : R) : Subring.closure (Set.range f) :=
   ⟨f x, Subring.subset_closure (Set.mem_range_self x)⟩
@@ -53,7 +56,9 @@ end
 variable [Ring R] [Ring S] (c : R)
 
 instance instCommRingClosure_of_singleton : CommRing (Subring.closure {c}) :=
-  Subring.closureCommRingOfComm λ _ h _ h0 _ ↦ h ▸ h0 ▸ rfl
+  have : IsMulCommutative ↥(Subring.closure {c}) :=
+    Subring.isMulCommutative_closure λ _ h _ h0 _ ↦ h ▸ h0 ▸ rfl
+  IsMulCommutative.instCommRing
 
 def oneVarDomainLift (f : R → S) (x : Subring.closure {c}) : S := f x
 
