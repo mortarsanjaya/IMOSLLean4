@@ -151,7 +151,7 @@ theorem good_of_card_eq_31 (hF : q = 31) : good F :=
 
 /-- The integer `21` is not a prime power. -/
 theorem not_IsPrimePow_21 : ¬IsPrimePow 21 := by
-  ---- Somehow direct decision procedute doesn't work anymore...
+  ---- Somehow direct decision procedure doesn't work anymore...
   intro h
   replace h0 : Nat.Coprime 3 7 := rfl
   replace h : 21 ∣ 3 ∨ 21 ∣ 7 := (h0.isPrimePow_dvd_mul h).mp (Nat.dvd_refl 21)
