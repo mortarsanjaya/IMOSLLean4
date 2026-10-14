@@ -152,7 +152,7 @@ theorem eq_of_infinite_sum_map_pow_eq {S T : Multiset ℕ} (hS : 0 ∉ S) (hT : 
       Multiset_sup_mem (mt card_eq_zero.mpr (hS'.trans_ne (Nat.succ_ne_zero k)))
     have hT0 : S.sup ∈ T := by
       refine hST0 ▸ Multiset_sup_mem λ hT0 ↦ hS ?_
-      rw [hT0, sup_zero, Nat.bot_eq_zero] at hST0
+      rw [hT0, Multiset.sup_zero, Nat.bot_eq_zero] at hST0
       exact hST0 ▸ hS0
     replace hS : 0 ∉ S.erase S.sup := λ h ↦ hS (mem_of_mem_erase h)
     replace hT : 0 ∉ T.erase S.sup := λ h ↦ hT (mem_of_mem_erase h)
