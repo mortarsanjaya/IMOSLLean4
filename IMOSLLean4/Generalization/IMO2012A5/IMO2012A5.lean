@@ -64,7 +64,7 @@ namespace Generalization
 
 open BundledRingFun
 
-variable [Ring R] [Ring S] [NoZeroDivisors S] {f : R → S}
+variable [Ring R] [Ring S] [IsDomain S] {f : R → S}
 
 theorem ReducedGood.isNontrivialAnswer (hf : ReducedGood f) : isNontrivialAnswer (ofFun f) :=
   (em' <| f (-1) = 0).elim
@@ -80,8 +80,14 @@ theorem ReducedGood.isNontrivialAnswer (hf : ReducedGood f) : isNontrivialAnswer
       (λ ⟨φ, h1⟩ ↦ ⟨_, isFinGoodMap.ℤ₄Map, φ, Int.castRingHom S, h1⟩)
       (λ ⟨φ, h1⟩ ↦ ⟨_, isFinGoodMap.𝔽₃Map2, φ, Int.castRingHom S, h1⟩))
     ---- Case 3: `f(2) = -1`
-    (λ h0 ↦ have : Extra.CharTwo R :=
-      Extra.CharTwo.Semiring_of_two_eq_zero (Case2.CharTwo'_of_map_two hf h h0)
+    (λ h0 ↦
+    have : Nontrivial R := by
+      refine ⟨⟨1, 0, λ h1 ↦ ?_⟩⟩
+      have : Subsingleton R := subsingleton_of_zero_eq_one h1.symm
+      rw [Subsingleton.allEq (-1) 2, h0, neg_eq_zero] at h
+      exact one_ne_zero h
+    have : CharP R 2 :=
+      CharTwo.of_one_ne_zero_of_two_eq_zero one_ne_zero (Case2.CharTwo'_of_map_two hf h h0)
     (Case3.solution hf).imp
       (λ ⟨φ, h0⟩ ↦ ⟨_, isPolyGoodMap.SubOne R, RingHom.id R, φ, h0⟩)
     λ h1 ↦ h1.elim
